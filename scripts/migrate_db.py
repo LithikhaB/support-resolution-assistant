@@ -5,12 +5,13 @@ from app.database.connection import get_connection
 
 
 def main() -> None:
-    migration = Path(__file__).resolve().parents[1] / "db/migrations/002_evidence_semantics.sql"
+    directory = Path(__file__).resolve().parents[1] / "db/migrations"
     with get_connection() as conn:
         # Migration owns its transaction; use the connection context for rollback on error.
-        sql = migration.read_text(encoding="utf-8").replace("BEGIN;", "").replace("COMMIT;", "")
-        conn.execute(sql)
-    print("Day 1 evidence migration applied; existing records and chunks preserved.")
+        for name in ('002_evidence_semantics.sql', '004_synthetic_outcomes.sql'):
+            sql = (directory / name).read_text(encoding="utf-8").replace("BEGIN;", "").replace("COMMIT;", "")
+            conn.execute(sql)
+    print("Evidence migrations applied; existing records and chunks preserved.")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,3 @@
+{"id":"connectivity","query":"Connection keeps dropping","filters":{"queue":"technical_support"},"review_note":"Inspect whether the complaints describe connectivity interruptions; replies are not verified fixes."}
+{"id":"integration","query":"Salesforce Microsoft Teams integration","filters":{},"review_note":"Inspect exact product matches and integration context."}
+{"id":"framework","query":"Django 3.2 scalable SaaS platform","filters":{},"review_note":"Inspect framework/version matches and setup questions."}

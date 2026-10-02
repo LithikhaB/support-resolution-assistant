@@ -15,13 +15,15 @@ from app.retrieval.tokenizer import load_tokenizer
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--preview", type=int, default=0, help="Print the first N chunks; explicit opt-in to displaying source text")
+    parser.add_argument("--directory", type=Path, help="Stage a separate processed corpus; defaults to DATA_DIR/processed")
     args = parser.parse_args()
     if not 0 <= args.preview <= 10:
         parser.error("--preview must be between 0 and 10")
     settings = get_settings()
-    source = settings.processed_dir / "documents.jsonl"
+    directory = args.directory or settings.processed_dir
+    source = directory / "documents.jsonl"
     source_hash = file_sha256(source)
-    parent_manifest = settings.processed_dir / "manifest.json"
+    parent_manifest = directory / "manifest.json"
     if parent_manifest.exists():
         manifest = json.loads(parent_manifest.read_text(encoding="utf-8"))
         if manifest.get("output_sha256") != source_hash:
@@ -55,7 +57,7 @@ def main() -> None:
             raise ValueError("No documents; refusing to replace chunks")
         if file_sha256(source) != source_hash:
             raise ValueError("Documents changed during chunking")
-    output = settings.processed_dir / "chunks.jsonl"
+    output = directory / "chunks.jsonl"
     atomic_write(output, lines())
     lengths.sort()
     report = dict(counts) | {
