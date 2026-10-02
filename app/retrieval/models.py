@@ -41,6 +41,9 @@ class EvidenceResult(BaseModel):
     resolution: str | None
     outcome_status: str
     metadata: dict[str, Any]
+    rerank_score: float | None = Field(default=None, allow_inf_nan=False)
+    rerank_rank: int | None = Field(default=None, ge=1)
+    rerank_input_truncated: bool = False
 
 
 class VectorResult(EvidenceResult):
@@ -81,14 +84,26 @@ class SearchRequest(RetrievalRequest):
     mode: Literal["bm25", "vector", "hybrid"] = "hybrid"
     candidate_k: int | None = Field(default=None, ge=1, le=100, strict=True)
 
+    rerank: bool = Field(default=False, strict=True)
+    rerank_k: int | None = Field(default=None, ge=1, le=50, strict=True)
+
+    @property
+    def retrieval_depth(self) -> int:
+        """Retrieve a bounded pool before applying optional pairwise reranking."""
+        return (self.rerank_k or max(20, self.top_k)) if self.rerank else self.top_k
+
     @model_validator(mode="after")
     def validate_candidates(self):
         """Reject candidate pools that cannot satisfy the requested hybrid result count."""
+        if self.rerank_k is not None and not self.rerank:
+            raise ValueError("rerank_k requires rerank=true")
+        if self.rerank and (self.top_k > 50 or self.retrieval_depth < self.top_k):
+            raise ValueError("reranking requires top_k <= rerank_k <= 50")
         if self.candidate_k is not None:
             if self.mode != "hybrid":
                 raise ValueError("candidate_k applies only to hybrid search")
-            if self.candidate_k < self.top_k:
-                raise ValueError("candidate_k must be at least top_k")
+            if self.candidate_k < self.retrieval_depth:
+                raise ValueError("candidate_k must be at least the retrieval depth")
         return self
 
 
@@ -97,4 +112,11 @@ class SearchResponse(BaseModel):
 
     mode: Literal["bm25", "vector", "hybrid"]
     results: list[HybridResult | VectorResult | BM25Result]
+    reranked: bool = False
+    reranker_model: str | None = None
+    reranker_revision: str | None = None
+    reranked_candidates: int = 0
+    rerank_score_note: str = (
+        "Pairwise relevance scores are not probabilities or proof of a diagnosis."
+    )
     elapsed_ms: float = Field(ge=0, allow_inf_nan=False)

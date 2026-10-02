@@ -4,7 +4,7 @@
 
 “We retrieve telecom support evidence even when customers describe the same problem differently. Local embeddings and BM25 provide complementary candidates; reciprocal rank fusion combines their ranks. The next stage will inspect attempted actions and diagnostic prerequisites before drafting cited next steps. Missing evidence should trigger clarification, not a guessed repair.”
 
-Present the current retrieval service as implemented. Describe understanding, reranking, answer generation and citation-support checks as planned until each has working code and evaluation.
+Retrieval, local complaint understanding and optional local reranking are implemented. Answer generation and citation-support checks remain planned.
 
 ## Dataset choices and limitations
 
@@ -35,11 +35,33 @@ Resolutions and agent-only diagnostic findings stay on the parent ticket, outsid
 - **Readiness:** schema availability, index readiness and model availability are different checks. The first semantic request loads the model; SQL timeout is not an end-to-end request deadline.
 - **Scale:** each API process owns its model and BM25 cache. More workers consume more memory. A persistent lexical index, connection pooling and load testing are possible later improvements, not implemented guarantees.
 
-## Proposed local model work
+## Implemented local understanding
 
-1. Train TF-IDF plus logistic regression as an intent baseline. Compare against frozen MiniLM embeddings plus logistic regression on the same family-separated split. Fit preprocessing only on train; tune on development; freeze test.
-2. Extract attempted steps and severity evidence locally. Start severity with inspectable impact rules; anger must not cause critical severity. Few independent examples support critical-impact learning here.
-3. Add the pretrained local `cross-encoder/ms-marco-MiniLM-L6-v2` reranker over a bounded candidate set. Measure gains and latency before considering fine-tuning.
+- Compare train-only TF-IDF against frozen MiniLM features, each with logistic regression at C=1, 4 and 16. Family weights prevent larger families dominating training. Select by development macro-F1; never load test during training.
+- Selected MiniLM + logistic regression at C=1: development accuracy 60%, macro-F1 0.552 on 120 variants from 15 families. The encoder is frozen; only the classifier is trained. This small synthetic benchmark does not establish real-world accuracy.
+- Porting and payment-restoration development families have zero accuracy; Wi-Fi is also weak. Broader independently authored training scenarios are needed. Preserve the held-out test set while improving data.
+- Category scores are uncalibrated. Fixed score/margin gates (0.45/0.10) request clarification on weak predictions; they are not validated out-of-domain detection. Reported accuracy is before these gates, not accuracy among accepted predictions.
+- Product mentions, sentiment, impact and prior actions use separate English rules with exact text spans. Negated and hypothetical actions are distinct from completed troubleshooting. Rules are inspectable but cannot understand every paraphrase.
+- Severity depends on stated service impact, not anger. Missing evidence remains unknown. Predicted categories are not confirmed diagnoses and are not automatically used as retrieval filters.
+- JSON weights avoid arbitrary pickle deserialization. Artifact dimensions, label uniqueness and train/development separation are validated. API errors hide internal details; analysis logs omit complaint text.
+- Run `python -m scripts.train_understanding` to rebuild, then restart the API to load new weights. `/api/v1/analyze` needs the local model but no database. The first MiniLM request incurs model-loading latency.
+
+## Implemented reranking and context improvements
+
+- Analysis now retains explicit connection patterns, cable condition and wired-connection results with customer-text spans. These are reported observations, not independently verified diagnoses or proof that a cable test was performed.
+- Contact and next-step requests are separate from the technical category. Clarification uses known service details and asks for provider/region for contact lookup. Contact lookup and generated troubleshooting are still pending.
+- The pretrained `cross-encoder/ms-marco-MiniLM-L6-v2` jointly scores each query/chunk pair on CPU. Its revision is pinned; no hosted API or reranker fine-tuning is used.
+- Reranking is opt-in, defaults to 20 candidates and caps the pool at 50. It cannot recover evidence absent from the retrieved pool. Scores are raw relevance logits; they are neither calibrated confidence nor diagnostic proof.
+- Original source ranks, content and outcome status are preserved. Long pair truncation is explicit. Model failure returns an error; it does not masquerade as successful reranking.
+- `scripts.evaluate_reranking` compares identical candidate pools on development queries with authored KB relevance. The report includes top-five hit rate, reciprocal rank, candidate coverage and local timing. Repeated variants are correlated; these are development measurements only.
+- Measured reranking regression: expected-KB hit@5 dropped from 50.0% to 36.7%, with MRR@5 dropping from 0.461 to 0.341. Candidate hit rate at 20 was 62.5%; median additional ranking time was about 759 ms. Keep reranking optional. Synthetic sibling tickets can crowd out KBs, and KB-only authored labels may omit other useful evidence; review both diversity and relevance judgments before drawing broader conclusions.
+- The classifier and its 60% development accuracy are unchanged. Better extraction does not establish improved classifier accuracy.
+
+## Remaining local model work
+
+1. Improve category generalization with reviewed independent scenarios; calibrate routing and evaluate accepted coverage before relying on automatic routing.
+2. Expand and independently evaluate the implemented action and impact rules. Few independent examples support critical-impact learning here.
+3. Review reranker failures and duplicate scenario variants before considering fine-tuning. Candidate coverage and evidence diversity can limit the result even when pairwise scores improve.
 4. Retain the embedding baseline initially. Fine-tune only with reviewed positive/negative pairs and demonstrated held-out improvement.
 5. Use one replaceable final-drafting model. Groq may serve it; classification, embeddings, retrieval, reranking and validation need not call Groq. A local quantized Qwen3-4B is an experiment contingent on hardware and measured latency, not a current dependency.
 

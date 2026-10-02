@@ -19,6 +19,8 @@ def main():
     parser.add_argument("--mode", choices=["hybrid", "bm25", "vector"], default="hybrid")
     parser.add_argument("--top-k", type=int, default=5)
     parser.add_argument("--candidate-k", type=int)
+    parser.add_argument("--rerank", action="store_true")
+    parser.add_argument("--rerank-k", type=int)
     parser.add_argument("--queue")
     parser.add_argument("--intent")
     parser.add_argument("--product")
@@ -43,6 +45,8 @@ def main():
             mode=args.mode,
             top_k=args.top_k,
             candidate_k=args.candidate_k,
+            rerank=args.rerank,
+            rerank_k=args.rerank_k,
             filters=filters,
         )
         response = get_retrieval_service().search(request)
@@ -58,6 +62,8 @@ def main():
         print(response.model_dump_json(indent=2))
         return
     print(f"QUERY: {request.query}\n{response.mode.upper()} RESULTS ({response.elapsed_ms:.1f} ms)")
+    if response.reranked:
+        print(f"Reranked {response.reranked_candidates} candidates using {response.reranker_model}")
     if not response.results:
         print("No matching evidence found.")
     for rank, result in enumerate(response.results, 1):
@@ -71,7 +77,7 @@ def main():
         print(f"Title: {result.title}\nSources: {', '.join(result.sources)}")
         print("Scores/ranks: " + json.dumps(scores))
         print(f"Content: {result.content}\nHistorical response: {result.response}")
-        print(f"Outcome: {result.outcome_status} | Verified resolution: {result.resolution}")
+        print(f"Outcome: {result.outcome_status} | Resolution: {result.resolution}")
 
 
 if __name__ == "__main__":

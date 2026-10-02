@@ -9,4 +9,5 @@ huggingface-hub>=0.25
 tokenizers>=0.22,<0.24
 sentence-transformers>=5,<6
 numpy>=2,<3
+scikit-learn>=1.6,<2
 ruff==0.16.10

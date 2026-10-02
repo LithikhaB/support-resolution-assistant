@@ -37,6 +37,14 @@ class Settings(BaseSettings):
 
     data_dir: Path = Path("data")
     corpus_dir: Path = Path("data/synthetic/telecom_v1")
+    understanding_model_path: Path = Path("data/models/understanding/classifier.json")
+    understanding_min_score: float = Field(default=0.45, ge=0, le=1)
+    understanding_min_margin: float = Field(default=0.10, ge=0, le=1)
+
+    reranker_model: str = "cross-encoder/ms-marco-MiniLM-L6-v2"
+    reranker_revision: str = "233902d25c440f23af6f7d6e94d2946bac0bee0a"
+    reranker_local_files_only: bool = False
+    reranker_batch_size: int = Field(default=8, ge=1, le=32)
 
     @property
     def processed_dir(self) -> Path:

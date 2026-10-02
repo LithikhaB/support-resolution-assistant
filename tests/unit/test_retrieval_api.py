@@ -26,7 +26,7 @@ def test_retrieve_default_and_empty_result(api):
     client, service = api
     response = client.post("/api/v1/retrieve", json={"query": " router "})
     assert response.status_code == 200
-    assert response.json() == {"mode": "hybrid", "results": [], "elapsed_ms": 1}
+    assert response.json() == SearchResponse(mode="hybrid", results=[], elapsed_ms=1).model_dump()
     request = service.search.call_args.args[0]
     assert request.query == "router" and request.top_k == 5
 

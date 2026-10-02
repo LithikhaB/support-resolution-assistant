@@ -1,0 +1,382 @@
+{
+  "purpose": "Live API smoke checks, not a relevance benchmark.",
+  "analysis": {
+    "category": null,
+    "category_status": "uncertain",
+    "candidates": [
+      {
+        "category": "intermittent_broadband",
+        "score": 0.1620179655363471
+      },
+      {
+        "category": "broadband_outage",
+        "score": 0.15998418330384678
+      },
+      {
+        "category": "router_ont_hardware",
+        "score": 0.1250087852109999
+      }
+    ],
+    "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+    "products": [
+      {
+        "text": "broadband",
+        "start": 3,
+        "end": 12,
+        "product": "broadband"
+      },
+      {
+        "text": "router",
+        "start": 58,
+        "end": 64,
+        "product": "router"
+      }
+    ],
+    "severity": {
+      "value": "medium",
+      "rule": "reported_degradation_or_work_impact",
+      "evidence": [
+        {
+          "text": "drops",
+          "start": 13,
+          "end": 18
+        }
+      ],
+      "method": "rules_v1"
+    },
+    "sentiment": {
+      "value": "unknown",
+      "rule": "no_explicit_tone",
+      "evidence": [],
+      "method": "rules_v1"
+    },
+    "actions": [
+      {
+        "text": "I already restarted the router twice",
+        "start": 34,
+        "end": 70,
+        "action": "restart_device",
+        "status": "attempted"
+      }
+    ],
+    "reported_facts": [
+      {
+        "text": "broadband drops",
+        "start": 3,
+        "end": 18,
+        "name": "connection_pattern",
+        "value": "intermittent"
+      },
+      {
+        "text": "Cable in my home is intact",
+        "start": 72,
+        "end": 98,
+        "name": "cable_condition",
+        "value": "intact"
+      }
+    ],
+    "requests": [
+      {
+        "text": "what to do now",
+        "start": 100,
+        "end": 114,
+        "kind": "next_steps"
+      },
+      {
+        "text": "helpline number",
+        "start": 129,
+        "end": 144,
+        "kind": "contact_support"
+      }
+    ],
+    "needs_clarification": true,
+    "clarification_questions": [
+      "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?",
+      "Which provider and country or region should the support contact be for?"
+    ],
+    "model_version": "3ff37cba26815532",
+    "elapsed_ms": 23162.358700064942
+  },
+  "retrieval": {
+    "mode": "hybrid",
+    "results": [
+      {
+        "chunk_id": 142,
+        "doc_id": "syn_ticket_ID01_04",
+        "chunk_index": 0,
+        "content": "Intermittent broadband support case\n\nThe connection drops on my wired computer too, mostly when it rains. Restarting the router did not help. Already checked: Restarted once and compared wired with wireless. I am angry about this experience and want it addressed.",
+        "title": "Intermittent broadband support case",
+        "doc_type": "resolved_ticket",
+        "response": null,
+        "resolution": "Finding: Optical loss events align with rain; technician finds moisture at an external joint. Action: Dispatch an authorized technician to repair and seal the damaged joint. Simulated follow-up: no optical loss events during the next wet-weather observation.",
+        "outcome_status": "simulated_resolved",
+        "metadata": {
+          "queue": "technical_support",
+          "split": "train",
+          "source": "Fictional Northstar Telecom / authored synthetic scenarios",
+          "kb_refs": [
+            "syn_kb_ID01"
+          ],
+          "category": "intermittent_broadband",
+          "root_cause": "Moisture-damaged external optical joint.",
+          "label_basis": "authored_scenario",
+          "is_synthetic": true,
+          "review_status": "authored_and_automatically_checked_not_expert_reviewed",
+          "severity_basis": "service impact in the scenario; independent of tone",
+          "attempted_steps": [
+            "Restarted once and compared wired with wireless."
+          ],
+          "dataset_version": "telecom-synthetic-1.0.0",
+          "scenario_family": "ID01",
+          "forbidden_action": "Do not treat this as Wi-Fi interference or recommend repeated reboots.",
+          "outcome_evidence": "Simulated follow-up: no optical loss events during the next wet-weather observation.",
+          "resolution_steps": [
+            "Dispatch an authorized technician to repair and seal the damaged joint."
+          ],
+          "complaint_group_id": "9f710d2eddd0233e87ac2e216427837c92c9459c7363e3ddba4beab169fd3963",
+          "diagnostic_findings": [
+            "Optical loss events align with rain; technician finds moisture at an external joint."
+          ]
+        },
+        "rerank_score": 1.850029468536377,
+        "rerank_rank": 1,
+        "rerank_input_truncated": false,
+        "rrf_score": 0.031099324975891997,
+        "vector_contribution": 0.01639344262295082,
+        "bm25_contribution": 0.014705882352941176,
+        "hybrid_rank": 1,
+        "vector_rank": 1,
+        "bm25_rank": 8,
+        "cosine_similarity": 0.6828220501084972,
+        "bm25_score": 11.9504263584073,
+        "sources": [
+          "vector",
+          "bm25"
+        ]
+      },
+      {
+        "chunk_id": 140,
+        "doc_id": "syn_ticket_ID01_02",
+        "chunk_index": 0,
+        "content": "Intermittent broadband support case\n\nThe connection drops on my wired computer too, mostly when it rains. Restarting the router did not help. Already checked: Restarted once and compared wired with wireless. I am worried about this and would appreciate an update.",
+        "title": "Intermittent broadband support case",
+        "doc_type": "resolved_ticket",
+        "response": null,
+        "resolution": "Finding: Optical loss events align with rain; technician finds moisture at an external joint. Action: Dispatch an authorized technician to repair and seal the damaged joint. Simulated follow-up: no optical loss events during the next wet-weather observation.",
+        "outcome_status": "simulated_resolved",
+        "metadata": {
+          "queue": "technical_support",
+          "split": "train",
+          "source": "Fictional Northstar Telecom / authored synthetic scenarios",
+          "kb_refs": [
+            "syn_kb_ID01"
+          ],
+          "category": "intermittent_broadband",
+          "root_cause": "Moisture-damaged external optical joint.",
+          "label_basis": "authored_scenario",
+          "is_synthetic": true,
+          "review_status": "authored_and_automatically_checked_not_expert_reviewed",
+          "severity_basis": "service impact in the scenario; independent of tone",
+          "attempted_steps": [
+            "Restarted once and compared wired with wireless."
+          ],
+          "dataset_version": "telecom-synthetic-1.0.0",
+          "scenario_family": "ID01",
+          "forbidden_action": "Do not treat this as Wi-Fi interference or recommend repeated reboots.",
+          "outcome_evidence": "Simulated follow-up: no optical loss events during the next wet-weather observation.",
+          "resolution_steps": [
+            "Dispatch an authorized technician to repair and seal the damaged joint."
+          ],
+          "complaint_group_id": "522937146990e799289e507d21697afffb5b4744c69c97c4010ad5f62476d9df",
+          "diagnostic_findings": [
+            "Optical loss events align with rain; technician finds moisture at an external joint."
+          ]
+        },
+        "rerank_score": 1.7833772897720337,
+        "rerank_rank": 2,
+        "rerank_input_truncated": false,
+        "rrf_score": 0.031054405392392875,
+        "vector_contribution": 0.016129032258064516,
+        "bm25_contribution": 0.014925373134328358,
+        "hybrid_rank": 2,
+        "vector_rank": 2,
+        "bm25_rank": 7,
+        "cosine_similarity": 0.6801556944847156,
+        "bm25_score": 11.9504263584073,
+        "sources": [
+          "vector",
+          "bm25"
+        ]
+      },
+      {
+        "chunk_id": 141,
+        "doc_id": "syn_ticket_ID01_03",
+        "chunk_index": 0,
+        "content": "Intermittent broadband support case\n\nThe connection drops on my wired computer too, mostly when it rains. Restarting the router did not help. Already checked: Restarted once and compared wired with wireless. I am frustrated with this problem and want a clear explanation.",
+        "title": "Intermittent broadband support case",
+        "doc_type": "resolved_ticket",
+        "response": null,
+        "resolution": "Finding: Optical loss events align with rain; technician finds moisture at an external joint. Action: Dispatch an authorized technician to repair and seal the damaged joint. Simulated follow-up: no optical loss events during the next wet-weather observation.",
+        "outcome_status": "simulated_resolved",
+        "metadata": {
+          "queue": "technical_support",
+          "split": "train",
+          "source": "Fictional Northstar Telecom / authored synthetic scenarios",
+          "kb_refs": [
+            "syn_kb_ID01"
+          ],
+          "category": "intermittent_broadband",
+          "root_cause": "Moisture-damaged external optical joint.",
+          "label_basis": "authored_scenario",
+          "is_synthetic": true,
+          "review_status": "authored_and_automatically_checked_not_expert_reviewed",
+          "severity_basis": "service impact in the scenario; independent of tone",
+          "attempted_steps": [
+            "Restarted once and compared wired with wireless."
+          ],
+          "dataset_version": "telecom-synthetic-1.0.0",
+          "scenario_family": "ID01",
+          "forbidden_action": "Do not treat this as Wi-Fi interference or recommend repeated reboots.",
+          "outcome_evidence": "Simulated follow-up: no optical loss events during the next wet-weather observation.",
+          "resolution_steps": [
+            "Dispatch an authorized technician to repair and seal the damaged joint."
+          ],
+          "complaint_group_id": "18a6a60f559defe7df19f73f5310beab069add35202182484bf5ad54a33955ff",
+          "diagnostic_findings": [
+            "Optical loss events align with rain; technician finds moisture at an external joint."
+          ]
+        },
+        "rerank_score": 1.783368468284607,
+        "rerank_rank": 3,
+        "rerank_input_truncated": false,
+        "rrf_score": 0.029877369007803793,
+        "vector_contribution": 0.015384615384615385,
+        "bm25_contribution": 0.014492753623188406,
+        "hybrid_rank": 4,
+        "vector_rank": 5,
+        "bm25_rank": 9,
+        "cosine_similarity": 0.6682919861339321,
+        "bm25_score": 11.8341063255002,
+        "sources": [
+          "vector",
+          "bm25"
+        ]
+      },
+      {
+        "chunk_id": 139,
+        "doc_id": "syn_ticket_ID01_01",
+        "chunk_index": 0,
+        "content": "Intermittent broadband support case\n\nThe connection drops on my wired computer too, mostly when it rains. Restarting the router did not help. Already checked: Restarted once and compared wired with wireless. Please explain the next step.",
+        "title": "Intermittent broadband support case",
+        "doc_type": "resolved_ticket",
+        "response": null,
+        "resolution": "Finding: Optical loss events align with rain; technician finds moisture at an external joint. Action: Dispatch an authorized technician to repair and seal the damaged joint. Simulated follow-up: no optical loss events during the next wet-weather observation.",
+        "outcome_status": "simulated_resolved",
+        "metadata": {
+          "queue": "technical_support",
+          "split": "train",
+          "source": "Fictional Northstar Telecom / authored synthetic scenarios",
+          "kb_refs": [
+            "syn_kb_ID01"
+          ],
+          "category": "intermittent_broadband",
+          "root_cause": "Moisture-damaged external optical joint.",
+          "label_basis": "authored_scenario",
+          "is_synthetic": true,
+          "review_status": "authored_and_automatically_checked_not_expert_reviewed",
+          "severity_basis": "service impact in the scenario; independent of tone",
+          "attempted_steps": [
+            "Restarted once and compared wired with wireless."
+          ],
+          "dataset_version": "telecom-synthetic-1.0.0",
+          "scenario_family": "ID01",
+          "forbidden_action": "Do not treat this as Wi-Fi interference or recommend repeated reboots.",
+          "outcome_evidence": "Simulated follow-up: no optical loss events during the next wet-weather observation.",
+          "resolution_steps": [
+            "Dispatch an authorized technician to repair and seal the damaged joint."
+          ],
+          "complaint_group_id": "3e8dfb1d7b2809d3c84956d22dfc16d0300c759d46f40991fe66b4ab9ebf9f52",
+          "diagnostic_findings": [
+            "Optical loss events align with rain; technician finds moisture at an external joint."
+          ]
+        },
+        "rerank_score": 1.5786657333374023,
+        "rerank_rank": 4,
+        "rerank_input_truncated": false,
+        "rrf_score": 0.031024531024531024,
+        "vector_contribution": 0.015873015873015872,
+        "bm25_contribution": 0.015151515151515152,
+        "hybrid_rank": 3,
+        "vector_rank": 3,
+        "bm25_rank": 6,
+        "cosine_similarity": 0.6769314619221046,
+        "bm25_score": 12.039926360359061,
+        "sources": [
+          "vector",
+          "bm25"
+        ]
+      },
+      {
+        "chunk_id": 149,
+        "doc_id": "syn_ticket_ID02_03",
+        "chunk_index": 0,
+        "content": "Intermittent broadband support case\n\nEvery evening the internet pauses on all devices, including my wired laptop. The optical light remains normal. Already checked: Tested Ethernet and stopped local downloads; stalls continue. I am frustrated with this problem and want a clear explanation.",
+        "title": "Intermittent broadband support case",
+        "doc_type": "resolved_ticket",
+        "response": null,
+        "resolution": "Finding: Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment. Action: Network operations rebalance capacity and monitor the affected segment during peak hours. Simulated follow-up: peak-hour packet loss subsides and calls stay connected.",
+        "outcome_status": "simulated_resolved",
+        "metadata": {
+          "queue": "technical_support",
+          "split": "train",
+          "source": "Fictional Northstar Telecom / authored synthetic scenarios",
+          "kb_refs": [
+            "syn_kb_ID02"
+          ],
+          "category": "intermittent_broadband",
+          "root_cause": "Congested access segment.",
+          "label_basis": "authored_scenario",
+          "is_synthetic": true,
+          "review_status": "authored_and_automatically_checked_not_expert_reviewed",
+          "severity_basis": "service impact in the scenario; independent of tone",
+          "attempted_steps": [
+            "Tested Ethernet and stopped local downloads; stalls continue."
+          ],
+          "dataset_version": "telecom-synthetic-1.0.0",
+          "scenario_family": "ID02",
+          "forbidden_action": "Do not promise that a Wi-Fi channel change will repair provider congestion.",
+          "outcome_evidence": "Simulated follow-up: peak-hour packet loss subsides and calls stay connected.",
+          "resolution_steps": [
+            "Network operations rebalance capacity and monitor the affected segment during peak hours."
+          ],
+          "complaint_group_id": "bc16d2e826e606f3891972a962db017060536ae956799ee85a467a0f295e71a9",
+          "diagnostic_findings": [
+            "Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment."
+          ]
+        },
+        "rerank_score": 0.22176413238048553,
+        "rerank_rank": 5,
+        "rerank_input_truncated": false,
+        "rrf_score": 0.024086021505376344,
+        "vector_contribution": 0.010752688172043012,
+        "bm25_contribution": 0.013333333333333334,
+        "hybrid_rank": 19,
+        "vector_rank": 33,
+        "bm25_rank": 15,
+        "cosine_similarity": 0.5295169669101824,
+        "bm25_score": 9.831304379792135,
+        "sources": [
+          "vector",
+          "bm25"
+        ]
+      }
+    ],
+    "reranked": true,
+    "reranker_model": "cross-encoder/ms-marco-MiniLM-L6-v2",
+    "reranker_revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+    "reranked_candidates": 20,
+    "rerank_score_note": "Pairwise relevance scores are not probabilities or proof of a diagnosis.",
+    "elapsed_ms": 2438.146800035611
+  },
+  "empty_filter_status": 200
+}
