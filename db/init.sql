@@ -29,7 +29,6 @@ CREATE TABLE IF NOT EXISTS documents (
     )
 );
 
--- 384 = output size of all-MiniLM-L6-v2 
 CREATE TABLE IF NOT EXISTS chunks (
     chunk_id    BIGSERIAL PRIMARY KEY,
     doc_id      TEXT NOT NULL REFERENCES documents(doc_id) ON DELETE CASCADE,

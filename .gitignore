@@ -8,3 +8,6 @@ data/processed/
 *.log
 .DS_Store
 data/models/
+.ruff_cache/
+data/evaluation/retrieval_report.json
+data/synthetic/telecom_v1/processed/indexing.manifest.json

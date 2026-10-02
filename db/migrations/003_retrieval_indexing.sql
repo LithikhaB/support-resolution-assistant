@@ -1,4 +1,3 @@
--- Applied by the indexer. No changes to existing document/chunk columns.
 CREATE TABLE IF NOT EXISTS document_index_state (
     doc_id TEXT PRIMARY KEY REFERENCES documents(doc_id) ON DELETE CASCADE,
     fingerprint TEXT NOT NULL,

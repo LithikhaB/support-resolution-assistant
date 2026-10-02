@@ -1,4 +1,3 @@
--- Preserve all rows; distinguish simulated outcomes from real verification.
 ALTER TABLE documents DROP CONSTRAINT IF EXISTS documents_outcome_status_check;
 ALTER TABLE documents ADD CONSTRAINT documents_outcome_status_check
     CHECK (outcome_status IN ('unknown','verified_resolved','simulated_resolved')) NOT VALID;

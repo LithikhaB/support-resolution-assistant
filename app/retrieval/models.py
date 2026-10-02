@@ -1,4 +1,5 @@
 """Validated retrieval inputs and evidence-bearing vector results."""
+
 from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -7,15 +8,20 @@ from app.ingestion.schema import DocType, Severity
 
 
 class RetrievalFilters(BaseModel):
+    """Allow only explicit supported document filters."""
+
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
     doc_type: DocType | None = None
     intent: str | None = Field(default=None, min_length=1, max_length=100)
     severity: Severity | None = None
     ticket_type: str | None = Field(default=None, min_length=1, max_length=100)
+    product: str | None = Field(default=None, min_length=1, max_length=100)
     queue: str | None = Field(default=None, min_length=1, max_length=100)
 
 
 class RetrievalRequest(BaseModel):
+    """Bound query length, result count and supported filters."""
+
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
     query: str = Field(min_length=1, max_length=10000)
     top_k: int = Field(default=10, ge=1, le=100, strict=True)
@@ -23,6 +29,8 @@ class RetrievalRequest(BaseModel):
 
 
 class EvidenceResult(BaseModel):
+    """Preserve source evidence independently of retrieval ranking scores."""
+
     chunk_id: int
     doc_id: str
     chunk_index: int
@@ -36,6 +44,8 @@ class EvidenceResult(BaseModel):
 
 
 class VectorResult(EvidenceResult):
+    """Expose cosine distance, similarity and semantic rank alongside evidence."""
+
     cosine_distance: float = Field(allow_inf_nan=False)
     cosine_similarity: float = Field(allow_inf_nan=False)
     vector_rank: int
@@ -43,13 +53,17 @@ class VectorResult(EvidenceResult):
 
 
 class BM25Result(EvidenceResult):
+    """Expose lexical score and rank alongside evidence."""
+
     bm25_score: float = Field(allow_inf_nan=False)
     bm25_rank: int
     sources: list[Literal["bm25"]] = Field(default_factory=lambda: ["bm25"])
 
 
 class HybridResult(EvidenceResult):
-    rrf_score: float
+    """Expose fused rank and individual source contributions alongside evidence."""
+
+    rrf_score: float = Field(ge=0, allow_inf_nan=False)
     vector_contribution: float = 0.0
     bm25_contribution: float = 0.0
     hybrid_rank: int
@@ -61,21 +75,26 @@ class HybridResult(EvidenceResult):
 
 
 class SearchRequest(RetrievalRequest):
+    """Validate mode-specific retrieval options for API and CLI callers."""
+
     top_k: int = Field(default=5, ge=1, le=100, strict=True)
-    mode: Literal['bm25', 'vector', 'hybrid'] = 'hybrid'
+    mode: Literal["bm25", "vector", "hybrid"] = "hybrid"
     candidate_k: int | None = Field(default=None, ge=1, le=100, strict=True)
 
-    @model_validator(mode='after')
+    @model_validator(mode="after")
     def validate_candidates(self):
+        """Reject candidate pools that cannot satisfy the requested hybrid result count."""
         if self.candidate_k is not None:
-            if self.mode != 'hybrid':
-                raise ValueError('candidate_k applies only to hybrid search')
+            if self.mode != "hybrid":
+                raise ValueError("candidate_k applies only to hybrid search")
             if self.candidate_k < self.top_k:
-                raise ValueError('candidate_k must be at least top_k')
+                raise ValueError("candidate_k must be at least top_k")
         return self
 
 
 class SearchResponse(BaseModel):
-    mode: Literal['bm25', 'vector', 'hybrid']
+    """Return ranked evidence and measured request duration."""
+
+    mode: Literal["bm25", "vector", "hybrid"]
     results: list[HybridResult | VectorResult | BM25Result]
     elapsed_ms: float = Field(ge=0, allow_inf_nan=False)

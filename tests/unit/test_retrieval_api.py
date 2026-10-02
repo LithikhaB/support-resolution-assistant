@@ -1,8 +1,8 @@
 from unittest.mock import Mock
 
-from fastapi.testclient import TestClient
 import psycopg
 import pytest
+from fastapi.testclient import TestClient
 
 from app.main import app
 from app.retrieval.embeddings import EmbeddingInputTooLong
@@ -14,7 +14,7 @@ from app.retrieval.vector_search import RetrievalUnavailable
 @pytest.fixture
 def api():
     service = Mock()
-    service.search.return_value = SearchResponse(mode='hybrid', results=[], elapsed_ms=1)
+    service.search.return_value = SearchResponse(mode="hybrid", results=[], elapsed_ms=1)
     app.dependency_overrides[get_retrieval_service] = lambda: service
     try:
         yield TestClient(app), service
@@ -24,55 +24,70 @@ def api():
 
 def test_retrieve_default_and_empty_result(api):
     client, service = api
-    response = client.post('/api/v1/retrieve', json={'query': ' router '})
+    response = client.post("/api/v1/retrieve", json={"query": " router "})
     assert response.status_code == 200
-    assert response.json() == {'mode': 'hybrid', 'results': [], 'elapsed_ms': 1}
+    assert response.json() == {"mode": "hybrid", "results": [], "elapsed_ms": 1}
     request = service.search.call_args.args[0]
-    assert request.query == 'router' and request.top_k == 5
+    assert request.query == "router" and request.top_k == 5
 
 
-@pytest.mark.parametrize('values', [
-    {'query': ''}, {'query': ' '}, {'query': 'a' * 10001}, {'query': 5},
-    {'top_k': 101}, {'top_k': True}, {'top_k': 0}, {'mode': 'rag'},
-    {'candidate_k': 3}, {'candidate_k': 101}, {'candidate_k': True},
-    {'mode': 'bm25', 'candidate_k': 50}, {'filters': {'unknown': 'value'}},
-])
+@pytest.mark.parametrize(
+    "values",
+    [
+        {"query": ""},
+        {"query": " "},
+        {"query": "a" * 10001},
+        {"query": 5},
+        {"top_k": 101},
+        {"top_k": True},
+        {"top_k": 0},
+        {"mode": "rag"},
+        {"candidate_k": 3},
+        {"candidate_k": 101},
+        {"candidate_k": True},
+        {"mode": "bm25", "candidate_k": 50},
+        {"filters": {"unknown": "value"}},
+    ],
+)
 def test_api_rejects_invalid_requests_without_retrieval(api, values):
     client, service = api
-    response = client.post('/api/v1/retrieve', json={'query': 'router', **values})
+    response = client.post("/api/v1/retrieve", json={"query": "router", **values})
     assert response.status_code == 422
     service.search.assert_not_called()
 
 
-@pytest.mark.parametrize('error,status', [
-    (EmbeddingInputTooLong('private input'), 422),
-    (psycopg.errors.QueryCanceled('private query'), 504),
-    (psycopg.OperationalError('private password'), 503),
-    (psycopg.errors.UndefinedTable('private schema'), 503),
-    (RetrievalUnavailable('private configuration'), 503),
-    (OSError('private model path'), 503),
-])
+@pytest.mark.parametrize(
+    "error,status",
+    [
+        (EmbeddingInputTooLong("private input"), 422),
+        (psycopg.errors.QueryCanceled("private query"), 504),
+        (psycopg.OperationalError("private password"), 503),
+        (psycopg.errors.UndefinedTable("private schema"), 503),
+        (RetrievalUnavailable("private configuration"), 503),
+        (OSError("private model path"), 503),
+    ],
+)
 def test_failures_are_actionable_and_sanitized(api, error, status, caplog):
     client, service = api
     service.search.side_effect = error
-    response = client.post('/api/v1/retrieve', json={'query': 'secret complaint'})
+    response = client.post("/api/v1/retrieve", json={"query": "secret complaint"})
     assert response.status_code == status
-    assert 'private' not in response.text + caplog.text
-    assert 'secret complaint' not in caplog.text
-    assert client.get('/api/v1/health').status_code == 200
+    assert "private" not in response.text + caplog.text
+    assert "secret complaint" not in caplog.text
+    assert client.get("/api/v1/health").status_code == 200
 
 
-@pytest.mark.parametrize('mode', ['bm25', 'vector', 'hybrid'])
+@pytest.mark.parametrize("mode", ["bm25", "vector", "hybrid"])
 def test_service_routes_and_logs_without_query(mode, caplog):
-    retrievers = {name: Mock() for name in ('bm25', 'vector', 'hybrid')}
+    retrievers = {name: Mock() for name in ("bm25", "vector", "hybrid")}
     for retriever in retrievers.values():
         retriever.search.return_value = []
     service = RetrievalService(**retrievers)
-    with caplog.at_level('INFO'):
-        response = service.search(SearchRequest(query='private customer text', mode=mode))
+    with caplog.at_level("INFO"):
+        response = service.search(SearchRequest(query="private customer text", mode=mode))
     assert response.mode == mode and response.elapsed_ms >= 0
     retrievers[mode].search.assert_called_once()
-    assert 'private customer text' not in caplog.text
+    assert "private customer text" not in caplog.text
     for name, retriever in retrievers.items():
         if name != mode:
             retriever.search.assert_not_called()
@@ -80,15 +95,16 @@ def test_service_routes_and_logs_without_query(mode, caplog):
 
 def test_cli_prints_empty_result_and_handles_unavailability(monkeypatch, capsys):
     from scripts import test_retrieval
+
     service = Mock()
-    service.search.return_value = SearchResponse(mode='hybrid', results=[], elapsed_ms=1)
-    monkeypatch.setattr(test_retrieval, 'get_retrieval_service', lambda: service)
-    monkeypatch.setattr('sys.argv', ['test_retrieval', 'router'])
+    service.search.return_value = SearchResponse(mode="hybrid", results=[], elapsed_ms=1)
+    monkeypatch.setattr(test_retrieval, "get_retrieval_service", lambda: service)
+    monkeypatch.setattr("sys.argv", ["test_retrieval", "router"])
     test_retrieval.main()
-    assert 'No matching evidence' in capsys.readouterr().out
-    service.search.side_effect = RetrievalUnavailable('private details')
+    assert "No matching evidence" in capsys.readouterr().out
+    service.search.side_effect = RetrievalUnavailable("private details")
     with pytest.raises(SystemExit) as error:
         test_retrieval.main()
     assert error.value.code == 1
     output = capsys.readouterr().err
-    assert 'unavailable' in output and 'private' not in output
+    assert "unavailable" in output and "private" not in output

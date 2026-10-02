@@ -41,7 +41,9 @@ class SupportDocument(BaseModel):
     body: str = Field(min_length=MIN_BODY_CHARS)
     resolution: str | None = None
     response: str | None = None
-    outcome_status: str = Field(default="unknown", pattern="^(unknown|verified_resolved|simulated_resolved)$")
+    outcome_status: str = Field(
+        default="unknown", pattern="^(unknown|verified_resolved|simulated_resolved)$"
+    )
     ticket_type: str | None = None
     priority: Severity | None = None
     intent: str | None = None
@@ -52,12 +54,22 @@ class SupportDocument(BaseModel):
 
     @model_validator(mode="after")
     def validate_evidence(self) -> "SupportDocument":
+        """Enforce distinct real, simulated, unknown and knowledge-base evidence semantics."""
         if self.doc_type == DocType.RESOLVED_TICKET:
-            if not self.resolution or self.outcome_status not in {"verified_resolved", "simulated_resolved"}:
-                raise ValueError("Resolved tickets require a resolution and an explicit resolved outcome")
+            if not self.resolution or self.outcome_status not in {
+                "verified_resolved",
+                "simulated_resolved",
+            }:
+                raise ValueError(
+                    "Resolved tickets require a resolution and an explicit resolved outcome"
+                )
             if self.outcome_status == "simulated_resolved":
-                if self.metadata.get("is_synthetic") is not True or not self.metadata.get("scenario_family"):
-                    raise ValueError("Simulated resolutions require synthetic provenance and scenario_family")
+                if self.metadata.get("is_synthetic") is not True or not self.metadata.get(
+                    "scenario_family"
+                ):
+                    raise ValueError(
+                        "Simulated resolutions require synthetic provenance and scenario_family"
+                    )
             elif self.metadata.get("is_synthetic"):
                 raise ValueError("Synthetic tickets cannot claim verified real-world resolution")
             evidence = self.metadata.get("outcome_evidence")

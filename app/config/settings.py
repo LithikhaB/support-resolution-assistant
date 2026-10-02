@@ -15,7 +15,7 @@ class Settings(BaseSettings):
 
     postgres_user: str = "support"
     postgres_password: str = "support_pass"
-    postgres_db: str = "support_db"
+    postgres_db: str = "support_telecom"
     postgres_host: str = "localhost"
     postgres_port: int = 5432
     postgres_connect_timeout: int = 3
@@ -25,10 +25,6 @@ class Settings(BaseSettings):
     retrieval_rrf_constant: int = Field(default=60, ge=1)
     indexing_statement_timeout_ms: int = Field(default=600000, ge=1000)
     indexing_batch_size: int = Field(default=128, ge=1, le=1024)
-
-    groq_api_key: str = ""
-    groq_model: str = "llama-3.3-70b-versatile"
-    groq_base_url: str = "https://api.groq.com/openai/v1"
 
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
     embedding_dim: int = Field(default=384, ge=1)
@@ -40,27 +36,15 @@ class Settings(BaseSettings):
     chunk_overlap_tokens: int = Field(default=32, ge=0)
 
     data_dir: Path = Path("data")
-
-    @property
-    def database_url(self) -> str:
-        return (
-            f"postgresql://{self.postgres_user}:{self.postgres_password}"
-            f"@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
-        )
-
-    @property
-    def raw_dir(self) -> Path:
-        return self.data_dir / "raw"
+    corpus_dir: Path = Path("data/synthetic/telecom_v1")
 
     @property
     def processed_dir(self) -> Path:
-        return self.data_dir / "processed"
-
-    @property
-    def evaluation_dir(self) -> Path:
-        return self.data_dir / "evaluation"
+        """Return the active corpus artifacts, separate from the shared model cache."""
+        return self.corpus_dir / "processed"
 
 
 @lru_cache
 def get_settings() -> Settings:
+    """Reuse validated environment settings within the current process."""
     return Settings()

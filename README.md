@@ -1,148 +1,167 @@
-# AI-Powered Support Resolution Assistant
+# AI-Powered Telecom Support Resolution Assistant
 
-**Intelligent Support Ticket Resolution Assistant — Synapt assessment**
+A local-first support retrieval service for the Synapt hiring challenge.
 
-## 1. Problem statement and my understanding
+## Problem and understanding
 
-A telecom support agent receives a raw complaint such as:
+An agent receives a complaint such as: “My broadband drops every evening. I already restarted the router twice, and I work from home.” Keyword search can miss equivalent symptoms, and a similar ticket does not necessarily establish the same cause.
 
-> “My broadband drops every evening around 8. I have restarted the router twice, and I work from home.”
+The complete application should:
 
-My understanding is that the agent needs a useful next action supported by evidence, not just a list of tickets containing the word “router”. The assistant must address these problems:
+1. Identify the service, category, impact, sentiment and attempted troubleshooting.
+2. Retrieve relevant historical cases and knowledge-base procedures.
+3. Draft evidence-grounded next steps with citations.
+4. Ask for missing information or escalate when a diagnosis is unsupported.
+5. Accept new knowledge and ticket categories without redesigning storage.
 
-- **Different words, similar issues:** “internet keeps dropping” and “intermittent broadband disconnection” may describe the same symptom.
-- **Important context:** the time pattern, affected service, business impact and troubleshooting already attempted should influence the response.
-- **Manual triage:** intent, product, severity and sentiment must be interpreted from an unstructured complaint.
-- **Trust in recommendations:** each proposed step should have a traceable source, and a historical reply must not be mistaken for a proven fix.
-- **Changing knowledge:** new ticket categories and updated procedures must become usable without redesigning the system.
+## Current implementation
 
-The target is a small service that retrieves relevant past tickets and KB articles, then drafts a step-by-step, cited resolution. Missing information or weak evidence should lead to clarification or escalation.
+- Deterministic synthetic telecom dataset with linked diagnostic findings and KB procedures.
+- Validated evidence schema distinguishing simulated outcomes from real verification.
+- Token-aware chunks and pinned local CPU embeddings.
+- PostgreSQL/pgvector indexing with transactional batches, safe resume and cosine HNSW.
+- BM25 keyword search, vector search and Reciprocal Rank Fusion.
+- FastAPI endpoint, one retrieval CLI, smoke checks and regression tests.
 
-## 2. What the current solution has
-
-**Existing workflow described in the assessment**
-
-- Agents search past tickets and knowledge articles using keywords.
-- Agents manually interpret the complaint, compare possible matches and select the next steps.
-- Exact terms are useful, but wording differences can hide relevant evidence.
-
-**What this implementation has today**
-
-- Validated ingestion, source provenance, reproducible data preparation and a PostgreSQL schema.
-- Token-aware complaint chunks, with historical replies linked through the parent document.
-- Phase C CPU embedding service and an executable model smoke test; verification results are listed below.
-- FastAPI liveness/readiness endpoints. Search, reranking and resolution generation remain planned.
-
-## 3. What our solution does
-
-1. **Prepare trustworthy evidence — implemented:** clean records, preserve answer variants and keep unknown outcomes explicit.
-2. **Represent complaint meaning — implemented through Phase C:** create bounded chunks and normalized 384-dimensional local embeddings.
-3. **Retrieve complementary matches — planned:** combine BM25 exact-term matches with pgvector semantic search using Reciprocal Rank Fusion, rather than adding incompatible raw scores.
-4. **Understand and refine — planned:** extract complaint context and rerank candidates before building the evidence set.
-5. **Recommend a justified action — planned:** generate cited steps, account for attempted troubleshooting, and request clarification or escalate when needed.
-6. **Adapt and measure — planned:** handle data updates and evolving categories, compare retrieval approaches and monitor latency, failures and evidence quality.
+Classification, reranking, answer generation, citation-support validation and a UI are **not implemented yet**. Current responses are ranked evidence, not generated resolutions. Retrieval does not guarantee relevance or automatically abstain on out-of-domain queries.
 
 ## Architecture
-![Architecuture Diagram](docs/architecture%20v1.svg)
 
-## 5. Dataset and selection rationale
+![Project architecture](docs/architecture%20v1.svg)
 
-I chose [Tobi-Bueck/customer-support-tickets on Hugging Face](https://huggingface.co/datasets/Tobi-Bueck/customer-support-tickets) because its customer-message and agent-response structure fits the complaint-to-evidence workflow. 
+The SVG shows the full project direction. The implemented request path is:
 
-|  | Hugging Face dataset | GitHub dataset |
-|---|---|---|
-| Text structure | Subject, complaint body and agent answer | Complaint type, descriptor and resolution description; no separate customer-message body column |
-| Domain fit | Mixed customer/IT support topics | Municipal complaints, including noise, parking, rodents and sanitation |
-| Useful source labels | Type, queue, priority, language and tags | Agency, borough, complaint type and status |
-| Outcome evidence | A reply is not proof of a completed resolution | Includes status and closed date; resolution descriptions are present for 22,760 of 25,921 rows |
-| Fit for this prototype | Better suited to natural-language complaint matching and response evidence | Useful for civic-ticket routing and lifecycle analysis |
+`API / CLI → RetrievalService → BM25 + pgvector → RRF → ranked evidence`
 
-**Reasons for the choice**
+## Dataset
 
-- Paired complaint/response text supports retrieval now and evidence assembly later.
-- Source labels support filtering and selected evaluation tasks without inventing labels.
-- The Hugging Face loader supports a repeatable download pinned to a source revision.
+The primary corpus is `data/synthetic/telecom_v1`, authored for a fictional provider. The previous Hugging Face corpus was useful for engineering retrieval, but its broad domains and unverified replies do not supply focused telecom resolution evidence.
 
-**Current local corpus**
+| Artifact | Count and purpose |
+|---|---|
+| Scenario families | 60 distinct authored diagnostic situations across 15 categories |
+| Tickets | 480 simulated resolved variants and 30 unresolved cases |
+| KB | 60 conditional fictional-provider procedures |
+| Train / development / test | 240 / 120 / 120 labeled queries; families never cross splits |
+| Challenge cases | 15 ambiguity, safety, unsupported-request and repeated-action cases |
+| Indexed corpus | 330 documents: 240 training tickets, 30 unresolved cases and 60 KB articles |
 
-| Measure | Count |
-|---|---:|
-| English source rows | 28,261 |
-| Cleaned historical responses | 23,790 |
-| Exact complaint groups | 23,643 |
-| Retrieval chunks | 23,811 |
-| Documents needing multiple chunks | 21 |
+Categories: broadband outage, intermittent broadband, slow broadband, Wi-Fi connectivity, router/ONT hardware, mobile coverage, voice failure, mobile data, SIM/eSIM activation, porting, SMS/OTP, roaming, billing disputes, payment restoration and IPTV.
 
-**Limitations we preserve explicitly**
+Only `processed/documents.jsonl` is indexed. The full `tickets.jsonl` includes held-out examples and must not be used wholesale as a retrieval corpus. Each scenario has controlled wording/tone variants; those variants are not independent real incidents. Outcome status is `simulated_resolved` or `unknown`, never fabricated real verification.
 
-- This is mixed-domain, templated data, not a reviewed telecom corpus. Public availability does not establish that tickets are real customer incidents.
-- All current records have `outcome_status=unknown`; `response` stores the agent reply and `resolution` remains null. Source ticket type/priority are distinct from inferred intent/severity.
-- Product, sentiment, intent and severity are not populated without evidence. No KB collection is present yet.
-- The dataset card lists **CC BY-NC 4.0**. GitHub's closure/status fields are an advantage it retains; our choice does not prove superior retrieval quality.
-- The legacy local snapshot's upstream revision is unknown. File hashes identify it; future downloads record an immutable revision. Near-duplicate leakage still needs evaluation controls.
+The corpus has automatic integrity checks, not expert certification. Human review and independent evaluation questions remain necessary. All KBs are available at evaluation time; this tests unseen tickets against existing knowledge, not unseen knowledge. See [interview notes](docs/interview-notes.md).
 
-## 6. Implementation phases
+## Setup and run
 
-Each row lists the phase's two main outcomes. Day 2 is deliberately limited to retrieval foundations.
-
-| Stage | Scope | Status |
-|---|---|---|
-| Day 1 — foundation | Normalize records and track provenance; validate evidence and database readiness | Complete |
-| Day 2 A — inspection | Inspect data/schema; agree retrieval design | Complete |
-| Day 2 B — chunking | Preserve short complaints; split long text within token limits | Complete |
-| Day 2 C — embeddings | Reuse a local CPU model; validate batched document and query vectors | Complete |
-| Day 2 D — indexing | Transactionally load documents/chunks; build cosine HNSW index | Planned |
-| Day 2 E — vector search | Search pgvector with parameterized SQL; return distances and evidence | Planned |
-| Day 2 F — BM25 | Index the same chunk corpus; retrieve exact technical terms | Planned |
-| Day 2 G — fusion | Merge candidates using RRF; expose ranks and source contributions | Planned |
-| Day 2 H — API and CLI | Add bounded retrieval requests; demonstrate ranked results | Planned |
-| Day 2 I — verification | Test retrieval/failure paths; run clearly labeled smoke queries | Planned |
-| Day 3 — understanding and RAG | Extract context and rerank evidence; draft cited steps with clarification/escalation | Planned |
-| Day 4 — evaluation | Build reviewed query sets; compare retrieval and answer-grounding quality | Planned |
-| Day 5 — operations and UI | Add ingestion/update behavior and runtime metrics; expose an agent interface | Planned |
-| Day 6 — final demonstration | Verify reproducible setup; present results and limitations | Planned |
-
-## 7. Phase-wise endpoints and progress
-
-| Phase | Working interface | What it provides |
-|---|---|---|
-| Day 1 | `GET /api/v1/health` | Process liveness |
-| Day 1 | `GET /api/v1/ready` | PostgreSQL/schema readiness; 503 when unavailable/incomplete |
-| Day 1 | `GET /docs` | FastAPI interactive documentation |
-| Day 1 | `python -m scripts.prepare_data` | Documents JSONL and quality/checksum manifest |
-| Day 2 B | `python -m scripts.chunk_documents --preview 2` | Chunk JSONL, manifest and optional preview |
-| Day 2 C | `python -m scripts.check_embeddings` | Real-model CPU check for dimensions, normalization and reuse |
-| Day 2 D | `python -m scripts.index_documents` **planned** | Batched database indexing |
-| Day 2 H | `POST /api/v1/retrieve` **planned** | Ranked evidence, not an LLM answer |
-| Day 3 | `POST /api/v1/tickets/resolve` **planned** | Structured analysis and cited resolution draft |
-
-### Run and test Phase C
-
-From the repository root with the virtual environment activated:
-
-```powershell
-python -m pip install -r requirements.txt
-python -m pytest tests/unit/test_embeddings.py -q -p no:cacheprovider
-python -m scripts.check_embeddings
-python -m pytest -q -p no:cacheprovider
-```
-
-- The first smoke test downloads the pinned model into `data/models/`; inference runs on CPU. No complaint text is sent to an embedding API.
-- Subsequent runs can be offline: `$env:EMBEDDING_LOCAL_FILES_ONLY="true"`. If the cache is incomplete, unset it or use `"false"` once with network access.
-- `EMBEDDING_BATCH_SIZE=32` is a conservative CPU starting point. Documents and queries use the same model revision as the Phase B tokenizer, normalized vectors and a 256-token ceiling. Overlong input is rejected instead of silently truncated.
-- Model/service reuse is per process. Unit tests inject fake models and never download weights. Corpus-wide vector generation and database writes belong to Phase D.
-
-### Foundation setup and verification
+Use Python 3.12 or newer, PostgreSQL 16 with pgvector, and a CPU-capable machine. Commands below are PowerShell from the repository root.
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-# First setup only; preserve an existing .env
+python -m pip install -r requirements-dev.txt
 if (-not (Test-Path .env)) { Copy-Item .env.example .env }
-# Configure PostgreSQL values in .env, then start the database if needed
-docker compose up -d
-python -m scripts.migrate_db
-python -m scripts.check_db
-uvicorn app.main:app --reload
 ```
+
+Set database credentials in `.env`. The active defaults are:
+
+```dotenv
+POSTGRES_DB=support_telecom
+CORPUS_DIR=data/synthetic/telecom_v1
+```
+
+Start PostgreSQL if needed. Skip Docker startup if your existing PostgreSQL server is already running on the configured port.
+
+```powershell
+docker compose up -d
+python -m scripts.setup_database
+python -m scripts.prepare_synthetic
+python -m scripts.chunk_documents
+python -m scripts.index_documents
+python -m scripts.check_index
+```
+
+`setup_database` creates the configured database if missing, then initializes tables and constraints. The database user needs create-database and extension privileges, or an administrator must provision them first. Existing rows are preserved. Do not use `docker compose down -v` to switch datasets.
+
+First use may download the pinned model into `data/models`. After caching, offline operation can be enabled:
+
+```powershell
+$env:EMBEDDING_LOCAL_FILES_ONLY="true"
+$env:TOKENIZER_LOCAL_FILES_ONLY="true"
+```
+
+Expected index check: `status=ready`, 330 documents, 330 embeddings, zero invalid embeddings and a valid cosine HNSW index. Reindexing unchanged artifacts skips existing documents. Old Hugging Face rows remain in the separate `support_db` database, not the active index.
+
+### CLI
+
+```powershell
+python -m scripts.test_retrieval "Wi-Fi is poor upstairs but Ethernet works" --top-k 5
+python -m scripts.test_retrieval "Two payments for one invoice have both settled" --mode bm25 --queue billing_support
+python -m scripts.test_retrieval "Outgoing calls fail but mobile data works" --mode vector --product mobile_voice --json
+```
+
+Modes are `hybrid` (default), `vector`, and `bm25`. Filters include queue, intent, product and document type. Use `--help` for arguments. Historical response and simulated resolution are displayed separately.
+
+### API
+
+```powershell
+python -m uvicorn app.main:app --reload
+```
+
+Open http://127.0.0.1:8000/docs. Submit to `POST /api/v1/retrieve`:
+
+```json
+{
+  "query": "Wi-Fi is poor upstairs but Ethernet works",
+  "top_k": 5,
+  "mode": "hybrid",
+  "filters": {"intent": "wifi_connectivity"}
+}
+```
+
+The response includes evidence, document IDs, source ranks, score contributions and elapsed milliseconds. `GET /api/v1/health` checks process liveness; `GET /api/v1/ready` checks database schema availability only. `scripts.check_index` checks the retrieval index.
+
+| Response | Meaning |
+|---|---|
+| 200, empty results | No eligible documents or no lexical matches |
+| 422 | Invalid fields, candidate depth, or model token budget exceeded |
+| 503 | Database/index/model unavailable or indexing in progress |
+| 504 | Database statement timed out |
+
+Queries are limited to 10,000 characters; semantic modes also enforce the model's 256-token ceiling. `top_k` is 1–100. Hybrid `candidate_k` must be at least top_k and at most 100. Unsupported filter fields are rejected. There is no automatic query truncation.
+
+## Verification
+
+Verified after the dataset switch: **131 tests passed**, Ruff lint/format checks passed, and all three live API modes returned synthetic-only evidence. Nine smoke searches completed. A second indexing run skipped all 330 documents and generated zero new embeddings. Existing FastAPI/Starlette dependency deprecation warnings remain.
+
+```powershell
+python -m ruff check app scripts tests
+python -m ruff format --check app scripts tests
+python -m pytest tests/unit -q -p no:cacheprovider
+$env:RUN_DB_TESTS="1"
+python -m pytest -q -p no:cacheprovider
+python -m scripts.check_retrieval --output data/evaluation/retrieval_report.json
+```
+
+Unit tests do not download models or require PostgreSQL. Integration tests use rollback-only schemas, plus a separate-session indexing-lock check; do not run them while indexing. Smoke queries exercise all three retrieval modes but are not a relevance benchmark. Test coverage includes corrupt artifacts, train/test leakage, synthetic evidence claims, invalid filters, duplicate rank candidates, SQL injection inputs, cache refresh, transaction rollback and indexing/retrieval exclusion.
+
+## Project structure and progress
+
+| Location | Responsibility |
+|---|---|
+| `app/api` | HTTP contracts and sanitized errors |
+| `app/ingestion` | Evidence validation, synthetic generation and artifact integrity |
+| `app/retrieval` | Chunking, embeddings, lexical/semantic search and fusion |
+| `app/database` | Connections, persistence and indexing checkpoints |
+| `scripts` | Dataset preparation, database setup, indexing and demonstrations |
+| `tests` | Unit and opt-in PostgreSQL integration tests |
+
+| Phase | Status |
+|---|---|
+| Day 1: foundation and evidence semantics | Complete |
+| Day 2 A–D: design, chunks, embeddings and indexing | Complete |
+| Day 2 E–I: vector/BM25/fusion, API/CLI and verification | Complete |
+| Dataset transition: telecom corpus and isolated index | Complete |
+| Day 3: local understanding, reranking and grounded drafting | Planned |
+| Day 4: reviewed evaluation and model comparisons | Planned |
+| Later: evolving categories, operational metrics and UI | Planned |

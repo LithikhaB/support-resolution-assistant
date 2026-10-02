@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
-from app.api.routes import router
 from app.api.retrieval import router as retrieval_router
+from app.api.routes import router
 from app.config.settings import get_settings
 from app.monitoring.logging import configure_logging
 

@@ -1,17 +1,20 @@
 """Build the staged synthetic corpus without changing the active HF corpus/database."""
+
 import argparse
 import json
 from pathlib import Path
 
+from app.config.settings import get_settings
 from app.ingestion.synthetic import write_dataset
 
 
 def main():
+    """Run the command and report its result to the terminal."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output', type=Path, default=Path('data/synthetic/telecom_v1'))
+    parser.add_argument("--output", type=Path, default=get_settings().corpus_dir)
     args = parser.parse_args()
     print(json.dumps(write_dataset(args.output), indent=2))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

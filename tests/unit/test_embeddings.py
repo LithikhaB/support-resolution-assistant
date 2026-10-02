@@ -16,15 +16,19 @@ def components():
     model = Mock()
     model.get_embedding_dimension.return_value = 384
     model.max_seq_length = 256
+
     def encode(texts, **kwargs):
         result = np.zeros((len(texts), 384), dtype=np.float32)
         for i, text in enumerate(texts):
             result[i, 0] = len(text)
             result[i, 1] = 1
         return result
+
     model.encode.side_effect = encode
     tokenizer = Mock()
-    tokenizer.encode.side_effect = lambda text: SimpleNamespace(ids=list(range(len(text.split()) + 2)))
+    tokenizer.encode.side_effect = lambda text: SimpleNamespace(
+        ids=list(range(len(text.split()) + 2))
+    )
     return settings, model, tokenizer
 
 
@@ -59,8 +63,10 @@ def test_invalid_inputs_fail_before_inference(components, text):
     components[1].encode.assert_not_called()
 
 
-@pytest.mark.parametrize("bad", [np.zeros((1, 383)), np.zeros((1, 384)),
-                                  np.full((1,384), np.nan), np.full((1,384), np.inf)])
+@pytest.mark.parametrize(
+    "bad",
+    [np.zeros((1, 383)), np.zeros((1, 384)), np.full((1, 384), np.nan), np.full((1, 384), np.inf)],
+)
 def test_invalid_model_outputs_rejected(components, bad):
     components[1].encode.side_effect = None
     components[1].encode.return_value = bad
@@ -99,14 +105,21 @@ def test_token_limit_includes_special_tokens(components):
 
 def test_default_loader_uses_cpu_pinned_revision_and_local_cache(components, monkeypatch):
     import sys
+
     settings, model, tokenizer = components
     constructor = Mock(return_value=model)
-    monkeypatch.setitem(sys.modules, "sentence_transformers", SimpleNamespace(SentenceTransformer=constructor))
+    monkeypatch.setitem(
+        sys.modules, "sentence_transformers", SimpleNamespace(SentenceTransformer=constructor)
+    )
     loader = Mock(return_value=(tokenizer, None))
     monkeypatch.setattr(embeddings, "load_tokenizer", loader)
     EmbeddingService(settings)
     constructor.assert_called_once_with(
-        settings.embedding_model, device="cpu", revision=settings.tokenizer_revision,
+        settings.embedding_model,
+        device="cpu",
+        revision=settings.tokenizer_revision,
         cache_folder=str(settings.data_dir / "models"),
-        local_files_only=settings.embedding_local_files_only, trust_remote_code=False)
+        local_files_only=settings.embedding_local_files_only,
+        trust_remote_code=False,
+    )
     loader.assert_called_once()

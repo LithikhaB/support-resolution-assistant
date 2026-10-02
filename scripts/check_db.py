@@ -1,8 +1,10 @@
 """Check the live Day 1 database without changing any data."""
+
 from app.api.routes import readiness
 
 
 def main() -> None:
+    """Run the command and report its result to the terminal."""
     result = readiness()
     if isinstance(result, dict):
         print("Database ready: pgvector, documents, chunks and Day 1 schema found.")

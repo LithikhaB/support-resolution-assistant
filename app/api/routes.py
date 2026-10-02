@@ -2,20 +2,21 @@ import psycopg
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
-from app.database.connection import get_connection
-
 from app.config.settings import get_settings
+from app.database.connection import get_connection
 
 router = APIRouter(prefix="/api/v1")
 
 
 @router.get("/health")
 def health() -> dict[str, str]:
+    """Report process liveness independently of database availability."""
     return {"status": "ok", "service": get_settings().app_name}
+
 
 @router.get("/ready")
 def readiness():
-    """Day 1 database/schema readiness; does not claim retrieval is available."""
+    """Check database schema availability; retrieval readiness is checked separately."""
     try:
         with get_connection() as conn:
             with conn.cursor() as cursor:
@@ -29,7 +30,11 @@ def readiness():
                 """)
                 checks = cursor.fetchone()
         if not checks or not all(checks):
-            return JSONResponse(status_code=503, content={"status": "not_ready", "reason": "database_schema"})
+            return JSONResponse(
+                status_code=503, content={"status": "not_ready", "reason": "database_schema"}
+            )
     except psycopg.Error:
-        return JSONResponse(status_code=503, content={"status": "not_ready", "reason": "database_unavailable"})
-    return {"status": "ready", "scope": "day1_database"}
+        return JSONResponse(
+            status_code=503, content={"status": "not_ready", "reason": "database_unavailable"}
+        )
+    return {"status": "ready", "scope": "database_schema"}

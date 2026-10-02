@@ -1,26 +1,36 @@
 """Verify Phase B artifacts and stream one document with its chunks at a time."""
+
 import json
 from dataclasses import dataclass
 from itertools import groupby
 from pathlib import Path
 
-from app.ingestion.artifacts import file_sha256
-from app.ingestion.loader import digest
+from app.ingestion.artifacts import digest, file_sha256
 from app.ingestion.schema import SupportDocument
 from app.retrieval.chunking import Chunk, DocumentChunker
 
 
 @dataclass
 class CorpusDocument:
+    """Associate one parent document with its chunks for reproducible indexing."""
+
     document: SupportDocument
     chunks: list[Chunk]
 
     def fingerprint(self, config_hash: str) -> str:
-        return digest({"document": self.document.model_dump(mode="json"),
-                       "chunks": [c.content for c in self.chunks], "config_hash": config_hash})
+        """Hash parent evidence, chunks and model configuration for safe resume."""
+        return digest(
+            {
+                "document": self.document.model_dump(mode="json"),
+                "chunks": [c.content for c in self.chunks],
+                "config_hash": config_hash,
+            }
+        )
 
 
 class PreparedCorpus:
+    """Validate checksums and stream chunks with their parent evidence."""
+
     def __init__(self, directory: Path):
         self.documents_path = directory / "documents.jsonl"
         self.chunks_path = directory / "chunks.jsonl"
@@ -28,14 +38,20 @@ class PreparedCorpus:
         self.verify_hashes()
 
     def verify_hashes(self) -> None:
+        """Reject artifacts changed since their chunk manifest was produced."""
         if file_sha256(self.documents_path) != self.manifest["source_sha256"]:
             raise ValueError("Document checksum mismatch; rerun preparation/chunking")
         if file_sha256(self.chunks_path) != self.manifest["output_sha256"]:
             raise ValueError("Chunk checksum mismatch; rerun chunking")
 
     def __iter__(self):
-        with self.documents_path.open(encoding="utf-8") as docs, self.chunks_path.open(encoding="utf-8") as chunks:
-            groups = iter(groupby((Chunk(**json.loads(line)) for line in chunks), key=lambda c: c.doc_id))
+        with (
+            self.documents_path.open(encoding="utf-8") as docs,
+            self.chunks_path.open(encoding="utf-8") as chunks,
+        ):
+            groups = iter(
+                groupby((Chunk(**json.loads(line)) for line in chunks), key=lambda c: c.doc_id)
+            )
             previous = ""
             for line in docs:
                 doc = SupportDocument.model_validate_json(line)
@@ -45,14 +61,16 @@ class PreparedCorpus:
                 group_id, group = next(groups, (None, []))
                 parts = list(group)
                 if group_id != doc.doc_id or not parts:
-                    raise ValueError("Chunks must match document order with at least one chunk per document")
+                    raise ValueError(
+                        "Chunks must match document order with at least one chunk per document"
+                    )
                 text = DocumentChunker.retrieval_text(doc)
                 for index, part in enumerate(parts):
                     if part.chunk_index != index or not part.content.strip():
                         raise ValueError("Chunk indexes must be contiguous and content non-empty")
                     if not (0 <= part.char_start < part.char_end <= len(text)):
                         raise ValueError("Chunk offsets are outside parent text")
-                    if text[part.char_start:part.char_end] != part.content:
+                    if text[part.char_start : part.char_end] != part.content:
                         raise ValueError("Chunk content does not match parent text")
                     if not 0 < part.token_count <= self.manifest["max_tokens_including_special"]:
                         raise ValueError("Invalid chunk token count")
@@ -61,6 +79,7 @@ class PreparedCorpus:
                 raise ValueError("Chunks contain unknown or extra documents")
 
     def validate(self) -> set[str]:
+        """Check document identities, chunk order, offsets and manifest counts."""
         ids = set()
         count = 0
         for item in self:
