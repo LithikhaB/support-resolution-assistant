@@ -24,3 +24,9 @@ def test_normalize_severity_aliases():
 def test_normalize_sentiment():
     assert normalize_sentiment("Frustrated") == Sentiment.FRUSTRATED
     assert normalize_sentiment("???") is None
+
+def test_cleaning_preserves_placeholders_and_normalizes_escaped_lines():
+    raw = r"<p>Hello &lt;name&gt;\nCall <tel_num>\r\nAccount <acc_num></p>"
+    result = clean_text(raw)
+    assert result == "Hello [name] Call [tel_num] Account [acc_num]"
+    assert clean_text(result) == result

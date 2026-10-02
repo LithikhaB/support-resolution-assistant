@@ -1,6 +1,7 @@
 from functools import lru_cache
 from pathlib import Path
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -17,6 +18,7 @@ class Settings(BaseSettings):
     postgres_db: str = "support_db"
     postgres_host: str = "localhost"
     postgres_port: int = 5432
+    postgres_connect_timeout: int = 3
 
     groq_api_key: str = ""
     groq_model: str = "llama-3.3-70b-versatile"
@@ -24,6 +26,10 @@ class Settings(BaseSettings):
 
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
     embedding_dim: int = 384
+    tokenizer_revision: str = "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
+    tokenizer_local_files_only: bool = False
+    chunk_max_tokens: int = Field(default=256, ge=8, le=256)
+    chunk_overlap_tokens: int = Field(default=32, ge=0)
 
     data_dir: Path = Path("data")
 
