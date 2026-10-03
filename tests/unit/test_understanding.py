@@ -10,6 +10,7 @@ from sklearn.linear_model import LogisticRegression
 
 from app.api import understanding as api
 from app.config.settings import Settings
+from app.llm.client import LanguageUnavailable
 from app.main import app
 from app.understanding.classifier import (
     CategoryClassifier,
@@ -225,6 +226,57 @@ def test_uncertain_classifier_requests_clarification_without_logging_text(caplog
     assert result.category is None and result.needs_clarification
     assert "private complaint" not in caplog.text
     assert result.severity.value == "unknown"
+
+
+def test_language_assisted_category_is_distinct_from_local_confidence():
+    from app.understanding.language import Interpretation
+
+    classifier = Mock()
+    classifier.artifact = artifact()
+    classifier.predict.return_value = [
+        CategoryCandidate(category="wifi_connectivity", score=0.2),
+        CategoryCandidate(category="broadband_outage", score=0.19),
+    ]
+    client = Mock()
+    text = "My Wi-Fi barely works upstairs."
+    client.generate.return_value = Interpretation(
+        products=[{"product": "home_wifi", "quote": "Wi-Fi"}],
+        facts=[],
+        category={"category": "wifi_connectivity", "quote": text},
+    )
+    service = UnderstandingService(
+        classifier, settings=Settings(_env_file=None, llm_enabled=True), language=client
+    )
+    result = service.analyze(AnalyzeRequest(query=text))
+    assert result.category == "wifi_connectivity" and result.category_basis == "language_assisted"
+    assert result.candidates[0].score == 0.2
+    assert result.category_evidence[0].text == text
+    client.generate.side_effect = LanguageUnavailable("provider_http_429")
+    fallback = service.analyze(AnalyzeRequest(query=text))
+    assert fallback.category is None and fallback.language_method == "rules_fallback"
+
+
+def test_empty_language_services_do_not_erase_local_billing_context():
+    from app.understanding.language import Interpretation
+
+    classifier = Mock()
+    classifier.artifact = artifact()
+    classifier.predict.return_value = [
+        CategoryCandidate(category="billing_dispute", score=0.8),
+        CategoryCandidate(category="payment_restoration", score=0.1),
+    ]
+    client = Mock()
+    client.generate.return_value = Interpretation(products=[], facts=[])
+    service = UnderstandingService(
+        classifier, settings=Settings(_env_file=None, llm_enabled=True), language=client
+    )
+    result = service.analyze(
+        AnalyzeRequest(query="I see two charges on my bill. Not sure whether one is a hold.")
+    )
+    assert result.category == "billing_dispute"
+    assert {p.product for p in result.products} == {"billing"}
+    assert any("pending or settled" in q for q in result.clarification_questions)
+    assert not any("Which service" in q for q in result.clarification_questions)
 
 
 @pytest.mark.parametrize("query", ["", " ", 123, "a" * 10001])

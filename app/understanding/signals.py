@@ -15,7 +15,7 @@ PRODUCT_PATTERNS = {
     "home_wifi": r"\bwi[ -]?fi\b",
     "router": r"\b(?:router|gateway|modem|access point)\b",
     "mobile": r"\b(?:mobile|phones?(?!\s+(?:number|support))|handsets?|SIM|eSIM|roaming|SMS|OTP|calls?|text messages?|login text|travel pack)\b",
-    "iptv": r"\b(?:IPTV|TV|television|set.top box)\b",
+    "iptv": r"\b(?:IPTV|TV|television|set.top box|live channels?)\b",
     "billing": r"\b(?:bills?|invoices?|payments?|charges?|refunds?|paid|account.*suspended)\b",
 }
 TONE_PATTERNS = {
@@ -25,7 +25,7 @@ TONE_PATTERNS = {
     "neutral": r"\b(?:calmly|please explain|please advise|reporting the observations)\b",
 }
 ACTION_PATTERNS = {
-    "restart_device": r"\b(?:restart(?:ed|ing)?|reboot(?:ed|ing)?|power[ -]cycl(?:e|ed|ing))\b",
+    "restart_device": r"\b(?:restart(?:ed|ing)?|reboot(?:ed|ing)?|power[ -]cycl(?:e|ed|ing)|unplugged\s+(?:it|(?:my|the)\s+(?:router|modem|ONT))\s+for\s+(?:\w+\s+){0,2}(?:minutes?|seconds?))\b",
     "test_wired_connection": r"\b(?:test(?:ed|ing)?|tried|check(?:ed|ing)?)\s+(?:(?:a|the|my)\s+)?(?:wired|Ethernet)\b",
     "check_cables": r"\b(?:check(?:ed|ing)?|reseat(?:ed|ing)?|swapp(?:ed|ing))\s+(?:(?:the|my|a)\s+)?(?:cables?|connectors?)\b",
     "compare_devices": r"\b(?:compar(?:ed|ing)|cross[ -]test(?:ed|ing)?)\b",
@@ -121,7 +121,7 @@ def assess_severity(text: str) -> RuleAssessment:
         (
             "medium",
             "reported_degradation_or_work_impact",
-            r"\b(?:drops?|disconnects?|disconnecting|buffering|slow|unstable|poor|weak signal|no service|no picture|activation.*pending|people calling me reach an error|affecting my work|cannot work|can[’\x27]t work)\b",
+            r"\b(?:drops?|cuts? out|freez(?:es|ing)|disconnects?|disconnecting|buffering|slow|unstable|poor|weak signal|no service|no picture|activation.*pending|people calling me reach an error|affecting my work|cannot work|can[’\x27]t work)\b",
         ),
         (
             "low",

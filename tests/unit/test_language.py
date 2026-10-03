@@ -9,7 +9,7 @@ import pytest
 from app.config.settings import Settings
 from app.llm.client import GroqClient, LanguageUnavailable
 from app.resolution.history import select_history
-from app.understanding.language import Interpretation, interpret
+from app.understanding.language import Interpretation, interpret, interpret_complaint
 
 
 def test_provider_failure_never_discloses_private_body_or_key():
@@ -61,6 +61,39 @@ def test_unavailable_test_keeps_exact_quote():
     _, facts = interpret(text, client)
     assert facts[0].value == "unavailable"
     assert text[facts[0].start : facts[0].end] == facts[0].text
+
+
+def test_category_proposal_requires_local_candidate_and_affected_service_agreement():
+    text = "My Wi-Fi barely works upstairs."
+    client = Mock()
+    client.generate.return_value = Interpretation(
+        products=[{"product": "home_wifi", "quote": "Wi-Fi"}],
+        facts=[],
+        category={"category": "wifi_connectivity", "quote": text},
+    )
+    _, _, category = interpret_complaint(text, client, category_options=["wifi_connectivity"])
+    assert category.category == "wifi_connectivity"
+    with pytest.raises(LanguageUnavailable, match="unsupported_category_proposal"):
+        interpret_complaint(text, client, category_options=["billing_dispute"])
+
+
+@pytest.mark.parametrize(
+    "category,quote,product",
+    [
+        ("billing_dispute", "My Wi-Fi fails", "home_wifi"),
+        ("wifi_connectivity", "invented quote", "home_wifi"),
+        ("wifi_connectivity", "My Wi-Fi fails", "landline"),
+    ],
+)
+def test_untraceable_or_service_incompatible_category_falls_back(category, quote, product):
+    client = Mock()
+    client.generate.return_value = Interpretation(
+        products=[{"product": product, "quote": "My Wi-Fi fails"}],
+        facts=[],
+        category={"category": category, "quote": quote},
+    )
+    with pytest.raises(LanguageUnavailable, match="unsupported_category_proposal"):
+        interpret_complaint("My Wi-Fi fails", client, category_options=[category])
 
 
 @pytest.mark.parametrize(

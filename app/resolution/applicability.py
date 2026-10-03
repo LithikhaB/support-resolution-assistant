@@ -17,6 +17,14 @@ def applicability_issue(procedure, analysis):
         return "different_service_scope"
     known = {(fact.name, fact.value) for fact in analysis.reported_facts}
     finding = procedure.quotes["condition"].text
+    if ("tv_symptom", "buffering") in known and re.search(
+        r"\b(?:entitlement|purchase|billing|display cable|local menu)\b", finding, re.I
+    ):
+        return "channel_entitlement_procedure_for_buffering"
+    if ("sms_scope", "one_sender") in known and re.search(
+        r"\b(?:service.center|donor|porting)\b", finding, re.I
+    ):
+        return "general_sms_procedure_for_single_sender_failure"
     if ("billing_status", "pending") in known and re.search(
         r"\b(?:settled|ledger is paid|ledger confirms duplicate)\b", finding, re.I
     ):

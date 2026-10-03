@@ -41,6 +41,8 @@ INSTRUCTION = """Write a concise, professional support-agent draft introduction 
 Use two or three short sentences, no greeting, no 'supplied plan', no 'recorded in our
 records', and no description of the application. Do not repeat the questions verbatim.
 Acknowledge the current complaint, relevant previous attempts, and latest answers.
+If previous_attempts is empty, omit discussion of earlier checks or attempts entirely.
+Missing troubleshooting history does not mean the customer has taken no steps.
 Explain the next workflow step from the supplied customer plan. Do not add troubleshooting
 instructions, diagnose a cause, promise a repair/refund/replacement, invent contact details,
 or claim a handoff happened. Do not repeat answered or impossible tests.
@@ -72,11 +74,25 @@ def add_language_draft(response, query, settings, client=None):
         "customer_plan": response.customer_plan.model_dump(),
         "questions": response.clarification_questions,
         "history": [h.model_dump() for h in response.historical_cases],
-        "candidate_procedures": [s.model_dump() for s in response.suggestions],
+        "candidate_procedures": [s.model_dump() for s in response.suggestions]
+        if response.customer_plan.title == "Suggested resolution for agent review"
+        else [],
     }
 
     def validate(candidate, provider):
         """Reject invented citations and unsupported prose before provider acceptance."""
+        if not response.acknowledged_actions and re.search(
+            r"\b(?:earlier checks|prior attempts|previous attempts|no prior troubleshooting steps|no troubleshooting (?:steps|attempts))\b",
+            candidate.summary,
+            re.I,
+        ):
+            raise LanguageUnavailable("unsupported_attempt_history")
+        if re.search(
+            r"\bI(?:['’]ll| will)\s+(?:start|check|inspect|repair|refund|replace|contact|book|arrange)\b",
+            candidate.summary,
+            re.I,
+        ):
+            raise LanguageUnavailable("unsupported_action_commitment")
         allowed = {h.citation_id for h in response.historical_cases}
         if re.search(r"\[[ST]\d+\]", candidate.summary):
             raise LanguageUnavailable("inline_citation_not_allowed")

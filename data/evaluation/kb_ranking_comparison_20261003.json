@@ -1,0 +1,3390 @@
+{
+  "purpose": "Synthetic development comparison using provisional author-assigned KB relevance, not real-world accuracy.",
+  "test_split_used": false,
+  "queries": 120,
+  "families": 15,
+  "dev_sha256": "fe5e48b90972fd715884404937ef65ba1c4f59ab55dd20fb2ea60f4f2c215e2c",
+  "corpus_sha256": "a93a4a53ee5b02af72571b1e528fa63cba8d9fc9ff378a4de4eef19a2f0be348",
+  "chunks_sha256": "8484ba33f895cac2711b8af46e1dc039e87f5c04d6d09b95372d9d7ba32d8670",
+  "scope": "knowledge_base",
+  "diversified": true,
+  "reranker_model": "cross-encoder/ms-marco-MiniLM-L6-v2",
+  "reranker_revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+  "top_k": 5,
+  "rerank_k": 20,
+  "timing_note": "Sequential CPU calls after model initialization; includes first inference. No load-test claims.",
+  "summary": {
+    "hybrid": {
+      "hit_at_k": 0.8,
+      "mrr_at_k": 0.6938888888888889
+    },
+    "reranked": {
+      "hit_at_k": 0.9,
+      "mrr_at_k": 0.7616666666666667
+    },
+    "candidate_hit_rate": 0.925,
+    "median_rerank_ms": 1408.5951499873772
+  },
+  "runs": [
+    {
+      "query_id": "query_BB03_01",
+      "scenario_family": "BB03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_BB01",
+        "syn_kb_ID04",
+        "syn_kb_HW04",
+        "syn_kb_HW01",
+        "syn_kb_WF02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_BB03",
+        "syn_kb_ID02",
+        "syn_kb_BB01",
+        "syn_kb_ID01",
+        "syn_kb_BB04"
+      ],
+      "rerank_ms": 1402.4692999664694
+    },
+    {
+      "query_id": "query_BB03_02",
+      "scenario_family": "BB03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_BB01",
+        "syn_kb_ID04",
+        "syn_kb_HW04",
+        "syn_kb_ID02",
+        "syn_kb_TV01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_BB03",
+        "syn_kb_ID02",
+        "syn_kb_BB01",
+        "syn_kb_ID01",
+        "syn_kb_BB04"
+      ],
+      "rerank_ms": 1620.575400069356
+    },
+    {
+      "query_id": "query_BB03_03",
+      "scenario_family": "BB03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_BB01",
+        "syn_kb_ID04",
+        "syn_kb_HW04",
+        "syn_kb_HW01",
+        "syn_kb_TV01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_BB03",
+        "syn_kb_ID02",
+        "syn_kb_BB01",
+        "syn_kb_SP04",
+        "syn_kb_ID01"
+      ],
+      "rerank_ms": 1952.0503000821918
+    },
+    {
+      "query_id": "query_BB03_04",
+      "scenario_family": "BB03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_BB01",
+        "syn_kb_ID04",
+        "syn_kb_HW04",
+        "syn_kb_TV01",
+        "syn_kb_HW01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_BB03",
+        "syn_kb_BB01",
+        "syn_kb_ID01",
+        "syn_kb_SP04",
+        "syn_kb_BB04"
+      ],
+      "rerank_ms": 1636.954299872741
+    },
+    {
+      "query_id": "query_BB03_05",
+      "scenario_family": "BB03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "candidate_hit": 0,
+      "hybrid_doc_ids": [
+        "syn_kb_HW01",
+        "syn_kb_ID04",
+        "syn_kb_WF02",
+        "syn_kb_HW04",
+        "syn_kb_TV01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_TV01",
+        "syn_kb_HW01",
+        "syn_kb_WF03",
+        "syn_kb_MC01",
+        "syn_kb_WF02"
+      ],
+      "rerank_ms": 1436.2910001073033
+    },
+    {
+      "query_id": "query_BB03_06",
+      "scenario_family": "BB03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "candidate_hit": 0,
+      "hybrid_doc_ids": [
+        "syn_kb_ID04",
+        "syn_kb_HW01",
+        "syn_kb_WF02",
+        "syn_kb_TV01",
+        "syn_kb_BB01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_TV01",
+        "syn_kb_HW01",
+        "syn_kb_MC01",
+        "syn_kb_WF02",
+        "syn_kb_WF03"
+      ],
+      "rerank_ms": 1351.1666997801512
+    },
+    {
+      "query_id": "query_BB03_07",
+      "scenario_family": "BB03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "candidate_hit": 0,
+      "hybrid_doc_ids": [
+        "syn_kb_ID04",
+        "syn_kb_HW01",
+        "syn_kb_WF02",
+        "syn_kb_HW04",
+        "syn_kb_TV01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_WF02",
+        "syn_kb_TV01",
+        "syn_kb_HW01",
+        "syn_kb_MC01",
+        "syn_kb_WF03"
+      ],
+      "rerank_ms": 1444.318699883297
+    },
+    {
+      "query_id": "query_BB03_08",
+      "scenario_family": "BB03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_TV01",
+        "syn_kb_ID04",
+        "syn_kb_WF02",
+        "syn_kb_HW01",
+        "syn_kb_HW04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_BB02",
+        "syn_kb_TV01",
+        "syn_kb_WF02",
+        "syn_kb_MC01",
+        "syn_kb_HW01"
+      ],
+      "rerank_ms": 1579.2836002074182
+    },
+    {
+      "query_id": "query_BD03_01",
+      "scenario_family": "BD03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_BD04",
+        "syn_kb_RM03",
+        "syn_kb_BD02",
+        "syn_kb_BD01",
+        "syn_kb_SP01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_MD04",
+        "syn_kb_BD04",
+        "syn_kb_BD01",
+        "syn_kb_MD02",
+        "syn_kb_SP01"
+      ],
+      "rerank_ms": 1460.3808999527246
+    },
+    {
+      "query_id": "query_BD03_02",
+      "scenario_family": "BD03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "candidate_hit": 0,
+      "hybrid_doc_ids": [
+        "syn_kb_BD04",
+        "syn_kb_RM03",
+        "syn_kb_PR02",
+        "syn_kb_BD02",
+        "syn_kb_BD01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_MD04",
+        "syn_kb_BD04",
+        "syn_kb_BD01",
+        "syn_kb_BD02",
+        "syn_kb_MD02"
+      ],
+      "rerank_ms": 2292.160199955106
+    },
+    {
+      "query_id": "query_BD03_03",
+      "scenario_family": "BD03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_BD04",
+        "syn_kb_RM03",
+        "syn_kb_BD02",
+        "syn_kb_PR02",
+        "syn_kb_BD01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_MD04",
+        "syn_kb_BD04",
+        "syn_kb_MD02",
+        "syn_kb_BD01",
+        "syn_kb_RM03"
+      ],
+      "rerank_ms": 1496.1702998261899
+    },
+    {
+      "query_id": "query_BD03_04",
+      "scenario_family": "BD03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "candidate_hit": 0,
+      "hybrid_doc_ids": [
+        "syn_kb_BD04",
+        "syn_kb_RM03",
+        "syn_kb_PR01",
+        "syn_kb_PR04",
+        "syn_kb_MD02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_MD04",
+        "syn_kb_BD04",
+        "syn_kb_MD02",
+        "syn_kb_RM03",
+        "syn_kb_BD01"
+      ],
+      "rerank_ms": 1354.2224999982864
+    },
+    {
+      "query_id": "query_BD03_05",
+      "scenario_family": "BD03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_BD04",
+        "syn_kb_RM03",
+        "syn_kb_BD02",
+        "syn_kb_PR04",
+        "syn_kb_BD01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_BD04",
+        "syn_kb_BD03",
+        "syn_kb_TV02",
+        "syn_kb_BD02",
+        "syn_kb_BD01"
+      ],
+      "rerank_ms": 1198.9223998971283
+    },
+    {
+      "query_id": "query_BD03_06",
+      "scenario_family": "BD03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_BD04",
+        "syn_kb_RM03",
+        "syn_kb_PR02",
+        "syn_kb_BD02",
+        "syn_kb_PR04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_BD04",
+        "syn_kb_BD03",
+        "syn_kb_TV02",
+        "syn_kb_BD02",
+        "syn_kb_BD01"
+      ],
+      "rerank_ms": 1661.1657000612468
+    },
+    {
+      "query_id": "query_BD03_07",
+      "scenario_family": "BD03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_BD04",
+        "syn_kb_BD02",
+        "syn_kb_RM03",
+        "syn_kb_PR02",
+        "syn_kb_TV02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_BD04",
+        "syn_kb_BD03",
+        "syn_kb_TV02",
+        "syn_kb_BD01",
+        "syn_kb_BD02"
+      ],
+      "rerank_ms": 1261.9264000095427
+    },
+    {
+      "query_id": "query_BD03_08",
+      "scenario_family": "BD03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_BD04",
+        "syn_kb_RM03",
+        "syn_kb_PR04",
+        "syn_kb_BD01",
+        "syn_kb_RM04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_BD04",
+        "syn_kb_BD03",
+        "syn_kb_TV02",
+        "syn_kb_BD01",
+        "syn_kb_BD02"
+      ],
+      "rerank_ms": 1299.2819000501186
+    },
+    {
+      "query_id": "query_HW03_01",
+      "scenario_family": "HW03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_HW03",
+        "syn_kb_HW01",
+        "syn_kb_BB01",
+        "syn_kb_WF02",
+        "syn_kb_BB02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_HW03",
+        "syn_kb_HW01",
+        "syn_kb_HW04",
+        "syn_kb_BB03",
+        "syn_kb_WF03"
+      ],
+      "rerank_ms": 1485.142600024119
+    },
+    {
+      "query_id": "query_HW03_02",
+      "scenario_family": "HW03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_HW03",
+        "syn_kb_BB01",
+        "syn_kb_HW01",
+        "syn_kb_BB02",
+        "syn_kb_WF03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_HW03",
+        "syn_kb_HW01",
+        "syn_kb_HW04",
+        "syn_kb_BB03",
+        "syn_kb_WF03"
+      ],
+      "rerank_ms": 1225.8741999976337
+    },
+    {
+      "query_id": "query_HW03_03",
+      "scenario_family": "HW03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_HW03",
+        "syn_kb_BB01",
+        "syn_kb_HW01",
+        "syn_kb_BB02",
+        "syn_kb_WF03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_HW03",
+        "syn_kb_HW01",
+        "syn_kb_HW04",
+        "syn_kb_BB03",
+        "syn_kb_HW02"
+      ],
+      "rerank_ms": 1383.5203000344336
+    },
+    {
+      "query_id": "query_HW03_04",
+      "scenario_family": "HW03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_HW03",
+        "syn_kb_HW04",
+        "syn_kb_BB01",
+        "syn_kb_BB02",
+        "syn_kb_HW01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_HW03",
+        "syn_kb_HW01",
+        "syn_kb_BB03",
+        "syn_kb_HW04",
+        "syn_kb_HW02"
+      ],
+      "rerank_ms": 1511.4831000100821
+    },
+    {
+      "query_id": "query_HW03_05",
+      "scenario_family": "HW03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_HW03",
+        "syn_kb_BB02",
+        "syn_kb_ID03",
+        "syn_kb_SP04",
+        "syn_kb_BB03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_HW03",
+        "syn_kb_SP04",
+        "syn_kb_ID03",
+        "syn_kb_BB04",
+        "syn_kb_WF03"
+      ],
+      "rerank_ms": 1317.8743000607938
+    },
+    {
+      "query_id": "query_HW03_06",
+      "scenario_family": "HW03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_HW03",
+        "syn_kb_BB02",
+        "syn_kb_ID03",
+        "syn_kb_SP04",
+        "syn_kb_ID02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_HW03",
+        "syn_kb_SP04",
+        "syn_kb_WF01",
+        "syn_kb_ID03",
+        "syn_kb_BB04"
+      ],
+      "rerank_ms": 1247.8130999952555
+    },
+    {
+      "query_id": "query_HW03_07",
+      "scenario_family": "HW03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_HW03",
+        "syn_kb_ID03",
+        "syn_kb_BB02",
+        "syn_kb_SP04",
+        "syn_kb_BB03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_HW03",
+        "syn_kb_SP04",
+        "syn_kb_ID03",
+        "syn_kb_WF01",
+        "syn_kb_WF03"
+      ],
+      "rerank_ms": 1214.8357999976724
+    },
+    {
+      "query_id": "query_HW03_08",
+      "scenario_family": "HW03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_HW03",
+        "syn_kb_SP04",
+        "syn_kb_BB03",
+        "syn_kb_ID03",
+        "syn_kb_BB02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_HW03",
+        "syn_kb_SP04",
+        "syn_kb_ID03",
+        "syn_kb_WF01",
+        "syn_kb_WF03"
+      ],
+      "rerank_ms": 1296.455099945888
+    },
+    {
+      "query_id": "query_ID03_01",
+      "scenario_family": "ID03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "candidate_hit": 0,
+      "hybrid_doc_ids": [
+        "syn_kb_BB01",
+        "syn_kb_SP02",
+        "syn_kb_ID02",
+        "syn_kb_ID01",
+        "syn_kb_WF02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_ID02",
+        "syn_kb_SP02",
+        "syn_kb_ID04",
+        "syn_kb_SP03",
+        "syn_kb_ID01"
+      ],
+      "rerank_ms": 1461.3220999017358
+    },
+    {
+      "query_id": "query_ID03_02",
+      "scenario_family": "ID03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "candidate_hit": 0,
+      "hybrid_doc_ids": [
+        "syn_kb_ID02",
+        "syn_kb_BB01",
+        "syn_kb_SP02",
+        "syn_kb_ID01",
+        "syn_kb_ID04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_ID02",
+        "syn_kb_SP02",
+        "syn_kb_ID01",
+        "syn_kb_ID04",
+        "syn_kb_SP03"
+      ],
+      "rerank_ms": 1470.1262000016868
+    },
+    {
+      "query_id": "query_ID03_03",
+      "scenario_family": "ID03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "candidate_hit": 0,
+      "hybrid_doc_ids": [
+        "syn_kb_BB01",
+        "syn_kb_ID02",
+        "syn_kb_SP02",
+        "syn_kb_ID01",
+        "syn_kb_ID04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_ID02",
+        "syn_kb_SP02",
+        "syn_kb_ID04",
+        "syn_kb_ID01",
+        "syn_kb_SP03"
+      ],
+      "rerank_ms": 1327.7853999752551
+    },
+    {
+      "query_id": "query_ID03_04",
+      "scenario_family": "ID03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "candidate_hit": 0,
+      "hybrid_doc_ids": [
+        "syn_kb_BB01",
+        "syn_kb_ID02",
+        "syn_kb_SP02",
+        "syn_kb_ID01",
+        "syn_kb_HW04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_ID02",
+        "syn_kb_SP02",
+        "syn_kb_WF03",
+        "syn_kb_ID04",
+        "syn_kb_SP03"
+      ],
+      "rerank_ms": 1480.170700000599
+    },
+    {
+      "query_id": "query_ID03_05",
+      "scenario_family": "ID03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_BB01",
+        "syn_kb_ID03",
+        "syn_kb_ID04",
+        "syn_kb_BB02",
+        "syn_kb_ID01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_ID01",
+        "syn_kb_ID03",
+        "syn_kb_HW04",
+        "syn_kb_HW03",
+        "syn_kb_HW02"
+      ],
+      "rerank_ms": 1208.1523002125323
+    },
+    {
+      "query_id": "query_ID03_06",
+      "scenario_family": "ID03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_BB01",
+        "syn_kb_ID02",
+        "syn_kb_ID03",
+        "syn_kb_ID04",
+        "syn_kb_BB02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_ID01",
+        "syn_kb_ID03",
+        "syn_kb_HW04",
+        "syn_kb_HW02",
+        "syn_kb_BB02"
+      ],
+      "rerank_ms": 1898.472199914977
+    },
+    {
+      "query_id": "query_ID03_07",
+      "scenario_family": "ID03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_BB01",
+        "syn_kb_ID03",
+        "syn_kb_BB02",
+        "syn_kb_ID04",
+        "syn_kb_ID01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_ID01",
+        "syn_kb_HW04",
+        "syn_kb_ID03",
+        "syn_kb_HW03",
+        "syn_kb_HW02"
+      ],
+      "rerank_ms": 1610.4283998720348
+    },
+    {
+      "query_id": "query_ID03_08",
+      "scenario_family": "ID03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_BB01",
+        "syn_kb_ID03",
+        "syn_kb_BB02",
+        "syn_kb_HW04",
+        "syn_kb_WF03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_ID01",
+        "syn_kb_HW04",
+        "syn_kb_ID03",
+        "syn_kb_HW02",
+        "syn_kb_BB02"
+      ],
+      "rerank_ms": 1378.2123001292348
+    },
+    {
+      "query_id": "query_MC03_01",
+      "scenario_family": "MC03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_RM02",
+        "syn_kb_RM03",
+        "syn_kb_MC02",
+        "syn_kb_HW04",
+        "syn_kb_MD03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_MC03",
+        "syn_kb_MC02",
+        "syn_kb_RM02",
+        "syn_kb_RM03",
+        "syn_kb_RM04"
+      ],
+      "rerank_ms": 1589.8525000084192
+    },
+    {
+      "query_id": "query_MC03_02",
+      "scenario_family": "MC03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_RM02",
+        "syn_kb_RM03",
+        "syn_kb_MC04",
+        "syn_kb_MC02",
+        "syn_kb_MD03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_MC03",
+        "syn_kb_MC02",
+        "syn_kb_RM02",
+        "syn_kb_RM03",
+        "syn_kb_RM04"
+      ],
+      "rerank_ms": 1301.0805000085384
+    },
+    {
+      "query_id": "query_MC03_03",
+      "scenario_family": "MC03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_RM02",
+        "syn_kb_RM03",
+        "syn_kb_MC02",
+        "syn_kb_MD03",
+        "syn_kb_HW04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_MC03",
+        "syn_kb_RM02",
+        "syn_kb_MC02",
+        "syn_kb_RM03",
+        "syn_kb_RM04"
+      ],
+      "rerank_ms": 1757.5999000109732
+    },
+    {
+      "query_id": "query_MC03_04",
+      "scenario_family": "MC03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_RM02",
+        "syn_kb_MD03",
+        "syn_kb_RM04",
+        "syn_kb_RM03",
+        "syn_kb_MC02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_MC03",
+        "syn_kb_RM02",
+        "syn_kb_MC02",
+        "syn_kb_RM03",
+        "syn_kb_SM02"
+      ],
+      "rerank_ms": 1168.280699988827
+    },
+    {
+      "query_id": "query_MC03_05",
+      "scenario_family": "MC03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_MC03",
+        "syn_kb_MC04",
+        "syn_kb_RM02",
+        "syn_kb_WF02",
+        "syn_kb_VC04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_MC03",
+        "syn_kb_MC04",
+        "syn_kb_WF02",
+        "syn_kb_VC03",
+        "syn_kb_MC02"
+      ],
+      "rerank_ms": 1170.5093998461962
+    },
+    {
+      "query_id": "query_MC03_06",
+      "scenario_family": "MC03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_MC03",
+        "syn_kb_MC04",
+        "syn_kb_MC02",
+        "syn_kb_RM02",
+        "syn_kb_VC03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_MC03",
+        "syn_kb_MC04",
+        "syn_kb_WF02",
+        "syn_kb_VC03",
+        "syn_kb_MC02"
+      ],
+      "rerank_ms": 1421.8680998310447
+    },
+    {
+      "query_id": "query_MC03_07",
+      "scenario_family": "MC03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_MC03",
+        "syn_kb_MC04",
+        "syn_kb_RM02",
+        "syn_kb_VC04",
+        "syn_kb_VC03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_MC03",
+        "syn_kb_MC04",
+        "syn_kb_WF02",
+        "syn_kb_VC03",
+        "syn_kb_MC02"
+      ],
+      "rerank_ms": 1758.778000017628
+    },
+    {
+      "query_id": "query_MC03_08",
+      "scenario_family": "MC03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_MC03",
+        "syn_kb_MC04",
+        "syn_kb_VC03",
+        "syn_kb_MC02",
+        "syn_kb_RM02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_MC03",
+        "syn_kb_MC04",
+        "syn_kb_WF02",
+        "syn_kb_VC03",
+        "syn_kb_MC02"
+      ],
+      "rerank_ms": 3004.584399983287
+    },
+    {
+      "query_id": "query_MD03_01",
+      "scenario_family": "MD03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_MD03",
+        "syn_kb_MC03",
+        "syn_kb_SA01",
+        "syn_kb_RM02",
+        "syn_kb_VC03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_MD03",
+        "syn_kb_MC03",
+        "syn_kb_SA02",
+        "syn_kb_SA01",
+        "syn_kb_SA04"
+      ],
+      "rerank_ms": 2571.5998001396656
+    },
+    {
+      "query_id": "query_MD03_02",
+      "scenario_family": "MD03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_MD03",
+        "syn_kb_MC03",
+        "syn_kb_RM02",
+        "syn_kb_SA01",
+        "syn_kb_RM04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_MD03",
+        "syn_kb_MC03",
+        "syn_kb_SA02",
+        "syn_kb_SA01",
+        "syn_kb_SA04"
+      ],
+      "rerank_ms": 1597.109700087458
+    },
+    {
+      "query_id": "query_MD03_03",
+      "scenario_family": "MD03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_MD03",
+        "syn_kb_MC03",
+        "syn_kb_SA01",
+        "syn_kb_VC03",
+        "syn_kb_RM02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_MD03",
+        "syn_kb_MC03",
+        "syn_kb_SA02",
+        "syn_kb_SA01",
+        "syn_kb_SA04"
+      ],
+      "rerank_ms": 2204.543200088665
+    },
+    {
+      "query_id": "query_MD03_04",
+      "scenario_family": "MD03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_MD03",
+        "syn_kb_MC03",
+        "syn_kb_SA01",
+        "syn_kb_RM02",
+        "syn_kb_VC03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_MD03",
+        "syn_kb_MC03",
+        "syn_kb_SA02",
+        "syn_kb_SA01",
+        "syn_kb_SA04"
+      ],
+      "rerank_ms": 2472.70999988541
+    },
+    {
+      "query_id": "query_MD03_05",
+      "scenario_family": "MD03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_MD03",
+        "syn_kb_RM02",
+        "syn_kb_MC03",
+        "syn_kb_RM04",
+        "syn_kb_MD04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_MD03",
+        "syn_kb_MC03",
+        "syn_kb_RM02",
+        "syn_kb_RM04",
+        "syn_kb_MD01"
+      ],
+      "rerank_ms": 2652.368700131774
+    },
+    {
+      "query_id": "query_MD03_06",
+      "scenario_family": "MD03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_MD03",
+        "syn_kb_RM02",
+        "syn_kb_MC03",
+        "syn_kb_RM04",
+        "syn_kb_MD04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_MD03",
+        "syn_kb_MC03",
+        "syn_kb_RM02",
+        "syn_kb_RM04",
+        "syn_kb_MD01"
+      ],
+      "rerank_ms": 2059.4201998319477
+    },
+    {
+      "query_id": "query_MD03_07",
+      "scenario_family": "MD03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_MD03",
+        "syn_kb_RM02",
+        "syn_kb_MC03",
+        "syn_kb_RM04",
+        "syn_kb_SA01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_MD03",
+        "syn_kb_MC03",
+        "syn_kb_RM02",
+        "syn_kb_RM04",
+        "syn_kb_MD01"
+      ],
+      "rerank_ms": 1514.6976998075843
+    },
+    {
+      "query_id": "query_MD03_08",
+      "scenario_family": "MD03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_MD03",
+        "syn_kb_RM02",
+        "syn_kb_MC03",
+        "syn_kb_RM04",
+        "syn_kb_SA01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_MD03",
+        "syn_kb_MC03",
+        "syn_kb_RM02",
+        "syn_kb_RM04",
+        "syn_kb_MD01"
+      ],
+      "rerank_ms": 1446.4470001403242
+    },
+    {
+      "query_id": "query_NP03_01",
+      "scenario_family": "NP03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_NP03",
+        "syn_kb_VC03",
+        "syn_kb_VC01",
+        "syn_kb_VC04",
+        "syn_kb_SM04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_VC01",
+        "syn_kb_VC03",
+        "syn_kb_NP03",
+        "syn_kb_VC04",
+        "syn_kb_SM02"
+      ],
+      "rerank_ms": 1458.5502999834716
+    },
+    {
+      "query_id": "query_NP03_02",
+      "scenario_family": "NP03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_NP03",
+        "syn_kb_VC03",
+        "syn_kb_VC01",
+        "syn_kb_VC04",
+        "syn_kb_ID02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_VC01",
+        "syn_kb_VC03",
+        "syn_kb_NP03",
+        "syn_kb_VC04",
+        "syn_kb_SM02"
+      ],
+      "rerank_ms": 1898.9877998828888
+    },
+    {
+      "query_id": "query_NP03_03",
+      "scenario_family": "NP03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.2
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_NP03",
+        "syn_kb_VC01",
+        "syn_kb_VC03",
+        "syn_kb_VC04",
+        "syn_kb_SM04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_VC01",
+        "syn_kb_VC03",
+        "syn_kb_VC04",
+        "syn_kb_SM02",
+        "syn_kb_NP03"
+      ],
+      "rerank_ms": 1918.1957999244332
+    },
+    {
+      "query_id": "query_NP03_04",
+      "scenario_family": "NP03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.2
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_NP03",
+        "syn_kb_VC03",
+        "syn_kb_VC01",
+        "syn_kb_VC04",
+        "syn_kb_NP02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_VC01",
+        "syn_kb_VC03",
+        "syn_kb_VC04",
+        "syn_kb_SM02",
+        "syn_kb_NP03"
+      ],
+      "rerank_ms": 1822.3460000008345
+    },
+    {
+      "query_id": "query_NP03_05",
+      "scenario_family": "NP03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_NP03",
+        "syn_kb_SM04",
+        "syn_kb_NP01",
+        "syn_kb_MC04",
+        "syn_kb_MC03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_NP03",
+        "syn_kb_NP04",
+        "syn_kb_SM04",
+        "syn_kb_NP02",
+        "syn_kb_VC01"
+      ],
+      "rerank_ms": 1647.9582998435944
+    },
+    {
+      "query_id": "query_NP03_06",
+      "scenario_family": "NP03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_NP03",
+        "syn_kb_MC04",
+        "syn_kb_SM04",
+        "syn_kb_SA01",
+        "syn_kb_MC03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_NP03",
+        "syn_kb_NP04",
+        "syn_kb_SM04",
+        "syn_kb_NP02",
+        "syn_kb_VC01"
+      ],
+      "rerank_ms": 1500.3875000402331
+    },
+    {
+      "query_id": "query_NP03_07",
+      "scenario_family": "NP03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_NP03",
+        "syn_kb_SM04",
+        "syn_kb_SA01",
+        "syn_kb_MC04",
+        "syn_kb_MC03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_NP03",
+        "syn_kb_NP04",
+        "syn_kb_SM04",
+        "syn_kb_NP02",
+        "syn_kb_VC01"
+      ],
+      "rerank_ms": 1508.8277000468224
+    },
+    {
+      "query_id": "query_NP03_08",
+      "scenario_family": "NP03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_NP03",
+        "syn_kb_SA01",
+        "syn_kb_SM04",
+        "syn_kb_MC04",
+        "syn_kb_MC03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_NP03",
+        "syn_kb_NP04",
+        "syn_kb_SM04",
+        "syn_kb_NP02",
+        "syn_kb_VC01"
+      ],
+      "rerank_ms": 2072.1458001062274
+    },
+    {
+      "query_id": "query_PR03_01",
+      "scenario_family": "PR03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.2
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_NP01",
+        "syn_kb_PR02",
+        "syn_kb_NP04",
+        "syn_kb_WF04",
+        "syn_kb_PR03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_PR03",
+        "syn_kb_PR02",
+        "syn_kb_WF04",
+        "syn_kb_BB04",
+        "syn_kb_NP02"
+      ],
+      "rerank_ms": 2456.01570000872
+    },
+    {
+      "query_id": "query_PR03_02",
+      "scenario_family": "PR03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.2
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_PR02",
+        "syn_kb_NP01",
+        "syn_kb_WF04",
+        "syn_kb_NP04",
+        "syn_kb_PR03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_PR03",
+        "syn_kb_PR02",
+        "syn_kb_WF04",
+        "syn_kb_NP02",
+        "syn_kb_BB04"
+      ],
+      "rerank_ms": 1827.0492998417467
+    },
+    {
+      "query_id": "query_PR03_03",
+      "scenario_family": "PR03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.2
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_PR02",
+        "syn_kb_NP01",
+        "syn_kb_WF04",
+        "syn_kb_NP04",
+        "syn_kb_PR03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_PR02",
+        "syn_kb_PR03",
+        "syn_kb_WF04",
+        "syn_kb_NP02",
+        "syn_kb_BB04"
+      ],
+      "rerank_ms": 1387.174699921161
+    },
+    {
+      "query_id": "query_PR03_04",
+      "scenario_family": "PR03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_PR03",
+        "syn_kb_PR01",
+        "syn_kb_PR02",
+        "syn_kb_NP01",
+        "syn_kb_PR04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_PR03",
+        "syn_kb_PR02",
+        "syn_kb_NP02",
+        "syn_kb_WF04",
+        "syn_kb_PR04"
+      ],
+      "rerank_ms": 1969.7679001837969
+    },
+    {
+      "query_id": "query_PR03_05",
+      "scenario_family": "PR03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_NP01",
+        "syn_kb_PR03",
+        "syn_kb_PR02",
+        "syn_kb_BD01",
+        "syn_kb_PR04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_PR03",
+        "syn_kb_PR02",
+        "syn_kb_BD01",
+        "syn_kb_PR04",
+        "syn_kb_PR01"
+      ],
+      "rerank_ms": 1200.8102999534458
+    },
+    {
+      "query_id": "query_PR03_06",
+      "scenario_family": "PR03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_PR03",
+        "syn_kb_PR02",
+        "syn_kb_BD01",
+        "syn_kb_PR04",
+        "syn_kb_NP01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_PR03",
+        "syn_kb_PR02",
+        "syn_kb_BD01",
+        "syn_kb_PR04",
+        "syn_kb_BB02"
+      ],
+      "rerank_ms": 1150.0363000668585
+    },
+    {
+      "query_id": "query_PR03_07",
+      "scenario_family": "PR03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_PR02",
+        "syn_kb_PR03",
+        "syn_kb_NP01",
+        "syn_kb_BD01",
+        "syn_kb_BD02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_PR03",
+        "syn_kb_PR02",
+        "syn_kb_BD01",
+        "syn_kb_PR04",
+        "syn_kb_PR01"
+      ],
+      "rerank_ms": 1220.1905001420528
+    },
+    {
+      "query_id": "query_PR03_08",
+      "scenario_family": "PR03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_PR03",
+        "syn_kb_PR04",
+        "syn_kb_PR02",
+        "syn_kb_PR01",
+        "syn_kb_BD01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_PR03",
+        "syn_kb_PR02",
+        "syn_kb_PR04",
+        "syn_kb_BD01",
+        "syn_kb_PR01"
+      ],
+      "rerank_ms": 1132.034600013867
+    },
+    {
+      "query_id": "query_RM03_01",
+      "scenario_family": "RM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_RM03",
+        "syn_kb_BD04",
+        "syn_kb_RM01",
+        "syn_kb_TV02",
+        "syn_kb_RM04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_RM03",
+        "syn_kb_RM01",
+        "syn_kb_RM04",
+        "syn_kb_TV02",
+        "syn_kb_RM02"
+      ],
+      "rerank_ms": 1207.4800999835134
+    },
+    {
+      "query_id": "query_RM03_02",
+      "scenario_family": "RM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_RM03",
+        "syn_kb_BD04",
+        "syn_kb_RM01",
+        "syn_kb_MD02",
+        "syn_kb_BB04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_RM03",
+        "syn_kb_RM01",
+        "syn_kb_RM04",
+        "syn_kb_MD04",
+        "syn_kb_RM02"
+      ],
+      "rerank_ms": 1242.658699862659
+    },
+    {
+      "query_id": "query_RM03_03",
+      "scenario_family": "RM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_RM03",
+        "syn_kb_BD04",
+        "syn_kb_RM01",
+        "syn_kb_RM04",
+        "syn_kb_BB04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_RM03",
+        "syn_kb_RM01",
+        "syn_kb_RM02",
+        "syn_kb_MD04",
+        "syn_kb_RM04"
+      ],
+      "rerank_ms": 1230.9759999625385
+    },
+    {
+      "query_id": "query_RM03_04",
+      "scenario_family": "RM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_RM03",
+        "syn_kb_RM04",
+        "syn_kb_BD04",
+        "syn_kb_RM01",
+        "syn_kb_SA01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_RM03",
+        "syn_kb_RM01",
+        "syn_kb_RM02",
+        "syn_kb_RM04",
+        "syn_kb_MD04"
+      ],
+      "rerank_ms": 1290.999700082466
+    },
+    {
+      "query_id": "query_RM03_05",
+      "scenario_family": "RM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_RM03",
+        "syn_kb_RM01",
+        "syn_kb_RM04",
+        "syn_kb_RM02",
+        "syn_kb_MD03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_RM03",
+        "syn_kb_RM04",
+        "syn_kb_RM01",
+        "syn_kb_RM02",
+        "syn_kb_MD03"
+      ],
+      "rerank_ms": 1307.267300086096
+    },
+    {
+      "query_id": "query_RM03_06",
+      "scenario_family": "RM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_RM03",
+        "syn_kb_RM01",
+        "syn_kb_RM04",
+        "syn_kb_RM02",
+        "syn_kb_MD03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_RM03",
+        "syn_kb_RM04",
+        "syn_kb_RM01",
+        "syn_kb_RM02",
+        "syn_kb_MD03"
+      ],
+      "rerank_ms": 1352.5255999993533
+    },
+    {
+      "query_id": "query_RM03_07",
+      "scenario_family": "RM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_RM03",
+        "syn_kb_RM01",
+        "syn_kb_RM04",
+        "syn_kb_RM02",
+        "syn_kb_MD03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_RM03",
+        "syn_kb_RM04",
+        "syn_kb_RM01",
+        "syn_kb_RM02",
+        "syn_kb_MD03"
+      ],
+      "rerank_ms": 1409.3015999533236
+    },
+    {
+      "query_id": "query_RM03_08",
+      "scenario_family": "RM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_RM03",
+        "syn_kb_RM04",
+        "syn_kb_RM01",
+        "syn_kb_MD03",
+        "syn_kb_RM02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_RM03",
+        "syn_kb_RM01",
+        "syn_kb_RM04",
+        "syn_kb_RM02",
+        "syn_kb_MD03"
+      ],
+      "rerank_ms": 1431.6157000139356
+    },
+    {
+      "query_id": "query_SA03_01",
+      "scenario_family": "SA03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_SA03",
+        "syn_kb_SA01",
+        "syn_kb_SA02",
+        "syn_kb_NP01",
+        "syn_kb_MC03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_SA03",
+        "syn_kb_SA01",
+        "syn_kb_SA02",
+        "syn_kb_SA04",
+        "syn_kb_VC04"
+      ],
+      "rerank_ms": 1441.682399949059
+    },
+    {
+      "query_id": "query_SA03_02",
+      "scenario_family": "SA03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_SA03",
+        "syn_kb_SA01",
+        "syn_kb_SA02",
+        "syn_kb_MC03",
+        "syn_kb_SA04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_SA03",
+        "syn_kb_SA01",
+        "syn_kb_SA02",
+        "syn_kb_SA04",
+        "syn_kb_VC04"
+      ],
+      "rerank_ms": 1231.3757000956684
+    },
+    {
+      "query_id": "query_SA03_03",
+      "scenario_family": "SA03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_SA03",
+        "syn_kb_SA01",
+        "syn_kb_SA02",
+        "syn_kb_MC03",
+        "syn_kb_SA04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_SA03",
+        "syn_kb_SA01",
+        "syn_kb_SA02",
+        "syn_kb_SA04",
+        "syn_kb_VC04"
+      ],
+      "rerank_ms": 1283.6039001122117
+    },
+    {
+      "query_id": "query_SA03_04",
+      "scenario_family": "SA03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_SA03",
+        "syn_kb_SA01",
+        "syn_kb_SA02",
+        "syn_kb_MC03",
+        "syn_kb_SA04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_SA03",
+        "syn_kb_SA01",
+        "syn_kb_SA02",
+        "syn_kb_SA04",
+        "syn_kb_VC04"
+      ],
+      "rerank_ms": 1289.4113000947982
+    },
+    {
+      "query_id": "query_SA03_05",
+      "scenario_family": "SA03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_SA03",
+        "syn_kb_NP04",
+        "syn_kb_SA01",
+        "syn_kb_BB04",
+        "syn_kb_SA02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_NP04",
+        "syn_kb_SA01",
+        "syn_kb_SA03",
+        "syn_kb_SA02",
+        "syn_kb_VC01"
+      ],
+      "rerank_ms": 1295.1608998700976
+    },
+    {
+      "query_id": "query_SA03_06",
+      "scenario_family": "SA03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_SA03",
+        "syn_kb_NP04",
+        "syn_kb_SA01",
+        "syn_kb_BB04",
+        "syn_kb_SA02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_NP04",
+        "syn_kb_SA01",
+        "syn_kb_SA03",
+        "syn_kb_SA02",
+        "syn_kb_VC01"
+      ],
+      "rerank_ms": 1420.7522000651807
+    },
+    {
+      "query_id": "query_SA03_07",
+      "scenario_family": "SA03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_SA03",
+        "syn_kb_NP04",
+        "syn_kb_SA01",
+        "syn_kb_BB04",
+        "syn_kb_SA02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_NP04",
+        "syn_kb_SA01",
+        "syn_kb_SA03",
+        "syn_kb_SA02",
+        "syn_kb_BB02"
+      ],
+      "rerank_ms": 1383.699500001967
+    },
+    {
+      "query_id": "query_SA03_08",
+      "scenario_family": "SA03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_SA03",
+        "syn_kb_NP04",
+        "syn_kb_SA01",
+        "syn_kb_BB02",
+        "syn_kb_NP02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_NP04",
+        "syn_kb_SA01",
+        "syn_kb_SA03",
+        "syn_kb_SA02",
+        "syn_kb_BB02"
+      ],
+      "rerank_ms": 1267.2945000231266
+    },
+    {
+      "query_id": "query_SM03_01",
+      "scenario_family": "SM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_SM03",
+        "syn_kb_SM01",
+        "syn_kb_SM04",
+        "syn_kb_MC04",
+        "syn_kb_SM02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_SM03",
+        "syn_kb_SM02",
+        "syn_kb_MC04",
+        "syn_kb_SM04",
+        "syn_kb_SM01"
+      ],
+      "rerank_ms": 1293.5985999647528
+    },
+    {
+      "query_id": "query_SM03_02",
+      "scenario_family": "SM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_SM03",
+        "syn_kb_SM01",
+        "syn_kb_MC04",
+        "syn_kb_SM04",
+        "syn_kb_SM02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_SM03",
+        "syn_kb_SM02",
+        "syn_kb_MC04",
+        "syn_kb_SM01",
+        "syn_kb_SM04"
+      ],
+      "rerank_ms": 1291.50339984335
+    },
+    {
+      "query_id": "query_SM03_03",
+      "scenario_family": "SM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_SM03",
+        "syn_kb_SM01",
+        "syn_kb_SM04",
+        "syn_kb_MC04",
+        "syn_kb_SM02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_SM03",
+        "syn_kb_SM02",
+        "syn_kb_SM04",
+        "syn_kb_MC04",
+        "syn_kb_SM01"
+      ],
+      "rerank_ms": 1326.773699838668
+    },
+    {
+      "query_id": "query_SM03_04",
+      "scenario_family": "SM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_SM03",
+        "syn_kb_SM01",
+        "syn_kb_MC04",
+        "syn_kb_SM02",
+        "syn_kb_MC03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_SM03",
+        "syn_kb_SM02",
+        "syn_kb_SM04",
+        "syn_kb_MC04",
+        "syn_kb_SM01"
+      ],
+      "rerank_ms": 1407.8887000214309
+    },
+    {
+      "query_id": "query_SM03_05",
+      "scenario_family": "SM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_SM03",
+        "syn_kb_SM01",
+        "syn_kb_SM02",
+        "syn_kb_MC04",
+        "syn_kb_VC04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_SM03",
+        "syn_kb_SM01",
+        "syn_kb_MC04",
+        "syn_kb_SM02",
+        "syn_kb_MC03"
+      ],
+      "rerank_ms": 1290.3720000758767
+    },
+    {
+      "query_id": "query_SM03_06",
+      "scenario_family": "SM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_SM03",
+        "syn_kb_SM01",
+        "syn_kb_MC04",
+        "syn_kb_SM02",
+        "syn_kb_VC04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_SM03",
+        "syn_kb_SM01",
+        "syn_kb_MC04",
+        "syn_kb_SM02",
+        "syn_kb_MC03"
+      ],
+      "rerank_ms": 1358.12299977988
+    },
+    {
+      "query_id": "query_SM03_07",
+      "scenario_family": "SM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_SM03",
+        "syn_kb_SM01",
+        "syn_kb_MC04",
+        "syn_kb_SM02",
+        "syn_kb_VC04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_SM03",
+        "syn_kb_SM01",
+        "syn_kb_MC04",
+        "syn_kb_SM02",
+        "syn_kb_SM04"
+      ],
+      "rerank_ms": 1484.9318000487983
+    },
+    {
+      "query_id": "query_SM03_08",
+      "scenario_family": "SM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_SM03",
+        "syn_kb_SM01",
+        "syn_kb_MC04",
+        "syn_kb_SM02",
+        "syn_kb_MC03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_SM03",
+        "syn_kb_SM01",
+        "syn_kb_MC04",
+        "syn_kb_SM02",
+        "syn_kb_SM04"
+      ],
+      "rerank_ms": 1507.455499842763
+    },
+    {
+      "query_id": "query_SP03_01",
+      "scenario_family": "SP03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_WF02",
+        "syn_kb_SP03",
+        "syn_kb_SP01",
+        "syn_kb_TV01",
+        "syn_kb_TV03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_SP03",
+        "syn_kb_SP01",
+        "syn_kb_WF02",
+        "syn_kb_SP02",
+        "syn_kb_SP04"
+      ],
+      "rerank_ms": 1610.562500078231
+    },
+    {
+      "query_id": "query_SP03_02",
+      "scenario_family": "SP03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_WF02",
+        "syn_kb_SP03",
+        "syn_kb_SP01",
+        "syn_kb_ID02",
+        "syn_kb_TV01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_SP03",
+        "syn_kb_SP01",
+        "syn_kb_WF02",
+        "syn_kb_SP02",
+        "syn_kb_SP04"
+      ],
+      "rerank_ms": 1661.8438998702914
+    },
+    {
+      "query_id": "query_SP03_03",
+      "scenario_family": "SP03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_WF02",
+        "syn_kb_SP01",
+        "syn_kb_SP03",
+        "syn_kb_TV03",
+        "syn_kb_TV01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_SP03",
+        "syn_kb_SP01",
+        "syn_kb_WF02",
+        "syn_kb_SP02",
+        "syn_kb_SP04"
+      ],
+      "rerank_ms": 1410.3723999578506
+    },
+    {
+      "query_id": "query_SP03_04",
+      "scenario_family": "SP03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_WF02",
+        "syn_kb_SP01",
+        "syn_kb_SP03",
+        "syn_kb_TV01",
+        "syn_kb_SP04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_SP03",
+        "syn_kb_SP01",
+        "syn_kb_WF02",
+        "syn_kb_SP02",
+        "syn_kb_SP04"
+      ],
+      "rerank_ms": 1340.2474999893457
+    },
+    {
+      "query_id": "query_SP03_05",
+      "scenario_family": "SP03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_SP03",
+        "syn_kb_WF02",
+        "syn_kb_SP01",
+        "syn_kb_SP02",
+        "syn_kb_ID02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_SP03",
+        "syn_kb_ID02",
+        "syn_kb_WF02",
+        "syn_kb_SP01",
+        "syn_kb_SP02"
+      ],
+      "rerank_ms": 1305.978300049901
+    },
+    {
+      "query_id": "query_SP03_06",
+      "scenario_family": "SP03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_SP03",
+        "syn_kb_ID02",
+        "syn_kb_WF02",
+        "syn_kb_SP01",
+        "syn_kb_SP04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_SP03",
+        "syn_kb_ID02",
+        "syn_kb_WF02",
+        "syn_kb_SP01",
+        "syn_kb_SP02"
+      ],
+      "rerank_ms": 1298.3858999796212
+    },
+    {
+      "query_id": "query_SP03_07",
+      "scenario_family": "SP03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_SP03",
+        "syn_kb_WF02",
+        "syn_kb_SP01",
+        "syn_kb_ID02",
+        "syn_kb_SP02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_SP03",
+        "syn_kb_ID02",
+        "syn_kb_WF02",
+        "syn_kb_SP01",
+        "syn_kb_SP02"
+      ],
+      "rerank_ms": 1315.8644000068307
+    },
+    {
+      "query_id": "query_SP03_08",
+      "scenario_family": "SP03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_SP03",
+        "syn_kb_SP01",
+        "syn_kb_WF02",
+        "syn_kb_SP04",
+        "syn_kb_SP02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_SP03",
+        "syn_kb_ID02",
+        "syn_kb_WF02",
+        "syn_kb_SP01",
+        "syn_kb_SP02"
+      ],
+      "rerank_ms": 1386.8809000123292
+    },
+    {
+      "query_id": "query_TV03_01",
+      "scenario_family": "TV03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_TV03",
+        "syn_kb_TV01",
+        "syn_kb_SP02",
+        "syn_kb_WF02",
+        "syn_kb_SP04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_TV02",
+        "syn_kb_TV01",
+        "syn_kb_TV03",
+        "syn_kb_WF02",
+        "syn_kb_MC01"
+      ],
+      "rerank_ms": 1426.091100089252
+    },
+    {
+      "query_id": "query_TV03_02",
+      "scenario_family": "TV03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_TV03",
+        "syn_kb_TV01",
+        "syn_kb_SP02",
+        "syn_kb_ID02",
+        "syn_kb_SP04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_TV02",
+        "syn_kb_TV01",
+        "syn_kb_TV03",
+        "syn_kb_WF02",
+        "syn_kb_SM01"
+      ],
+      "rerank_ms": 1370.5263999290764
+    },
+    {
+      "query_id": "query_TV03_03",
+      "scenario_family": "TV03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_TV03",
+        "syn_kb_TV01",
+        "syn_kb_SP02",
+        "syn_kb_TV02",
+        "syn_kb_WF02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_TV02",
+        "syn_kb_TV01",
+        "syn_kb_TV03",
+        "syn_kb_WF02",
+        "syn_kb_MC01"
+      ],
+      "rerank_ms": 2005.5181998759508
+    },
+    {
+      "query_id": "query_TV03_04",
+      "scenario_family": "TV03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_TV03",
+        "syn_kb_TV01",
+        "syn_kb_SP02",
+        "syn_kb_SP04",
+        "syn_kb_HW04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_TV01",
+        "syn_kb_TV03",
+        "syn_kb_WF02",
+        "syn_kb_MC03",
+        "syn_kb_SM01"
+      ],
+      "rerank_ms": 1925.1053999178112
+    },
+    {
+      "query_id": "query_TV03_05",
+      "scenario_family": "TV03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_TV03",
+        "syn_kb_HW04",
+        "syn_kb_TV01",
+        "syn_kb_NP03",
+        "syn_kb_SP02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_TV03",
+        "syn_kb_TV01",
+        "syn_kb_SP02",
+        "syn_kb_SP04",
+        "syn_kb_WF02"
+      ],
+      "rerank_ms": 1896.8293000943959
+    },
+    {
+      "query_id": "query_TV03_06",
+      "scenario_family": "TV03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_TV03",
+        "syn_kb_HW04",
+        "syn_kb_NP03",
+        "syn_kb_SP02",
+        "syn_kb_ID03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_TV03",
+        "syn_kb_TV01",
+        "syn_kb_SP02",
+        "syn_kb_RM03",
+        "syn_kb_SP04"
+      ],
+      "rerank_ms": 1828.7662998773158
+    },
+    {
+      "query_id": "query_TV03_07",
+      "scenario_family": "TV03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_TV03",
+        "syn_kb_TV02",
+        "syn_kb_HW04",
+        "syn_kb_SP02",
+        "syn_kb_ID03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_TV03",
+        "syn_kb_TV01",
+        "syn_kb_RM03",
+        "syn_kb_SP02",
+        "syn_kb_SP04"
+      ],
+      "rerank_ms": 1793.8252000603825
+    },
+    {
+      "query_id": "query_TV03_08",
+      "scenario_family": "TV03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_TV03",
+        "syn_kb_TV01",
+        "syn_kb_HW04",
+        "syn_kb_BB03",
+        "syn_kb_SP02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_TV03",
+        "syn_kb_TV01",
+        "syn_kb_RM03",
+        "syn_kb_SP04",
+        "syn_kb_SP02"
+      ],
+      "rerank_ms": 1248.1205000076443
+    },
+    {
+      "query_id": "query_VC03_01",
+      "scenario_family": "VC03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.25
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_MD03",
+        "syn_kb_MC04",
+        "syn_kb_SA04",
+        "syn_kb_VC03",
+        "syn_kb_SA01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_VC03",
+        "syn_kb_MC04",
+        "syn_kb_VC02",
+        "syn_kb_VC01",
+        "syn_kb_SA04"
+      ],
+      "rerank_ms": 1391.0022000782192
+    },
+    {
+      "query_id": "query_VC03_02",
+      "scenario_family": "VC03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.25
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_MC04",
+        "syn_kb_MD03",
+        "syn_kb_SA04",
+        "syn_kb_VC03",
+        "syn_kb_SA01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_VC03",
+        "syn_kb_MC04",
+        "syn_kb_VC02",
+        "syn_kb_VC01",
+        "syn_kb_SA04"
+      ],
+      "rerank_ms": 1437.9801999311894
+    },
+    {
+      "query_id": "query_VC03_03",
+      "scenario_family": "VC03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_MD03",
+        "syn_kb_MC04",
+        "syn_kb_VC03",
+        "syn_kb_SA04",
+        "syn_kb_SA01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_MC04",
+        "syn_kb_VC03",
+        "syn_kb_VC02",
+        "syn_kb_VC01",
+        "syn_kb_VC04"
+      ],
+      "rerank_ms": 1655.6071999948472
+    },
+    {
+      "query_id": "query_VC03_04",
+      "scenario_family": "VC03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_MD03",
+        "syn_kb_VC03",
+        "syn_kb_SA01",
+        "syn_kb_SA04",
+        "syn_kb_MC04"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_MC04",
+        "syn_kb_VC03",
+        "syn_kb_VC02",
+        "syn_kb_VC01",
+        "syn_kb_MD03"
+      ],
+      "rerank_ms": 1722.9331000708044
+    },
+    {
+      "query_id": "query_VC03_05",
+      "scenario_family": "VC03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_MC04",
+        "syn_kb_VC02",
+        "syn_kb_VC03",
+        "syn_kb_VC01",
+        "syn_kb_MD03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_VC02",
+        "syn_kb_MC04",
+        "syn_kb_VC03",
+        "syn_kb_VC04",
+        "syn_kb_VC01"
+      ],
+      "rerank_ms": 1294.3139001727104
+    },
+    {
+      "query_id": "query_VC03_06",
+      "scenario_family": "VC03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.25
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_MC04",
+        "syn_kb_VC02",
+        "syn_kb_MD03",
+        "syn_kb_VC03",
+        "syn_kb_VC01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_VC02",
+        "syn_kb_MC04",
+        "syn_kb_VC03",
+        "syn_kb_VC04",
+        "syn_kb_VC01"
+      ],
+      "rerank_ms": 1286.3604999147356
+    },
+    {
+      "query_id": "query_VC03_07",
+      "scenario_family": "VC03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.25
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_MC04",
+        "syn_kb_VC01",
+        "syn_kb_VC02",
+        "syn_kb_VC03",
+        "syn_kb_MD03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_VC02",
+        "syn_kb_MC04",
+        "syn_kb_VC03",
+        "syn_kb_VC04",
+        "syn_kb_VC01"
+      ],
+      "rerank_ms": 1237.0714999269694
+    },
+    {
+      "query_id": "query_VC03_08",
+      "scenario_family": "VC03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_VC03",
+        "syn_kb_MC04",
+        "syn_kb_VC01",
+        "syn_kb_VC02",
+        "syn_kb_MD03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_VC02",
+        "syn_kb_MC04",
+        "syn_kb_VC03",
+        "syn_kb_VC04",
+        "syn_kb_VC01"
+      ],
+      "rerank_ms": 1249.872799962759
+    },
+    {
+      "query_id": "query_WF03_01",
+      "scenario_family": "WF03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_WF03",
+        "syn_kb_WF04",
+        "syn_kb_WF02",
+        "syn_kb_MC01",
+        "syn_kb_MD01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_WF03",
+        "syn_kb_WF04",
+        "syn_kb_MD01",
+        "syn_kb_WF02",
+        "syn_kb_WF01"
+      ],
+      "rerank_ms": 1204.3048001360148
+    },
+    {
+      "query_id": "query_WF03_02",
+      "scenario_family": "WF03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_WF03",
+        "syn_kb_WF04",
+        "syn_kb_ID02",
+        "syn_kb_MC01",
+        "syn_kb_MD01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_WF03",
+        "syn_kb_WF04",
+        "syn_kb_MD01",
+        "syn_kb_WF01",
+        "syn_kb_MC01"
+      ],
+      "rerank_ms": 1183.7889000307769
+    },
+    {
+      "query_id": "query_WF03_03",
+      "scenario_family": "WF03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_WF03",
+        "syn_kb_WF04",
+        "syn_kb_MC01",
+        "syn_kb_MD01",
+        "syn_kb_ID02"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_WF03",
+        "syn_kb_WF04",
+        "syn_kb_MC01",
+        "syn_kb_WF01",
+        "syn_kb_MD01"
+      ],
+      "rerank_ms": 1235.055100172758
+    },
+    {
+      "query_id": "query_WF03_04",
+      "scenario_family": "WF03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_WF03",
+        "syn_kb_WF04",
+        "syn_kb_MC01",
+        "syn_kb_HW04",
+        "syn_kb_MD01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_WF03",
+        "syn_kb_WF04",
+        "syn_kb_MC01",
+        "syn_kb_WF01",
+        "syn_kb_MD01"
+      ],
+      "rerank_ms": 1197.443500161171
+    },
+    {
+      "query_id": "query_WF03_05",
+      "scenario_family": "WF03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_WF03",
+        "syn_kb_HW01",
+        "syn_kb_HW04",
+        "syn_kb_HW02",
+        "syn_kb_HW03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_WF03",
+        "syn_kb_HW04",
+        "syn_kb_HW02",
+        "syn_kb_HW01",
+        "syn_kb_HW03"
+      ],
+      "rerank_ms": 1243.9739000983536
+    },
+    {
+      "query_id": "query_WF03_06",
+      "scenario_family": "WF03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_WF03",
+        "syn_kb_HW04",
+        "syn_kb_HW01",
+        "syn_kb_HW02",
+        "syn_kb_HW03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_WF03",
+        "syn_kb_HW04",
+        "syn_kb_HW02",
+        "syn_kb_HW01",
+        "syn_kb_HW03"
+      ],
+      "rerank_ms": 1249.7031001839787
+    },
+    {
+      "query_id": "query_WF03_07",
+      "scenario_family": "WF03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_WF03",
+        "syn_kb_HW04",
+        "syn_kb_HW01",
+        "syn_kb_HW02",
+        "syn_kb_HW03"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_WF03",
+        "syn_kb_HW04",
+        "syn_kb_HW02",
+        "syn_kb_HW01",
+        "syn_kb_HW03"
+      ],
+      "rerank_ms": 1620.3578000422567
+    },
+    {
+      "query_id": "query_WF03_08",
+      "scenario_family": "WF03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "reranked": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "candidate_hit": 1,
+      "hybrid_doc_ids": [
+        "syn_kb_WF03",
+        "syn_kb_HW04",
+        "syn_kb_RM02",
+        "syn_kb_HW03",
+        "syn_kb_BB01"
+      ],
+      "reranked_doc_ids": [
+        "syn_kb_WF03",
+        "syn_kb_HW04",
+        "syn_kb_HW02",
+        "syn_kb_HW01",
+        "syn_kb_HW03"
+      ],
+      "rerank_ms": 1303.4672997891903
+    }
+  ]
+}

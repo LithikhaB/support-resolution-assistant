@@ -32,6 +32,7 @@ class ClassifierArtifact(BaseModel):
     embedding_revision: str | None = None
     train_sha256: str
     dev_sha256: str
+    augmentation_sha256: str | None = None
     training_families: list[str]
     development_families: list[str]
     sklearn_version: str

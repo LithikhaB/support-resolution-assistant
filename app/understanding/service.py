@@ -11,8 +11,8 @@ from app.llm.client import LanguageUnavailable
 from app.llm.providers import ProviderChain, get_language_client, last_provider
 from app.understanding.classifier import CategoryClassifier, UnderstandingUnavailable
 from app.understanding.context import clarification_questions, extract_facts, extract_requests
-from app.understanding.language import interpret
-from app.understanding.models import AnalysisResponse, AnalyzeRequest
+from app.understanding.language import interpret_complaint
+from app.understanding.models import AnalysisResponse, AnalyzeRequest, TextEvidence
 from app.understanding.routing import (
     compatible_category,
     explicit_category,
@@ -60,9 +60,16 @@ class UnderstandingService:
         products = extract_products(request.query)
         facts = extract_facts(request.query)
         language_method, language_error = "rules_v1", None
+        language_category = None
         if self.settings.llm_enabled:
             try:
-                products, facts = interpret(request.query, self.language or get_language_client())
+                interpreted_products, facts, language_category = interpret_complaint(
+                    request.query,
+                    self.language or get_language_client(),
+                    category_options=[c.category for c in candidates] if not accepted else [],
+                    category_products=self.category_products,
+                )
+                products = interpreted_products or products
                 trace = last_provider.get() or {
                     "provider": "groq",
                     "model": self.settings.groq_model,
@@ -78,8 +85,24 @@ class UnderstandingService:
         severity = assess_severity(request.query)
         reported_category = explicit_category(products, severity)
         category = reported_category or (candidates[0].category if accepted else None)
+        category_evidence = severity.evidence if reported_category else []
+        category_basis = (
+            "explicit_report" if reported_category else ("model" if category else "uncertain")
+        )
+        if category is None and language_category is not None:
+            category = language_category.category
+            category_basis = "language_assisted"
+            start = request.query.rfind(language_category.quote)
+            category_evidence = [
+                TextEvidence(
+                    text=language_category.quote,
+                    start=start,
+                    end=start + len(language_category.quote),
+                )
+            ]
         if scope_status == "unsupported":
             category = reported_category = None
+            category_basis, category_evidence = "uncertain", []
         accepted = category is not None
         requests = extract_requests(request.query)
         questions = clarification_questions(
@@ -91,10 +114,8 @@ class UnderstandingService:
             scope_status=scope_status,
             scope_reason=scope_reason,
             category=category,
-            category_basis="explicit_report"
-            if reported_category
-            else ("model" if accepted else "uncertain"),
-            category_evidence=severity.evidence if reported_category else [],
+            category_basis=category_basis,
+            category_evidence=category_evidence,
             routing_policy="development_selected_v1" if self.routing else "fixed_v1",
             category_status="predicted" if accepted else "uncertain",
             candidates=candidates,

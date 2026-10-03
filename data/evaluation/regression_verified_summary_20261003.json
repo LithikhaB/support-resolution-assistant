@@ -1,0 +1,138 @@
+{
+  "run_complete": true,
+  "counts": {
+    "snapshots": 24,
+    "issues": 26,
+    "uncertain_categories": 20,
+    "needs_clarification": 15,
+    "extractive_fallbacks": 0,
+    "language_drafts": 0,
+    "faithfulness_checked": 0
+  },
+  "providers": {
+    "extractive": 26
+  },
+  "rates": {
+    "uncertain_categories": 0.7692307692307693,
+    "needs_clarification": 0.5769230769230769,
+    "extractive_fallbacks": 0.0
+  },
+  "median_issue_ms": 1854.3405500240624,
+  "golden_passed": 16,
+  "golden_checked": 16,
+  "golden_results": [
+    {
+      "id": "C01",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "C02",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "C03",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "C04",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "C05",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "C06",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "C07",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "C08",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "C09",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "C10",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "C11",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "C12",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "C13",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "C14",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "C15",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "C16",
+      "passed": true,
+      "failures": []
+    }
+  ],
+  "human_review": {
+    "fully_reviewed_cases": 0,
+    "total_cases": 16,
+    "dimensions": {
+      "context": {
+        "rated_cases": 0,
+        "mean_out_of_2": null
+      },
+      "relevance": {
+        "rated_cases": 0,
+        "mean_out_of_2": null
+      },
+      "conversation": {
+        "rated_cases": 0,
+        "mean_out_of_2": null
+      },
+      "grounding": {
+        "rated_cases": 0,
+        "mean_out_of_2": null
+      },
+      "clarity": {
+        "rated_cases": 0,
+        "mean_out_of_2": null
+      }
+    },
+    "note": "Supplied manual ratings only; reviewer identity and independence are not verified by this script."
+  },
+  "scope": "Authored development behaviour checks; not independent human answer-quality ratings or a production drift significance test.",
+  "baseline_rate_changes": {
+    "uncertain_categories": -0.07692307692307687,
+    "needs_clarification": -0.03846153846153855,
+    "extractive_fallbacks": 0.0
+  }
+}

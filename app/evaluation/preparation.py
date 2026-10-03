@@ -9,6 +9,7 @@ import numpy as np
 from sklearn.linear_model import LogisticRegression
 
 from app.ingestion.artifacts import digest, file_sha256, write_json
+from app.understanding.augmentation import augment_training
 from app.understanding.classifier import CategoryClassifier, make_vectorizer
 from app.understanding.training import load_split, validate_separation
 
@@ -21,6 +22,14 @@ def prepare_classifiers(settings):
         raise ValueError("Classifier differs from the development-selection report")
     selected = CategoryClassifier.load(settings.understanding_model_path, settings=settings)
     train = load_split(settings.corpus_dir, "train")
+    train, augmentation_hash = augment_training(
+        train, settings.corpus_dir / "training_paraphrases.json"
+    )
+    if (
+        augmentation_hash != selected.artifact.augmentation_sha256
+        or augmentation_hash != report.get("augmentation_sha256")
+    ):
+        raise ValueError("Classifier training paraphrases changed")
     dev = load_split(settings.corpus_dir, "dev")
     validate_separation(train, dev)
     for split in ("train", "dev"):
@@ -76,6 +85,9 @@ def fingerprint(settings, split):
         "chunks_sha256": file_sha256(settings.processed_dir / "chunks.jsonl"),
         "declared_query_sha256": manifest["file_sha256"][f"{split}.jsonl"],
         "train_sha256": file_sha256(settings.corpus_dir / "train.jsonl"),
+        "augmentation_sha256": file_sha256(settings.corpus_dir / "training_paraphrases.json")
+        if (settings.corpus_dir / "training_paraphrases.json").exists()
+        else None,
         "dev_sha256": file_sha256(settings.corpus_dir / "dev.jsonl"),
         "challenge_sha256": file_sha256(settings.corpus_dir / "challenge_queries.jsonl"),
         "embedding_model": settings.embedding_model,

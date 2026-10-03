@@ -62,6 +62,22 @@ def parse_procedure(result):
 def supported_scopes(analysis):
     """Use explicitly mentioned service families, without hard-filtering by predicted intent."""
     scopes = set().union(*(PRODUCT_SCOPES.get(item.product, set()) for item in analysis.products))
+    if "iptv" in scopes and any(f.name == "tv_symptom" for f in analysis.reported_facts):
+        return {"iptv"}
+    affected = {f.value for f in analysis.reported_facts if f.name == "mobile_services"}
+    mobile_scopes = PRODUCT_SCOPES["mobile"]
+    if affected and affected <= {"texts", "calls", "data"}:
+        scopes -= mobile_scopes
+        mapping = {"texts": "mobile_sms", "calls": "mobile_voice", "data": "mobile_data"}
+        scopes.update(mapping[value] for value in affected)
+        if analysis.category == "roaming":
+            scopes -= {"mobile_data", "mobile_voice", "mobile_sms"}
+            scopes.add("mobile_roaming")
+    if any(
+        f.name == "connection_pattern" and f.value == "intermittent"
+        for f in analysis.reported_facts
+    ):
+        scopes.discard("router")
     wired = {f.value for f in analysis.reported_facts if f.name == "wired_connection"}
     if wired == {"working"} and analysis.severity.rule != "reported_area_outage":
         scopes -= {"fibre_broadband", "router"}

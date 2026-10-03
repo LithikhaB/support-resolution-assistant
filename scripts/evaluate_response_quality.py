@@ -11,9 +11,35 @@ from fastapi import HTTPException
 from pydantic import ValidationError
 
 from app.api.resolution import run_request
-from app.ingestion.artifacts import digest, write_json
+from app.config.settings import get_settings
+from app.ingestion.artifacts import digest, file_sha256, write_json
 from app.resolution.conversation import ConversationRequest, resolve_conversation
 from app.resolution.service import get_resolution_service
+
+
+def runtime_fingerprint(settings):
+    """Record reproducible code/model identities and provider names without secrets."""
+    root = Path(__file__).resolve().parents[1]
+    code = sorted([*(root / "app").rglob("*.py"), *(root / "scripts").glob("*.py")])
+    paths = {
+        "classifier": settings.understanding_model_path,
+        "routing": settings.understanding_routing_path,
+        "corpus": settings.processed_dir / "documents.jsonl",
+        "chunks": settings.processed_dir / "chunks.jsonl",
+    }
+    return {
+        "code_sha256": digest({str(p.relative_to(root)): file_sha256(p) for p in code}),
+        "artifacts": {
+            name: file_sha256(path) if path.exists() else None for name, path in paths.items()
+        },
+        "llm_enabled": settings.llm_enabled,
+        "groq_model": settings.groq_model,
+        "gemini_model": settings.gemini_model,
+        "embedding_model": settings.embedding_model,
+        "embedding_revision": settings.tokenizer_revision,
+        "reranker_model": settings.reranker_model,
+        "reranker_revision": settings.reranker_revision,
+    }
 
 
 def evaluate_case(case, service, delay_seconds=0):
@@ -126,6 +152,8 @@ def main():
         "purpose": pack["purpose"],
         "scoring": pack["scoring"],
         "results": [],
+        "run_complete": False,
+        "fingerprint": runtime_fingerprint(get_settings()),
     }
     service = get_resolution_service()
     for case in selected:
@@ -133,6 +161,10 @@ def main():
         report["results"].append(result)
         write_json(output, report)
         print_case(result)
+    if runtime_fingerprint(get_settings()) != report["fingerprint"]:
+        raise ValueError("Runtime inputs changed during evaluation; partial report retained")
+    report["run_complete"] = True
+    write_json(output, report)
     print(f"\nSaved full evidence and empty manual scoring fields: {output}")
     print("No automatic quality score was assigned. Citation integrity is not response quality.")
 

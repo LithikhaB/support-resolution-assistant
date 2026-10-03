@@ -44,6 +44,17 @@ def service_group(text):
     return groups
 
 
+def working_comparison(text):
+    """Keep a clearly working comparison device with the complaint it helps explain."""
+    return bool(
+        re.search(r"\b(?:works?|working|fine|normally|okay|OK)\b", text, re.I)
+    ) and not re.search(
+        r"\b(?:not|no|isn't|isn’t|fails?|drops?|disconnects?|missing|dead|slow|freez\w*|buffers?)\b",
+        text,
+        re.I,
+    )
+
+
 def split_issues(text):
     """Split explicit service changes while retaining unlabelled details with their issue."""
     if re.search(r"\b(?:floodwater|flood waters?|water.damage)\b", text, re.I) and service_group(
@@ -62,6 +73,15 @@ def split_issues(text):
         if not fragment:
             continue
         groups = service_group(fragment)
+        if issues and working_comparison(fragment):
+            issues[-1] += " " + fragment
+            continue
+        if (
+            "iptv" in previous
+            and groups <= {"iptv", "home_connectivity"}
+            and re.search(r"\b(?:set.top box|TV|television)\b", fragment, re.I)
+        ):
+            groups = previous
         if (
             "home_connectivity" in previous
             and groups <= {"mobile", "iptv"}

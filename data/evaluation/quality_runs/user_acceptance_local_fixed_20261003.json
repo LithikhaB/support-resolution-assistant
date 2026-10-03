@@ -1,0 +1,1878 @@
+{
+  "created_at": "2026-10-03T15:52:28.962410+00:00",
+  "cases_sha256": "4ef0217557074171dbe0546cd9d68a4c0ce0009003f9796e258b754012e738db",
+  "provenance": "Complaints and one reply supplied directly by the user on 2026-10-03; expectations authored by the coding assistant.",
+  "purpose": "User-authored acceptance check, excluded from model selection and training; five cases are not a statistical quality benchmark.",
+  "scoring": {
+    "context": "0 missed/misread; 1 partial; 2 accurate",
+    "relevance": "0 unrelated; 1 mixed; 2 relevant",
+    "conversation": "0 repeats an answered/unavailable question or loses corrections; 1 partial; 2 coherent; leave null for single-turn cases",
+    "grounding": "0 invented cause/action/citation; 1 uncertain support; 2 traceable and appropriately conditional",
+    "clarity": "0 confusing; 1 usable with effort; 2 clear and actionable"
+  },
+  "results": [
+    {
+      "id": "U01",
+      "name": "Intermittent connection after a storm",
+      "query": "Since the storm on Tuesday my internet cuts out for about a minute every hour or so. The router light stays green. I unplugged it for ten minutes, twice. I run a small online tailoring shop so it's costing me orders.",
+      "turns": [
+        {
+          "issue_id": 1,
+          "message": "I plugged my laptop straight into the router with a cable and it still drops at the same moments the Wi-Fi does."
+        }
+      ],
+      "expected": [
+        "Recognize intermittent broadband and business impact without declaring storm damage.",
+        "Retain the failed wired test after the reply; do not repeat it or claim Ethernet works.",
+        "Do not repeat the two power cycles as a new remedy."
+      ],
+      "snapshots": [
+        {
+          "after_reply": 0,
+          "response": {
+            "issues": [
+              {
+                "issue_id": 1,
+                "complaint": "Since the storm on Tuesday my internet cuts out for about a minute every hour or so. The router light stays green. I unplugged it for ten minutes, twice. I run a small online tailoring shop so it's costing me orders.",
+                "analysis_text": "Since the storm on Tuesday my internet cuts out for about a minute every hour or so. The router light stays green. I unplugged it for ten minutes, twice. I run a small online tailoring shop so it's costing me orders.",
+                "resolution": {
+                  "status": "needs_diagnostic_confirmation",
+                  "decision": {
+                    "action": "clarify",
+                    "priority": "normal",
+                    "reasons": [
+                      "missing_customer_observations"
+                    ],
+                    "target": "support_agent",
+                    "handoff_created": false
+                  },
+                  "validation": {
+                    "status": "passed",
+                    "checked_sources": 3,
+                    "issues": [],
+                    "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+                  },
+                  "method": "local_extractive_v1",
+                  "language_summary": null,
+                  "language_plan": null,
+                  "language_draft": null,
+                  "language_status": "disabled",
+                  "language_model": null,
+                  "language_provider": null,
+                  "faithfulness_status": "not_run",
+                  "language_error": null,
+                  "historical_cases": [
+                    {
+                      "citation_id": "T1",
+                      "doc_id": "syn_ticket_ID02_04",
+                      "chunk_id": 150,
+                      "title": "Intermittent broadband support case",
+                      "resolution": "Finding: Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment. Action: Network operations rebalance capacity and monitor the affected segment during peak hours. Simulated follow-up: peak-hour packet loss subsides and calls stay connected.",
+                      "outcome_status": "simulated_resolved",
+                      "is_synthetic": true
+                    },
+                    {
+                      "citation_id": "T2",
+                      "doc_id": "syn_ticket_HW02_04",
+                      "chunk_id": 134,
+                      "title": "Router ont hardware support case",
+                      "resolution": "Finding: Authorized support reads a failed firmware validation event for this device model. Action: Authorized support follows the model-specific recovery procedure with a verified firmware image. Simulated follow-up: router boots normally and configuration checks pass.",
+                      "outcome_status": "simulated_resolved",
+                      "is_synthetic": true
+                    }
+                  ],
+                  "agent_review_required": true,
+                  "draft": "Draft for agent review. A cause has not been confirmed.\n\nAlready attempted, according to the customer: I unplugged it for ten minutes\n\nCustomer-reported observations: internet cuts out\n\nClarify: During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?\n\nAnswer the clarification questions before choosing a repair. Retrieved procedures are attached for agent review, not recommended actions yet.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: clarify. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+                  "analysis": {
+                    "category": null,
+                    "scope_status": "supported",
+                    "scope_reason": "recognized_service_mention",
+                    "category_status": "uncertain",
+                    "category_basis": "uncertain",
+                    "category_evidence": [],
+                    "routing_policy": "development_selected_v1",
+                    "candidates": [
+                      {
+                        "category": "intermittent_broadband",
+                        "score": 0.21246803576852596
+                      },
+                      {
+                        "category": "router_ont_hardware",
+                        "score": 0.2060033441652064
+                      },
+                      {
+                        "category": "broadband_outage",
+                        "score": 0.11091162647794683
+                      }
+                    ],
+                    "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                    "products": [
+                      {
+                        "text": "internet",
+                        "start": 30,
+                        "end": 38,
+                        "product": "broadband"
+                      },
+                      {
+                        "text": "router",
+                        "start": 89,
+                        "end": 95,
+                        "product": "router"
+                      }
+                    ],
+                    "severity": {
+                      "value": "medium",
+                      "rule": "reported_degradation_or_work_impact",
+                      "evidence": [
+                        {
+                          "text": "cuts out",
+                          "start": 39,
+                          "end": 47
+                        }
+                      ],
+                      "method": "rules_v1"
+                    },
+                    "sentiment": {
+                      "value": "unknown",
+                      "rule": "no_explicit_tone",
+                      "evidence": [],
+                      "method": "rules_v1"
+                    },
+                    "actions": [
+                      {
+                        "text": "I unplugged it for ten minutes",
+                        "start": 115,
+                        "end": 145,
+                        "action": "restart_device",
+                        "status": "attempted"
+                      }
+                    ],
+                    "reported_facts": [
+                      {
+                        "text": "internet cuts out",
+                        "start": 30,
+                        "end": 47,
+                        "name": "connection_pattern",
+                        "value": "intermittent"
+                      }
+                    ],
+                    "requests": [],
+                    "needs_clarification": true,
+                    "clarification_questions": [
+                      "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?"
+                    ],
+                    "model_version": "231617e54a465126",
+                    "language_method": "rules_v1",
+                    "language_provider": null,
+                    "language_model": null,
+                    "language_error": null,
+                    "elapsed_ms": 27971.94300009869
+                  },
+                  "suggestions": [
+                    {
+                      "citation_id": "S1",
+                      "required_finding": "Device still overheats in a safe ventilated location; authorized inspection flags a hardware fault.",
+                      "proposed_action": "Stop using the faulty unit and arrange approved hardware replacement.",
+                      "restriction": "Do not tell the customer to open the case or continue using a visibly damaged unit.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S2",
+                      "required_finding": "Authorized support reads a failed firmware validation event for this device model.",
+                      "proposed_action": "Authorized support follows the model-specific recovery procedure with a verified firmware image.",
+                      "restriction": "Do not provide generic flashing commands or download firmware from an unverified source.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S3",
+                      "required_finding": "Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment.",
+                      "proposed_action": "Network operations rebalance capacity and monitor the affected segment during peak hours.",
+                      "restriction": "Do not promise that a Wi-Fi channel change will repair provider congestion.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    }
+                  ],
+                  "sources": [
+                    {
+                      "citation_id": "S1",
+                      "doc_id": "syn_kb_HW03",
+                      "chunk_id": 11,
+                      "title": "Internal router thermal fault. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "router",
+                          "start": 132,
+                          "end": 138,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Device still overheats in a safe ventilated location; authorized inspection flags a hardware fault.",
+                          "start": 293,
+                          "end": 392,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Stop using the faulty unit and arrange approved hardware replacement.",
+                          "start": 430,
+                          "end": 499,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not tell the customer to open the case or continue using a visibly damaged unit.",
+                          "start": 724,
+                          "end": 807,
+                          "field": "restriction"
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "S2",
+                      "doc_id": "syn_kb_HW02",
+                      "chunk_id": 10,
+                      "title": "Failed firmware update. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "router",
+                          "start": 125,
+                          "end": 131,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Authorized support reads a failed firmware validation event for this device model.",
+                          "start": 286,
+                          "end": 368,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Authorized support follows the model-specific recovery procedure with a verified firmware image.",
+                          "start": 406,
+                          "end": 502,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not provide generic flashing commands or download firmware from an unverified source.",
+                          "start": 718,
+                          "end": 806,
+                          "field": "restriction"
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "S3",
+                      "doc_id": "syn_kb_ID02",
+                      "chunk_id": 14,
+                      "title": "Congested access segment. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "fibre_broadband",
+                          "start": 127,
+                          "end": 142,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment.",
+                          "start": 300,
+                          "end": 394,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Network operations rebalance capacity and monitor the affected segment during peak hours.",
+                          "start": 432,
+                          "end": 521,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not promise that a Wi-Fi channel change will repair provider congestion.",
+                          "start": 741,
+                          "end": 816,
+                          "field": "restriction"
+                        }
+                      ]
+                    }
+                  ],
+                  "clarification_questions": [
+                    "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?"
+                  ],
+                  "acknowledged_actions": [
+                    "I unplugged it for ten minutes"
+                  ],
+                  "contact_status": "not_requested",
+                  "customer_plan": {
+                    "title": "Let's narrow down the problem",
+                    "summary": "We need the details below to choose the next step without guessing a cause.",
+                    "steps": [
+                      "Answer the questions below together in the reply box."
+                    ],
+                    "note": "Your previous attempts are retained so they can be reviewed."
+                  },
+                  "limitations": [
+                    "Extractive local drafting; no generative LLM is used.",
+                    "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                    "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+                  ],
+                  "elapsed_ms": 3855.532499961555
+                }
+              }
+            ],
+            "storage": "client_replayed",
+            "limitations": [
+              "Send the same original query and full customer-turn history on each request.",
+              "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+              "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+            ]
+          }
+        },
+        {
+          "after_reply": 1,
+          "response": {
+            "issues": [
+              {
+                "issue_id": 1,
+                "complaint": "Since the storm on Tuesday my internet cuts out for about a minute every hour or so. The router light stays green. I unplugged it for ten minutes, twice. I run a small online tailoring shop so it's costing me orders.",
+                "analysis_text": "Since the storm on Tuesday my internet cuts out for about a minute every hour or so. The router light stays green. I unplugged it for ten minutes, twice. I run a small online tailoring shop so it's costing me orders.. I plugged my laptop straight into the router with a cable and it still drops at the same moments the Wi-Fi does.",
+                "resolution": {
+                  "status": "needs_diagnostic_confirmation",
+                  "decision": {
+                    "action": "agent_review",
+                    "priority": "normal",
+                    "reasons": [
+                      "diagnostic_confirmation_required"
+                    ],
+                    "target": "support_agent",
+                    "handoff_created": false
+                  },
+                  "validation": {
+                    "status": "passed",
+                    "checked_sources": 3,
+                    "issues": [],
+                    "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+                  },
+                  "method": "local_extractive_v1",
+                  "language_summary": null,
+                  "language_plan": null,
+                  "language_draft": null,
+                  "language_status": "disabled",
+                  "language_model": null,
+                  "language_provider": null,
+                  "faithfulness_status": "not_run",
+                  "language_error": null,
+                  "historical_cases": [
+                    {
+                      "citation_id": "T1",
+                      "doc_id": "syn_ticket_ID02_04",
+                      "chunk_id": 150,
+                      "title": "Intermittent broadband support case",
+                      "resolution": "Finding: Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment. Action: Network operations rebalance capacity and monitor the affected segment during peak hours. Simulated follow-up: peak-hour packet loss subsides and calls stay connected.",
+                      "outcome_status": "simulated_resolved",
+                      "is_synthetic": true
+                    }
+                  ],
+                  "agent_review_required": true,
+                  "draft": "Draft for agent review. A cause has not been confirmed.\n\nAlready attempted, according to the customer: I unplugged it for ten minutes\n\nCustomer-reported observations: internet cuts out; with a cable and it still drops\n\n[S1] Ask an authorized agent to verify: Device still overheats in a safe ventilated location; authorized inspection flags a hardware fault. Only if confirmed, the procedure proposes: Stop using the faulty unit and arrange approved hardware replacement.\n\n[S1] Restriction: Do not tell the customer to open the case or continue using a visibly damaged unit.\n\n[S2] Ask an authorized agent to verify: Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment. Only if confirmed, the procedure proposes: Network operations rebalance capacity and monitor the affected segment during peak hours.\n\n[S2] Restriction: Do not promise that a Wi-Fi channel change will repair provider congestion.\n\n[S3] Ask an authorized agent to verify: Authorized support reads a failed firmware validation event for this device model. Only if confirmed, the procedure proposes: Authorized support follows the model-specific recovery procedure with a verified firmware image.\n\n[S3] Restriction: Do not provide generic flashing commands or download firmware from an unverified source.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: agent_review. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+                  "analysis": {
+                    "category": null,
+                    "scope_status": "supported",
+                    "scope_reason": "recognized_service_mention",
+                    "category_status": "uncertain",
+                    "category_basis": "uncertain",
+                    "category_evidence": [],
+                    "routing_policy": "development_selected_v1",
+                    "candidates": [
+                      {
+                        "category": "intermittent_broadband",
+                        "score": 0.2680414075090841
+                      },
+                      {
+                        "category": "router_ont_hardware",
+                        "score": 0.169894087008334
+                      },
+                      {
+                        "category": "wifi_connectivity",
+                        "score": 0.14500023190398026
+                      }
+                    ],
+                    "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                    "products": [
+                      {
+                        "text": "internet",
+                        "start": 30,
+                        "end": 38,
+                        "product": "broadband"
+                      },
+                      {
+                        "text": "router",
+                        "start": 89,
+                        "end": 95,
+                        "product": "router"
+                      },
+                      {
+                        "text": "Wi-Fi",
+                        "start": 319,
+                        "end": 324,
+                        "product": "home_wifi"
+                      }
+                    ],
+                    "severity": {
+                      "value": "medium",
+                      "rule": "reported_degradation_or_work_impact",
+                      "evidence": [
+                        {
+                          "text": "drops",
+                          "start": 289,
+                          "end": 294
+                        }
+                      ],
+                      "method": "rules_v1"
+                    },
+                    "sentiment": {
+                      "value": "unknown",
+                      "rule": "no_explicit_tone",
+                      "evidence": [],
+                      "method": "rules_v1"
+                    },
+                    "actions": [
+                      {
+                        "text": "I unplugged it for ten minutes",
+                        "start": 115,
+                        "end": 145,
+                        "action": "restart_device",
+                        "status": "attempted"
+                      }
+                    ],
+                    "reported_facts": [
+                      {
+                        "text": "internet cuts out",
+                        "start": 30,
+                        "end": 47,
+                        "name": "connection_pattern",
+                        "value": "intermittent"
+                      },
+                      {
+                        "text": "with a cable and it still drops",
+                        "start": 263,
+                        "end": 294,
+                        "name": "wired_connection",
+                        "value": "failing"
+                      }
+                    ],
+                    "requests": [],
+                    "needs_clarification": false,
+                    "clarification_questions": [],
+                    "model_version": "231617e54a465126",
+                    "language_method": "rules_v1",
+                    "language_provider": null,
+                    "language_model": null,
+                    "language_error": null,
+                    "elapsed_ms": 91.0712000913918
+                  },
+                  "suggestions": [
+                    {
+                      "citation_id": "S1",
+                      "required_finding": "Device still overheats in a safe ventilated location; authorized inspection flags a hardware fault.",
+                      "proposed_action": "Stop using the faulty unit and arrange approved hardware replacement.",
+                      "restriction": "Do not tell the customer to open the case or continue using a visibly damaged unit.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S2",
+                      "required_finding": "Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment.",
+                      "proposed_action": "Network operations rebalance capacity and monitor the affected segment during peak hours.",
+                      "restriction": "Do not promise that a Wi-Fi channel change will repair provider congestion.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S3",
+                      "required_finding": "Authorized support reads a failed firmware validation event for this device model.",
+                      "proposed_action": "Authorized support follows the model-specific recovery procedure with a verified firmware image.",
+                      "restriction": "Do not provide generic flashing commands or download firmware from an unverified source.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    }
+                  ],
+                  "sources": [
+                    {
+                      "citation_id": "S1",
+                      "doc_id": "syn_kb_HW03",
+                      "chunk_id": 11,
+                      "title": "Internal router thermal fault. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "router",
+                          "start": 132,
+                          "end": 138,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Device still overheats in a safe ventilated location; authorized inspection flags a hardware fault.",
+                          "start": 293,
+                          "end": 392,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Stop using the faulty unit and arrange approved hardware replacement.",
+                          "start": 430,
+                          "end": 499,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not tell the customer to open the case or continue using a visibly damaged unit.",
+                          "start": 724,
+                          "end": 807,
+                          "field": "restriction"
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "S2",
+                      "doc_id": "syn_kb_ID02",
+                      "chunk_id": 14,
+                      "title": "Congested access segment. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "fibre_broadband",
+                          "start": 127,
+                          "end": 142,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment.",
+                          "start": 300,
+                          "end": 394,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Network operations rebalance capacity and monitor the affected segment during peak hours.",
+                          "start": 432,
+                          "end": 521,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not promise that a Wi-Fi channel change will repair provider congestion.",
+                          "start": 741,
+                          "end": 816,
+                          "field": "restriction"
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "S3",
+                      "doc_id": "syn_kb_HW02",
+                      "chunk_id": 10,
+                      "title": "Failed firmware update. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "router",
+                          "start": 125,
+                          "end": 131,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Authorized support reads a failed firmware validation event for this device model.",
+                          "start": 286,
+                          "end": 368,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Authorized support follows the model-specific recovery procedure with a verified firmware image.",
+                          "start": 406,
+                          "end": 502,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not provide generic flashing commands or download firmware from an unverified source.",
+                          "start": 718,
+                          "end": 806,
+                          "field": "restriction"
+                        }
+                      ]
+                    }
+                  ],
+                  "clarification_questions": [],
+                  "acknowledged_actions": [
+                    "I unplugged it for ten minutes"
+                  ],
+                  "contact_status": "not_requested",
+                  "customer_plan": {
+                    "title": "Suggested resolution for agent review",
+                    "summary": "These steps depend on the diagnostic checks shown below. Similar symptoms alone do not confirm the cause.",
+                    "steps": [
+                      "[S1] Verify: Device still overheats in a safe ventilated location; authorized inspection flags a hardware fault. Only if confirmed: Stop using the faulty unit and arrange approved hardware replacement. Restriction: Do not tell the customer to open the case or continue using a visibly damaged unit.",
+                      "[S2] Verify: Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment. Only if confirmed: Network operations rebalance capacity and monitor the affected segment during peak hours. Restriction: Do not promise that a Wi-Fi channel change will repair provider congestion.",
+                      "[S3] Verify: Authorized support reads a failed firmware validation event for this device model. Only if confirmed: Authorized support follows the model-specific recovery procedure with a verified firmware image. Restriction: Do not provide generic flashing commands or download firmware from an unverified source."
+                    ],
+                    "note": "Sources are synthetic demonstration procedures. No repair has been executed."
+                  },
+                  "limitations": [
+                    "Extractive local drafting; no generative LLM is used.",
+                    "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                    "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+                  ],
+                  "elapsed_ms": 3343.9605000894517
+                }
+              }
+            ],
+            "storage": "client_replayed",
+            "limitations": [
+              "Send the same original query and full customer-turn history on each request.",
+              "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+              "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+            ]
+          }
+        }
+      ],
+      "manual_scores": {
+        "context": null,
+        "relevance": null,
+        "conversation": null,
+        "grounding": null,
+        "clarity": null
+      },
+      "review_notes": ""
+    },
+    {
+      "id": "U02",
+      "name": "Only bank codes missing",
+      "query": "I can't get my bank's one-time passwords on my phone since last week. Friends' texts come through fine, and so do the codes from my food delivery app. Only the bank ones are missing.",
+      "turns": [],
+      "expected": [
+        "Recognize an SMS/OTP complaint; do not claim all SMS or calls fail.",
+        "Do not request passwords or the actual verification code.",
+        "Keep any sender/network diagnosis conditional."
+      ],
+      "snapshots": [
+        {
+          "after_reply": 0,
+          "response": {
+            "issues": [
+              {
+                "issue_id": 1,
+                "complaint": "I can't get my bank's one-time passwords on my phone since last week. Friends' texts come through fine, and so do the codes from my food delivery app. Only the bank ones are missing.",
+                "analysis_text": "I can't get my bank's one-time passwords on my phone since last week. Friends' texts come through fine, and so do the codes from my food delivery app. Only the bank ones are missing.",
+                "resolution": {
+                  "status": "needs_diagnostic_confirmation",
+                  "decision": {
+                    "action": "agent_review",
+                    "priority": "normal",
+                    "reasons": [
+                      "diagnostic_confirmation_required"
+                    ],
+                    "target": "support_agent",
+                    "handoff_created": false
+                  },
+                  "validation": {
+                    "status": "passed",
+                    "checked_sources": 3,
+                    "issues": [],
+                    "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+                  },
+                  "method": "local_extractive_v1",
+                  "language_summary": null,
+                  "language_plan": null,
+                  "language_draft": null,
+                  "language_status": "disabled",
+                  "language_model": null,
+                  "language_provider": null,
+                  "faithfulness_status": "not_run",
+                  "language_error": null,
+                  "historical_cases": [
+                    {
+                      "citation_id": "T1",
+                      "doc_id": "syn_ticket_SM01_01",
+                      "chunk_id": 251,
+                      "title": "Sms otp support case",
+                      "resolution": "Finding: Network trace shows no message submission from the affected sender; other SMS delivers. Action: Provide trace findings and refer the customer to the sender's official support channel. Simulated follow-up: sender fixes its submission and a new verification message arrives.",
+                      "outcome_status": "simulated_resolved",
+                      "is_synthetic": true
+                    },
+                    {
+                      "citation_id": "T2",
+                      "doc_id": "syn_ticket_RM01_03",
+                      "chunk_id": 221,
+                      "title": "Roaming support case",
+                      "resolution": "Finding: Roaming-data entitlement is disabled on the account despite the eligible pack. Action: After authentication and consent, apply the eligible roaming-data entitlement. Simulated follow-up: a roaming data session establishes on a supported partner.",
+                      "outcome_status": "simulated_resolved",
+                      "is_synthetic": true
+                    }
+                  ],
+                  "agent_review_required": true,
+                  "draft": "Draft for agent review. A cause has not been confirmed.\n\nCustomer-reported observations: can't get my bank's one-time passwords; Only the bank ones are missing\n\n[S1] Ask an authorized agent to verify: Network trace shows no message submission from the affected sender; other SMS delivers. Only if confirmed, the procedure proposes: Provide trace findings and refer the customer to the sender's official support channel.\n\n[S1] Restriction: Never request or repeat the customer's OTP.\n\n[S2] Ask an authorized agent to verify: Roaming-data entitlement is disabled on the account despite the eligible pack. Only if confirmed, the procedure proposes: After authentication and consent, apply the eligible roaming-data entitlement.\n\n[S2] Restriction: Do not enable chargeable services without confirming pack coverage and consent.\n\n[S3] Ask an authorized agent to verify: The sender is blocked locally; network delivery receipts are successful. Only if confirmed, the procedure proposes: With consent, remove the unintended block or adjust the device's supported filtering setting.\n\n[S3] Restriction: Do not disable all spam protection or expose message contents in logs.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: agent_review. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+                  "analysis": {
+                    "category": null,
+                    "scope_status": "supported",
+                    "scope_reason": "recognized_service_mention",
+                    "category_status": "uncertain",
+                    "category_basis": "uncertain",
+                    "category_evidence": [],
+                    "routing_policy": "development_selected_v1",
+                    "candidates": [
+                      {
+                        "category": "sms_otp",
+                        "score": 0.32613974945711194
+                      },
+                      {
+                        "category": "mobile_data",
+                        "score": 0.1090797786484834
+                      },
+                      {
+                        "category": "roaming",
+                        "score": 0.07669879085182989
+                      }
+                    ],
+                    "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                    "products": [
+                      {
+                        "text": "phone",
+                        "start": 47,
+                        "end": 52,
+                        "product": "mobile"
+                      }
+                    ],
+                    "severity": {
+                      "value": "unknown",
+                      "rule": "insufficient_impact_evidence",
+                      "evidence": [],
+                      "method": "rules_v1"
+                    },
+                    "sentiment": {
+                      "value": "unknown",
+                      "rule": "no_explicit_tone",
+                      "evidence": [],
+                      "method": "rules_v1"
+                    },
+                    "actions": [],
+                    "reported_facts": [
+                      {
+                        "text": "can't get my bank's one-time passwords",
+                        "start": 2,
+                        "end": 40,
+                        "name": "mobile_services",
+                        "value": "texts"
+                      },
+                      {
+                        "text": "Only the bank ones are missing",
+                        "start": 151,
+                        "end": 181,
+                        "name": "sms_scope",
+                        "value": "one_sender"
+                      }
+                    ],
+                    "requests": [],
+                    "needs_clarification": false,
+                    "clarification_questions": [],
+                    "model_version": "231617e54a465126",
+                    "language_method": "rules_v1",
+                    "language_provider": null,
+                    "language_model": null,
+                    "language_error": null,
+                    "elapsed_ms": 100.36849998869002
+                  },
+                  "suggestions": [
+                    {
+                      "citation_id": "S1",
+                      "required_finding": "Network trace shows no message submission from the affected sender; other SMS delivers.",
+                      "proposed_action": "Provide trace findings and refer the customer to the sender's official support channel.",
+                      "restriction": "Never request or repeat the customer's OTP.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S2",
+                      "required_finding": "Roaming-data entitlement is disabled on the account despite the eligible pack.",
+                      "proposed_action": "After authentication and consent, apply the eligible roaming-data entitlement.",
+                      "restriction": "Do not enable chargeable services without confirming pack coverage and consent.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S3",
+                      "required_finding": "The sender is blocked locally; network delivery receipts are successful.",
+                      "proposed_action": "With consent, remove the unintended block or adjust the device's supported filtering setting.",
+                      "restriction": "Do not disable all spam protection or expose message contents in logs.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    }
+                  ],
+                  "sources": [
+                    {
+                      "citation_id": "S1",
+                      "doc_id": "syn_kb_SM01",
+                      "chunk_id": 41,
+                      "title": "Sender-side OTP submission failure. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "mobile_sms",
+                          "start": 137,
+                          "end": 147,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Network trace shows no message submission from the affected sender; other SMS delivers.",
+                          "start": 290,
+                          "end": 377,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Provide trace findings and refer the customer to the sender's official support channel.",
+                          "start": 415,
+                          "end": 502,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Never request or repeat the customer's OTP.",
+                          "start": 733,
+                          "end": 776,
+                          "field": "restriction"
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "S2",
+                      "doc_id": "syn_kb_RM01",
+                      "chunk_id": 33,
+                      "title": "Account-level roaming-data restriction. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "mobile_roaming",
+                          "start": 141,
+                          "end": 155,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Roaming-data entitlement is disabled on the account despite the eligible pack.",
+                          "start": 298,
+                          "end": 376,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "After authentication and consent, apply the eligible roaming-data entitlement.",
+                          "start": 414,
+                          "end": 492,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not enable chargeable services without confirming pack coverage and consent.",
+                          "start": 714,
+                          "end": 793,
+                          "field": "restriction"
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "S3",
+                      "doc_id": "syn_kb_SM03",
+                      "chunk_id": 43,
+                      "title": "Local message filtering. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "mobile_sms",
+                          "start": 126,
+                          "end": 136,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "The sender is blocked locally; network delivery receipts are successful.",
+                          "start": 279,
+                          "end": 351,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "With consent, remove the unintended block or adjust the device's supported filtering setting.",
+                          "start": 389,
+                          "end": 482,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not disable all spam protection or expose message contents in logs.",
+                          "start": 697,
+                          "end": 767,
+                          "field": "restriction"
+                        }
+                      ]
+                    }
+                  ],
+                  "clarification_questions": [],
+                  "acknowledged_actions": [],
+                  "contact_status": "not_requested",
+                  "customer_plan": {
+                    "title": "Suggested resolution for agent review",
+                    "summary": "These steps depend on the diagnostic checks shown below. Similar symptoms alone do not confirm the cause.",
+                    "steps": [
+                      "[S1] Verify: Network trace shows no message submission from the affected sender; other SMS delivers. Only if confirmed: Provide trace findings and refer the customer to the sender's official support channel. Restriction: Never request or repeat the customer's OTP.",
+                      "[S2] Verify: Roaming-data entitlement is disabled on the account despite the eligible pack. Only if confirmed: After authentication and consent, apply the eligible roaming-data entitlement. Restriction: Do not enable chargeable services without confirming pack coverage and consent.",
+                      "[S3] Verify: The sender is blocked locally; network delivery receipts are successful. Only if confirmed: With consent, remove the unintended block or adjust the device's supported filtering setting. Restriction: Do not disable all spam protection or expose message contents in logs."
+                    ],
+                    "note": "Sources are synthetic demonstration procedures. No repair has been executed."
+                  },
+                  "limitations": [
+                    "Extractive local drafting; no generative LLM is used.",
+                    "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                    "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+                  ],
+                  "elapsed_ms": 2854.6726999338716
+                }
+              }
+            ],
+            "storage": "client_replayed",
+            "limitations": [
+              "Send the same original query and full customer-turn history on each request.",
+              "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+              "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+            ]
+          }
+        }
+      ],
+      "manual_scores": {
+        "context": null,
+        "relevance": null,
+        "conversation": null,
+        "grounding": null,
+        "clarity": null
+      },
+      "review_notes": ""
+    },
+    {
+      "id": "U03",
+      "name": "Two charges with uncertain settlement",
+      "query": "I see two charges of Rs 999 on my bank statement for this month's bill, and the portal shows only one payment against my account. Not sure whether one of them is just a hold.",
+      "turns": [],
+      "expected": [
+        "Identify a billing dispute.",
+        "Ask whether the second charge is pending or settled, without asserting either.",
+        "Do not promise a refund or state duplicate settlement is confirmed."
+      ],
+      "snapshots": [
+        {
+          "after_reply": 0,
+          "response": {
+            "issues": [
+              {
+                "issue_id": 1,
+                "complaint": "I see two charges of Rs 999 on my bank statement for this month's bill, the portal shows only one payment against my account. Not sure whether one of them is just a hold.",
+                "analysis_text": "I see two charges of Rs 999 on my bank statement for this month's bill, the portal shows only one payment against my account. Not sure whether one of them is just a hold.",
+                "resolution": {
+                  "status": "needs_diagnostic_confirmation",
+                  "decision": {
+                    "action": "clarify",
+                    "priority": "normal",
+                    "reasons": [
+                      "missing_customer_observations"
+                    ],
+                    "target": "support_agent",
+                    "handoff_created": false
+                  },
+                  "validation": {
+                    "status": "passed",
+                    "checked_sources": 3,
+                    "issues": [],
+                    "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+                  },
+                  "method": "local_extractive_v1",
+                  "language_summary": null,
+                  "language_plan": null,
+                  "language_draft": null,
+                  "language_status": "disabled",
+                  "language_model": null,
+                  "language_provider": null,
+                  "faithfulness_status": "not_run",
+                  "language_error": null,
+                  "historical_cases": [
+                    {
+                      "citation_id": "T1",
+                      "doc_id": "syn_ticket_BD01_03",
+                      "chunk_id": 109,
+                      "title": "Billing dispute support case",
+                      "resolution": "Finding: Ledger confirms duplicate settled payments against one invoice. Action: Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment. Simulated follow-up: adjustment appears in the ledger and is communicated to the customer.",
+                      "outcome_status": "simulated_resolved",
+                      "is_synthetic": true
+                    },
+                    {
+                      "citation_id": "T2",
+                      "doc_id": "syn_ticket_PR02_02",
+                      "chunk_id": 212,
+                      "title": "Payment restoration support case",
+                      "resolution": "Finding: Payment is an authorization only; provider has no settlement confirmation. Action: Explain the pending status and approved payment-support route without falsely marking the account paid. Simulated follow-up: settlement later arrives and normal restoration proceeds.",
+                      "outcome_status": "simulated_resolved",
+                      "is_synthetic": true
+                    }
+                  ],
+                  "agent_review_required": true,
+                  "draft": "Draft for agent review. A cause has not been confirmed.\n\nCustomer-reported observations: two charges\n\nClarify: Does your payment record show pending or settled? Do not share bank credentials or card details.\n\nAnswer the clarification questions before choosing a repair. Retrieved procedures are attached for agent review, not recommended actions yet.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: clarify. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+                  "analysis": {
+                    "category": "billing_dispute",
+                    "scope_status": "supported",
+                    "scope_reason": "recognized_service_mention",
+                    "category_status": "predicted",
+                    "category_basis": "model",
+                    "category_evidence": [],
+                    "routing_policy": "development_selected_v1",
+                    "candidates": [
+                      {
+                        "category": "billing_dispute",
+                        "score": 0.35675549738331935
+                      },
+                      {
+                        "category": "payment_restoration",
+                        "score": 0.17819821255813534
+                      },
+                      {
+                        "category": "number_porting",
+                        "score": 0.07502559294094885
+                      }
+                    ],
+                    "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                    "products": [
+                      {
+                        "text": "charges",
+                        "start": 10,
+                        "end": 17,
+                        "product": "billing"
+                      }
+                    ],
+                    "severity": {
+                      "value": "unknown",
+                      "rule": "insufficient_impact_evidence",
+                      "evidence": [],
+                      "method": "rules_v1"
+                    },
+                    "sentiment": {
+                      "value": "unknown",
+                      "rule": "no_explicit_tone",
+                      "evidence": [],
+                      "method": "rules_v1"
+                    },
+                    "actions": [],
+                    "reported_facts": [
+                      {
+                        "text": "two charges",
+                        "start": 6,
+                        "end": 17,
+                        "name": "charge",
+                        "value": "bill_payment"
+                      }
+                    ],
+                    "requests": [],
+                    "needs_clarification": true,
+                    "clarification_questions": [
+                      "Does your payment record show pending or settled? Do not share bank credentials or card details."
+                    ],
+                    "model_version": "231617e54a465126",
+                    "language_method": "rules_v1",
+                    "language_provider": null,
+                    "language_model": null,
+                    "language_error": null,
+                    "elapsed_ms": 75.16940007917583
+                  },
+                  "suggestions": [
+                    {
+                      "citation_id": "S1",
+                      "required_finding": "Ledger confirms duplicate settled payments against one invoice.",
+                      "proposed_action": "Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment.",
+                      "restriction": "Do not refund a pending authorization or promise a universal refund deadline.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S2",
+                      "required_finding": "Payment is an authorization only; provider has no settlement confirmation.",
+                      "proposed_action": "Explain the pending status and approved payment-support route without falsely marking the account paid.",
+                      "restriction": "Do not claim that a pending bank hold proves the invoice is paid.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S3",
+                      "required_finding": "Ledger shows correct non-overlapping prorated periods and no duplicate charge.",
+                      "proposed_action": "Explain the dated line items and calculation; retain the valid charges unless new evidence shows an error.",
+                      "restriction": "Do not issue a credit merely because the customer is angry.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    }
+                  ],
+                  "sources": [
+                    {
+                      "citation_id": "S1",
+                      "doc_id": "syn_kb_BD01",
+                      "chunk_id": 5,
+                      "title": "Duplicate settled payment. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "billing",
+                          "start": 128,
+                          "end": 135,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Ledger confirms duplicate settled payments against one invoice.",
+                          "start": 286,
+                          "end": 349,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment.",
+                          "start": 387,
+                          "end": 488,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not refund a pending authorization or promise a universal refund deadline.",
+                          "start": 721,
+                          "end": 798,
+                          "field": "restriction"
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "S2",
+                      "doc_id": "syn_kb_PR02",
+                      "chunk_id": 30,
+                      "title": "Payment not yet settled. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "billing",
+                          "start": 126,
+                          "end": 133,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Payment is an authorization only; provider has no settlement confirmation.",
+                          "start": 288,
+                          "end": 362,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Explain the pending status and approved payment-support route without falsely marking the account paid.",
+                          "start": 400,
+                          "end": 503,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not claim that a pending bank hold proves the invoice is paid.",
+                          "start": 724,
+                          "end": 789,
+                          "field": "restriction"
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "S3",
+                      "doc_id": "syn_kb_BD03",
+                      "chunk_id": 7,
+                      "title": "Valid prorated billing misunderstood. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "billing",
+                          "start": 139,
+                          "end": 146,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Ledger shows correct non-overlapping prorated periods and no duplicate charge.",
+                          "start": 297,
+                          "end": 375,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Explain the dated line items and calculation; retain the valid charges unless new evidence shows an error.",
+                          "start": 413,
+                          "end": 519,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not issue a credit merely because the customer is angry.",
+                          "start": 745,
+                          "end": 804,
+                          "field": "restriction"
+                        }
+                      ]
+                    }
+                  ],
+                  "clarification_questions": [
+                    "Does your payment record show pending or settled? Do not share bank credentials or card details."
+                  ],
+                  "acknowledged_actions": [],
+                  "contact_status": "not_requested",
+                  "customer_plan": {
+                    "title": "Let's narrow down the problem",
+                    "summary": "We need the details below to choose the next step without guessing a cause.",
+                    "steps": [
+                      "Answer the questions below together in the reply box."
+                    ],
+                    "note": "Your previous attempts are retained so they can be reviewed."
+                  },
+                  "limitations": [
+                    "Extractive local drafting; no generative LLM is used.",
+                    "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                    "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+                  ],
+                  "elapsed_ms": 4213.0474001169205
+                }
+              }
+            ],
+            "storage": "client_replayed",
+            "limitations": [
+              "Send the same original query and full customer-turn history on each request.",
+              "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+              "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+            ]
+          }
+        }
+      ],
+      "manual_scores": {
+        "context": null,
+        "relevance": null,
+        "conversation": null,
+        "grounding": null,
+        "clarity": null
+      },
+      "review_notes": ""
+    },
+    {
+      "id": "U04",
+      "name": "Roaming data unavailable",
+      "query": "Landed in Singapore this morning. My travel pack was supposed to start today but I have no data at all, though I can make calls. The pack is meant to cover Singapore.",
+      "turns": [],
+      "expected": [
+        "Recognize roaming data as affected and calls as working.",
+        "Treat pack activation as unconfirmed; do not invent coverage or activation confirmation.",
+        "Do not ask which mobile service fails when data failure is already clear."
+      ],
+      "snapshots": [
+        {
+          "after_reply": 0,
+          "response": {
+            "issues": [
+              {
+                "issue_id": 1,
+                "complaint": "Landed in Singapore this morning. My travel pack was supposed to start today I have no data at all, though I can make calls. The pack is meant to cover Singapore.",
+                "analysis_text": "Landed in Singapore this morning. My travel pack was supposed to start today I have no data at all, though I can make calls. The pack is meant to cover Singapore.",
+                "resolution": {
+                  "status": "needs_diagnostic_confirmation",
+                  "decision": {
+                    "action": "agent_review",
+                    "priority": "normal",
+                    "reasons": [
+                      "diagnostic_confirmation_required"
+                    ],
+                    "target": "support_agent",
+                    "handoff_created": false
+                  },
+                  "validation": {
+                    "status": "passed",
+                    "checked_sources": 3,
+                    "issues": [],
+                    "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+                  },
+                  "method": "local_extractive_v1",
+                  "language_summary": null,
+                  "language_plan": null,
+                  "language_draft": null,
+                  "language_status": "disabled",
+                  "language_model": null,
+                  "language_provider": null,
+                  "faithfulness_status": "not_run",
+                  "language_error": null,
+                  "historical_cases": [
+                    {
+                      "citation_id": "T1",
+                      "doc_id": "syn_ticket_RM01_06",
+                      "chunk_id": 224,
+                      "title": "Roaming support case",
+                      "resolution": "Finding: Roaming-data entitlement is disabled on the account despite the eligible pack. Action: After authentication and consent, apply the eligible roaming-data entitlement. Simulated follow-up: a roaming data session establishes on a supported partner.",
+                      "outcome_status": "simulated_resolved",
+                      "is_synthetic": true
+                    }
+                  ],
+                  "agent_review_required": true,
+                  "draft": "Draft for agent review. A cause has not been confirmed.\n\nCustomer-reported observations: have no data\n\n[S1] Ask an authorized agent to verify: Roaming-data entitlement is disabled on the account despite the eligible pack. Only if confirmed, the procedure proposes: After authentication and consent, apply the eligible roaming-data entitlement.\n\n[S1] Restriction: Do not enable chargeable services without confirming pack coverage and consent.\n\n[S2] Ask an authorized agent to verify: Purchase succeeded; service date has not started. Only if confirmed, the procedure proposes: Explain the recorded validity and authorized change options; obtain consent before any paid change.\n\n[S2] Restriction: Do not automatically backdate coverage or promise refunds.\n\n[S3] Ask an authorized agent to verify: Roaming allowance is exhausted with no active additional entitlement. Only if confirmed, the procedure proposes: Explain remaining service and approved top-up choices without purchasing on the customer's behalf.\n\n[S3] Restriction: Do not silently switch to out-of-bundle charging.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: agent_review. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+                  "analysis": {
+                    "category": "roaming",
+                    "scope_status": "supported",
+                    "scope_reason": "recognized_service_mention",
+                    "category_status": "predicted",
+                    "category_basis": "model",
+                    "category_evidence": [],
+                    "routing_policy": "development_selected_v1",
+                    "candidates": [
+                      {
+                        "category": "roaming",
+                        "score": 0.4071874078536817
+                      },
+                      {
+                        "category": "mobile_data",
+                        "score": 0.08098154187557381
+                      },
+                      {
+                        "category": "sim_esim_activation",
+                        "score": 0.06557454061644392
+                      }
+                    ],
+                    "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                    "products": [
+                      {
+                        "text": "travel pack",
+                        "start": 37,
+                        "end": 48,
+                        "product": "mobile"
+                      }
+                    ],
+                    "severity": {
+                      "value": "unknown",
+                      "rule": "insufficient_impact_evidence",
+                      "evidence": [],
+                      "method": "rules_v1"
+                    },
+                    "sentiment": {
+                      "value": "unknown",
+                      "rule": "no_explicit_tone",
+                      "evidence": [],
+                      "method": "rules_v1"
+                    },
+                    "actions": [],
+                    "reported_facts": [
+                      {
+                        "text": "have no data",
+                        "start": 79,
+                        "end": 91,
+                        "name": "mobile_services",
+                        "value": "data"
+                      }
+                    ],
+                    "requests": [],
+                    "needs_clarification": false,
+                    "clarification_questions": [],
+                    "model_version": "231617e54a465126",
+                    "language_method": "rules_v1",
+                    "language_provider": null,
+                    "language_model": null,
+                    "language_error": null,
+                    "elapsed_ms": 59.721400029957294
+                  },
+                  "suggestions": [
+                    {
+                      "citation_id": "S1",
+                      "required_finding": "Roaming-data entitlement is disabled on the account despite the eligible pack.",
+                      "proposed_action": "After authentication and consent, apply the eligible roaming-data entitlement.",
+                      "restriction": "Do not enable chargeable services without confirming pack coverage and consent.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S2",
+                      "required_finding": "Purchase succeeded; service date has not started.",
+                      "proposed_action": "Explain the recorded validity and authorized change options; obtain consent before any paid change.",
+                      "restriction": "Do not automatically backdate coverage or promise refunds.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S3",
+                      "required_finding": "Roaming allowance is exhausted with no active additional entitlement.",
+                      "proposed_action": "Explain remaining service and approved top-up choices without purchasing on the customer's behalf.",
+                      "restriction": "Do not silently switch to out-of-bundle charging.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    }
+                  ],
+                  "sources": [
+                    {
+                      "citation_id": "S1",
+                      "doc_id": "syn_kb_RM01",
+                      "chunk_id": 33,
+                      "title": "Account-level roaming-data restriction. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "mobile_roaming",
+                          "start": 141,
+                          "end": 155,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Roaming-data entitlement is disabled on the account despite the eligible pack.",
+                          "start": 298,
+                          "end": 376,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "After authentication and consent, apply the eligible roaming-data entitlement.",
+                          "start": 414,
+                          "end": 492,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not enable chargeable services without confirming pack coverage and consent.",
+                          "start": 714,
+                          "end": 793,
+                          "field": "restriction"
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "S2",
+                      "doc_id": "syn_kb_RM03",
+                      "chunk_id": 35,
+                      "title": "Roaming pack validity has not begun. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "mobile_roaming",
+                          "start": 138,
+                          "end": 152,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Purchase succeeded; service date has not started.",
+                          "start": 295,
+                          "end": 344,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Explain the recorded validity and authorized change options; obtain consent before any paid change.",
+                          "start": 382,
+                          "end": 481,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not automatically backdate coverage or promise refunds.",
+                          "start": 707,
+                          "end": 765,
+                          "field": "restriction"
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "S3",
+                      "doc_id": "syn_kb_RM04",
+                      "chunk_id": 36,
+                      "title": "Exhausted roaming data allowance. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "mobile_roaming",
+                          "start": 135,
+                          "end": 149,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Roaming allowance is exhausted with no active additional entitlement.",
+                          "start": 292,
+                          "end": 361,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Explain remaining service and approved top-up choices without purchasing on the customer's behalf.",
+                          "start": 399,
+                          "end": 497,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not silently switch to out-of-bundle charging.",
+                          "start": 711,
+                          "end": 760,
+                          "field": "restriction"
+                        }
+                      ]
+                    }
+                  ],
+                  "clarification_questions": [],
+                  "acknowledged_actions": [],
+                  "contact_status": "not_requested",
+                  "customer_plan": {
+                    "title": "Suggested resolution for agent review",
+                    "summary": "These steps depend on the diagnostic checks shown below. Similar symptoms alone do not confirm the cause.",
+                    "steps": [
+                      "[S1] Verify: Roaming-data entitlement is disabled on the account despite the eligible pack. Only if confirmed: After authentication and consent, apply the eligible roaming-data entitlement. Restriction: Do not enable chargeable services without confirming pack coverage and consent.",
+                      "[S2] Verify: Purchase succeeded; service date has not started. Only if confirmed: Explain the recorded validity and authorized change options; obtain consent before any paid change. Restriction: Do not automatically backdate coverage or promise refunds.",
+                      "[S3] Verify: Roaming allowance is exhausted with no active additional entitlement. Only if confirmed: Explain remaining service and approved top-up choices without purchasing on the customer's behalf. Restriction: Do not silently switch to out-of-bundle charging."
+                    ],
+                    "note": "Sources are synthetic demonstration procedures. No repair has been executed."
+                  },
+                  "limitations": [
+                    "Extractive local drafting; no generative LLM is used.",
+                    "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                    "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+                  ],
+                  "elapsed_ms": 2336.972299963236
+                }
+              }
+            ],
+            "storage": "client_replayed",
+            "limitations": [
+              "Send the same original query and full customer-turn history on each request.",
+              "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+              "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+            ]
+          }
+        }
+      ],
+      "manual_scores": {
+        "context": null,
+        "relevance": null,
+        "conversation": null,
+        "grounding": null,
+        "clarity": null
+      },
+      "review_notes": ""
+    },
+    {
+      "id": "U05",
+      "name": "Live TV freezes",
+      "query": "Cricket match tonight and the live channels freeze every few seconds. Netflix on my phone is fine on the same Wi-Fi. The set-top box is in the bedroom, far from the router.",
+      "turns": [],
+      "expected": [
+        "Recognize an IPTV/live-TV complaint rather than mobile data failure.",
+        "Preserve the working comparison stream without assuming the TV has a good connection.",
+        "Offer a relevant diagnostic next step without asserting wireless distance is the confirmed cause."
+      ],
+      "snapshots": [
+        {
+          "after_reply": 0,
+          "response": {
+            "issues": [
+              {
+                "issue_id": 1,
+                "complaint": "Cricket match tonight the live channels freeze every few seconds. Netflix on my phone is fine on the same Wi-Fi. The set-top box is in the bedroom, far from the router.",
+                "analysis_text": "Cricket match tonight the live channels freeze every few seconds. Netflix on my phone is fine on the same Wi-Fi. The set-top box is in the bedroom, far from the router.",
+                "resolution": {
+                  "status": "needs_diagnostic_confirmation",
+                  "decision": {
+                    "action": "agent_review",
+                    "priority": "normal",
+                    "reasons": [
+                      "diagnostic_confirmation_required"
+                    ],
+                    "target": "support_agent",
+                    "handoff_created": false
+                  },
+                  "validation": {
+                    "status": "passed",
+                    "checked_sources": 3,
+                    "issues": [],
+                    "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+                  },
+                  "method": "local_extractive_v1",
+                  "language_summary": null,
+                  "language_plan": null,
+                  "language_draft": null,
+                  "language_status": "disabled",
+                  "language_model": null,
+                  "language_provider": null,
+                  "faithfulness_status": "not_run",
+                  "language_error": null,
+                  "historical_cases": [
+                    {
+                      "citation_id": "T1",
+                      "doc_id": "syn_ticket_TV01_04",
+                      "chunk_id": 286,
+                      "title": "Iptv support case",
+                      "resolution": "Finding: Box and service are healthy; wireless link shows loss during buffering. Action: Use the supported wired connection or improve wireless placement after a coverage check. Simulated follow-up: playback stays stable on the tested connection.",
+                      "outcome_status": "simulated_resolved",
+                      "is_synthetic": true
+                    },
+                    {
+                      "citation_id": "T2",
+                      "doc_id": "syn_ticket_TV02_01",
+                      "chunk_id": 291,
+                      "title": "Iptv support case",
+                      "resolution": "Finding: Billing has the package but the set-top-box entitlement has not synchronized. Action: Authorized provisioning staff synchronize the purchased channel entitlement. Simulated follow-up: newly entitled channels play without changing other packages.",
+                      "outcome_status": "simulated_resolved",
+                      "is_synthetic": true
+                    }
+                  ],
+                  "agent_review_required": true,
+                  "draft": "Draft for agent review. A cause has not been confirmed.\n\nCustomer-reported observations: live channels freeze\n\n[S1] Ask an authorized agent to verify: Billing has the package but the set-top-box entitlement has not synchronized. Only if confirmed, the procedure proposes: Authorized provisioning staff synchronize the purchased channel entitlement.\n\n[S1] Restriction: Do not unlock channels the customer has not purchased.\n\n[S2] Ask an authorized agent to verify: Box and service are healthy; wireless link shows loss during buffering. Only if confirmed, the procedure proposes: Use the supported wired connection or improve wireless placement after a coverage check.\n\n[S2] Restriction: Do not change billing entitlements for a demonstrated local link problem.\n\n[S3] Ask an authorized agent to verify: Provider incident confirms a failed source feed for that channel. Only if confirmed, the procedure proposes: Link the report to the content incident and provide confirmed updates while operations restore the feed.\n\n[S3] Restriction: Do not factory-reset customer devices for a confirmed shared content outage.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: agent_review. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+                  "analysis": {
+                    "category": null,
+                    "scope_status": "supported",
+                    "scope_reason": "recognized_service_mention",
+                    "category_status": "uncertain",
+                    "category_basis": "uncertain",
+                    "category_evidence": [],
+                    "routing_policy": "development_selected_v1",
+                    "candidates": [
+                      {
+                        "category": "iptv",
+                        "score": 0.2669518438702699
+                      },
+                      {
+                        "category": "wifi_connectivity",
+                        "score": 0.10976595751062021
+                      },
+                      {
+                        "category": "mobile_coverage",
+                        "score": 0.08339291591479484
+                      }
+                    ],
+                    "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                    "products": [
+                      {
+                        "text": "live channels",
+                        "start": 26,
+                        "end": 39,
+                        "product": "iptv"
+                      },
+                      {
+                        "text": "Wi-Fi",
+                        "start": 106,
+                        "end": 111,
+                        "product": "home_wifi"
+                      },
+                      {
+                        "text": "router",
+                        "start": 161,
+                        "end": 167,
+                        "product": "router"
+                      }
+                    ],
+                    "severity": {
+                      "value": "unknown",
+                      "rule": "insufficient_impact_evidence",
+                      "evidence": [],
+                      "method": "rules_v1"
+                    },
+                    "sentiment": {
+                      "value": "unknown",
+                      "rule": "no_explicit_tone",
+                      "evidence": [],
+                      "method": "rules_v1"
+                    },
+                    "actions": [],
+                    "reported_facts": [
+                      {
+                        "text": "live channels freeze",
+                        "start": 26,
+                        "end": 46,
+                        "name": "tv_symptom",
+                        "value": "buffering"
+                      }
+                    ],
+                    "requests": [],
+                    "needs_clarification": false,
+                    "clarification_questions": [],
+                    "model_version": "231617e54a465126",
+                    "language_method": "rules_v1",
+                    "language_provider": null,
+                    "language_model": null,
+                    "language_error": null,
+                    "elapsed_ms": 40.60339997522533
+                  },
+                  "suggestions": [
+                    {
+                      "citation_id": "S1",
+                      "required_finding": "Billing has the package but the set-top-box entitlement has not synchronized.",
+                      "proposed_action": "Authorized provisioning staff synchronize the purchased channel entitlement.",
+                      "restriction": "Do not unlock channels the customer has not purchased.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S2",
+                      "required_finding": "Box and service are healthy; wireless link shows loss during buffering.",
+                      "proposed_action": "Use the supported wired connection or improve wireless placement after a coverage check.",
+                      "restriction": "Do not change billing entitlements for a demonstrated local link problem.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S3",
+                      "required_finding": "Provider incident confirms a failed source feed for that channel.",
+                      "proposed_action": "Link the report to the content incident and provide confirmed updates while operations restore the feed.",
+                      "restriction": "Do not factory-reset customer devices for a confirmed shared content outage.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    }
+                  ],
+                  "sources": [
+                    {
+                      "citation_id": "S1",
+                      "doc_id": "syn_kb_TV02",
+                      "chunk_id": 50,
+                      "title": "Missing IPTV package entitlement. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "iptv",
+                          "start": 135,
+                          "end": 139,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Billing has the package but the set-top-box entitlement has not synchronized.",
+                          "start": 279,
+                          "end": 356,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Authorized provisioning staff synchronize the purchased channel entitlement.",
+                          "start": 394,
+                          "end": 470,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not unlock channels the customer has not purchased.",
+                          "start": 695,
+                          "end": 749,
+                          "field": "restriction"
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "S2",
+                      "doc_id": "syn_kb_TV01",
+                      "chunk_id": 49,
+                      "title": "Weak wireless link to the IPTV box. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "iptv",
+                          "start": 137,
+                          "end": 141,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Box and service are healthy; wireless link shows loss during buffering.",
+                          "start": 281,
+                          "end": 352,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Use the supported wired connection or improve wireless placement after a coverage check.",
+                          "start": 390,
+                          "end": 478,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not change billing entitlements for a demonstrated local link problem.",
+                          "start": 689,
+                          "end": 762,
+                          "field": "restriction"
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "S3",
+                      "doc_id": "syn_kb_TV04",
+                      "chunk_id": 52,
+                      "title": "Channel-specific source-feed outage. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "iptv",
+                          "start": 138,
+                          "end": 142,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Provider incident confirms a failed source feed for that channel.",
+                          "start": 282,
+                          "end": 347,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Link the report to the content incident and provide confirmed updates while operations restore the feed.",
+                          "start": 385,
+                          "end": 489,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not factory-reset customer devices for a confirmed shared content outage.",
+                          "start": 715,
+                          "end": 791,
+                          "field": "restriction"
+                        }
+                      ]
+                    }
+                  ],
+                  "clarification_questions": [],
+                  "acknowledged_actions": [],
+                  "contact_status": "not_requested",
+                  "customer_plan": {
+                    "title": "Suggested resolution for agent review",
+                    "summary": "These steps depend on the diagnostic checks shown below. Similar symptoms alone do not confirm the cause.",
+                    "steps": [
+                      "[S1] Verify: Billing has the package but the set-top-box entitlement has not synchronized. Only if confirmed: Authorized provisioning staff synchronize the purchased channel entitlement. Restriction: Do not unlock channels the customer has not purchased.",
+                      "[S2] Verify: Box and service are healthy; wireless link shows loss during buffering. Only if confirmed: Use the supported wired connection or improve wireless placement after a coverage check. Restriction: Do not change billing entitlements for a demonstrated local link problem.",
+                      "[S3] Verify: Provider incident confirms a failed source feed for that channel. Only if confirmed: Link the report to the content incident and provide confirmed updates while operations restore the feed. Restriction: Do not factory-reset customer devices for a confirmed shared content outage."
+                    ],
+                    "note": "Sources are synthetic demonstration procedures. No repair has been executed."
+                  },
+                  "limitations": [
+                    "Extractive local drafting; no generative LLM is used.",
+                    "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                    "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+                  ],
+                  "elapsed_ms": 2075.155299855396
+                }
+              }
+            ],
+            "storage": "client_replayed",
+            "limitations": [
+              "Send the same original query and full customer-turn history on each request.",
+              "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+              "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+            ]
+          }
+        }
+      ],
+      "manual_scores": {
+        "context": null,
+        "relevance": null,
+        "conversation": null,
+        "grounding": null,
+        "clarity": null
+      },
+      "review_notes": ""
+    }
+  ],
+  "run_complete": true,
+  "fingerprint": {
+    "code_sha256": "a4d9a526b731290dff87f562a65a8bfcdcece4e3b95f68d4ae3bf0a46d8fd65f",
+    "artifacts": {
+      "classifier": "a7cc25d5a52df20fe311444920d011e1343422ac5847010b62234663bef8053d",
+      "routing": "f8c8497c40b1e5c476d30e0edd38d9c008f26bf3f8de8ae5fe55fd142098fd8c",
+      "corpus": "a93a4a53ee5b02af72571b1e528fa63cba8d9fc9ff378a4de4eef19a2f0be348",
+      "chunks": "8484ba33f895cac2711b8af46e1dc039e87f5c04d6d09b95372d9d7ba32d8670"
+    },
+    "llm_enabled": false,
+    "groq_model": "openai/gpt-oss-120b",
+    "gemini_model": "gemini-2.5-flash",
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "embedding_revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+    "reranker_model": "cross-encoder/ms-marco-MiniLM-L6-v2",
+    "reranker_revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a"
+  }
+}

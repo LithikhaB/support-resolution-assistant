@@ -13,6 +13,32 @@ EQUIPMENT_LINK = r"(?:\s+(?:is|are|was|were|has|have|been|got|looks?|seems?|ever
 FACT_PATTERNS = (
     (
         "wired_connection",
+        "failing",
+        r"\b(?:with|using|via|over)\s+(?:an?\s+)?(?:Ethernet\s+)?cable\s+(?:and\s+)?(?:it|the connection)\s+(?:still\s+|also\s+)?(?:drops|disconnects|cuts out|fails)\b",
+    ),
+    (
+        "mobile_services",
+        "data",
+        r"\b(?:have|has|getting)\s+no\s+(?:mobile\s+)?data\b|\b(?:mobile\s+)?data\s+(?:isn't|is not|doesn't|does not)\s+work(?:ing)?\b",
+    ),
+    (
+        "mobile_services",
+        "texts",
+        r"\b(?:can't|cannot|can not)\s+(?:get|receive)\b[^.!?;,]{0,40}\b(?:one.time passwords?|verification (?:codes?|texts?)|SMS|OTP)\b",
+    ),
+    (
+        "sms_scope",
+        "one_sender",
+        r"\bonly\s+(?:the\s+)?[\w'’ -]{1,35}\b(?:ones|messages|codes|texts)\s+(?:are\s+)?(?:missing|not arriving)\b",
+    ),
+    (
+        "tv_symptom",
+        "buffering",
+        r"\b(?:live channels?|TV|television|picture|set.top box)\s+(?:(?:keeps?|is|are|still)\s+)*(?:freez(?:e|es|ing)|buffers?|buffering)\b",
+    ),
+    ("charge", "bill_payment", r"\b(?:two|duplicate)\s+(?:charges|payments)\b"),
+    (
+        "wired_connection",
         "unavailable",
         r"\b(?:cannot|can't)\s+(?:plug|use|test|connect)[^.!?]{0,60}\bEthernet\b|\b(?:don't|do not) have\s+(?:any\s+)?devices? with Ethernet\b",
     ),
@@ -165,7 +191,9 @@ def clarification_questions(*, accepted, products, severity, facts, requests) ->
     if severity.rule == "reported_area_outage":
         questions.append(AREA_OUTAGE_QUESTION)
     else:
-        if services & {"broadband", "home_wifi", "router"}:
+        if "iptv" in services and any(name == "tv_symptom" for name, _ in known):
+            pass
+        elif services & {"broadband", "home_wifi", "router"}:
             if ("wireless_devices", "one") in known:
                 questions.append(
                     "Does the affected device reconnect by itself, or do you need to turn its Wi-Fi off and on?"
@@ -214,6 +242,7 @@ def clarification_questions(*, accepted, products, severity, facts, requests) ->
         and not any(name == "service_recovery" for name, _ in known)
         and not any(name == "impact" for name, _ in known)
         and not any(name == "mobile_services" for name, _ in known)
+        and not any(name in {"connection_pattern", "tv_symptom"} for name, _ in known)
     ):
         questions.append(
             "Is service completely unavailable or intermittent, and which devices or people are affected?"

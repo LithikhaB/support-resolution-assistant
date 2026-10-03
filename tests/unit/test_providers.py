@@ -135,7 +135,17 @@ def test_both_providers_down_preserve_extractive_draft():
     assert result.validation.status == "passed"
 
 
-@pytest.mark.parametrize("summary,citations", [("Use [S99]", []), ("Earlier case", ["T99"])])
+@pytest.mark.parametrize(
+    "summary,citations",
+    [
+        ("Use [S99]", []),
+        ("Earlier case", ["T99"]),
+        ("I'll check the network trace now.", []),
+        ("I will arrange a replacement.", []),
+        ("Earlier checks did not identify the issue.", []),
+        ("No prior troubleshooting steps taken.", []),
+    ],
+)
 def test_invented_citations_never_reach_display(summary, citations):
     bad = DraftIntroduction(summary=summary, history_citations=citations)
     chain = ProviderChain(

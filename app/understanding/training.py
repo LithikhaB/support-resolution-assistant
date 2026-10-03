@@ -12,7 +12,10 @@ from sklearn.metrics import accuracy_score, confusion_matrix, f1_score
 from app.config.settings import Settings
 from app.ingestion.artifacts import file_sha256, write_json
 from app.retrieval.embeddings import get_embedding_service
+from app.understanding.augmentation import augment_training
+from app.understanding.calibration import select_thresholds
 from app.understanding.classifier import CategoryClassifier, ClassifierArtifact, make_vectorizer
+from app.understanding.routing import load_category_products
 
 
 def load_split(directory: Path, split: str) -> list[dict]:
@@ -85,6 +88,9 @@ def classification_metrics(rows: list[dict], predictions: list[str], classes: li
 def train_classifier(settings: Settings, *, embedder=None) -> dict:
     """Compare fixed local feature baselines and publish one validated JSON classifier."""
     train = load_split(settings.corpus_dir, "train")
+    base_examples = len(train)
+    augmentation_path = settings.corpus_dir / "training_paraphrases.json"
+    train, augmentation_hash = augment_training(train, augmentation_path)
     dev = load_split(settings.corpus_dir, "dev")
     validate_separation(train, dev)
     hashes = {
@@ -103,6 +109,7 @@ def train_classifier(settings: Settings, *, embedder=None) -> dict:
     semantic_train = np.asarray(encoder.embed_documents(texts))
     semantic_dev = np.asarray(encoder.embed_documents(dev_texts))
     candidates = []
+    category_products = load_category_products(settings.category_products_path)
     for feature_type, train_features, dev_features in (
         ("tfidf", lexical_train, lexical_dev),
         ("minilm", semantic_train, semantic_dev),
@@ -114,6 +121,9 @@ def train_classifier(settings: Settings, *, embedder=None) -> dict:
                 raise ValueError("Classifier did not converge; no model was published")
             classes = model.classes_.tolist()
             metrics = classification_metrics(dev, model.predict(dev_features).tolist(), classes)
+            metrics["selective_routing"] = select_thresholds(
+                dev, model.predict_proba(dev_features), classes, category_products=category_products
+            )
             artifact = ClassifierArtifact(
                 feature_type=feature_type,
                 classes=classes,
@@ -127,6 +137,7 @@ def train_classifier(settings: Settings, *, embedder=None) -> dict:
                 else None,
                 train_sha256=hashes["train"],
                 dev_sha256=hashes["dev"],
+                augmentation_sha256=augmentation_hash,
                 training_families=sorted(family_counts),
                 development_families=sorted({r["scenario_family"] for r in dev}),
                 sklearn_version=sklearn.__version__,
@@ -145,6 +156,7 @@ def train_classifier(settings: Settings, *, embedder=None) -> dict:
     selected, metrics = max(
         candidates,
         key=lambda pair: (
+            pair[1]["selective_routing"] is not None,
             pair[1]["macro_f1"],
             pair[0].feature_type == "tfidf",
             -pair[0].regularization_c,
@@ -155,12 +167,19 @@ def train_classifier(settings: Settings, *, embedder=None) -> dict:
         for split, value in hashes.items()
     ):
         raise ValueError("Dataset changed during training; no model was published")
+    if (
+        file_sha256(augmentation_path) if augmentation_path.exists() else None
+    ) != augmentation_hash:
+        raise ValueError("Training paraphrases changed; no model was published")
     write_json(settings.understanding_model_path, selected.model_dump(mode="json"))
     report = {
         "purpose": "Development selection on synthetic scenario families, not real-world accuracy.",
-        "selection": "Highest development macro-F1; ties prefer TF-IDF, then lower C.",
+        "selection": "Prefer candidates meeting the unchanged selective-routing accuracy and coverage floors, then highest development macro-F1; ties prefer TF-IDF, then lower C. Without an eligible candidate, routing remains conservative.",
         "test_split_used": False,
         "train_examples": len(train),
+        "base_train_examples": base_examples,
+        "augmentation_sha256": augmentation_hash,
+        "augmentation_note": "AI-authored paraphrases of training families only; no new independent scenarios or test examples.",
         "train_families": len(family_counts),
         "train_sha256": hashes["train"],
         "dev_sha256": hashes["dev"],

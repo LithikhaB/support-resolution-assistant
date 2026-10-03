@@ -1,0 +1,334 @@
+{
+  "created_at": "2026-10-03T18:53:23.713491+00:00",
+  "cases_sha256": "4ef0217557074171dbe0546cd9d68a4c0ce0009003f9796e258b754012e738db",
+  "provenance": "Complaints and one reply supplied directly by the user on 2026-10-03; expectations authored by the coding assistant.",
+  "purpose": "User-authored acceptance check, excluded from model selection and training; five cases are not a statistical quality benchmark.",
+  "scoring": {
+    "context": "0 missed/misread; 1 partial; 2 accurate",
+    "relevance": "0 unrelated; 1 mixed; 2 relevant",
+    "conversation": "0 repeats an answered/unavailable question or loses corrections; 1 partial; 2 coherent; leave null for single-turn cases",
+    "grounding": "0 invented cause/action/citation; 1 uncertain support; 2 traceable and appropriately conditional",
+    "clarity": "0 confusing; 1 usable with effort; 2 clear and actionable"
+  },
+  "results": [
+    {
+      "id": "U03",
+      "name": "Two charges with uncertain settlement",
+      "query": "I see two charges of Rs 999 on my bank statement for this month's bill, and the portal shows only one payment against my account. Not sure whether one of them is just a hold.",
+      "turns": [],
+      "expected": [
+        "Identify a billing dispute.",
+        "Ask whether the second charge is pending or settled, without asserting either.",
+        "Do not promise a refund or state duplicate settlement is confirmed."
+      ],
+      "snapshots": [
+        {
+          "after_reply": 0,
+          "response": {
+            "issues": [
+              {
+                "issue_id": 1,
+                "complaint": "I see two charges of Rs 999 on my bank statement for this month's bill, the portal shows only one payment against my account. Not sure whether one of them is just a hold.",
+                "analysis_text": "I see two charges of Rs 999 on my bank statement for this month's bill, the portal shows only one payment against my account. Not sure whether one of them is just a hold.",
+                "resolution": {
+                  "status": "needs_diagnostic_confirmation",
+                  "decision": {
+                    "action": "clarify",
+                    "priority": "normal",
+                    "reasons": [
+                      "missing_customer_observations"
+                    ],
+                    "target": "support_agent",
+                    "handoff_created": false
+                  },
+                  "validation": {
+                    "status": "passed",
+                    "checked_sources": 3,
+                    "issues": [],
+                    "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+                  },
+                  "method": "local_extractive_v1",
+                  "language_summary": null,
+                  "language_plan": null,
+                  "language_draft": null,
+                  "language_status": "disabled",
+                  "language_model": null,
+                  "language_provider": null,
+                  "faithfulness_status": "not_run",
+                  "language_error": null,
+                  "historical_cases": [
+                    {
+                      "citation_id": "T1",
+                      "doc_id": "syn_ticket_BD01_03",
+                      "chunk_id": 109,
+                      "title": "Billing dispute support case",
+                      "resolution": "Finding: Ledger confirms duplicate settled payments against one invoice. Action: Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment. Simulated follow-up: adjustment appears in the ledger and is communicated to the customer.",
+                      "outcome_status": "simulated_resolved",
+                      "is_synthetic": true
+                    },
+                    {
+                      "citation_id": "T2",
+                      "doc_id": "syn_ticket_PR02_02",
+                      "chunk_id": 212,
+                      "title": "Payment restoration support case",
+                      "resolution": "Finding: Payment is an authorization only; provider has no settlement confirmation. Action: Explain the pending status and approved payment-support route without falsely marking the account paid. Simulated follow-up: settlement later arrives and normal restoration proceeds.",
+                      "outcome_status": "simulated_resolved",
+                      "is_synthetic": true
+                    }
+                  ],
+                  "agent_review_required": true,
+                  "draft": "Draft for agent review. A cause has not been confirmed.\n\nCustomer-reported observations: two charges\n\nClarify: Does your payment record show pending or settled? Do not share bank credentials or card details.\n\nAnswer the clarification questions before choosing a repair. Retrieved procedures are attached for agent review, not recommended actions yet.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: clarify. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+                  "analysis": {
+                    "category": "billing_dispute",
+                    "scope_status": "supported",
+                    "scope_reason": "recognized_service_mention",
+                    "category_status": "predicted",
+                    "category_basis": "model",
+                    "category_evidence": [],
+                    "routing_policy": "development_selected_v1",
+                    "candidates": [
+                      {
+                        "category": "billing_dispute",
+                        "score": 0.35675549738331935
+                      },
+                      {
+                        "category": "payment_restoration",
+                        "score": 0.17819821255813534
+                      },
+                      {
+                        "category": "number_porting",
+                        "score": 0.07502559294094885
+                      }
+                    ],
+                    "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                    "products": [
+                      {
+                        "text": "charges",
+                        "start": 10,
+                        "end": 17,
+                        "product": "billing"
+                      }
+                    ],
+                    "severity": {
+                      "value": "unknown",
+                      "rule": "insufficient_impact_evidence",
+                      "evidence": [],
+                      "method": "rules_v1"
+                    },
+                    "sentiment": {
+                      "value": "unknown",
+                      "rule": "no_explicit_tone",
+                      "evidence": [],
+                      "method": "rules_v1"
+                    },
+                    "actions": [],
+                    "reported_facts": [
+                      {
+                        "text": "two charges",
+                        "start": 6,
+                        "end": 17,
+                        "name": "charge",
+                        "value": "bill_payment"
+                      }
+                    ],
+                    "requests": [],
+                    "needs_clarification": true,
+                    "clarification_questions": [
+                      "Does your payment record show pending or settled? Do not share bank credentials or card details."
+                    ],
+                    "model_version": "231617e54a465126",
+                    "language_method": "rules_v1",
+                    "language_provider": null,
+                    "language_model": null,
+                    "language_error": null,
+                    "elapsed_ms": 22794.854100095108
+                  },
+                  "suggestions": [
+                    {
+                      "citation_id": "S1",
+                      "required_finding": "Ledger confirms duplicate settled payments against one invoice.",
+                      "proposed_action": "Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment.",
+                      "restriction": "Do not refund a pending authorization or promise a universal refund deadline.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S2",
+                      "required_finding": "Payment is an authorization only; provider has no settlement confirmation.",
+                      "proposed_action": "Explain the pending status and approved payment-support route without falsely marking the account paid.",
+                      "restriction": "Do not claim that a pending bank hold proves the invoice is paid.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S3",
+                      "required_finding": "Ledger shows correct non-overlapping prorated periods and no duplicate charge.",
+                      "proposed_action": "Explain the dated line items and calculation; retain the valid charges unless new evidence shows an error.",
+                      "restriction": "Do not issue a credit merely because the customer is angry.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    }
+                  ],
+                  "sources": [
+                    {
+                      "citation_id": "S1",
+                      "doc_id": "syn_kb_BD01",
+                      "chunk_id": 5,
+                      "title": "Duplicate settled payment. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "billing",
+                          "start": 128,
+                          "end": 135,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Ledger confirms duplicate settled payments against one invoice.",
+                          "start": 286,
+                          "end": 349,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment.",
+                          "start": 387,
+                          "end": 488,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not refund a pending authorization or promise a universal refund deadline.",
+                          "start": 721,
+                          "end": 798,
+                          "field": "restriction"
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "S2",
+                      "doc_id": "syn_kb_PR02",
+                      "chunk_id": 30,
+                      "title": "Payment not yet settled. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "billing",
+                          "start": 126,
+                          "end": 133,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Payment is an authorization only; provider has no settlement confirmation.",
+                          "start": 288,
+                          "end": 362,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Explain the pending status and approved payment-support route without falsely marking the account paid.",
+                          "start": 400,
+                          "end": 503,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not claim that a pending bank hold proves the invoice is paid.",
+                          "start": 724,
+                          "end": 789,
+                          "field": "restriction"
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "S3",
+                      "doc_id": "syn_kb_BD03",
+                      "chunk_id": 7,
+                      "title": "Valid prorated billing misunderstood. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "billing",
+                          "start": 139,
+                          "end": 146,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Ledger shows correct non-overlapping prorated periods and no duplicate charge.",
+                          "start": 297,
+                          "end": 375,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Explain the dated line items and calculation; retain the valid charges unless new evidence shows an error.",
+                          "start": 413,
+                          "end": 519,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not issue a credit merely because the customer is angry.",
+                          "start": 745,
+                          "end": 804,
+                          "field": "restriction"
+                        }
+                      ]
+                    }
+                  ],
+                  "clarification_questions": [
+                    "Does your payment record show pending or settled? Do not share bank credentials or card details."
+                  ],
+                  "acknowledged_actions": [],
+                  "contact_status": "not_requested",
+                  "customer_plan": {
+                    "title": "Let's narrow down the problem",
+                    "summary": "We need the details below to choose the next step without guessing a cause.",
+                    "steps": [
+                      "Answer the questions below together in the reply box."
+                    ],
+                    "note": "Your previous attempts are retained so they can be reviewed."
+                  },
+                  "limitations": [
+                    "Extractive local drafting; no generative LLM is used.",
+                    "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                    "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+                  ],
+                  "elapsed_ms": 2573.0910999700427
+                }
+              }
+            ],
+            "storage": "client_replayed",
+            "limitations": [
+              "Send the same original query and full customer-turn history on each request.",
+              "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+              "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+            ]
+          }
+        }
+      ],
+      "manual_scores": {
+        "context": null,
+        "relevance": null,
+        "conversation": null,
+        "grounding": null,
+        "clarity": null
+      },
+      "review_notes": ""
+    }
+  ],
+  "run_complete": true,
+  "fingerprint": {
+    "code_sha256": "0a7ef0eae36fd6e93346ed4267b27358907c200e4dd33738255ae98fb7f7121e",
+    "artifacts": {
+      "classifier": "a7cc25d5a52df20fe311444920d011e1343422ac5847010b62234663bef8053d",
+      "routing": "f8c8497c40b1e5c476d30e0edd38d9c008f26bf3f8de8ae5fe55fd142098fd8c",
+      "corpus": "a93a4a53ee5b02af72571b1e528fa63cba8d9fc9ff378a4de4eef19a2f0be348",
+      "chunks": "8484ba33f895cac2711b8af46e1dc039e87f5c04d6d09b95372d9d7ba32d8670"
+    },
+    "llm_enabled": false,
+    "groq_model": "openai/gpt-oss-120b",
+    "gemini_model": "gemini-2.5-flash",
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "embedding_revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+    "reranker_model": "cross-encoder/ms-marco-MiniLM-L6-v2",
+    "reranker_revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a"
+  }
+}

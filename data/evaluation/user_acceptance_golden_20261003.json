@@ -1,0 +1,110 @@
+{
+  "purpose": "Regression expectations after reviewing the first user acceptance failures; not an untouched benchmark or human quality ratings.",
+  "cases": [
+    {
+      "id": "U01",
+      "issue_count": 1,
+      "issues": [
+        {
+          "issue_id": 1,
+          "facts": {
+            "wired_connection": "failing"
+          },
+          "no_questions": true,
+          "requires_sources": true,
+          "allowed_source_scopes": [
+            "fibre_broadband",
+            "home_wifi"
+          ]
+        }
+      ],
+      "checkpoints": [
+        {
+          "after_reply": 0,
+          "issue_count": 1,
+          "issues": [
+            {
+              "issue_id": 1,
+              "question_contains": [
+                "Ethernet"
+              ],
+              "question_excludes": [
+                "completely unavailable or intermittent"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "U02",
+      "issue_count": 1,
+      "issues": [
+        {
+          "issue_id": 1,
+          "facts": {
+            "mobile_services": "texts",
+            "sms_scope": "one_sender"
+          },
+          "no_questions": true,
+          "requires_sources": true,
+          "allowed_source_scopes": [
+            "mobile_sms"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "U03",
+      "issue_count": 1,
+      "issues": [
+        {
+          "issue_id": 1,
+          "question_contains": [
+            "pending or settled"
+          ],
+          "question_excludes": [
+            "Which charge"
+          ],
+          "allowed_categories": [
+            "billing_dispute"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "U04",
+      "issue_count": 1,
+      "issues": [
+        {
+          "issue_id": 1,
+          "facts": {
+            "mobile_services": "data"
+          },
+          "no_questions": true,
+          "requires_sources": true,
+          "allowed_source_scopes": [
+            "mobile_roaming"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "U05",
+      "issue_count": 1,
+      "issues": [
+        {
+          "issue_id": 1,
+          "facts": {
+            "tv_symptom": "buffering"
+          },
+          "no_questions": true,
+          "requires_sources": true,
+          "allowed_source_scopes": [
+            "iptv"
+          ]
+        }
+      ]
+    }
+  ]
+}

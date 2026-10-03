@@ -69,7 +69,9 @@ class AnalysisResponse(BaseModel):
     scope_status: Literal["supported", "unsupported", "uncertain"] = "uncertain"
     scope_reason: str = "not_assessed"
     category_status: Literal["predicted", "uncertain"]
-    category_basis: Literal["model", "explicit_report", "uncertain"] = "uncertain"
+    category_basis: Literal["model", "explicit_report", "language_assisted", "uncertain"] = (
+        "uncertain"
+    )
     category_evidence: list[TextEvidence] = Field(default_factory=list)
     routing_policy: str = "fixed_v1"
     candidates: list[CategoryCandidate]

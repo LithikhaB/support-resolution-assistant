@@ -1,14 +1,14 @@
 {
-  "model_version": "3ff37cba26815532",
+  "model_version": "231617e54a465126",
   "dev_sha256": "fe5e48b90972fd715884404937ef65ba1c4f59ab55dd20fb2ea60f4f2c215e2c",
-  "min_score": 0.34,
-  "min_margin": 0.15,
-  "accepted": 28,
-  "accepted_families": 7,
-  "accepted_accuracy": 0.8571428571428571,
-  "family_mean_accuracy": 0.8571428571428571,
+  "min_score": 0.33,
+  "min_margin": 0.09,
+  "accepted": 44,
+  "accepted_families": 9,
+  "accepted_accuracy": 0.9090909090909091,
+  "family_mean_accuracy": 0.8888888888888888,
   "total": 120,
   "selection_note": "Development-selected thresholds; >=85% accepted-example and accepted-family mean accuracy, >=5 families and >=20 examples. Compatible mentioned service required. Same development split selected the model, so these figures are optimistic selection results, not independent accuracy or proven OOD detection.",
   "test_split_used": false,
-  "classifier_sha256": "059e1700f9f54ec5c64dfc362f0eb25d3be410b18a8056eca4ec2ab13c926826"
+  "classifier_sha256": "a7cc25d5a52df20fe311444920d011e1343422ac5847010b62234663bef8053d"
 }
