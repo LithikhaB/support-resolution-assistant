@@ -59,14 +59,19 @@ class ReportedFact(TextEvidence):
 class CustomerRequest(TextEvidence):
     """Identify an explicit support request without inventing contact information."""
 
-    kind: Literal["contact_support", "next_steps"]
+    kind: Literal["contact_support", "next_steps", "replacement"]
 
 
 class AnalysisResponse(BaseModel):
     """Return a provisional category and independently extracted complaint context."""
 
     category: str | None
+    scope_status: Literal["supported", "unsupported", "uncertain"] = "uncertain"
+    scope_reason: str = "not_assessed"
     category_status: Literal["predicted", "uncertain"]
+    category_basis: Literal["model", "explicit_report", "uncertain"] = "uncertain"
+    category_evidence: list[TextEvidence] = Field(default_factory=list)
+    routing_policy: str = "fixed_v1"
     candidates: list[CategoryCandidate]
     score_note: str = (
         "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection."

@@ -1,0 +1,247 @@
+{
+  "purpose": "Real local-model API smoke check, not a benchmark of diagnostic correctness.",
+  "response": {
+    "status": "needs_diagnostic_confirmation",
+    "method": "local_extractive_v1",
+    "agent_review_required": true,
+    "draft": "Draft for agent review. A cause has not been confirmed.\n\nAlready attempted, according to the customer: I already restarted the router twice\n\nCustomer-reported observations: broadband drops; Cable in my home is intact\n\nClarify: During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?\n\nClarify: Which provider and country or region should the support contact be for?\n\n[S1] Ask an authorized agent to verify: Moving the affected PC to a known-good cable negotiates a gigabit link. Only if confirmed, the procedure proposes: Replace the damaged cable with a compatible tested cable.\n\n[S1] Restriction: Do not change the subscription or blame the access network when another wired device performs normally.\n\n[S2] Ask an authorized agent to verify: Authorized technician reproduces voltage drops with the ONT power adapter. Only if confirmed, the procedure proposes: Replace the adapter with the provider-approved matching unit.\n\n[S2] Restriction: Do not suggest opening the adapter or using an incompatible supply.\n\n[S3] Ask an authorized agent to verify: Gateway logs show session renewals failing against a stale lease record. Only if confirmed, the procedure proposes: Authorized access team clears the stale lease and applies the validated renewal configuration.\n\n[S3] Restriction: Do not diagnose a broken optical cable without optical fault evidence.\n\nNo verified provider contact is available in this corpus; no helpline number is supplied.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.",
+    "analysis": {
+      "category": null,
+      "category_status": "uncertain",
+      "candidates": [
+        {
+          "category": "intermittent_broadband",
+          "score": 0.15373183498704032
+        },
+        {
+          "category": "broadband_outage",
+          "score": 0.1447432758379578
+        },
+        {
+          "category": "router_ont_hardware",
+          "score": 0.12864860150604002
+        }
+      ],
+      "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+      "products": [
+        {
+          "text": "broadband",
+          "start": 3,
+          "end": 12,
+          "product": "broadband"
+        },
+        {
+          "text": "router",
+          "start": 58,
+          "end": 64,
+          "product": "router"
+        }
+      ],
+      "severity": {
+        "value": "medium",
+        "rule": "reported_degradation_or_work_impact",
+        "evidence": [
+          {
+            "text": "drops",
+            "start": 13,
+            "end": 18
+          }
+        ],
+        "method": "rules_v1"
+      },
+      "sentiment": {
+        "value": "unknown",
+        "rule": "no_explicit_tone",
+        "evidence": [],
+        "method": "rules_v1"
+      },
+      "actions": [
+        {
+          "text": "I already restarted the router twice",
+          "start": 34,
+          "end": 70,
+          "action": "restart_device",
+          "status": "attempted"
+        }
+      ],
+      "reported_facts": [
+        {
+          "text": "broadband drops",
+          "start": 3,
+          "end": 18,
+          "name": "connection_pattern",
+          "value": "intermittent"
+        },
+        {
+          "text": "Cable in my home is intact",
+          "start": 72,
+          "end": 98,
+          "name": "cable_condition",
+          "value": "intact"
+        }
+      ],
+      "requests": [
+        {
+          "text": "helpline number",
+          "start": 111,
+          "end": 126,
+          "kind": "contact_support"
+        }
+      ],
+      "needs_clarification": true,
+      "clarification_questions": [
+        "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?",
+        "Which provider and country or region should the support contact be for?"
+      ],
+      "model_version": "3ff37cba26815532",
+      "elapsed_ms": 15358.138700015843
+    },
+    "suggestions": [
+      {
+        "citation_id": "S1",
+        "required_finding": "Moving the affected PC to a known-good cable negotiates a gigabit link.",
+        "proposed_action": "Replace the damaged cable with a compatible tested cable.",
+        "restriction": "Do not change the subscription or blame the access network when another wired device performs normally.",
+        "status": "requires_agent_confirmation",
+        "repeated_actions": []
+      },
+      {
+        "citation_id": "S2",
+        "required_finding": "Authorized technician reproduces voltage drops with the ONT power adapter.",
+        "proposed_action": "Replace the adapter with the provider-approved matching unit.",
+        "restriction": "Do not suggest opening the adapter or using an incompatible supply.",
+        "status": "requires_agent_confirmation",
+        "repeated_actions": []
+      },
+      {
+        "citation_id": "S3",
+        "required_finding": "Gateway logs show session renewals failing against a stale lease record.",
+        "proposed_action": "Authorized access team clears the stale lease and applies the validated renewal configuration.",
+        "restriction": "Do not diagnose a broken optical cable without optical fault evidence.",
+        "status": "requires_agent_confirmation",
+        "repeated_actions": []
+      }
+    ],
+    "sources": [
+      {
+        "citation_id": "S1",
+        "doc_id": "syn_kb_SP02",
+        "chunk_id": 46,
+        "title": "Damaged Ethernet cable limiting link negotiation. — procedure",
+        "is_synthetic": true,
+        "authority": "fictional_provider_policy",
+        "quotes": [
+          {
+            "text": "fibre_broadband",
+            "start": 151,
+            "end": 166,
+            "field": "scope"
+          },
+          {
+            "text": "Moving the affected PC to a known-good cable negotiates a gigabit link.",
+            "start": 316,
+            "end": 387,
+            "field": "condition"
+          },
+          {
+            "text": "Replace the damaged cable with a compatible tested cable.",
+            "start": 425,
+            "end": 482,
+            "field": "action"
+          },
+          {
+            "text": "Do not change the subscription or blame the access network when another wired device performs normally.",
+            "start": 716,
+            "end": 819,
+            "field": "restriction"
+          }
+        ]
+      },
+      {
+        "citation_id": "S2",
+        "doc_id": "syn_kb_ID04",
+        "chunk_id": 16,
+        "title": "Failing ONT power adapter. — procedure",
+        "is_synthetic": true,
+        "authority": "fictional_provider_policy",
+        "quotes": [
+          {
+            "text": "fibre_broadband",
+            "start": 128,
+            "end": 143,
+            "field": "scope"
+          },
+          {
+            "text": "Authorized technician reproduces voltage drops with the ONT power adapter.",
+            "start": 301,
+            "end": 375,
+            "field": "condition"
+          },
+          {
+            "text": "Replace the adapter with the provider-approved matching unit.",
+            "start": 413,
+            "end": 474,
+            "field": "action"
+          },
+          {
+            "text": "Do not suggest opening the adapter or using an incompatible supply.",
+            "start": 707,
+            "end": 774,
+            "field": "restriction"
+          }
+        ]
+      },
+      {
+        "citation_id": "S3",
+        "doc_id": "syn_kb_ID03",
+        "chunk_id": 15,
+        "title": "Access-session renewal failure. — procedure",
+        "is_synthetic": true,
+        "authority": "fictional_provider_policy",
+        "quotes": [
+          {
+            "text": "fibre_broadband",
+            "start": 133,
+            "end": 148,
+            "field": "scope"
+          },
+          {
+            "text": "Gateway logs show session renewals failing against a stale lease record.",
+            "start": 306,
+            "end": 378,
+            "field": "condition"
+          },
+          {
+            "text": "Authorized access team clears the stale lease and applies the validated renewal configuration.",
+            "start": 416,
+            "end": 510,
+            "field": "action"
+          },
+          {
+            "text": "Do not diagnose a broken optical cable without optical fault evidence.",
+            "start": 728,
+            "end": 798,
+            "field": "restriction"
+          }
+        ]
+      }
+    ],
+    "clarification_questions": [
+      "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?",
+      "Which provider and country or region should the support contact be for?"
+    ],
+    "acknowledged_actions": [
+      "I already restarted the router twice"
+    ],
+    "contact_status": "unverified",
+    "limitations": [
+      "Extractive local drafting; no generative LLM is used.",
+      "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+      "Retrieved similarity does not confirm a cause; broader citation-support validation is still pending."
+    ],
+    "elapsed_ms": 15690.20379986614
+  },
+  "empty_filter_status": "insufficient_evidence",
+  "unsupported_service_status": "needs_clarification",
+  "invalid_request_http": 422
+}

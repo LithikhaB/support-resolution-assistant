@@ -5,7 +5,47 @@ import re
 from app.understanding.models import CustomerRequest, ReportedFact
 from app.understanding.signals import negated, span
 
+AREA_OUTAGE_QUESTION = "Which area is affected, and when did the shared outage begin? Do not delay incident review while collecting these details."
+
+EQUIPMENT = r"(?:modem|router|ont|equipment|cables?|landlines?|ethernet line)"
+EQUIPMENT_LINK = r"(?:\s+(?:is|are|was|were|has|have|been|got|looks?|seems?|everything|all|physically|completely|badly|casing)){0,6}\s+"
+
 FACT_PATTERNS = (
+    (
+        "equipment_condition",
+        "water_exposed",
+        rf"\b{EQUIPMENT}\b{EQUIPMENT_LINK}(?:soaked|submerged|water[ -]damaged|flood[ -]damaged|wet)\b",
+    ),
+    (
+        "equipment_condition",
+        "damaged",
+        rf"\b{EQUIPMENT}\b{EQUIPMENT_LINK}(?:damaged|broken|frayed|burnt|burned)\b|\b(?:damaged|broken|frayed|burnt|burned)\s+{EQUIPMENT}\b",
+    ),
+    (
+        "equipment_condition",
+        "intact",
+        r"\b(?:modem|router|ont|equipment)\s+(?:is|are)\s+(?:undamaged|intact|not damaged|not wet)\b",
+    ),
+    (
+        "wired_connection",
+        "failing",
+        r"\b(?:Ethernet|wired(?: connection)?)\s+(?:also\s+)?(?:drops|disconnects|fails|is offline|does not work|doesn't work)\b",
+    ),
+    (
+        "wireless_devices",
+        "all",
+        r"\b(?:all|every)\s+(?:wireless|wi[ -]?fi)\s+devices?\s+(?:are affected|is affected|disconnect|disconnects|drop|drops)\b",
+    ),
+    (
+        "wireless_devices",
+        "one",
+        r"\b(?:only one|a single)\s+(?:wireless|wi[ -]?fi)\s+device\s+(?:is affected|disconnects|drops)\b",
+    ),
+    (
+        "service_recovery",
+        "working",
+        r"\b(?:all services|everything)\s+(?:is |are )?(?:working|works)(?: again| now)?\b",
+    ),
     (
         "cable_condition",
         "intact",
@@ -42,9 +82,29 @@ def extract_facts(text: str) -> list[ReportedFact]:
             for match in re.finditer(pattern, fragment, re.I):
                 if negated(fragment[: match.start()]):
                     continue
+                if (
+                    name == "equipment_condition"
+                    and value != "intact"
+                    and re.search(r"\b(?:not|never|no|isn't|aren't)\b", match.group(), re.I)
+                ):
+                    continue
+                fact_value = value
+                sentence_start = max(text.rfind(mark, 0, clause.start()) for mark in ".!?") + 1
+                context = text[sentence_start : clause.end()]
+                if (
+                    name == "equipment_condition"
+                    and value == "damaged"
+                    and re.search(
+                        r"\b(?:flood|floods|floodwater|flood waters?|water damage)\b", context, re.I
+                    )
+                    and not re.search(r"\b(?:not|no|if|maybe|might)\b.{0,25}\bflood", context, re.I)
+                ):
+                    fact_value = "water_exposed"
                 facts.append(
                     ReportedFact(
-                        **span(text, match, clause.start()).model_dump(), name=name, value=value
+                        **span(text, match, clause.start()).model_dump(),
+                        name=name,
+                        value=fact_value,
                     )
                 )
     return sorted(facts, key=lambda item: (item.start, item.name))
@@ -54,8 +114,9 @@ def extract_requests(text: str) -> list[CustomerRequest]:
     """Recognize requests for contact details and further help using explicit wording."""
     requests = []
     patterns = {
-        "contact_support": r"\b(?:helpline(?: number)?|support (?:phone |contact )?number|contact (?:support|an agent|a human)|speak to (?:an agent|a human))\b",
+        "contact_support": r"\b(?:helpline(?: number)?|toll[ -]?free(?: number)?|customer care(?: number)?|support (?:phone |contact )?number|contact (?:support|an agent|a human)|speak to (?:an agent|a human)|call (?:support|an agent|a human|my provider))\b",
         "next_steps": r"\b(?:what (?:should I do|to do)(?: now| next)?|next steps?|what can I (?:do|try))\b",
+        "replacement": r"\b(?:request|need|want|arrange)(?:\s+\w+){0,4}\s+replacement\b|\breplace (?:my|the) (?:modem|router|equipment|cable)\b",
     }
     for kind, pattern in patterns.items():
         for match in re.finditer(pattern, text, re.I):
@@ -69,28 +130,45 @@ def clarification_questions(*, accepted, products, severity, facts, requests) ->
     questions = []
     services = {item.product for item in products}
     known = {(item.name, item.value) for item in facts}
-    if not accepted:
+    if any(
+        name == "equipment_condition" and value in {"damaged", "water_exposed"}
+        for name, value in known
+    ):
+        return []
+    if severity.rule == "reported_area_outage":
+        questions.append(AREA_OUTAGE_QUESTION)
+    else:
         if services & {"broadband", "home_wifi", "router"}:
             if ("wired_connection", "working") in known:
-                questions.append(
-                    "Does the Wi-Fi problem affect one device or every wireless device?"
-                )
+                if not any(name == "wireless_devices" for name, _ in known):
+                    questions.append(
+                        "Does the Wi-Fi problem affect one device or every wireless device?"
+                    )
+            elif ("wired_connection", "failing") in known:
+                pass
             else:
                 questions.append(
                     "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?"
                 )
         elif "billing" in services:
-            questions.append("Which charge or payment is affected, and is it pending or settled?")
+            if not {"charge", "billing_status"} <= {name for name, _ in known}:
+                questions.append(
+                    "Which charge or payment is affected, and is it pending or settled?"
+                )
         elif "mobile" in services:
-            questions.append("Are calls, texts, mobile data, or several of these affected?")
+            if not any(name == "mobile_services" for name, _ in known):
+                questions.append("Are calls, texts, mobile data, or several of these affected?")
         elif "iptv" in services:
-            questions.append("Is the TV showing no picture, an error, or buffering?")
-        else:
+            if not any(name == "tv_symptom" for name, _ in known):
+                questions.append("Is the TV showing no picture, an error, or buffering?")
+        elif not accepted:
             questions.append("Which service is affected, and what exactly happens when you use it?")
-    if severity.value == "unknown":
+    if (
+        severity.value == "unknown"
+        and services != {"billing"}
+        and not any(name == "service_recovery" for name, _ in known)
+    ):
         questions.append(
             "Is service completely unavailable or intermittent, and which devices or people are affected?"
         )
-    if any(item.kind == "contact_support" for item in requests):
-        questions.append("Which provider and country or region should the support contact be for?")
     return questions

@@ -5,6 +5,7 @@ from functools import lru_cache
 from threading import Lock
 from time import perf_counter
 
+from app.retrieval.diversity import diverse_results
 from app.retrieval.hybrid_search import HybridRetriever
 from app.retrieval.models import SearchRequest, SearchResponse
 from app.retrieval.reranking import get_reranking_service
@@ -31,6 +32,9 @@ class RetrievalService:
         results = retriever.search(
             request.query, request.retrieval_depth, request.filters, **options
         )
+        retrieved_count = len(results)
+        if request.diversify:
+            results = diverse_results(results, request.ranking_depth)
         reranking = {}
         if request.rerank and results:
             reranker = self.reranker if self.reranker is not None else get_reranking_service()
@@ -51,7 +55,14 @@ class RetrievalService:
             len(results),
             elapsed,
         )
-        return SearchResponse(mode=request.mode, results=results, elapsed_ms=elapsed, **reranking)
+        return SearchResponse(
+            mode=request.mode,
+            results=results,
+            elapsed_ms=elapsed,
+            diversified=request.diversify,
+            retrieved_candidates=retrieved_count,
+            **reranking,
+        )
 
 
 @lru_cache(maxsize=1)

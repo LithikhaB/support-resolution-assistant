@@ -1,0 +1,565 @@
+{
+  "created_at": "2026-10-03T10:51:30.720637+00:00",
+  "cases_sha256": "ea220209cc3767b19ac50493f522d7d20d7fbde54201003ce923cc20ff9792f0",
+  "provenance": "AI-authored natural-language prompts. C02 and C03 are informed by the reported UI failure. These are not independently human-written.",
+  "purpose": "Development response-quality review; not a frozen or independent held-out benchmark.",
+  "scoring": {
+    "context": "0 missed/misread; 1 partial; 2 accurate",
+    "relevance": "0 unrelated; 1 mixed; 2 relevant",
+    "conversation": "0 repeats an answered/unavailable question or loses corrections; 1 partial; 2 coherent; leave null for single-turn cases",
+    "grounding": "0 invented cause/action/citation; 1 uncertain support; 2 traceable and appropriately conditional",
+    "clarity": "0 confusing; 1 usable with effort; 2 clear and actionable"
+  },
+  "results": [
+    {
+      "id": "C16",
+      "name": "Screenshot-style unavailable Ethernet reply",
+      "query": "My broadband keeps going off in the evenings. I already restarted the router twice.",
+      "turns": [
+        {
+          "issue_id": 1,
+          "message": "Wi-Fi is affected. I don't have any devices with Ethernet, please don't ask me to do that."
+        }
+      ],
+      "expected": [
+        "Treat the Ethernet test as unavailable, not as working or failing.",
+        "Ask an achievable alternative question instead of the same Ethernet question.",
+        "Retain the attempted restarts."
+      ],
+      "snapshots": [
+        {
+          "after_reply": 0,
+          "response": {
+            "issues": [
+              {
+                "issue_id": 1,
+                "complaint": "My broadband keeps going off in the evenings. I already restarted the router twice.",
+                "analysis_text": "My broadband keeps going off in the evenings. I already restarted the router twice.",
+                "resolution": {
+                  "status": "needs_diagnostic_confirmation",
+                  "decision": {
+                    "action": "clarify",
+                    "priority": "normal",
+                    "reasons": [
+                      "missing_customer_observations"
+                    ],
+                    "target": "support_agent",
+                    "handoff_created": false
+                  },
+                  "validation": {
+                    "status": "passed",
+                    "checked_sources": 3,
+                    "issues": [],
+                    "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+                  },
+                  "method": "local_extractive_v1",
+                  "agent_review_required": true,
+                  "draft": "Draft for agent review. A cause has not been confirmed.\n\nAlready attempted, according to the customer: I already restarted the router twice\n\nClarify: During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?\n\nClarify: Is service completely unavailable or intermittent, and which devices or people are affected?\n\nAnswer the clarification questions before choosing a repair. Retrieved procedures are attached for agent review, not recommended actions yet.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: clarify. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+                  "analysis": {
+                    "category": null,
+                    "scope_status": "supported",
+                    "scope_reason": "recognized_service_mention",
+                    "category_status": "uncertain",
+                    "category_basis": "uncertain",
+                    "category_evidence": [],
+                    "routing_policy": "development_selected_v1",
+                    "candidates": [
+                      {
+                        "category": "intermittent_broadband",
+                        "score": 0.14983589183368515
+                      },
+                      {
+                        "category": "router_ont_hardware",
+                        "score": 0.13278883721352713
+                      },
+                      {
+                        "category": "wifi_connectivity",
+                        "score": 0.11049486793330986
+                      }
+                    ],
+                    "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                    "products": [
+                      {
+                        "text": "broadband",
+                        "start": 3,
+                        "end": 12,
+                        "product": "broadband"
+                      },
+                      {
+                        "text": "router",
+                        "start": 70,
+                        "end": 76,
+                        "product": "router"
+                      }
+                    ],
+                    "severity": {
+                      "value": "unknown",
+                      "rule": "insufficient_impact_evidence",
+                      "evidence": [],
+                      "method": "rules_v1"
+                    },
+                    "sentiment": {
+                      "value": "unknown",
+                      "rule": "no_explicit_tone",
+                      "evidence": [],
+                      "method": "rules_v1"
+                    },
+                    "actions": [
+                      {
+                        "text": "I already restarted the router twice",
+                        "start": 46,
+                        "end": 82,
+                        "action": "restart_device",
+                        "status": "attempted"
+                      }
+                    ],
+                    "reported_facts": [],
+                    "requests": [],
+                    "needs_clarification": true,
+                    "clarification_questions": [
+                      "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?",
+                      "Is service completely unavailable or intermittent, and which devices or people are affected?"
+                    ],
+                    "model_version": "3ff37cba26815532",
+                    "elapsed_ms": 23858.0307001248
+                  },
+                  "suggestions": [
+                    {
+                      "citation_id": "S1",
+                      "required_finding": "Agent optical test reports no received signal; account is active.",
+                      "proposed_action": "Raise a fibre repair job; an authorized technician repairs the external span.",
+                      "restriction": "Do not factory-reset the router or tell the customer to handle exposed fibre.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S2",
+                      "required_finding": "Optical signal is healthy; the subscriber session is rejected after an account migration.",
+                      "proposed_action": "Authorized provisioning team corrects the subscriber session mapping and reconnects it.",
+                      "restriction": "Do not ask the customer to share account passwords in a ticket.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S3",
+                      "required_finding": "Gateway logs show session renewals failing against a stale lease record.",
+                      "proposed_action": "Authorized access team clears the stale lease and applies the validated renewal configuration.",
+                      "restriction": "Do not diagnose a broken optical cable without optical fault evidence.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    }
+                  ],
+                  "sources": [
+                    {
+                      "citation_id": "S1",
+                      "doc_id": "syn_kb_BB01",
+                      "chunk_id": 1,
+                      "title": "External fibre break. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "fibre_broadband",
+                          "start": 123,
+                          "end": 138,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Agent optical test reports no received signal; account is active.",
+                          "start": 290,
+                          "end": 355,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Raise a fibre repair job; an authorized technician repairs the external span.",
+                          "start": 393,
+                          "end": 470,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not factory-reset the router or tell the customer to handle exposed fibre.",
+                          "start": 683,
+                          "end": 760,
+                          "field": "restriction"
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "S2",
+                      "doc_id": "syn_kb_BB02",
+                      "chunk_id": 2,
+                      "title": "Stale access-session provisioning. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "fibre_broadband",
+                          "start": 136,
+                          "end": 151,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Optical signal is healthy; the subscriber session is rejected after an account migration.",
+                          "start": 303,
+                          "end": 392,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Authorized provisioning team corrects the subscriber session mapping and reconnects it.",
+                          "start": 430,
+                          "end": 517,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not ask the customer to share account passwords in a ticket.",
+                          "start": 745,
+                          "end": 808,
+                          "field": "restriction"
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "S3",
+                      "doc_id": "syn_kb_ID03",
+                      "chunk_id": 15,
+                      "title": "Access-session renewal failure. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "fibre_broadband",
+                          "start": 133,
+                          "end": 148,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Gateway logs show session renewals failing against a stale lease record.",
+                          "start": 306,
+                          "end": 378,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Authorized access team clears the stale lease and applies the validated renewal configuration.",
+                          "start": 416,
+                          "end": 510,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not diagnose a broken optical cable without optical fault evidence.",
+                          "start": 728,
+                          "end": 798,
+                          "field": "restriction"
+                        }
+                      ]
+                    }
+                  ],
+                  "clarification_questions": [
+                    "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?",
+                    "Is service completely unavailable or intermittent, and which devices or people are affected?"
+                  ],
+                  "acknowledged_actions": [
+                    "I already restarted the router twice"
+                  ],
+                  "contact_status": "not_requested",
+                  "customer_plan": {
+                    "title": "Let's narrow down the problem",
+                    "summary": "We need the details below to choose the next step without guessing a cause.",
+                    "steps": [
+                      "Answer the questions below together in the reply box."
+                    ],
+                    "note": "Your previous attempts are retained so they can be reviewed."
+                  },
+                  "limitations": [
+                    "Extractive local drafting; no generative LLM is used.",
+                    "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                    "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+                  ],
+                  "elapsed_ms": 2981.678100069985
+                }
+              }
+            ],
+            "storage": "client_replayed",
+            "limitations": [
+              "Send the same original query and full customer-turn history on each request.",
+              "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+              "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+            ]
+          }
+        },
+        {
+          "after_reply": 1,
+          "response": {
+            "issues": [
+              {
+                "issue_id": 1,
+                "complaint": "My broadband keeps going off in the evenings. I already restarted the router twice.",
+                "analysis_text": "My broadband keeps going off in the evenings. I already restarted the router twice.. Wi-Fi is affected. I don't have any devices with Ethernet, please don't ask me to do that.",
+                "resolution": {
+                  "status": "needs_diagnostic_confirmation",
+                  "decision": {
+                    "action": "clarify",
+                    "priority": "normal",
+                    "reasons": [
+                      "missing_customer_observations"
+                    ],
+                    "target": "support_agent",
+                    "handoff_created": false
+                  },
+                  "validation": {
+                    "status": "passed",
+                    "checked_sources": 3,
+                    "issues": [],
+                    "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+                  },
+                  "method": "local_extractive_v1",
+                  "agent_review_required": true,
+                  "draft": "Draft for agent review. A cause has not been confirmed.\n\nAlready attempted, according to the customer: I already restarted the router twice\n\nClarify: During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?\n\nClarify: Is service completely unavailable or intermittent, and which devices or people are affected?\n\nAnswer the clarification questions before choosing a repair. Retrieved procedures are attached for agent review, not recommended actions yet.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: clarify. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+                  "analysis": {
+                    "category": null,
+                    "scope_status": "supported",
+                    "scope_reason": "recognized_service_mention",
+                    "category_status": "uncertain",
+                    "category_basis": "uncertain",
+                    "category_evidence": [],
+                    "routing_policy": "development_selected_v1",
+                    "candidates": [
+                      {
+                        "category": "intermittent_broadband",
+                        "score": 0.2009501474927276
+                      },
+                      {
+                        "category": "wifi_connectivity",
+                        "score": 0.15988600265412983
+                      },
+                      {
+                        "category": "router_ont_hardware",
+                        "score": 0.10815795851589703
+                      }
+                    ],
+                    "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                    "products": [
+                      {
+                        "text": "broadband",
+                        "start": 3,
+                        "end": 12,
+                        "product": "broadband"
+                      },
+                      {
+                        "text": "router",
+                        "start": 70,
+                        "end": 76,
+                        "product": "router"
+                      },
+                      {
+                        "text": "Wi-Fi",
+                        "start": 85,
+                        "end": 90,
+                        "product": "home_wifi"
+                      }
+                    ],
+                    "severity": {
+                      "value": "unknown",
+                      "rule": "insufficient_impact_evidence",
+                      "evidence": [],
+                      "method": "rules_v1"
+                    },
+                    "sentiment": {
+                      "value": "unknown",
+                      "rule": "no_explicit_tone",
+                      "evidence": [],
+                      "method": "rules_v1"
+                    },
+                    "actions": [
+                      {
+                        "text": "I already restarted the router twice",
+                        "start": 46,
+                        "end": 82,
+                        "action": "restart_device",
+                        "status": "attempted"
+                      }
+                    ],
+                    "reported_facts": [],
+                    "requests": [],
+                    "needs_clarification": true,
+                    "clarification_questions": [
+                      "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?",
+                      "Is service completely unavailable or intermittent, and which devices or people are affected?"
+                    ],
+                    "model_version": "3ff37cba26815532",
+                    "elapsed_ms": 35.9098999761045
+                  },
+                  "suggestions": [
+                    {
+                      "citation_id": "S1",
+                      "required_finding": "Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment.",
+                      "proposed_action": "Network operations rebalance capacity and monitor the affected segment during peak hours.",
+                      "restriction": "Do not promise that a Wi-Fi channel change will repair provider congestion.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S2",
+                      "required_finding": "Moving the affected PC to a known-good cable negotiates a gigabit link.",
+                      "proposed_action": "Replace the damaged cable with a compatible tested cable.",
+                      "restriction": "Do not change the subscription or blame the access network when another wired device performs normally.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S3",
+                      "required_finding": "Agent optical test reports no received signal; account is active.",
+                      "proposed_action": "Raise a fibre repair job; an authorized technician repairs the external span.",
+                      "restriction": "Do not factory-reset the router or tell the customer to handle exposed fibre.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    }
+                  ],
+                  "sources": [
+                    {
+                      "citation_id": "S1",
+                      "doc_id": "syn_kb_ID02",
+                      "chunk_id": 14,
+                      "title": "Congested access segment. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "fibre_broadband",
+                          "start": 127,
+                          "end": 142,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment.",
+                          "start": 300,
+                          "end": 394,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Network operations rebalance capacity and monitor the affected segment during peak hours.",
+                          "start": 432,
+                          "end": 521,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not promise that a Wi-Fi channel change will repair provider congestion.",
+                          "start": 741,
+                          "end": 816,
+                          "field": "restriction"
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "S2",
+                      "doc_id": "syn_kb_SP02",
+                      "chunk_id": 46,
+                      "title": "Damaged Ethernet cable limiting link negotiation. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "fibre_broadband",
+                          "start": 151,
+                          "end": 166,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Moving the affected PC to a known-good cable negotiates a gigabit link.",
+                          "start": 316,
+                          "end": 387,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Replace the damaged cable with a compatible tested cable.",
+                          "start": 425,
+                          "end": 482,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not change the subscription or blame the access network when another wired device performs normally.",
+                          "start": 716,
+                          "end": 819,
+                          "field": "restriction"
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "S3",
+                      "doc_id": "syn_kb_BB01",
+                      "chunk_id": 1,
+                      "title": "External fibre break. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "fibre_broadband",
+                          "start": 123,
+                          "end": 138,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Agent optical test reports no received signal; account is active.",
+                          "start": 290,
+                          "end": 355,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Raise a fibre repair job; an authorized technician repairs the external span.",
+                          "start": 393,
+                          "end": 470,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not factory-reset the router or tell the customer to handle exposed fibre.",
+                          "start": 683,
+                          "end": 760,
+                          "field": "restriction"
+                        }
+                      ]
+                    }
+                  ],
+                  "clarification_questions": [
+                    "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?",
+                    "Is service completely unavailable or intermittent, and which devices or people are affected?"
+                  ],
+                  "acknowledged_actions": [
+                    "I already restarted the router twice"
+                  ],
+                  "contact_status": "not_requested",
+                  "customer_plan": {
+                    "title": "Let's narrow down the problem",
+                    "summary": "We need the details below to choose the next step without guessing a cause.",
+                    "steps": [
+                      "Answer the questions below together in the reply box."
+                    ],
+                    "note": "Your previous attempts are retained so they can be reviewed."
+                  },
+                  "limitations": [
+                    "Extractive local drafting; no generative LLM is used.",
+                    "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                    "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+                  ],
+                  "elapsed_ms": 1298.356199869886
+                }
+              }
+            ],
+            "storage": "client_replayed",
+            "limitations": [
+              "Send the same original query and full customer-turn history on each request.",
+              "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+              "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+            ]
+          }
+        }
+      ],
+      "manual_scores": {
+        "context": null,
+        "relevance": null,
+        "conversation": null,
+        "grounding": null,
+        "clarity": null
+      },
+      "review_notes": ""
+    }
+  ]
+}

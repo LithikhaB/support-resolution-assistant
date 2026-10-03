@@ -10,12 +10,12 @@ from app.understanding.models import (
 )
 
 PRODUCT_PATTERNS = {
-    "broadband": r"\b(?:broadband|fibre|fiber|ONT|Ethernet)\b",
+    "broadband": r"\b(?:broadband|fibre|fiber|ONT|Ethernet|wired (?:connection|computers?|devices?|tests?))\b",
     "home_wifi": r"\bwi[ -]?fi\b",
-    "router": r"\b(?:router|gateway)\b",
-    "mobile": r"\b(?:mobile|phone|handset|SIM|eSIM|roaming)\b",
+    "router": r"\b(?:router|gateway|modem|access point)\b",
+    "mobile": r"\b(?:mobile|phones?(?!\s+(?:number|support))|handsets?|SIM|eSIM|roaming|SMS|OTP|calls?|text messages?|login text|travel pack)\b",
     "iptv": r"\b(?:IPTV|TV|television|set.top box)\b",
-    "billing": r"\b(?:bill|invoice|payment|charge|refund)\b",
+    "billing": r"\b(?:bills?|invoices?|payments?|charges?|refunds?|paid|account.*suspended)\b",
 }
 TONE_PATTERNS = {
     "angry": r"\b(?:angry|furious|unacceptable|outraged)\b",
@@ -73,14 +73,21 @@ def assess_sentiment(text: str) -> RuleAssessment:
 def assess_severity(text: str) -> RuleAssessment:
     """Use reported service impact rather than sentiment; ambiguous impact stays unknown."""
     clauses = list(re.finditer(r"[^.!?;]+", text))
-    area_pattern = r"\b(?:whole (?:street|area)|our street|neighbou?ring blocks|multiple buildings|regional|several neighbou?rs)\b"
+    area_pattern = r"\b(?:(?:whole|entire) (?:street|area)|(?:our|my) street|neighbou?ring blocks|multiple buildings|regional|several neighbou?rs)\b"
     loss_pattern = (
         r"\b(?:lost|loss|outage|offline|no (?:internet|signal|service)|down|disconnected)\b"
     )
     for clause in clauses:
         area = re.search(area_pattern, clause.group(), re.I)
         loss = re.search(loss_pattern, clause.group(), re.I)
-        if area and loss and not negated(clause.group()[: loss.start()]):
+        if (
+            area
+            and loss
+            and text[clause.end() : clause.end() + 1] != "?"
+            and not negated(clause.group()[: loss.start()])
+            and not re.search(r"\b(?:if|whether|might|maybe|suppose)\b", clause.group(), re.I)
+            and not negated(clause.group()[: area.start()])
+        ):
             return RuleAssessment(
                 value="critical",
                 rule="reported_area_outage",
@@ -90,12 +97,22 @@ def assess_severity(text: str) -> RuleAssessment:
         (
             "high",
             "reported_complete_loss",
-            r"\b(?:every device is offline|all devices (?:are offline|lost internet)|no (?:internet|mobile signal|power)|cannot (?:make|receive) calls|every outgoing call fails|completely (?:down|stopped working)|still suspended)\b",
+            r"\b(?:(?:broadband|internet|mobile data|connection) (?:is |has been )?(?:not working|unavailable|offline|down)|(?:unable to|cannot|can't) (?:connect to the internet|access the internet|send (?:texts|SMS)|receive (?:texts|SMS))|(?:incoming|outgoing) calls (?:are )?(?:failing|blocked))\b",
+        ),
+        (
+            "high",
+            "reported_complete_loss",
+            r"\b(?:every device is offline|all devices (?:are offline|lost internet)|no (?:internet|mobile signal|power)|cannot (?:make|receive) calls|every outgoing call fails|completely (?:down|stopped working)|still suspended|(?:line|service) (?:remains|is) suspended|calls? fail(?:s)?(?: immediately)?|cannot get online|can[’\x27]t get online|shuts? down|overheat(?:s|ing)?)\b",
         ),
         (
             "medium",
             "reported_degradation_or_work_impact",
-            r"\b(?:drops?|disconnects?|buffering|slow|unstable|poor|weak signal|affecting my work|cannot work|can[’\x27]t work)\b",
+            r"\b(?:packet loss|frequent disconnections|keeps disconnecting|intermittent (?:internet|connection|broadband)|video (?:freezes|stutters)|speed (?:has )?dropped)\b",
+        ),
+        (
+            "medium",
+            "reported_degradation_or_work_impact",
+            r"\b(?:drops?|disconnects?|disconnecting|buffering|slow|unstable|poor|weak signal|no service|no picture|activation.*pending|people calling me reach an error|affecting my work|cannot work|can[’\x27]t work)\b",
         ),
         (
             "low",
@@ -105,7 +122,15 @@ def assess_severity(text: str) -> RuleAssessment:
     ]
     for value, rule, pattern in rules:
         for match in re.finditer(pattern, text, re.I):
-            if not negated(text[max(0, match.start() - 35) : match.start()]):
+            prefix = re.split(r"[.!?;]", text[: match.start()])[-1]
+            suffix = text[match.end() :]
+            sentence_end = re.search(r"[.!?;]", suffix)
+            is_question = sentence_end is not None and sentence_end.group() == "?"
+            if (
+                not is_question
+                and not negated(prefix[-35:])
+                and not re.search(r"\b(?:if|whether|might|maybe|suppose)\b", prefix, re.I)
+            ):
                 return RuleAssessment(value=value, rule=rule, evidence=[span(text, match)])
     return RuleAssessment(value="unknown", rule="insufficient_impact_evidence")
 

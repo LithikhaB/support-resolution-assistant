@@ -1,0 +1,2107 @@
+{
+  "purpose": "Author-designed acceptance regression cases; not independent held-out accuracy or a representative performance benchmark.",
+  "fingerprint": {
+    "split": "dev",
+    "code_sha256": "478b97f1bc0027df2c7014d84010a4a500208b630514087416c2bb36bfd3aabd",
+    "routing_profile_sha256": "67d7a29e5a99fbbd833ae0d15ec3c1f360c5ca13ffe054e01ac16db55bbfc4dc",
+    "classifier_sha256": "059e1700f9f54ec5c64dfc362f0eb25d3be410b18a8056eca4ec2ab13c926826",
+    "development_report_sha256": "1ceeb086dff7ef850dd1035e4621312a10ba2f92a27baee0e11909dab76b2ad4",
+    "corpus_sha256": "a93a4a53ee5b02af72571b1e528fa63cba8d9fc9ff378a4de4eef19a2f0be348",
+    "chunks_sha256": "8484ba33f895cac2711b8af46e1dc039e87f5c04d6d09b95372d9d7ba32d8670",
+    "declared_query_sha256": "fe5e48b90972fd715884404937ef65ba1c4f59ab55dd20fb2ea60f4f2c215e2c",
+    "train_sha256": "db476cd8139d73170d6f50a8392e090ceb665253b285daf1bf0eb39b83309bc9",
+    "dev_sha256": "fe5e48b90972fd715884404937ef65ba1c4f59ab55dd20fb2ea60f4f2c215e2c",
+    "challenge_sha256": "853d91c5cc2c724856c322a5993e4d8642d724025f2ce8e84740aa208f60bb79",
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "embedding_revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+    "reranker_model": "cross-encoder/ms-marco-MiniLM-L6-v2",
+    "reranker_revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+    "min_score": 0.45,
+    "min_margin": 0.1,
+    "top_k": 5,
+    "candidate_k": 50,
+    "rrf_constant": 60,
+    "rerank_k": 20,
+    "max_draft_sources": 3
+  },
+  "cases_sha256": "69c62694164b2339ca8cc9ddc248cf93c8e3cb2648068f746dddbef04700c0ab",
+  "cases": [
+    {
+      "name": "wireless_after_wired_test",
+      "query": "My home broadband disconnects during meetings. I already restarted the router.",
+      "turns": [
+        {
+          "issue_id": 1,
+          "message": "Ethernet works. All wireless devices disconnect."
+        }
+      ],
+      "check": "wireless"
+    },
+    {
+      "name": "settled_duplicate_payment",
+      "query": "My invoice includes a duplicate payment.",
+      "check": "billing"
+    },
+    {
+      "name": "separate_billing_and_connection",
+      "query": "My broadband is unavailable. Also my bill includes an extra charge.",
+      "check": "two_issues"
+    },
+    {
+      "name": "reported_neighbourhood_outage",
+      "query": "Several neighbours lost broadband at the same time.",
+      "check": "urgent"
+    },
+    {
+      "name": "unrelated_writing_request",
+      "query": "Write a poem about summer.",
+      "check": "unsupported"
+    },
+    {
+      "name": "corrected_wired_observation",
+      "query": "My broadband drops.",
+      "turns": [
+        {
+          "issue_id": 1,
+          "message": "Ethernet works."
+        },
+        {
+          "issue_id": 1,
+          "message": "Correction: Ethernet drops."
+        }
+      ],
+      "check": "correction"
+    },
+    {
+      "name": "reported_recovery",
+      "query": "My broadband drops.",
+      "turns": [
+        {
+          "issue_id": 1,
+          "observations": {
+            "impact": "working"
+          }
+        }
+      ],
+      "check": "recovery"
+    },
+    {
+      "name": "answered_mobile_question",
+      "query": "My mobile service has a problem.",
+      "turns": [
+        {
+          "issue_id": 1,
+          "observations": {
+            "mobile_services": "texts",
+            "impact": "complete_loss"
+          }
+        }
+      ],
+      "check": "mobile"
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "total": 8,
+    "first_request_ms": 33713.43860006891,
+    "subsequent_median_ms": 1505.159799940884
+  },
+  "runs": [
+    {
+      "name": "wireless_after_wired_test",
+      "passed": true,
+      "elapsed_ms": 33713.43860006891,
+      "response": {
+        "issues": [
+          {
+            "issue_id": 1,
+            "complaint": "My home broadband disconnects during meetings. I already restarted the router.",
+            "analysis_text": "My home broadband disconnects during meetings. I already restarted the router.. Ethernet works. All wireless devices disconnect.",
+            "resolution": {
+              "status": "needs_diagnostic_confirmation",
+              "decision": {
+                "action": "agent_review",
+                "priority": "normal",
+                "reasons": [
+                  "diagnostic_confirmation_required"
+                ],
+                "target": "support_agent",
+                "handoff_created": false
+              },
+              "validation": {
+                "status": "passed",
+                "checked_sources": 3,
+                "issues": [],
+                "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+              },
+              "method": "local_extractive_v1",
+              "agent_review_required": true,
+              "draft": "Draft for agent review. A cause has not been confirmed.\n\nAlready attempted, according to the customer: I already restarted the router\n\nCustomer-reported observations: broadband disconnects; Ethernet works; All wireless devices disconnect\n\n[S1] Ask an authorized agent to verify: Router is advertising only a band the appliance does not support. Only if confirmed, the procedure proposes: Enable a supported 2.4 GHz network using an appropriate security mode and reconnect the appliance.\n\n[S1] Restriction: Do not disable Wi-Fi security to make the device connect.\n\n[S2] Ask an authorized agent to verify: Wireless survey shows a crowded channel; wired tests and WAN counters are normal. Only if confirmed, the procedure proposes: Choose an appropriate supported channel or band after checking device compatibility.\n\n[S2] Restriction: Do not blame provider backhaul when concurrent Ethernet tests are normal.\n\n[S3] Ask an authorized agent to verify: Coverage survey shows weak signal behind several walls; WAN is stable. Only if confirmed, the procedure proposes: Reposition the access point safely; assess a supported mesh node if coverage remains inadequate.\n\n[S3] Restriction: Do not label this a broadband outage or promise coverage without checking placement.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: agent_review. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+              "analysis": {
+                "category": null,
+                "scope_status": "supported",
+                "scope_reason": "recognized_service_mention",
+                "category_status": "uncertain",
+                "category_basis": "uncertain",
+                "category_evidence": [],
+                "routing_policy": "development_selected_v1",
+                "candidates": [
+                  {
+                    "category": "intermittent_broadband",
+                    "score": 0.1826998709684532
+                  },
+                  {
+                    "category": "wifi_connectivity",
+                    "score": 0.12552660841512142
+                  },
+                  {
+                    "category": "broadband_outage",
+                    "score": 0.08915382213948561
+                  }
+                ],
+                "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                "products": [
+                  {
+                    "text": "broadband",
+                    "start": 8,
+                    "end": 17,
+                    "product": "broadband"
+                  },
+                  {
+                    "text": "router",
+                    "start": 71,
+                    "end": 77,
+                    "product": "router"
+                  }
+                ],
+                "severity": {
+                  "value": "medium",
+                  "rule": "reported_degradation_or_work_impact",
+                  "evidence": [
+                    {
+                      "text": "disconnect",
+                      "start": 117,
+                      "end": 127
+                    }
+                  ],
+                  "method": "rules_v1"
+                },
+                "sentiment": {
+                  "value": "unknown",
+                  "rule": "no_explicit_tone",
+                  "evidence": [],
+                  "method": "rules_v1"
+                },
+                "actions": [
+                  {
+                    "text": "I already restarted the router",
+                    "start": 47,
+                    "end": 77,
+                    "action": "restart_device",
+                    "status": "attempted"
+                  }
+                ],
+                "reported_facts": [
+                  {
+                    "text": "broadband disconnects",
+                    "start": 8,
+                    "end": 29,
+                    "name": "connection_pattern",
+                    "value": "intermittent"
+                  },
+                  {
+                    "text": "Ethernet works",
+                    "start": 80,
+                    "end": 94,
+                    "name": "wired_connection",
+                    "value": "working"
+                  },
+                  {
+                    "text": "All wireless devices disconnect",
+                    "start": 96,
+                    "end": 127,
+                    "name": "wireless_devices",
+                    "value": "all"
+                  }
+                ],
+                "requests": [],
+                "needs_clarification": false,
+                "clarification_questions": [],
+                "model_version": "3ff37cba26815532",
+                "elapsed_ms": 31268.484599888325
+              },
+              "suggestions": [
+                {
+                  "citation_id": "S1",
+                  "required_finding": "Router is advertising only a band the appliance does not support.",
+                  "proposed_action": "Enable a supported 2.4 GHz network using an appropriate security mode and reconnect the appliance.",
+                  "restriction": "Do not disable Wi-Fi security to make the device connect.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                },
+                {
+                  "citation_id": "S2",
+                  "required_finding": "Wireless survey shows a crowded channel; wired tests and WAN counters are normal.",
+                  "proposed_action": "Choose an appropriate supported channel or band after checking device compatibility.",
+                  "restriction": "Do not blame provider backhaul when concurrent Ethernet tests are normal.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                },
+                {
+                  "citation_id": "S3",
+                  "required_finding": "Coverage survey shows weak signal behind several walls; WAN is stable.",
+                  "proposed_action": "Reposition the access point safely; assess a supported mesh node if coverage remains inadequate.",
+                  "restriction": "Do not label this a broadband outage or promise coverage without checking placement.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                }
+              ],
+              "sources": [
+                {
+                  "citation_id": "S1",
+                  "doc_id": "syn_kb_WF03",
+                  "chunk_id": 59,
+                  "title": "Client and wireless-band incompatibility. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "home_wifi",
+                      "start": 143,
+                      "end": 152,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Router is advertising only a band the appliance does not support.",
+                      "start": 305,
+                      "end": 370,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Enable a supported 2.4 GHz network using an appropriate security mode and reconnect the appliance.",
+                      "start": 408,
+                      "end": 506,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not disable Wi-Fi security to make the device connect.",
+                      "start": 726,
+                      "end": 783,
+                      "field": "restriction"
+                    }
+                  ]
+                },
+                {
+                  "citation_id": "S2",
+                  "doc_id": "syn_kb_WF02",
+                  "chunk_id": 58,
+                  "title": "Wireless channel contention. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "home_wifi",
+                      "start": 130,
+                      "end": 139,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Wireless survey shows a crowded channel; wired tests and WAN counters are normal.",
+                      "start": 292,
+                      "end": 373,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Choose an appropriate supported channel or band after checking device compatibility.",
+                      "start": 411,
+                      "end": 495,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not blame provider backhaul when concurrent Ethernet tests are normal.",
+                      "start": 715,
+                      "end": 788,
+                      "field": "restriction"
+                    }
+                  ]
+                },
+                {
+                  "citation_id": "S3",
+                  "doc_id": "syn_kb_WF01",
+                  "chunk_id": 57,
+                  "title": "Insufficient indoor wireless coverage. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "home_wifi",
+                      "start": 140,
+                      "end": 149,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Coverage survey shows weak signal behind several walls; WAN is stable.",
+                      "start": 302,
+                      "end": 372,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Reposition the access point safely; assess a supported mesh node if coverage remains inadequate.",
+                      "start": 410,
+                      "end": 506,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not label this a broadband outage or promise coverage without checking placement.",
+                      "start": 730,
+                      "end": 814,
+                      "field": "restriction"
+                    }
+                  ]
+                }
+              ],
+              "clarification_questions": [],
+              "acknowledged_actions": [
+                "I already restarted the router"
+              ],
+              "contact_status": "not_requested",
+              "limitations": [
+                "Extractive local drafting; no generative LLM is used.",
+                "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+              ],
+              "elapsed_ms": 2418.3825999498367
+            }
+          }
+        ],
+        "storage": "client_replayed",
+        "limitations": [
+          "Send the same original query and full customer-turn history on each request.",
+          "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+          "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+        ]
+      }
+    },
+    {
+      "name": "settled_duplicate_payment",
+      "passed": true,
+      "elapsed_ms": 1571.7637001071125,
+      "response": {
+        "issues": [
+          {
+            "issue_id": 1,
+            "complaint": "My invoice includes a duplicate payment.",
+            "analysis_text": "My invoice includes a duplicate payment.",
+            "resolution": {
+              "status": "needs_diagnostic_confirmation",
+              "decision": {
+                "action": "clarify",
+                "priority": "normal",
+                "reasons": [
+                  "missing_customer_observations"
+                ],
+                "target": "support_agent",
+                "handoff_created": false
+              },
+              "validation": {
+                "status": "passed",
+                "checked_sources": 3,
+                "issues": [],
+                "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+              },
+              "method": "local_extractive_v1",
+              "agent_review_required": true,
+              "draft": "Draft for agent review. A cause has not been confirmed.\n\nClarify: Which charge or payment is affected, and is it pending or settled?\n\nAnswer the clarification questions before choosing a repair. Retrieved procedures are attached for agent review, not recommended actions yet.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: clarify. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+              "analysis": {
+                "category": "billing_dispute",
+                "scope_status": "supported",
+                "scope_reason": "recognized_service_mention",
+                "category_status": "predicted",
+                "category_basis": "model",
+                "category_evidence": [],
+                "routing_policy": "development_selected_v1",
+                "candidates": [
+                  {
+                    "category": "billing_dispute",
+                    "score": 0.5835869378843158
+                  },
+                  {
+                    "category": "payment_restoration",
+                    "score": 0.08269090267978783
+                  },
+                  {
+                    "category": "iptv",
+                    "score": 0.04099798114553813
+                  }
+                ],
+                "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                "products": [
+                  {
+                    "text": "invoice",
+                    "start": 3,
+                    "end": 10,
+                    "product": "billing"
+                  }
+                ],
+                "severity": {
+                  "value": "unknown",
+                  "rule": "insufficient_impact_evidence",
+                  "evidence": [],
+                  "method": "rules_v1"
+                },
+                "sentiment": {
+                  "value": "unknown",
+                  "rule": "no_explicit_tone",
+                  "evidence": [],
+                  "method": "rules_v1"
+                },
+                "actions": [],
+                "reported_facts": [],
+                "requests": [],
+                "needs_clarification": true,
+                "clarification_questions": [
+                  "Which charge or payment is affected, and is it pending or settled?"
+                ],
+                "model_version": "3ff37cba26815532",
+                "elapsed_ms": 46.99760000221431
+              },
+              "suggestions": [
+                {
+                  "citation_id": "S1",
+                  "required_finding": "Ledger confirms duplicate settled payments against one invoice.",
+                  "proposed_action": "Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment.",
+                  "restriction": "Do not refund a pending authorization or promise a universal refund deadline.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                },
+                {
+                  "citation_id": "S2",
+                  "required_finding": "Payment is an authorization only; provider has no settlement confirmation.",
+                  "proposed_action": "Explain the pending status and approved payment-support route without falsely marking the account paid.",
+                  "restriction": "Do not claim that a pending bank hold proves the invoice is paid.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                },
+                {
+                  "citation_id": "S3",
+                  "required_finding": "Ledger shows correct non-overlapping prorated periods and no duplicate charge.",
+                  "proposed_action": "Explain the dated line items and calculation; retain the valid charges unless new evidence shows an error.",
+                  "restriction": "Do not issue a credit merely because the customer is angry.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                }
+              ],
+              "sources": [
+                {
+                  "citation_id": "S1",
+                  "doc_id": "syn_kb_BD01",
+                  "chunk_id": 5,
+                  "title": "Duplicate settled payment. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "billing",
+                      "start": 128,
+                      "end": 135,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Ledger confirms duplicate settled payments against one invoice.",
+                      "start": 286,
+                      "end": 349,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment.",
+                      "start": 387,
+                      "end": 488,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not refund a pending authorization or promise a universal refund deadline.",
+                      "start": 721,
+                      "end": 798,
+                      "field": "restriction"
+                    }
+                  ]
+                },
+                {
+                  "citation_id": "S2",
+                  "doc_id": "syn_kb_PR02",
+                  "chunk_id": 30,
+                  "title": "Payment not yet settled. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "billing",
+                      "start": 126,
+                      "end": 133,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Payment is an authorization only; provider has no settlement confirmation.",
+                      "start": 288,
+                      "end": 362,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Explain the pending status and approved payment-support route without falsely marking the account paid.",
+                      "start": 400,
+                      "end": 503,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not claim that a pending bank hold proves the invoice is paid.",
+                      "start": 724,
+                      "end": 789,
+                      "field": "restriction"
+                    }
+                  ]
+                },
+                {
+                  "citation_id": "S3",
+                  "doc_id": "syn_kb_BD03",
+                  "chunk_id": 7,
+                  "title": "Valid prorated billing misunderstood. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "billing",
+                      "start": 139,
+                      "end": 146,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Ledger shows correct non-overlapping prorated periods and no duplicate charge.",
+                      "start": 297,
+                      "end": 375,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Explain the dated line items and calculation; retain the valid charges unless new evidence shows an error.",
+                      "start": 413,
+                      "end": 519,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not issue a credit merely because the customer is angry.",
+                      "start": 745,
+                      "end": 804,
+                      "field": "restriction"
+                    }
+                  ]
+                }
+              ],
+              "clarification_questions": [
+                "Which charge or payment is affected, and is it pending or settled?"
+              ],
+              "acknowledged_actions": [],
+              "contact_status": "not_requested",
+              "limitations": [
+                "Extractive local drafting; no generative LLM is used.",
+                "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+              ],
+              "elapsed_ms": 1522.6610000245273
+            }
+          }
+        ],
+        "storage": "client_replayed",
+        "limitations": [
+          "Send the same original query and full customer-turn history on each request.",
+          "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+          "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+        ]
+      }
+    },
+    {
+      "name": "separate_billing_and_connection",
+      "passed": true,
+      "elapsed_ms": 3041.0235999152064,
+      "response": {
+        "issues": [
+          {
+            "issue_id": 1,
+            "complaint": "My broadband is unavailable.",
+            "analysis_text": "My broadband is unavailable.",
+            "resolution": {
+              "status": "needs_diagnostic_confirmation",
+              "decision": {
+                "action": "clarify",
+                "priority": "high",
+                "reasons": [
+                  "missing_customer_observations"
+                ],
+                "target": "support_agent",
+                "handoff_created": false
+              },
+              "validation": {
+                "status": "passed",
+                "checked_sources": 3,
+                "issues": [],
+                "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+              },
+              "method": "local_extractive_v1",
+              "agent_review_required": true,
+              "draft": "Draft for agent review. A cause has not been confirmed.\n\nClarify: During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?\n\nAnswer the clarification questions before choosing a repair. Retrieved procedures are attached for agent review, not recommended actions yet.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: clarify. Priority: high. Recommended reviewer: support_agent. No external handoff has been created.",
+              "analysis": {
+                "category": null,
+                "scope_status": "supported",
+                "scope_reason": "recognized_service_mention",
+                "category_status": "uncertain",
+                "category_basis": "uncertain",
+                "category_evidence": [],
+                "routing_policy": "development_selected_v1",
+                "candidates": [
+                  {
+                    "category": "broadband_outage",
+                    "score": 0.15105114113869197
+                  },
+                  {
+                    "category": "intermittent_broadband",
+                    "score": 0.11127681559141994
+                  },
+                  {
+                    "category": "mobile_data",
+                    "score": 0.09030069381084697
+                  }
+                ],
+                "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                "products": [
+                  {
+                    "text": "broadband",
+                    "start": 3,
+                    "end": 12,
+                    "product": "broadband"
+                  }
+                ],
+                "severity": {
+                  "value": "high",
+                  "rule": "reported_complete_loss",
+                  "evidence": [
+                    {
+                      "text": "broadband is unavailable",
+                      "start": 3,
+                      "end": 27
+                    }
+                  ],
+                  "method": "rules_v1"
+                },
+                "sentiment": {
+                  "value": "unknown",
+                  "rule": "no_explicit_tone",
+                  "evidence": [],
+                  "method": "rules_v1"
+                },
+                "actions": [],
+                "reported_facts": [],
+                "requests": [],
+                "needs_clarification": true,
+                "clarification_questions": [
+                  "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?"
+                ],
+                "model_version": "3ff37cba26815532",
+                "elapsed_ms": 46.21990001760423
+              },
+              "suggestions": [
+                {
+                  "citation_id": "S1",
+                  "required_finding": "Optical signal is healthy; the subscriber session is rejected after an account migration.",
+                  "proposed_action": "Authorized provisioning team corrects the subscriber session mapping and reconnects it.",
+                  "restriction": "Do not ask the customer to share account passwords in a ticket.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                },
+                {
+                  "citation_id": "S2",
+                  "required_finding": "Gateway logs show session renewals failing against a stale lease record.",
+                  "proposed_action": "Authorized access team clears the stale lease and applies the validated renewal configuration.",
+                  "restriction": "Do not diagnose a broken optical cable without optical fault evidence.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                },
+                {
+                  "citation_id": "S3",
+                  "required_finding": "Agent optical test reports no received signal; account is active.",
+                  "proposed_action": "Raise a fibre repair job; an authorized technician repairs the external span.",
+                  "restriction": "Do not factory-reset the router or tell the customer to handle exposed fibre.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                }
+              ],
+              "sources": [
+                {
+                  "citation_id": "S1",
+                  "doc_id": "syn_kb_BB02",
+                  "chunk_id": 2,
+                  "title": "Stale access-session provisioning. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "fibre_broadband",
+                      "start": 136,
+                      "end": 151,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Optical signal is healthy; the subscriber session is rejected after an account migration.",
+                      "start": 303,
+                      "end": 392,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Authorized provisioning team corrects the subscriber session mapping and reconnects it.",
+                      "start": 430,
+                      "end": 517,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not ask the customer to share account passwords in a ticket.",
+                      "start": 745,
+                      "end": 808,
+                      "field": "restriction"
+                    }
+                  ]
+                },
+                {
+                  "citation_id": "S2",
+                  "doc_id": "syn_kb_ID03",
+                  "chunk_id": 15,
+                  "title": "Access-session renewal failure. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "fibre_broadband",
+                      "start": 133,
+                      "end": 148,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Gateway logs show session renewals failing against a stale lease record.",
+                      "start": 306,
+                      "end": 378,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Authorized access team clears the stale lease and applies the validated renewal configuration.",
+                      "start": 416,
+                      "end": 510,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not diagnose a broken optical cable without optical fault evidence.",
+                      "start": 728,
+                      "end": 798,
+                      "field": "restriction"
+                    }
+                  ]
+                },
+                {
+                  "citation_id": "S3",
+                  "doc_id": "syn_kb_BB01",
+                  "chunk_id": 1,
+                  "title": "External fibre break. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "fibre_broadband",
+                      "start": 123,
+                      "end": 138,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Agent optical test reports no received signal; account is active.",
+                      "start": 290,
+                      "end": 355,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Raise a fibre repair job; an authorized technician repairs the external span.",
+                      "start": 393,
+                      "end": 470,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not factory-reset the router or tell the customer to handle exposed fibre.",
+                      "start": 683,
+                      "end": 760,
+                      "field": "restriction"
+                    }
+                  ]
+                }
+              ],
+              "clarification_questions": [
+                "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?"
+              ],
+              "acknowledged_actions": [],
+              "contact_status": "not_requested",
+              "limitations": [
+                "Extractive local drafting; no generative LLM is used.",
+                "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+              ],
+              "elapsed_ms": 1366.399300051853
+            }
+          },
+          {
+            "issue_id": 2,
+            "complaint": "Also my bill includes an extra charge.",
+            "analysis_text": "Also my bill includes an extra charge.",
+            "resolution": {
+              "status": "needs_diagnostic_confirmation",
+              "decision": {
+                "action": "clarify",
+                "priority": "normal",
+                "reasons": [
+                  "missing_customer_observations"
+                ],
+                "target": "support_agent",
+                "handoff_created": false
+              },
+              "validation": {
+                "status": "passed",
+                "checked_sources": 3,
+                "issues": [],
+                "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+              },
+              "method": "local_extractive_v1",
+              "agent_review_required": true,
+              "draft": "Draft for agent review. A cause has not been confirmed.\n\nClarify: Which charge or payment is affected, and is it pending or settled?\n\nAnswer the clarification questions before choosing a repair. Retrieved procedures are attached for agent review, not recommended actions yet.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: clarify. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+              "analysis": {
+                "category": null,
+                "scope_status": "supported",
+                "scope_reason": "recognized_service_mention",
+                "category_status": "uncertain",
+                "category_basis": "uncertain",
+                "category_evidence": [],
+                "routing_policy": "development_selected_v1",
+                "candidates": [
+                  {
+                    "category": "billing_dispute",
+                    "score": 0.316860600651527
+                  },
+                  {
+                    "category": "payment_restoration",
+                    "score": 0.10034531255772637
+                  },
+                  {
+                    "category": "sim_esim_activation",
+                    "score": 0.07887275725096929
+                  }
+                ],
+                "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                "products": [
+                  {
+                    "text": "bill",
+                    "start": 8,
+                    "end": 12,
+                    "product": "billing"
+                  }
+                ],
+                "severity": {
+                  "value": "unknown",
+                  "rule": "insufficient_impact_evidence",
+                  "evidence": [],
+                  "method": "rules_v1"
+                },
+                "sentiment": {
+                  "value": "unknown",
+                  "rule": "no_explicit_tone",
+                  "evidence": [],
+                  "method": "rules_v1"
+                },
+                "actions": [],
+                "reported_facts": [],
+                "requests": [],
+                "needs_clarification": true,
+                "clarification_questions": [
+                  "Which charge or payment is affected, and is it pending or settled?"
+                ],
+                "model_version": "3ff37cba26815532",
+                "elapsed_ms": 39.698699954897165
+              },
+              "suggestions": [
+                {
+                  "citation_id": "S1",
+                  "required_finding": "Audit trail has no valid consent record for the add-on.",
+                  "proposed_action": "Billing staff investigate consent, remove the unsupported charge through policy, and document the decision.",
+                  "restriction": "Do not cancel unrelated services or assume every disputed charge is invalid.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                },
+                {
+                  "citation_id": "S2",
+                  "required_finding": "Ledger shows correct non-overlapping prorated periods and no duplicate charge.",
+                  "proposed_action": "Explain the dated line items and calculation; retain the valid charges unless new evidence shows an error.",
+                  "restriction": "Do not issue a credit merely because the customer is angry.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                },
+                {
+                  "citation_id": "S3",
+                  "required_finding": "Billing continued beyond the confirmed effective cancellation date.",
+                  "proposed_action": "Authorized billing staff align the end date and adjust only the unsupported period.",
+                  "restriction": "Do not erase valid charges incurred before the cancellation date.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                }
+              ],
+              "sources": [
+                {
+                  "citation_id": "S1",
+                  "doc_id": "syn_kb_BD02",
+                  "chunk_id": 6,
+                  "title": "Unsupported add-on charge. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "billing",
+                      "start": 128,
+                      "end": 135,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Audit trail has no valid consent record for the add-on.",
+                      "start": 286,
+                      "end": 341,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Billing staff investigate consent, remove the unsupported charge through policy, and document the decision.",
+                      "start": 379,
+                      "end": 486,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not cancel unrelated services or assume every disputed charge is invalid.",
+                      "start": 700,
+                      "end": 776,
+                      "field": "restriction"
+                    }
+                  ]
+                },
+                {
+                  "citation_id": "S2",
+                  "doc_id": "syn_kb_BD03",
+                  "chunk_id": 7,
+                  "title": "Valid prorated billing misunderstood. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "billing",
+                      "start": 139,
+                      "end": 146,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Ledger shows correct non-overlapping prorated periods and no duplicate charge.",
+                      "start": 297,
+                      "end": 375,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Explain the dated line items and calculation; retain the valid charges unless new evidence shows an error.",
+                      "start": 413,
+                      "end": 519,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not issue a credit merely because the customer is angry.",
+                      "start": 745,
+                      "end": 804,
+                      "field": "restriction"
+                    }
+                  ]
+                },
+                {
+                  "citation_id": "S3",
+                  "doc_id": "syn_kb_BD04",
+                  "chunk_id": 8,
+                  "title": "Cancellation not synchronized to billing. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "billing",
+                      "start": 143,
+                      "end": 150,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Billing continued beyond the confirmed effective cancellation date.",
+                      "start": 301,
+                      "end": 368,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Authorized billing staff align the end date and adjust only the unsupported period.",
+                      "start": 406,
+                      "end": 489,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not erase valid charges incurred before the cancellation date.",
+                      "start": 712,
+                      "end": 777,
+                      "field": "restriction"
+                    }
+                  ]
+                }
+              ],
+              "clarification_questions": [
+                "Which charge or payment is affected, and is it pending or settled?"
+              ],
+              "acknowledged_actions": [],
+              "contact_status": "not_requested",
+              "limitations": [
+                "Extractive local drafting; no generative LLM is used.",
+                "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+              ],
+              "elapsed_ms": 1587.240600027144
+            }
+          }
+        ],
+        "storage": "client_replayed",
+        "limitations": [
+          "Send the same original query and full customer-turn history on each request.",
+          "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+          "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+        ]
+      }
+    },
+    {
+      "name": "reported_neighbourhood_outage",
+      "passed": true,
+      "elapsed_ms": 1697.5271000992507,
+      "response": {
+        "issues": [
+          {
+            "issue_id": 1,
+            "complaint": "Several neighbours lost broadband at the same time.",
+            "analysis_text": "Several neighbours lost broadband at the same time.",
+            "resolution": {
+              "status": "needs_diagnostic_confirmation",
+              "decision": {
+                "action": "escalate",
+                "priority": "urgent",
+                "reasons": [
+                  "reported_area_outage"
+                ],
+                "target": "network_operations",
+                "handoff_created": false
+              },
+              "validation": {
+                "status": "passed",
+                "checked_sources": 1,
+                "issues": [],
+                "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+              },
+              "method": "local_extractive_v1",
+              "agent_review_required": true,
+              "draft": "Draft for agent review. A cause has not been confirmed.\n\nClarify: Which area is affected, and when did the shared outage begin? Do not delay incident review while collecting these details.\n\n[S1] Ask an authorized agent to verify: Provider incident record confirms a regional aggregation outage affecting multiple buildings. Only if confirmed, the procedure proposes: Link affected lines to the major incident; network operations restore the failed equipment and provide a status update.\n\n[S1] Restriction: Do not promise a restoration time before network operations supplies one.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: escalate. Priority: urgent. Recommended reviewer: network_operations. No external handoff has been created.",
+              "analysis": {
+                "category": "broadband_outage",
+                "scope_status": "supported",
+                "scope_reason": "recognized_service_mention",
+                "category_status": "predicted",
+                "category_basis": "explicit_report",
+                "category_evidence": [
+                  {
+                    "text": "Several neighbours",
+                    "start": 0,
+                    "end": 18
+                  },
+                  {
+                    "text": "lost",
+                    "start": 19,
+                    "end": 23
+                  }
+                ],
+                "routing_policy": "development_selected_v1",
+                "candidates": [
+                  {
+                    "category": "mobile_coverage",
+                    "score": 0.15825661043261713
+                  },
+                  {
+                    "category": "broadband_outage",
+                    "score": 0.13519477544755043
+                  },
+                  {
+                    "category": "intermittent_broadband",
+                    "score": 0.12172981829900621
+                  }
+                ],
+                "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                "products": [
+                  {
+                    "text": "broadband",
+                    "start": 24,
+                    "end": 33,
+                    "product": "broadband"
+                  }
+                ],
+                "severity": {
+                  "value": "critical",
+                  "rule": "reported_area_outage",
+                  "evidence": [
+                    {
+                      "text": "Several neighbours",
+                      "start": 0,
+                      "end": 18
+                    },
+                    {
+                      "text": "lost",
+                      "start": 19,
+                      "end": 23
+                    }
+                  ],
+                  "method": "rules_v1"
+                },
+                "sentiment": {
+                  "value": "unknown",
+                  "rule": "no_explicit_tone",
+                  "evidence": [],
+                  "method": "rules_v1"
+                },
+                "actions": [],
+                "reported_facts": [],
+                "requests": [],
+                "needs_clarification": true,
+                "clarification_questions": [
+                  "Which area is affected, and when did the shared outage begin? Do not delay incident review while collecting these details."
+                ],
+                "model_version": "3ff37cba26815532",
+                "elapsed_ms": 39.80919998139143
+              },
+              "suggestions": [
+                {
+                  "citation_id": "S1",
+                  "required_finding": "Provider incident record confirms a regional aggregation outage affecting multiple buildings.",
+                  "proposed_action": "Link affected lines to the major incident; network operations restore the failed equipment and provide a status update.",
+                  "restriction": "Do not promise a restoration time before network operations supplies one.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                }
+              ],
+              "sources": [
+                {
+                  "citation_id": "S1",
+                  "doc_id": "syn_kb_BB03",
+                  "chunk_id": 3,
+                  "title": "Regional aggregation equipment failure. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "fibre_broadband",
+                      "start": 141,
+                      "end": 156,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Provider incident record confirms a regional aggregation outage affecting multiple buildings.",
+                      "start": 308,
+                      "end": 401,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Link affected lines to the major incident; network operations restore the failed equipment and provide a status update.",
+                      "start": 439,
+                      "end": 558,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not promise a restoration time before network operations supplies one.",
+                      "start": 773,
+                      "end": 846,
+                      "field": "restriction"
+                    }
+                  ]
+                }
+              ],
+              "clarification_questions": [
+                "Which area is affected, and when did the shared outage begin? Do not delay incident review while collecting these details."
+              ],
+              "acknowledged_actions": [],
+              "contact_status": "not_requested",
+              "limitations": [
+                "Extractive local drafting; no generative LLM is used.",
+                "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+              ],
+              "elapsed_ms": 1656.1324999202043
+            }
+          }
+        ],
+        "storage": "client_replayed",
+        "limitations": [
+          "Send the same original query and full customer-turn history on each request.",
+          "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+          "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+        ]
+      }
+    },
+    {
+      "name": "unrelated_writing_request",
+      "passed": true,
+      "elapsed_ms": 57.67140001989901,
+      "response": {
+        "issues": [
+          {
+            "issue_id": 1,
+            "complaint": "Write a poem about summer.",
+            "analysis_text": "Write a poem about summer.",
+            "resolution": {
+              "status": "unsupported_request",
+              "decision": {
+                "action": "agent_review",
+                "priority": "normal",
+                "reasons": [
+                  "unsupported_request"
+                ],
+                "target": "support_agent",
+                "handoff_created": false
+              },
+              "validation": {
+                "status": "passed",
+                "checked_sources": 0,
+                "issues": [],
+                "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+              },
+              "method": "local_extractive_v1",
+              "agent_review_required": true,
+              "draft": "Draft for agent review. A cause has not been confirmed.\n\nThis request is outside the supported telecom complaint workflow. No repair is recommended; a support agent can review the request.\n\nNext action: agent_review. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+              "analysis": {
+                "category": null,
+                "scope_status": "unsupported",
+                "scope_reason": "explicit_unrelated_request",
+                "category_status": "uncertain",
+                "category_basis": "uncertain",
+                "category_evidence": [],
+                "routing_policy": "development_selected_v1",
+                "candidates": [
+                  {
+                    "category": "router_ont_hardware",
+                    "score": 0.12945863404778832
+                  },
+                  {
+                    "category": "sms_otp",
+                    "score": 0.10188877802830114
+                  },
+                  {
+                    "category": "number_porting",
+                    "score": 0.09403298900853316
+                  }
+                ],
+                "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                "products": [],
+                "severity": {
+                  "value": "unknown",
+                  "rule": "insufficient_impact_evidence",
+                  "evidence": [],
+                  "method": "rules_v1"
+                },
+                "sentiment": {
+                  "value": "unknown",
+                  "rule": "no_explicit_tone",
+                  "evidence": [],
+                  "method": "rules_v1"
+                },
+                "actions": [],
+                "reported_facts": [],
+                "requests": [],
+                "needs_clarification": false,
+                "clarification_questions": [],
+                "model_version": "3ff37cba26815532",
+                "elapsed_ms": 56.85180006548762
+              },
+              "suggestions": [],
+              "sources": [],
+              "clarification_questions": [],
+              "acknowledged_actions": [],
+              "contact_status": "not_requested",
+              "limitations": [
+                "Extractive local drafting; no generative LLM is used.",
+                "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+              ],
+              "elapsed_ms": 0.2443001139909029
+            }
+          }
+        ],
+        "storage": "client_replayed",
+        "limitations": [
+          "Send the same original query and full customer-turn history on each request.",
+          "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+          "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+        ]
+      }
+    },
+    {
+      "name": "corrected_wired_observation",
+      "passed": true,
+      "elapsed_ms": 1505.159799940884,
+      "response": {
+        "issues": [
+          {
+            "issue_id": 1,
+            "complaint": "My broadband drops.",
+            "analysis_text": "My broadband drops.. Ethernet works.. Correction: Ethernet drops.",
+            "resolution": {
+              "status": "needs_diagnostic_confirmation",
+              "decision": {
+                "action": "agent_review",
+                "priority": "normal",
+                "reasons": [
+                  "diagnostic_confirmation_required"
+                ],
+                "target": "support_agent",
+                "handoff_created": false
+              },
+              "validation": {
+                "status": "passed",
+                "checked_sources": 3,
+                "issues": [],
+                "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+              },
+              "method": "local_extractive_v1",
+              "agent_review_required": true,
+              "draft": "Draft for agent review. A cause has not been confirmed.\n\nCustomer-reported observations: broadband drops; Ethernet drops\n\n[S1] Ask an authorized agent to verify: Moving the affected PC to a known-good cable negotiates a gigabit link. Only if confirmed, the procedure proposes: Replace the damaged cable with a compatible tested cable.\n\n[S1] Restriction: Do not change the subscription or blame the access network when another wired device performs normally.\n\n[S2] Ask an authorized agent to verify: Authorized technician reproduces voltage drops with the ONT power adapter. Only if confirmed, the procedure proposes: Replace the adapter with the provider-approved matching unit.\n\n[S2] Restriction: Do not suggest opening the adapter or using an incompatible supply.\n\n[S3] Ask an authorized agent to verify: Optical signal is healthy; the subscriber session is rejected after an account migration. Only if confirmed, the procedure proposes: Authorized provisioning team corrects the subscriber session mapping and reconnects it.\n\n[S3] Restriction: Do not ask the customer to share account passwords in a ticket.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: agent_review. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+              "analysis": {
+                "category": null,
+                "scope_status": "supported",
+                "scope_reason": "recognized_service_mention",
+                "category_status": "uncertain",
+                "category_basis": "uncertain",
+                "category_evidence": [],
+                "routing_policy": "development_selected_v1",
+                "candidates": [
+                  {
+                    "category": "intermittent_broadband",
+                    "score": 0.23974958177542105
+                  },
+                  {
+                    "category": "broadband_outage",
+                    "score": 0.11997729841773429
+                  },
+                  {
+                    "category": "slow_broadband",
+                    "score": 0.09817588690788225
+                  }
+                ],
+                "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                "products": [
+                  {
+                    "text": "broadband",
+                    "start": 3,
+                    "end": 12,
+                    "product": "broadband"
+                  }
+                ],
+                "severity": {
+                  "value": "medium",
+                  "rule": "reported_degradation_or_work_impact",
+                  "evidence": [
+                    {
+                      "text": "drops",
+                      "start": 59,
+                      "end": 64
+                    }
+                  ],
+                  "method": "rules_v1"
+                },
+                "sentiment": {
+                  "value": "unknown",
+                  "rule": "no_explicit_tone",
+                  "evidence": [],
+                  "method": "rules_v1"
+                },
+                "actions": [],
+                "reported_facts": [
+                  {
+                    "text": "broadband drops",
+                    "start": 3,
+                    "end": 18,
+                    "name": "connection_pattern",
+                    "value": "intermittent"
+                  },
+                  {
+                    "text": "Ethernet drops",
+                    "start": 50,
+                    "end": 64,
+                    "name": "wired_connection",
+                    "value": "failing"
+                  }
+                ],
+                "requests": [],
+                "needs_clarification": false,
+                "clarification_questions": [],
+                "model_version": "3ff37cba26815532",
+                "elapsed_ms": 47.20750008709729
+              },
+              "suggestions": [
+                {
+                  "citation_id": "S1",
+                  "required_finding": "Moving the affected PC to a known-good cable negotiates a gigabit link.",
+                  "proposed_action": "Replace the damaged cable with a compatible tested cable.",
+                  "restriction": "Do not change the subscription or blame the access network when another wired device performs normally.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                },
+                {
+                  "citation_id": "S2",
+                  "required_finding": "Authorized technician reproduces voltage drops with the ONT power adapter.",
+                  "proposed_action": "Replace the adapter with the provider-approved matching unit.",
+                  "restriction": "Do not suggest opening the adapter or using an incompatible supply.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                },
+                {
+                  "citation_id": "S3",
+                  "required_finding": "Optical signal is healthy; the subscriber session is rejected after an account migration.",
+                  "proposed_action": "Authorized provisioning team corrects the subscriber session mapping and reconnects it.",
+                  "restriction": "Do not ask the customer to share account passwords in a ticket.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                }
+              ],
+              "sources": [
+                {
+                  "citation_id": "S1",
+                  "doc_id": "syn_kb_SP02",
+                  "chunk_id": 46,
+                  "title": "Damaged Ethernet cable limiting link negotiation. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "fibre_broadband",
+                      "start": 151,
+                      "end": 166,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Moving the affected PC to a known-good cable negotiates a gigabit link.",
+                      "start": 316,
+                      "end": 387,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Replace the damaged cable with a compatible tested cable.",
+                      "start": 425,
+                      "end": 482,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not change the subscription or blame the access network when another wired device performs normally.",
+                      "start": 716,
+                      "end": 819,
+                      "field": "restriction"
+                    }
+                  ]
+                },
+                {
+                  "citation_id": "S2",
+                  "doc_id": "syn_kb_ID04",
+                  "chunk_id": 16,
+                  "title": "Failing ONT power adapter. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "fibre_broadband",
+                      "start": 128,
+                      "end": 143,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Authorized technician reproduces voltage drops with the ONT power adapter.",
+                      "start": 301,
+                      "end": 375,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Replace the adapter with the provider-approved matching unit.",
+                      "start": 413,
+                      "end": 474,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not suggest opening the adapter or using an incompatible supply.",
+                      "start": 707,
+                      "end": 774,
+                      "field": "restriction"
+                    }
+                  ]
+                },
+                {
+                  "citation_id": "S3",
+                  "doc_id": "syn_kb_BB02",
+                  "chunk_id": 2,
+                  "title": "Stale access-session provisioning. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "fibre_broadband",
+                      "start": 136,
+                      "end": 151,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Optical signal is healthy; the subscriber session is rejected after an account migration.",
+                      "start": 303,
+                      "end": 392,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Authorized provisioning team corrects the subscriber session mapping and reconnects it.",
+                      "start": 430,
+                      "end": 517,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not ask the customer to share account passwords in a ticket.",
+                      "start": 745,
+                      "end": 808,
+                      "field": "restriction"
+                    }
+                  ]
+                }
+              ],
+              "clarification_questions": [],
+              "acknowledged_actions": [],
+              "contact_status": "not_requested",
+              "limitations": [
+                "Extractive local drafting; no generative LLM is used.",
+                "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+              ],
+              "elapsed_ms": 1453.8680999539793
+            }
+          }
+        ],
+        "storage": "client_replayed",
+        "limitations": [
+          "Send the same original query and full customer-turn history on each request.",
+          "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+          "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+        ]
+      }
+    },
+    {
+      "name": "reported_recovery",
+      "passed": true,
+      "elapsed_ms": 1283.1121999770403,
+      "response": {
+        "issues": [
+          {
+            "issue_id": 1,
+            "complaint": "My broadband drops.",
+            "analysis_text": "My broadband drops.. Customer reports impact: working",
+            "resolution": {
+              "status": "needs_diagnostic_confirmation",
+              "decision": {
+                "action": "agent_review",
+                "priority": "normal",
+                "reasons": [
+                  "diagnostic_confirmation_required"
+                ],
+                "target": "support_agent",
+                "handoff_created": false
+              },
+              "validation": {
+                "status": "passed",
+                "checked_sources": 3,
+                "issues": [],
+                "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+              },
+              "method": "local_extractive_v1",
+              "agent_review_required": true,
+              "draft": "Draft for agent review. A cause has not been confirmed.\n\nCustomer-reported observations: broadband drops; Customer reports impact: working\n\nThe customer reports recovery. Ask an agent to review the outcome before closing the issue; no further repair is recommended.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: agent_review. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+              "analysis": {
+                "category": null,
+                "scope_status": "supported",
+                "scope_reason": "recognized_service_mention",
+                "category_status": "uncertain",
+                "category_basis": "uncertain",
+                "category_evidence": [],
+                "routing_policy": "development_selected_v1",
+                "candidates": [
+                  {
+                    "category": "intermittent_broadband",
+                    "score": 0.12449337735685842
+                  },
+                  {
+                    "category": "broadband_outage",
+                    "score": 0.09588213994347068
+                  },
+                  {
+                    "category": "voice_call_failure",
+                    "score": 0.0876107077767753
+                  }
+                ],
+                "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                "products": [
+                  {
+                    "text": "broadband",
+                    "start": 3,
+                    "end": 12,
+                    "product": "broadband"
+                  }
+                ],
+                "severity": {
+                  "value": "low",
+                  "rule": "customer_reported_current_impact",
+                  "evidence": [
+                    {
+                      "text": "Customer reports impact: working",
+                      "start": 21,
+                      "end": 53
+                    }
+                  ],
+                  "method": "rules_v1"
+                },
+                "sentiment": {
+                  "value": "unknown",
+                  "rule": "no_explicit_tone",
+                  "evidence": [],
+                  "method": "rules_v1"
+                },
+                "actions": [],
+                "reported_facts": [
+                  {
+                    "text": "broadband drops",
+                    "start": 3,
+                    "end": 18,
+                    "name": "connection_pattern",
+                    "value": "intermittent"
+                  },
+                  {
+                    "text": "Customer reports impact: working",
+                    "start": 21,
+                    "end": 53,
+                    "name": "impact",
+                    "value": "working"
+                  }
+                ],
+                "requests": [],
+                "needs_clarification": false,
+                "clarification_questions": [],
+                "model_version": "3ff37cba26815532",
+                "elapsed_ms": 25.391299976035953
+              },
+              "suggestions": [
+                {
+                  "citation_id": "S1",
+                  "required_finding": "Agent optical test reports no received signal; account is active.",
+                  "proposed_action": "Raise a fibre repair job; an authorized technician repairs the external span.",
+                  "restriction": "Do not factory-reset the router or tell the customer to handle exposed fibre.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                },
+                {
+                  "citation_id": "S2",
+                  "required_finding": "Optical signal is healthy; the subscriber session is rejected after an account migration.",
+                  "proposed_action": "Authorized provisioning team corrects the subscriber session mapping and reconnects it.",
+                  "restriction": "Do not ask the customer to share account passwords in a ticket.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                },
+                {
+                  "citation_id": "S3",
+                  "required_finding": "Authorized technician reproduces voltage drops with the ONT power adapter.",
+                  "proposed_action": "Replace the adapter with the provider-approved matching unit.",
+                  "restriction": "Do not suggest opening the adapter or using an incompatible supply.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                }
+              ],
+              "sources": [
+                {
+                  "citation_id": "S1",
+                  "doc_id": "syn_kb_BB01",
+                  "chunk_id": 1,
+                  "title": "External fibre break. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "fibre_broadband",
+                      "start": 123,
+                      "end": 138,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Agent optical test reports no received signal; account is active.",
+                      "start": 290,
+                      "end": 355,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Raise a fibre repair job; an authorized technician repairs the external span.",
+                      "start": 393,
+                      "end": 470,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not factory-reset the router or tell the customer to handle exposed fibre.",
+                      "start": 683,
+                      "end": 760,
+                      "field": "restriction"
+                    }
+                  ]
+                },
+                {
+                  "citation_id": "S2",
+                  "doc_id": "syn_kb_BB02",
+                  "chunk_id": 2,
+                  "title": "Stale access-session provisioning. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "fibre_broadband",
+                      "start": 136,
+                      "end": 151,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Optical signal is healthy; the subscriber session is rejected after an account migration.",
+                      "start": 303,
+                      "end": 392,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Authorized provisioning team corrects the subscriber session mapping and reconnects it.",
+                      "start": 430,
+                      "end": 517,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not ask the customer to share account passwords in a ticket.",
+                      "start": 745,
+                      "end": 808,
+                      "field": "restriction"
+                    }
+                  ]
+                },
+                {
+                  "citation_id": "S3",
+                  "doc_id": "syn_kb_ID04",
+                  "chunk_id": 16,
+                  "title": "Failing ONT power adapter. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "fibre_broadband",
+                      "start": 128,
+                      "end": 143,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Authorized technician reproduces voltage drops with the ONT power adapter.",
+                      "start": 301,
+                      "end": 375,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Replace the adapter with the provider-approved matching unit.",
+                      "start": 413,
+                      "end": 474,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not suggest opening the adapter or using an incompatible supply.",
+                      "start": 707,
+                      "end": 774,
+                      "field": "restriction"
+                    }
+                  ]
+                }
+              ],
+              "clarification_questions": [],
+              "acknowledged_actions": [],
+              "contact_status": "not_requested",
+              "limitations": [
+                "Extractive local drafting; no generative LLM is used.",
+                "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+              ],
+              "elapsed_ms": 1256.7694999743253
+            }
+          }
+        ],
+        "storage": "client_replayed",
+        "limitations": [
+          "Send the same original query and full customer-turn history on each request.",
+          "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+          "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+        ]
+      }
+    },
+    {
+      "name": "answered_mobile_question",
+      "passed": true,
+      "elapsed_ms": 1273.5107999760658,
+      "response": {
+        "issues": [
+          {
+            "issue_id": 1,
+            "complaint": "My mobile service has a problem.",
+            "analysis_text": "My mobile service has a problem.. Customer reports impact: complete_loss. Customer reports mobile services: texts",
+            "resolution": {
+              "status": "needs_diagnostic_confirmation",
+              "decision": {
+                "action": "agent_review",
+                "priority": "high",
+                "reasons": [
+                  "diagnostic_confirmation_required"
+                ],
+                "target": "support_agent",
+                "handoff_created": false
+              },
+              "validation": {
+                "status": "passed",
+                "checked_sources": 3,
+                "issues": [],
+                "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+              },
+              "method": "local_extractive_v1",
+              "agent_review_required": true,
+              "draft": "Draft for agent review. A cause has not been confirmed.\n\nCustomer-reported observations: Customer reports impact: complete_loss; Customer reports mobile services: texts\n\n[S1] Ask an authorized agent to verify: Network incident confirms an affected serving site. Only if confirmed, the procedure proposes: Associate the reports with the network incident and provide the confirmed status; operations restore the site.\n\n[S1] Restriction: Do not keep resetting each customer's phone during a confirmed site outage.\n\n[S2] Ask an authorized agent to verify: Roaming allowance is exhausted with no active additional entitlement. Only if confirmed, the procedure proposes: Explain remaining service and approved top-up choices without purchasing on the customer's behalf.\n\n[S2] Restriction: Do not silently switch to out-of-bundle charging.\n\n[S3] Ask an authorized agent to verify: Voice-over-LTE registration is missing for the line despite compatible hardware. Only if confirmed, the procedure proposes: Authorized provisioning team restores the supported voice service profile.\n\n[S3] Restriction: Do not instruct the customer to place emergency calls as a test.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: agent_review. Priority: high. Recommended reviewer: support_agent. No external handoff has been created.",
+              "analysis": {
+                "category": null,
+                "scope_status": "supported",
+                "scope_reason": "recognized_service_mention",
+                "category_status": "uncertain",
+                "category_basis": "uncertain",
+                "category_evidence": [],
+                "routing_policy": "development_selected_v1",
+                "candidates": [
+                  {
+                    "category": "sms_otp",
+                    "score": 0.14554396712899412
+                  },
+                  {
+                    "category": "voice_call_failure",
+                    "score": 0.109058732810026
+                  },
+                  {
+                    "category": "billing_dispute",
+                    "score": 0.09202764157616646
+                  }
+                ],
+                "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                "products": [
+                  {
+                    "text": "mobile",
+                    "start": 3,
+                    "end": 9,
+                    "product": "mobile"
+                  }
+                ],
+                "severity": {
+                  "value": "high",
+                  "rule": "customer_reported_current_impact",
+                  "evidence": [
+                    {
+                      "text": "Customer reports impact: complete_loss",
+                      "start": 34,
+                      "end": 72
+                    }
+                  ],
+                  "method": "rules_v1"
+                },
+                "sentiment": {
+                  "value": "unknown",
+                  "rule": "no_explicit_tone",
+                  "evidence": [],
+                  "method": "rules_v1"
+                },
+                "actions": [],
+                "reported_facts": [
+                  {
+                    "text": "Customer reports impact: complete_loss",
+                    "start": 34,
+                    "end": 72,
+                    "name": "impact",
+                    "value": "complete_loss"
+                  },
+                  {
+                    "text": "Customer reports mobile services: texts",
+                    "start": 74,
+                    "end": 113,
+                    "name": "mobile_services",
+                    "value": "texts"
+                  }
+                ],
+                "requests": [],
+                "needs_clarification": false,
+                "clarification_questions": [],
+                "model_version": "3ff37cba26815532",
+                "elapsed_ms": 38.704900071024895
+              },
+              "suggestions": [
+                {
+                  "citation_id": "S1",
+                  "required_finding": "Network incident confirms an affected serving site.",
+                  "proposed_action": "Associate the reports with the network incident and provide the confirmed status; operations restore the site.",
+                  "restriction": "Do not keep resetting each customer's phone during a confirmed site outage.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                },
+                {
+                  "citation_id": "S2",
+                  "required_finding": "Roaming allowance is exhausted with no active additional entitlement.",
+                  "proposed_action": "Explain remaining service and approved top-up choices without purchasing on the customer's behalf.",
+                  "restriction": "Do not silently switch to out-of-bundle charging.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                },
+                {
+                  "citation_id": "S3",
+                  "required_finding": "Voice-over-LTE registration is missing for the line despite compatible hardware.",
+                  "proposed_action": "Authorized provisioning team restores the supported voice service profile.",
+                  "restriction": "Do not instruct the customer to place emergency calls as a test.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                }
+              ],
+              "sources": [
+                {
+                  "citation_id": "S1",
+                  "doc_id": "syn_kb_MC02",
+                  "chunk_id": 18,
+                  "title": "Serving-site outage. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "mobile",
+                      "start": 122,
+                      "end": 128,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Network incident confirms an affected serving site.",
+                      "start": 279,
+                      "end": 330,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Associate the reports with the network incident and provide the confirmed status; operations restore the site.",
+                      "start": 368,
+                      "end": 478,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not keep resetting each customer's phone during a confirmed site outage.",
+                      "start": 687,
+                      "end": 762,
+                      "field": "restriction"
+                    }
+                  ]
+                },
+                {
+                  "citation_id": "S2",
+                  "doc_id": "syn_kb_RM04",
+                  "chunk_id": 36,
+                  "title": "Exhausted roaming data allowance. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "mobile_roaming",
+                      "start": 135,
+                      "end": 149,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Roaming allowance is exhausted with no active additional entitlement.",
+                      "start": 292,
+                      "end": 361,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Explain remaining service and approved top-up choices without purchasing on the customer's behalf.",
+                      "start": 399,
+                      "end": 497,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not silently switch to out-of-bundle charging.",
+                      "start": 711,
+                      "end": 760,
+                      "field": "restriction"
+                    }
+                  ]
+                },
+                {
+                  "citation_id": "S3",
+                  "doc_id": "syn_kb_VC03",
+                  "chunk_id": 55,
+                  "title": "IMS voice provisioning missing. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "mobile_voice",
+                      "start": 133,
+                      "end": 145,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Voice-over-LTE registration is missing for the line despite compatible hardware.",
+                      "start": 299,
+                      "end": 379,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Authorized provisioning team restores the supported voice service profile.",
+                      "start": 417,
+                      "end": 491,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not instruct the customer to place emergency calls as a test.",
+                      "start": 713,
+                      "end": 777,
+                      "field": "restriction"
+                    }
+                  ]
+                }
+              ],
+              "clarification_questions": [],
+              "acknowledged_actions": [],
+              "contact_status": "not_requested",
+              "limitations": [
+                "Extractive local drafting; no generative LLM is used.",
+                "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+              ],
+              "elapsed_ms": 1232.7149999327958
+            }
+          }
+        ],
+        "storage": "client_replayed",
+        "limitations": [
+          "Send the same original query and full customer-turn history on each request.",
+          "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+          "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+        ]
+      }
+    }
+  ]
+}

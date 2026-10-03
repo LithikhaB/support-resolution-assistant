@@ -84,20 +84,26 @@ class SearchRequest(RetrievalRequest):
     mode: Literal["bm25", "vector", "hybrid"] = "hybrid"
     candidate_k: int | None = Field(default=None, ge=1, le=100, strict=True)
 
+    diversify: bool = Field(default=False, strict=True)
     rerank: bool = Field(default=False, strict=True)
     rerank_k: int | None = Field(default=None, ge=1, le=50, strict=True)
 
     @property
-    def retrieval_depth(self) -> int:
+    def ranking_depth(self) -> int:
         """Retrieve a bounded pool before applying optional pairwise reranking."""
         return (self.rerank_k or max(20, self.top_k)) if self.rerank else self.top_k
+
+    @property
+    def retrieval_depth(self) -> int:
+        """Overfetch for diversity before limiting the pool scored by the reranker."""
+        return max(50, self.ranking_depth) if self.diversify else self.ranking_depth
 
     @model_validator(mode="after")
     def validate_candidates(self):
         """Reject candidate pools that cannot satisfy the requested hybrid result count."""
         if self.rerank_k is not None and not self.rerank:
             raise ValueError("rerank_k requires rerank=true")
-        if self.rerank and (self.top_k > 50 or self.retrieval_depth < self.top_k):
+        if self.rerank and (self.top_k > 50 or self.ranking_depth < self.top_k):
             raise ValueError("reranking requires top_k <= rerank_k <= 50")
         if self.candidate_k is not None:
             if self.mode != "hybrid":
@@ -112,6 +118,8 @@ class SearchResponse(BaseModel):
 
     mode: Literal["bm25", "vector", "hybrid"]
     results: list[HybridResult | VectorResult | BM25Result]
+    diversified: bool = False
+    retrieved_candidates: int = 0
     reranked: bool = False
     reranker_model: str | None = None
     reranker_revision: str | None = None

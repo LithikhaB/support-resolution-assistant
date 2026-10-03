@@ -19,6 +19,7 @@ def main():
     parser.add_argument("--mode", choices=["hybrid", "bm25", "vector"], default="hybrid")
     parser.add_argument("--top-k", type=int, default=5)
     parser.add_argument("--candidate-k", type=int)
+    parser.add_argument("--diversify", action="store_true")
     parser.add_argument("--rerank", action="store_true")
     parser.add_argument("--rerank-k", type=int)
     parser.add_argument("--queue")
@@ -46,6 +47,7 @@ def main():
             top_k=args.top_k,
             candidate_k=args.candidate_k,
             rerank=args.rerank,
+            diversify=args.diversify,
             rerank_k=args.rerank_k,
             filters=filters,
         )
@@ -62,6 +64,8 @@ def main():
         print(response.model_dump_json(indent=2))
         return
     print(f"QUERY: {request.query}\n{response.mode.upper()} RESULTS ({response.elapsed_ms:.1f} ms)")
+    if response.diversified:
+        print(f"Selected diverse evidence from {response.retrieved_candidates} candidates")
     if response.reranked:
         print(f"Reranked {response.reranked_candidates} candidates using {response.reranker_model}")
     if not response.results:

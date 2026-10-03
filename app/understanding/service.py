@@ -10,6 +10,8 @@ from app.ingestion.artifacts import digest
 from app.understanding.classifier import CategoryClassifier
 from app.understanding.context import clarification_questions, extract_facts, extract_requests
 from app.understanding.models import AnalysisResponse, AnalyzeRequest
+from app.understanding.routing import compatible_category, explicit_category, load_policy
+from app.understanding.scope import scope_assessment
 from app.understanding.signals import (
     assess_sentiment,
     assess_severity,
@@ -28,24 +30,42 @@ class UnderstandingService:
         self.classifier = classifier
         self.settings = settings or get_settings()
         self.model_version = digest(classifier.artifact.model_dump(mode="json"))[:16]
+        self.routing = load_policy(self.settings, self.model_version)
 
     def analyze(self, request: AnalyzeRequest) -> AnalysisResponse:
         """Keep category uncertainty, observed products, impact and prior actions distinct."""
         started = perf_counter()
+        scope_status, scope_reason = scope_assessment(request.query)
         candidates = self.classifier.predict(request.query)
-        accepted = (
-            candidates[0].score >= self.settings.understanding_min_score
-            and candidates[0].score - candidates[1].score >= self.settings.understanding_min_margin
+        accepted = candidates[0].score >= (
+            self.routing.min_score if self.routing else self.settings.understanding_min_score
+        ) and candidates[0].score - candidates[1].score >= (
+            self.routing.min_margin if self.routing else self.settings.understanding_min_margin
         )
         products = extract_products(request.query)
+        accepted = accepted and compatible_category(candidates[0].category, products)
         severity = assess_severity(request.query)
+        reported_category = explicit_category(products, severity)
+        category = reported_category or (candidates[0].category if accepted else None)
+        if scope_status == "unsupported":
+            category = reported_category = None
+        accepted = category is not None
         facts = extract_facts(request.query)
         requests = extract_requests(request.query)
         questions = clarification_questions(
             accepted=accepted, products=products, severity=severity, facts=facts, requests=requests
         )
+        if scope_status == "unsupported":
+            questions = []
         result = AnalysisResponse(
-            category=candidates[0].category if accepted else None,
+            scope_status=scope_status,
+            scope_reason=scope_reason,
+            category=category,
+            category_basis="explicit_report"
+            if reported_category
+            else ("model" if accepted else "uncertain"),
+            category_evidence=severity.evidence if reported_category else [],
+            routing_policy="development_selected_v1" if self.routing else "fixed_v1",
             category_status="predicted" if accepted else "uncertain",
             candidates=candidates,
             products=products,

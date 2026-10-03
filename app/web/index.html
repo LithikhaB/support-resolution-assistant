@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Support Resolution · Agent workspace</title>
+  <link rel="stylesheet" href="/assets/style.css?v=3">
+  <script src="/assets/app.js?v=3" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand"><span class="mark">S</span><div>Support Resolution<small>AGENT WORKSPACE</small></div></div>
+    <a class="home-link" href="/">← Home</a><div class="local"><span></span> Local demonstration</div>
+    <h2>Recent cases</h2>
+    <div id="recent" class="recent"><p>No saved cases yet.</p></div>
+    <footer>Evidence informs.<br>People decide.<p>Fictional telecom procedures.<br>Nothing is sent to customers.</p><a href="/docs" target="_blank" rel="noopener">API documentation ↗</a></footer>
+  </aside>
+  <main>
+    <header><div><div class="eyebrow">TICKET RESOLUTION</div><h1>A clear next step for every ticket.</h1><p>Paste a complaint, clarify the details and review a grounded resolution.</p></div><span class="pill">Human review required</span></header>
+    <div id="status" role="status" aria-live="polite" hidden></div>
+    <section class="intake panel" aria-labelledby="intake-title">
+      <div class="section-title"><span class="step">01</span><h2 id="intake-title">Start a case</h2></div>
+      <form id="create-form">
+        <label for="complaint">Paste the customer complaint</label>
+        <textarea id="complaint" required maxlength="10000" rows="3" placeholder="Describe the problem and any troubleshooting already attempted…"></textarea>
+        <div class="intake-bottom"><small>Saved locally on this computer. Use demonstration data.</small><button type="submit" class="primary">Create resolution plan <span>→</span></button></div>
+      </form>
+    </section>
+    <section id="empty" class="empty"><span class="empty-icon">◎</span><h2>A clear path from complaint to review.</h2><p>Start with the complaint. Your resolution plan and any questions<br>will appear here, with evidence available for review.</p><div class="stages"><span>Understand</span><b>→</b><span>Find evidence</span><b>→</b><span>Agent review</span></div></section>
+    <section id="case" hidden aria-label="Saved case">
+      <div class="case-heading"><div><div class="eyebrow">ACTIVE CASE</div><h2 id="case-title"></h2><small id="case-meta"></small></div><button id="reload" class="secondary">Reload saved case</button></div>
+      <div id="issues"></div>
+      <details class="panel audit"><summary>Review history</summary><div id="history"></div></details>
+    </section>
+  </main>
+</body>
+</html>

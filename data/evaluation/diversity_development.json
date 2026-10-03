@@ -1,0 +1,4704 @@
+{
+  "purpose": "Development-only retrieval policy comparison with provisional authored KB labels; KB filtering changes the search task and is appropriate for procedure drafting, not a general search improvement claim.",
+  "test_split_used": false,
+  "queries": 120,
+  "families": 15,
+  "dev_sha256": "fe5e48b90972fd715884404937ef65ba1c4f59ab55dd20fb2ea60f4f2c215e2c",
+  "corpus_sha256": "a93a4a53ee5b02af72571b1e528fa63cba8d9fc9ff378a4de4eef19a2f0be348",
+  "summary": {
+    "hybrid": {
+      "hit_at_5": 0.5,
+      "mrr_at_5": 0.46111111111111114
+    },
+    "diverse_hybrid": {
+      "hit_at_5": 0.6166666666666667,
+      "mrr_at_5": 0.4948611111111111
+    },
+    "kb_focused": {
+      "hit_at_5": 0.8,
+      "mrr_at_5": 0.6938888888888889
+    }
+  },
+  "runs": [
+    {
+      "query_id": "query_BB03_01",
+      "scenario_family": "BB03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BB02_01",
+          "syn_ticket_BB02_03",
+          "syn_ticket_BB02_02",
+          "syn_ticket_BB02_04",
+          "syn_pending_MC02"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BB02_01",
+          "syn_pending_MC02",
+          "syn_ticket_ID02_05",
+          "syn_ticket_MC02_01",
+          "syn_pending_ID02"
+        ],
+        "kb_focused": [
+          "syn_kb_BB01",
+          "syn_kb_ID04",
+          "syn_kb_HW04",
+          "syn_kb_HW01",
+          "syn_kb_WF02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_BB03_02",
+      "scenario_family": "BB03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BB02_02",
+          "syn_ticket_BB02_03",
+          "syn_ticket_BB02_04",
+          "syn_ticket_BB02_01",
+          "syn_pending_MC02"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BB02_02",
+          "syn_pending_MC02",
+          "syn_ticket_ID02_06",
+          "syn_ticket_MC02_06",
+          "syn_pending_ID02"
+        ],
+        "kb_focused": [
+          "syn_kb_BB01",
+          "syn_kb_ID04",
+          "syn_kb_HW04",
+          "syn_kb_ID02",
+          "syn_kb_TV01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_BB03_03",
+      "scenario_family": "BB03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BB02_02",
+          "syn_ticket_BB02_03",
+          "syn_ticket_BB02_01",
+          "syn_ticket_BB02_04",
+          "syn_pending_MC02"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BB02_02",
+          "syn_pending_MC02",
+          "syn_ticket_ID02_05",
+          "syn_ticket_MC02_05",
+          "syn_pending_ID02"
+        ],
+        "kb_focused": [
+          "syn_kb_BB01",
+          "syn_kb_ID04",
+          "syn_kb_HW04",
+          "syn_kb_HW01",
+          "syn_kb_TV01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_BB03_04",
+      "scenario_family": "BB03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BB02_03",
+          "syn_ticket_BB02_01",
+          "syn_ticket_BB02_02",
+          "syn_ticket_BB02_04",
+          "syn_pending_MC02"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BB02_03",
+          "syn_pending_MC02",
+          "syn_pending_BB01",
+          "syn_ticket_BB01_07",
+          "syn_ticket_ID02_07"
+        ],
+        "kb_focused": [
+          "syn_kb_BB01",
+          "syn_kb_ID04",
+          "syn_kb_HW04",
+          "syn_kb_TV01",
+          "syn_kb_HW01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_BB03_05",
+      "scenario_family": "BB03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BB02_03",
+          "syn_ticket_BB02_02",
+          "syn_ticket_BB02_01",
+          "syn_ticket_BB02_04",
+          "syn_ticket_HW01_03"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BB02_03",
+          "syn_ticket_HW01_03",
+          "syn_ticket_MC02_03",
+          "syn_ticket_BB01_03",
+          "syn_pending_HW01"
+        ],
+        "kb_focused": [
+          "syn_kb_HW01",
+          "syn_kb_ID04",
+          "syn_kb_WF02",
+          "syn_kb_HW04",
+          "syn_kb_TV01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_BB03_06",
+      "scenario_family": "BB03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BB02_02",
+          "syn_ticket_BB02_03",
+          "syn_ticket_BB02_04",
+          "syn_ticket_BB02_01",
+          "syn_ticket_HW01_02"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BB02_02",
+          "syn_ticket_HW01_02",
+          "syn_ticket_BB01_02",
+          "syn_ticket_MC02_03",
+          "syn_pending_HW01"
+        ],
+        "kb_focused": [
+          "syn_kb_ID04",
+          "syn_kb_HW01",
+          "syn_kb_WF02",
+          "syn_kb_TV01",
+          "syn_kb_BB01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_BB03_07",
+      "scenario_family": "BB03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BB02_03",
+          "syn_ticket_BB02_02",
+          "syn_ticket_HW01_03",
+          "syn_ticket_BB02_01",
+          "syn_ticket_BB02_04"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BB02_03",
+          "syn_ticket_HW01_03",
+          "syn_ticket_BB01_03",
+          "syn_ticket_MC02_03",
+          "syn_pending_HW01"
+        ],
+        "kb_focused": [
+          "syn_kb_ID04",
+          "syn_kb_HW01",
+          "syn_kb_WF02",
+          "syn_kb_HW04",
+          "syn_kb_TV01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_BB03_08",
+      "scenario_family": "BB03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BB02_03",
+          "syn_ticket_BB02_02",
+          "syn_ticket_BB02_04",
+          "syn_ticket_BB02_01",
+          "syn_ticket_BB01_02"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BB02_03",
+          "syn_ticket_BB01_02",
+          "syn_ticket_HW01_03",
+          "syn_ticket_MC02_03",
+          "syn_pending_BB01"
+        ],
+        "kb_focused": [
+          "syn_kb_TV01",
+          "syn_kb_ID04",
+          "syn_kb_WF02",
+          "syn_kb_HW01",
+          "syn_kb_HW04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_BD03_01",
+      "scenario_family": "BD03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BD01_07",
+          "syn_ticket_BD01_03",
+          "syn_ticket_BD02_07",
+          "syn_kb_BD04",
+          "syn_ticket_BD01_06"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BD01_07",
+          "syn_ticket_BD02_07",
+          "syn_kb_BD04",
+          "syn_pending_BD01",
+          "syn_kb_RM03"
+        ],
+        "kb_focused": [
+          "syn_kb_BD04",
+          "syn_kb_RM03",
+          "syn_kb_BD02",
+          "syn_kb_BD01",
+          "syn_kb_SP01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_BD03_02",
+      "scenario_family": "BD03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BD01_07",
+          "syn_ticket_BD01_06",
+          "syn_ticket_BD02_06",
+          "syn_ticket_BD02_07",
+          "syn_ticket_BD01_03"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BD01_07",
+          "syn_ticket_BD02_06",
+          "syn_kb_BD04",
+          "syn_pending_BD01",
+          "syn_pending_BD02"
+        ],
+        "kb_focused": [
+          "syn_kb_BD04",
+          "syn_kb_RM03",
+          "syn_kb_PR02",
+          "syn_kb_BD02",
+          "syn_kb_BD01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_BD03_03",
+      "scenario_family": "BD03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BD01_07",
+          "syn_ticket_BD01_03",
+          "syn_ticket_BD02_07",
+          "syn_kb_BD04",
+          "syn_ticket_BD01_06"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BD01_07",
+          "syn_ticket_BD02_07",
+          "syn_kb_BD04",
+          "syn_pending_BD01",
+          "syn_kb_BD02"
+        ],
+        "kb_focused": [
+          "syn_kb_BD04",
+          "syn_kb_RM03",
+          "syn_kb_BD02",
+          "syn_kb_PR02",
+          "syn_kb_BD01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_BD03_04",
+      "scenario_family": "BD03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BD02_07",
+          "syn_ticket_BD02_06",
+          "syn_ticket_BD01_07",
+          "syn_ticket_BD02_08",
+          "syn_ticket_BD02_05"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BD02_07",
+          "syn_ticket_BD01_07",
+          "syn_kb_BD04",
+          "syn_pending_BD02",
+          "syn_kb_RM03"
+        ],
+        "kb_focused": [
+          "syn_kb_BD04",
+          "syn_kb_RM03",
+          "syn_kb_PR01",
+          "syn_kb_PR04",
+          "syn_kb_MD02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_BD03_05",
+      "scenario_family": "BD03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BD02_07",
+          "syn_ticket_BD02_06",
+          "syn_ticket_NP02_03",
+          "syn_ticket_BD02_05",
+          "syn_ticket_BD01_07"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BD02_07",
+          "syn_ticket_NP02_03",
+          "syn_ticket_BD01_07",
+          "syn_pending_BD02",
+          "syn_kb_BD04"
+        ],
+        "kb_focused": [
+          "syn_kb_BD04",
+          "syn_kb_RM03",
+          "syn_kb_BD02",
+          "syn_kb_PR04",
+          "syn_kb_BD01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_BD03_06",
+      "scenario_family": "BD03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BD02_07",
+          "syn_ticket_BD02_06",
+          "syn_ticket_BD01_07",
+          "syn_ticket_BD01_03",
+          "syn_pending_BD02"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BD02_07",
+          "syn_ticket_BD01_07",
+          "syn_pending_BD02",
+          "syn_ticket_NP02_03",
+          "syn_kb_BD04"
+        ],
+        "kb_focused": [
+          "syn_kb_BD04",
+          "syn_kb_RM03",
+          "syn_kb_PR02",
+          "syn_kb_BD02",
+          "syn_kb_PR04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_BD03_07",
+      "scenario_family": "BD03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BD01_07",
+          "syn_ticket_BD02_07",
+          "syn_ticket_BD02_06",
+          "syn_ticket_BD01_03",
+          "syn_ticket_BD01_06"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BD01_07",
+          "syn_ticket_BD02_07",
+          "syn_ticket_NP02_03",
+          "syn_pending_BD02",
+          "syn_ticket_TV02_06"
+        ],
+        "kb_focused": [
+          "syn_kb_BD04",
+          "syn_kb_BD02",
+          "syn_kb_RM03",
+          "syn_kb_PR02",
+          "syn_kb_TV02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_BD03_08",
+      "scenario_family": "BD03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BD02_06",
+          "syn_ticket_BD02_07",
+          "syn_ticket_BD02_05",
+          "syn_ticket_BD02_08",
+          "syn_pending_BD02"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BD02_06",
+          "syn_pending_BD02",
+          "syn_ticket_NP02_03",
+          "syn_ticket_BD01_07",
+          "syn_kb_BD04"
+        ],
+        "kb_focused": [
+          "syn_kb_BD04",
+          "syn_kb_RM03",
+          "syn_kb_PR04",
+          "syn_kb_BD01",
+          "syn_kb_RM04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_HW03_01",
+      "scenario_family": "HW03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_HW03",
+          "syn_pending_HW02",
+          "syn_ticket_HW02_08",
+          "syn_ticket_HW02_05",
+          "syn_ticket_HW02_07"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_HW03",
+          "syn_pending_HW02",
+          "syn_ticket_HW02_08",
+          "syn_ticket_HW01_04",
+          "syn_kb_HW01"
+        ],
+        "kb_focused": [
+          "syn_kb_HW03",
+          "syn_kb_HW01",
+          "syn_kb_BB01",
+          "syn_kb_WF02",
+          "syn_kb_BB02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_HW03_02",
+      "scenario_family": "HW03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_HW03",
+          "syn_pending_HW02",
+          "syn_ticket_HW02_08",
+          "syn_ticket_HW02_06",
+          "syn_ticket_HW02_07"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_HW03",
+          "syn_pending_HW02",
+          "syn_ticket_HW02_08",
+          "syn_ticket_HW01_08",
+          "syn_ticket_WF01_04"
+        ],
+        "kb_focused": [
+          "syn_kb_HW03",
+          "syn_kb_BB01",
+          "syn_kb_HW01",
+          "syn_kb_BB02",
+          "syn_kb_WF03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_HW03_03",
+      "scenario_family": "HW03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_pending_HW02",
+          "syn_kb_HW03",
+          "syn_ticket_HW02_08",
+          "syn_ticket_HW01_08",
+          "syn_ticket_HW02_05"
+        ],
+        "diverse_hybrid": [
+          "syn_pending_HW02",
+          "syn_kb_HW03",
+          "syn_ticket_HW02_08",
+          "syn_ticket_HW01_08",
+          "syn_pending_HW01"
+        ],
+        "kb_focused": [
+          "syn_kb_HW03",
+          "syn_kb_BB01",
+          "syn_kb_HW01",
+          "syn_kb_BB02",
+          "syn_kb_WF03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_HW03_04",
+      "scenario_family": "HW03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_HW03",
+          "syn_pending_HW02",
+          "syn_ticket_HW02_08",
+          "syn_ticket_HW02_07",
+          "syn_ticket_HW02_06"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_HW03",
+          "syn_pending_HW02",
+          "syn_ticket_HW02_08",
+          "syn_ticket_HW01_08",
+          "syn_kb_HW04"
+        ],
+        "kb_focused": [
+          "syn_kb_HW03",
+          "syn_kb_HW04",
+          "syn_kb_BB01",
+          "syn_kb_BB02",
+          "syn_kb_HW01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_HW03_05",
+      "scenario_family": "HW03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_HW03",
+          "syn_ticket_BB01_08",
+          "syn_ticket_NP02_08",
+          "syn_ticket_HW01_06",
+          "syn_ticket_NP01_04"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_HW03",
+          "syn_ticket_BB01_08",
+          "syn_ticket_NP02_08",
+          "syn_ticket_HW01_06",
+          "syn_ticket_NP01_04"
+        ],
+        "kb_focused": [
+          "syn_kb_HW03",
+          "syn_kb_BB02",
+          "syn_kb_ID03",
+          "syn_kb_SP04",
+          "syn_kb_BB03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_HW03_06",
+      "scenario_family": "HW03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_HW03",
+          "syn_ticket_WF01_04",
+          "syn_ticket_BB01_08",
+          "syn_ticket_HW02_04",
+          "syn_ticket_ID01_08"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_HW03",
+          "syn_ticket_WF01_04",
+          "syn_ticket_BB01_08",
+          "syn_ticket_HW02_04",
+          "syn_ticket_ID01_08"
+        ],
+        "kb_focused": [
+          "syn_kb_HW03",
+          "syn_kb_BB02",
+          "syn_kb_ID03",
+          "syn_kb_SP04",
+          "syn_kb_ID02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_HW03_07",
+      "scenario_family": "HW03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_HW01_08",
+          "syn_kb_HW03",
+          "syn_ticket_HW01_07",
+          "syn_ticket_BB01_04",
+          "syn_pending_HW01"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_HW01_08",
+          "syn_kb_HW03",
+          "syn_ticket_BB01_04",
+          "syn_pending_HW01",
+          "syn_ticket_ID01_08"
+        ],
+        "kb_focused": [
+          "syn_kb_HW03",
+          "syn_kb_ID03",
+          "syn_kb_BB02",
+          "syn_kb_SP04",
+          "syn_kb_BB03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_HW03_08",
+      "scenario_family": "HW03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_pending_BB01",
+          "syn_ticket_BB01_08",
+          "syn_kb_HW03",
+          "syn_ticket_BB01_06",
+          "syn_ticket_BB01_07"
+        ],
+        "diverse_hybrid": [
+          "syn_pending_BB01",
+          "syn_ticket_BB01_08",
+          "syn_kb_HW03",
+          "syn_ticket_ID01_08",
+          "syn_ticket_RM01_08"
+        ],
+        "kb_focused": [
+          "syn_kb_HW03",
+          "syn_kb_SP04",
+          "syn_kb_BB03",
+          "syn_kb_ID03",
+          "syn_kb_BB02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_ID03_01",
+      "scenario_family": "ID03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BB01_07",
+          "syn_ticket_ID02_03",
+          "syn_ticket_BB01_08",
+          "syn_ticket_BB01_05",
+          "syn_ticket_BB01_06"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BB01_07",
+          "syn_ticket_ID02_03",
+          "syn_ticket_ID01_05",
+          "syn_ticket_BB02_03",
+          "syn_pending_BB01"
+        ],
+        "kb_focused": [
+          "syn_kb_BB01",
+          "syn_kb_SP02",
+          "syn_kb_ID02",
+          "syn_kb_ID01",
+          "syn_kb_WF02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_ID03_02",
+      "scenario_family": "ID03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_ID02_03",
+          "syn_ticket_BB01_06",
+          "syn_ticket_BB01_07",
+          "syn_ticket_BB01_08",
+          "syn_ticket_ID02_02"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_ID02_03",
+          "syn_ticket_BB01_06",
+          "syn_ticket_BB02_02",
+          "syn_kb_ID02",
+          "syn_ticket_WF02_03"
+        ],
+        "kb_focused": [
+          "syn_kb_ID02",
+          "syn_kb_BB01",
+          "syn_kb_SP02",
+          "syn_kb_ID01",
+          "syn_kb_ID04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_ID03_03",
+      "scenario_family": "ID03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_ID02_03",
+          "syn_ticket_BB01_07",
+          "syn_ticket_ID02_01",
+          "syn_ticket_BB02_03",
+          "syn_ticket_ID01_05"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_ID02_03",
+          "syn_ticket_BB01_07",
+          "syn_ticket_BB02_03",
+          "syn_ticket_ID01_05",
+          "syn_pending_BB01"
+        ],
+        "kb_focused": [
+          "syn_kb_BB01",
+          "syn_kb_ID02",
+          "syn_kb_SP02",
+          "syn_kb_ID01",
+          "syn_kb_ID04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_ID03_04",
+      "scenario_family": "ID03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BB01_07",
+          "syn_pending_BB01",
+          "syn_ticket_BB01_08",
+          "syn_ticket_BB01_06",
+          "syn_ticket_ID02_03"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BB01_07",
+          "syn_pending_BB01",
+          "syn_ticket_ID02_03",
+          "syn_ticket_BB02_03",
+          "syn_ticket_ID01_05"
+        ],
+        "kb_focused": [
+          "syn_kb_BB01",
+          "syn_kb_ID02",
+          "syn_kb_SP02",
+          "syn_kb_ID01",
+          "syn_kb_HW04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_ID03_05",
+      "scenario_family": "ID03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BB02_05",
+          "syn_ticket_BB02_06",
+          "syn_ticket_BB02_08",
+          "syn_ticket_BB02_07",
+          "syn_pending_BB02"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BB02_05",
+          "syn_pending_BB02",
+          "syn_ticket_BB01_01",
+          "syn_ticket_HW02_05",
+          "syn_pending_WF01"
+        ],
+        "kb_focused": [
+          "syn_kb_BB01",
+          "syn_kb_ID03",
+          "syn_kb_ID04",
+          "syn_kb_BB02",
+          "syn_kb_ID01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_ID03_06",
+      "scenario_family": "ID03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BB02_06",
+          "syn_ticket_BB02_08",
+          "syn_ticket_BB02_07",
+          "syn_ticket_BB02_05",
+          "syn_ticket_BB01_02"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BB02_06",
+          "syn_ticket_BB01_02",
+          "syn_ticket_HW02_06",
+          "syn_ticket_ID02_02",
+          "syn_pending_BB02"
+        ],
+        "kb_focused": [
+          "syn_kb_BB01",
+          "syn_kb_ID02",
+          "syn_kb_ID03",
+          "syn_kb_ID04",
+          "syn_kb_BB02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_ID03_07",
+      "scenario_family": "ID03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BB02_05",
+          "syn_ticket_BB02_07",
+          "syn_ticket_BB01_04",
+          "syn_ticket_BB01_02",
+          "syn_ticket_BB02_06"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BB02_05",
+          "syn_ticket_BB01_04",
+          "syn_pending_BB02",
+          "syn_pending_WF01",
+          "syn_ticket_HW02_06"
+        ],
+        "kb_focused": [
+          "syn_kb_BB01",
+          "syn_kb_ID03",
+          "syn_kb_BB02",
+          "syn_kb_ID04",
+          "syn_kb_ID01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_ID03_08",
+      "scenario_family": "ID03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BB02_06",
+          "syn_ticket_BB02_05",
+          "syn_ticket_BB02_07",
+          "syn_ticket_BB02_08",
+          "syn_ticket_BB01_06"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BB02_06",
+          "syn_ticket_BB01_06",
+          "syn_pending_BB02",
+          "syn_ticket_HW02_06",
+          "syn_kb_BB01"
+        ],
+        "kb_focused": [
+          "syn_kb_BB01",
+          "syn_kb_ID03",
+          "syn_kb_BB02",
+          "syn_kb_HW04",
+          "syn_kb_WF03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_MC03_01",
+      "scenario_family": "MC03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_MD01_03",
+          "syn_ticket_MD01_01",
+          "syn_ticket_MD01_04",
+          "syn_ticket_MD01_02",
+          "syn_ticket_RM02_03"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_MD01_03",
+          "syn_ticket_RM02_03",
+          "syn_pending_MC02",
+          "syn_kb_RM02",
+          "syn_ticket_MC02_05"
+        ],
+        "kb_focused": [
+          "syn_kb_RM02",
+          "syn_kb_RM03",
+          "syn_kb_MC02",
+          "syn_kb_HW04",
+          "syn_kb_MD03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_MC03_02",
+      "scenario_family": "MC03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_RM02_03",
+          "syn_ticket_MD01_03",
+          "syn_ticket_MD01_04",
+          "syn_ticket_MD01_02",
+          "syn_ticket_MD01_01"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_RM02_03",
+          "syn_ticket_MD01_03",
+          "syn_pending_MC02",
+          "syn_ticket_MC02_07",
+          "syn_ticket_BB01_03"
+        ],
+        "kb_focused": [
+          "syn_kb_RM02",
+          "syn_kb_RM03",
+          "syn_kb_MC04",
+          "syn_kb_MC02",
+          "syn_kb_MD03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_MC03_03",
+      "scenario_family": "MC03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_MD01_03",
+          "syn_ticket_RM02_03",
+          "syn_ticket_MD01_01",
+          "syn_ticket_MD01_04",
+          "syn_ticket_MD01_02"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_MD01_03",
+          "syn_ticket_RM02_03",
+          "syn_ticket_MC02_05",
+          "syn_pending_MC02",
+          "syn_ticket_BB01_03"
+        ],
+        "kb_focused": [
+          "syn_kb_RM02",
+          "syn_kb_RM03",
+          "syn_kb_MC02",
+          "syn_kb_MD03",
+          "syn_kb_HW04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_MC03_04",
+      "scenario_family": "MC03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_RM02_03",
+          "syn_ticket_RM02_01",
+          "syn_ticket_MD01_03",
+          "syn_ticket_MD01_01",
+          "syn_ticket_RM02_04"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_RM02_03",
+          "syn_ticket_MD01_03",
+          "syn_kb_RM02",
+          "syn_pending_MC02",
+          "syn_ticket_MC02_05"
+        ],
+        "kb_focused": [
+          "syn_kb_RM02",
+          "syn_kb_MD03",
+          "syn_kb_RM04",
+          "syn_kb_RM03",
+          "syn_kb_MC02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_MC03_05",
+      "scenario_family": "MC03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_MC03",
+          "syn_kb_MC04",
+          "syn_pending_MC02",
+          "syn_ticket_MD01_05",
+          "syn_ticket_MD01_08"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_MC03",
+          "syn_kb_MC04",
+          "syn_pending_MC02",
+          "syn_ticket_MD01_05",
+          "syn_ticket_MC02_05"
+        ],
+        "kb_focused": [
+          "syn_kb_MC03",
+          "syn_kb_MC04",
+          "syn_kb_RM02",
+          "syn_kb_WF02",
+          "syn_kb_VC04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_MC03_06",
+      "scenario_family": "MC03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_MC03",
+          "syn_kb_MC04",
+          "syn_ticket_MD01_06",
+          "syn_pending_MC02",
+          "syn_ticket_MD01_08"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_MC03",
+          "syn_kb_MC04",
+          "syn_ticket_MD01_06",
+          "syn_pending_MC02",
+          "syn_ticket_MC02_06"
+        ],
+        "kb_focused": [
+          "syn_kb_MC03",
+          "syn_kb_MC04",
+          "syn_kb_MC02",
+          "syn_kb_RM02",
+          "syn_kb_VC03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_MC03_07",
+      "scenario_family": "MC03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_MC04",
+          "syn_kb_MC03",
+          "syn_pending_MC02",
+          "syn_ticket_MD01_05",
+          "syn_ticket_MC02_05"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_MC04",
+          "syn_kb_MC03",
+          "syn_pending_MC02",
+          "syn_ticket_MD01_05",
+          "syn_ticket_MC02_05"
+        ],
+        "kb_focused": [
+          "syn_kb_MC03",
+          "syn_kb_MC04",
+          "syn_kb_RM02",
+          "syn_kb_VC04",
+          "syn_kb_VC03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_MC03_08",
+      "scenario_family": "MC03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_MC03",
+          "syn_kb_MC04",
+          "syn_pending_MC02",
+          "syn_ticket_MD01_05",
+          "syn_ticket_MD01_07"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_MC03",
+          "syn_kb_MC04",
+          "syn_pending_MC02",
+          "syn_ticket_MD01_05",
+          "syn_kb_VC03"
+        ],
+        "kb_focused": [
+          "syn_kb_MC03",
+          "syn_kb_MC04",
+          "syn_kb_VC03",
+          "syn_kb_MC02",
+          "syn_kb_RM02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_MD03_01",
+      "scenario_family": "MD03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_MD03",
+          "syn_ticket_MD01_07",
+          "syn_ticket_MD01_05",
+          "syn_ticket_MD01_08",
+          "syn_ticket_MD01_06"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_MD03",
+          "syn_ticket_MD01_07",
+          "syn_ticket_MC01_05",
+          "syn_kb_MC03",
+          "syn_ticket_RM01_01"
+        ],
+        "kb_focused": [
+          "syn_kb_MD03",
+          "syn_kb_MC03",
+          "syn_kb_SA01",
+          "syn_kb_RM02",
+          "syn_kb_VC03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_MD03_02",
+      "scenario_family": "MD03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_MD03",
+          "syn_ticket_MD01_06",
+          "syn_ticket_MD01_08",
+          "syn_ticket_MD01_07",
+          "syn_ticket_MD01_05"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_MD03",
+          "syn_ticket_MD01_06",
+          "syn_ticket_RM01_02",
+          "syn_kb_MC03",
+          "syn_ticket_MC01_08"
+        ],
+        "kb_focused": [
+          "syn_kb_MD03",
+          "syn_kb_MC03",
+          "syn_kb_RM02",
+          "syn_kb_SA01",
+          "syn_kb_RM04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_MD03_03",
+      "scenario_family": "MD03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_MD03",
+          "syn_ticket_MD01_05",
+          "syn_ticket_MD01_07",
+          "syn_ticket_MD01_08",
+          "syn_ticket_MD01_06"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_MD03",
+          "syn_ticket_MD01_05",
+          "syn_ticket_RM01_01",
+          "syn_kb_MC03",
+          "syn_ticket_RM02_03"
+        ],
+        "kb_focused": [
+          "syn_kb_MD03",
+          "syn_kb_MC03",
+          "syn_kb_SA01",
+          "syn_kb_VC03",
+          "syn_kb_RM02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_MD03_04",
+      "scenario_family": "MD03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_MD03",
+          "syn_ticket_MD01_08",
+          "syn_ticket_MD01_06",
+          "syn_ticket_MD01_05",
+          "syn_ticket_MD01_07"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_MD03",
+          "syn_ticket_MD01_08",
+          "syn_ticket_RM01_01",
+          "syn_kb_MC03",
+          "syn_ticket_MD02_05"
+        ],
+        "kb_focused": [
+          "syn_kb_MD03",
+          "syn_kb_MC03",
+          "syn_kb_SA01",
+          "syn_kb_RM02",
+          "syn_kb_VC03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_MD03_05",
+      "scenario_family": "MD03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_MD03",
+          "syn_kb_RM02",
+          "syn_kb_MC03",
+          "syn_ticket_MD01_06",
+          "syn_ticket_RM02_01"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_MD03",
+          "syn_kb_RM02",
+          "syn_kb_MC03",
+          "syn_ticket_MD01_06",
+          "syn_ticket_RM02_01"
+        ],
+        "kb_focused": [
+          "syn_kb_MD03",
+          "syn_kb_RM02",
+          "syn_kb_MC03",
+          "syn_kb_RM04",
+          "syn_kb_MD04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_MD03_06",
+      "scenario_family": "MD03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_MD03",
+          "syn_ticket_MD01_06",
+          "syn_ticket_RM02_02",
+          "syn_kb_RM02",
+          "syn_ticket_MD01_08"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_MD03",
+          "syn_ticket_MD01_06",
+          "syn_ticket_RM02_02",
+          "syn_kb_RM02",
+          "syn_kb_MC03"
+        ],
+        "kb_focused": [
+          "syn_kb_MD03",
+          "syn_kb_RM02",
+          "syn_kb_MC03",
+          "syn_kb_RM04",
+          "syn_kb_MD04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_MD03_07",
+      "scenario_family": "MD03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_MD03",
+          "syn_ticket_MD01_06",
+          "syn_kb_RM02",
+          "syn_ticket_MD01_05",
+          "syn_ticket_RM02_03"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_MD03",
+          "syn_ticket_MD01_06",
+          "syn_kb_RM02",
+          "syn_ticket_RM02_03",
+          "syn_kb_MC03"
+        ],
+        "kb_focused": [
+          "syn_kb_MD03",
+          "syn_kb_RM02",
+          "syn_kb_MC03",
+          "syn_kb_RM04",
+          "syn_kb_SA01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_MD03_08",
+      "scenario_family": "MD03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_MD03",
+          "syn_pending_RM01",
+          "syn_kb_RM02",
+          "syn_kb_MC03",
+          "syn_ticket_RM02_01"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_MD03",
+          "syn_pending_RM01",
+          "syn_kb_RM02",
+          "syn_kb_MC03",
+          "syn_ticket_RM02_01"
+        ],
+        "kb_focused": [
+          "syn_kb_MD03",
+          "syn_kb_RM02",
+          "syn_kb_MC03",
+          "syn_kb_RM04",
+          "syn_kb_SA01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_NP03_01",
+      "scenario_family": "NP03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_VC01_02",
+          "syn_ticket_VC01_01",
+          "syn_ticket_VC01_03",
+          "syn_ticket_VC01_04",
+          "syn_ticket_NP02_06"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_VC01_02",
+          "syn_ticket_NP02_06",
+          "syn_kb_NP03",
+          "syn_ticket_VC02_02",
+          "syn_ticket_NP01_02"
+        ],
+        "kb_focused": [
+          "syn_kb_NP03",
+          "syn_kb_VC03",
+          "syn_kb_VC01",
+          "syn_kb_VC04",
+          "syn_kb_SM04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_NP03_02",
+      "scenario_family": "NP03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_VC01_02",
+          "syn_ticket_VC01_04",
+          "syn_ticket_VC01_03",
+          "syn_ticket_VC01_06",
+          "syn_ticket_NP02_06"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_VC01_02",
+          "syn_ticket_NP02_06",
+          "syn_kb_NP03",
+          "syn_pending_VC01",
+          "syn_ticket_VC02_02"
+        ],
+        "kb_focused": [
+          "syn_kb_NP03",
+          "syn_kb_VC03",
+          "syn_kb_VC01",
+          "syn_kb_VC04",
+          "syn_kb_ID02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_NP03_03",
+      "scenario_family": "NP03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_VC01_03",
+          "syn_ticket_VC01_04",
+          "syn_ticket_VC01_02",
+          "syn_ticket_NP02_08",
+          "syn_ticket_VC01_01"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_VC01_03",
+          "syn_ticket_NP02_08",
+          "syn_kb_NP03",
+          "syn_pending_NP02",
+          "syn_pending_VC01"
+        ],
+        "kb_focused": [
+          "syn_kb_NP03",
+          "syn_kb_VC01",
+          "syn_kb_VC03",
+          "syn_kb_VC04",
+          "syn_kb_SM04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_NP03_04",
+      "scenario_family": "NP03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_VC01_02",
+          "syn_ticket_VC01_04",
+          "syn_ticket_VC01_03",
+          "syn_ticket_VC01_01",
+          "syn_ticket_NP02_06"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_VC01_02",
+          "syn_ticket_NP02_06",
+          "syn_kb_NP03",
+          "syn_pending_VC01",
+          "syn_pending_NP02"
+        ],
+        "kb_focused": [
+          "syn_kb_NP03",
+          "syn_kb_VC03",
+          "syn_kb_VC01",
+          "syn_kb_VC04",
+          "syn_kb_NP02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_NP03_05",
+      "scenario_family": "NP03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_NP02_01",
+          "syn_ticket_NP02_02",
+          "syn_ticket_NP02_03",
+          "syn_ticket_NP02_04",
+          "syn_pending_SA01"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_NP02_01",
+          "syn_pending_SA01",
+          "syn_kb_NP03",
+          "syn_pending_MD01",
+          "syn_ticket_VC01_05"
+        ],
+        "kb_focused": [
+          "syn_kb_NP03",
+          "syn_kb_SM04",
+          "syn_kb_NP01",
+          "syn_kb_MC04",
+          "syn_kb_MC03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_NP03_06",
+      "scenario_family": "NP03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_NP02_02",
+          "syn_ticket_NP02_04",
+          "syn_ticket_NP02_03",
+          "syn_ticket_NP02_01",
+          "syn_ticket_VC01_06"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_NP02_02",
+          "syn_ticket_VC01_06",
+          "syn_kb_NP03",
+          "syn_pending_SA01",
+          "syn_pending_MD01"
+        ],
+        "kb_focused": [
+          "syn_kb_NP03",
+          "syn_kb_MC04",
+          "syn_kb_SM04",
+          "syn_kb_SA01",
+          "syn_kb_MC03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_NP03_07",
+      "scenario_family": "NP03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_NP02_02",
+          "syn_ticket_NP02_04",
+          "syn_ticket_NP02_01",
+          "syn_ticket_NP02_03",
+          "syn_pending_SA01"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_NP02_02",
+          "syn_pending_SA01",
+          "syn_kb_NP03",
+          "syn_pending_MD01",
+          "syn_ticket_VC01_05"
+        ],
+        "kb_focused": [
+          "syn_kb_NP03",
+          "syn_kb_SM04",
+          "syn_kb_SA01",
+          "syn_kb_MC04",
+          "syn_kb_MC03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_NP03_08",
+      "scenario_family": "NP03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_NP02_02",
+          "syn_ticket_NP02_01",
+          "syn_ticket_NP02_04",
+          "syn_ticket_NP02_03",
+          "syn_pending_SA01"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_NP02_02",
+          "syn_pending_SA01",
+          "syn_kb_NP03",
+          "syn_pending_MD01",
+          "syn_ticket_VC01_05"
+        ],
+        "kb_focused": [
+          "syn_kb_NP03",
+          "syn_kb_SA01",
+          "syn_kb_SM04",
+          "syn_kb_MC04",
+          "syn_kb_MC03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_PR03_01",
+      "scenario_family": "PR03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 0.2
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_NP01_02",
+          "syn_ticket_NP01_04",
+          "syn_ticket_NP01_03",
+          "syn_ticket_NP01_01",
+          "syn_ticket_BD01_02"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_NP01_02",
+          "syn_ticket_BD01_02",
+          "syn_ticket_PR01_02",
+          "syn_kb_NP01",
+          "syn_pending_PR01"
+        ],
+        "kb_focused": [
+          "syn_kb_NP01",
+          "syn_kb_PR02",
+          "syn_kb_NP04",
+          "syn_kb_WF04",
+          "syn_kb_PR03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_PR03_02",
+      "scenario_family": "PR03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 0.2
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BD01_06",
+          "syn_ticket_BD01_08",
+          "syn_ticket_PR01_02",
+          "syn_ticket_BD01_02",
+          "syn_ticket_BD01_05"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BD01_06",
+          "syn_ticket_PR01_02",
+          "syn_ticket_NP01_02",
+          "syn_ticket_BD02_06",
+          "syn_ticket_NP02_04"
+        ],
+        "kb_focused": [
+          "syn_kb_PR02",
+          "syn_kb_NP01",
+          "syn_kb_WF04",
+          "syn_kb_NP04",
+          "syn_kb_PR03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_PR03_03",
+      "scenario_family": "PR03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 0.2
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BD01_08",
+          "syn_ticket_BD01_05",
+          "syn_ticket_BD01_06",
+          "syn_ticket_BD01_02",
+          "syn_ticket_BD01_04"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BD01_08",
+          "syn_ticket_PR01_04",
+          "syn_ticket_NP01_04",
+          "syn_ticket_NP02_04",
+          "syn_kb_PR02"
+        ],
+        "kb_focused": [
+          "syn_kb_PR02",
+          "syn_kb_NP01",
+          "syn_kb_WF04",
+          "syn_kb_NP04",
+          "syn_kb_PR03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_PR03_04",
+      "scenario_family": "PR03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.25
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BD01_08",
+          "syn_ticket_BD01_06",
+          "syn_ticket_BD01_05",
+          "syn_ticket_BD02_06",
+          "syn_ticket_PR01_04"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BD01_08",
+          "syn_ticket_BD02_06",
+          "syn_ticket_PR01_04",
+          "syn_kb_PR03",
+          "syn_ticket_NP02_01"
+        ],
+        "kb_focused": [
+          "syn_kb_PR03",
+          "syn_kb_PR01",
+          "syn_kb_PR02",
+          "syn_kb_NP01",
+          "syn_kb_PR04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_PR03_05",
+      "scenario_family": "PR03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BD01_04",
+          "syn_ticket_PR02_08",
+          "syn_ticket_PR01_06",
+          "syn_ticket_PR02_06",
+          "syn_ticket_PR02_05"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BD01_04",
+          "syn_ticket_PR02_08",
+          "syn_ticket_PR01_06",
+          "syn_kb_NP01",
+          "syn_ticket_BD02_02"
+        ],
+        "kb_focused": [
+          "syn_kb_NP01",
+          "syn_kb_PR03",
+          "syn_kb_PR02",
+          "syn_kb_BD01",
+          "syn_kb_PR04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_PR03_06",
+      "scenario_family": "PR03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BD01_04",
+          "syn_ticket_PR01_04",
+          "syn_ticket_PR01_02",
+          "syn_ticket_BD01_02",
+          "syn_ticket_PR02_08"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BD01_04",
+          "syn_ticket_PR01_04",
+          "syn_ticket_PR02_08",
+          "syn_ticket_BD02_02",
+          "syn_ticket_MD02_08"
+        ],
+        "kb_focused": [
+          "syn_kb_PR03",
+          "syn_kb_PR02",
+          "syn_kb_BD01",
+          "syn_kb_PR04",
+          "syn_kb_NP01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_PR03_07",
+      "scenario_family": "PR03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_BD01_04",
+          "syn_ticket_BD01_02",
+          "syn_ticket_BD01_01",
+          "syn_ticket_PR02_08",
+          "syn_ticket_PR02_06"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_BD01_04",
+          "syn_ticket_PR02_08",
+          "syn_ticket_BD02_04",
+          "syn_ticket_PR01_04",
+          "syn_pending_PR02"
+        ],
+        "kb_focused": [
+          "syn_kb_PR02",
+          "syn_kb_PR03",
+          "syn_kb_NP01",
+          "syn_kb_BD01",
+          "syn_kb_BD02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_PR03_08",
+      "scenario_family": "PR03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.2
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_PR01_08",
+          "syn_ticket_PR01_06",
+          "syn_ticket_PR01_05",
+          "syn_ticket_PR02_08",
+          "syn_ticket_PR02_04"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_PR01_08",
+          "syn_ticket_PR02_08",
+          "syn_ticket_BD01_04",
+          "syn_ticket_MD02_08",
+          "syn_kb_PR03"
+        ],
+        "kb_focused": [
+          "syn_kb_PR03",
+          "syn_kb_PR04",
+          "syn_kb_PR02",
+          "syn_kb_PR01",
+          "syn_kb_BD01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_RM03_01",
+      "scenario_family": "RM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_NP02_03",
+          "syn_kb_RM03",
+          "syn_ticket_NP02_02",
+          "syn_ticket_NP02_01",
+          "syn_ticket_NP02_04"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_NP02_03",
+          "syn_kb_RM03",
+          "syn_pending_RM02",
+          "syn_ticket_RM02_06",
+          "syn_ticket_RM01_06"
+        ],
+        "kb_focused": [
+          "syn_kb_RM03",
+          "syn_kb_BD04",
+          "syn_kb_RM01",
+          "syn_kb_TV02",
+          "syn_kb_RM04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_RM03_02",
+      "scenario_family": "RM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_RM03",
+          "syn_ticket_NP02_03",
+          "syn_ticket_NP02_02",
+          "syn_ticket_NP02_04",
+          "syn_pending_RM02"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_RM03",
+          "syn_ticket_NP02_03",
+          "syn_pending_RM02",
+          "syn_ticket_RM02_06",
+          "syn_ticket_RM01_06"
+        ],
+        "kb_focused": [
+          "syn_kb_RM03",
+          "syn_kb_BD04",
+          "syn_kb_RM01",
+          "syn_kb_MD02",
+          "syn_kb_BB04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_RM03_03",
+      "scenario_family": "RM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_RM03",
+          "syn_ticket_NP02_03",
+          "syn_ticket_NP02_01",
+          "syn_ticket_NP02_02",
+          "syn_ticket_NP02_04"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_RM03",
+          "syn_ticket_NP02_03",
+          "syn_pending_RM02",
+          "syn_ticket_RM02_08",
+          "syn_ticket_RM01_06"
+        ],
+        "kb_focused": [
+          "syn_kb_RM03",
+          "syn_kb_BD04",
+          "syn_kb_RM01",
+          "syn_kb_RM04",
+          "syn_kb_BB04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_RM03_04",
+      "scenario_family": "RM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_NP02_03",
+          "syn_kb_RM03",
+          "syn_ticket_NP02_02",
+          "syn_ticket_NP02_04",
+          "syn_ticket_NP02_01"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_NP02_03",
+          "syn_kb_RM03",
+          "syn_pending_RM02",
+          "syn_ticket_RM02_08",
+          "syn_pending_RM01"
+        ],
+        "kb_focused": [
+          "syn_kb_RM03",
+          "syn_kb_RM04",
+          "syn_kb_BD04",
+          "syn_kb_RM01",
+          "syn_kb_SA01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_RM03_05",
+      "scenario_family": "RM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_RM03",
+          "syn_ticket_RM01_02",
+          "syn_ticket_RM01_01",
+          "syn_ticket_RM01_03",
+          "syn_ticket_RM01_04"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_RM03",
+          "syn_ticket_RM01_02",
+          "syn_ticket_RM02_05",
+          "syn_kb_RM01",
+          "syn_kb_RM02"
+        ],
+        "kb_focused": [
+          "syn_kb_RM03",
+          "syn_kb_RM01",
+          "syn_kb_RM04",
+          "syn_kb_RM02",
+          "syn_kb_MD03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_RM03_06",
+      "scenario_family": "RM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_RM03",
+          "syn_ticket_RM01_02",
+          "syn_ticket_RM01_04",
+          "syn_ticket_RM01_01",
+          "syn_ticket_RM01_03"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_RM03",
+          "syn_ticket_RM01_02",
+          "syn_ticket_RM02_06",
+          "syn_kb_RM01",
+          "syn_kb_RM02"
+        ],
+        "kb_focused": [
+          "syn_kb_RM03",
+          "syn_kb_RM01",
+          "syn_kb_RM04",
+          "syn_kb_RM02",
+          "syn_kb_MD03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_RM03_07",
+      "scenario_family": "RM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_RM03",
+          "syn_ticket_RM01_02",
+          "syn_ticket_RM01_01",
+          "syn_ticket_RM01_03",
+          "syn_ticket_RM01_04"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_RM03",
+          "syn_ticket_RM01_02",
+          "syn_ticket_RM02_05",
+          "syn_kb_RM04",
+          "syn_kb_RM02"
+        ],
+        "kb_focused": [
+          "syn_kb_RM03",
+          "syn_kb_RM01",
+          "syn_kb_RM04",
+          "syn_kb_RM02",
+          "syn_kb_MD03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_RM03_08",
+      "scenario_family": "RM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_RM03",
+          "syn_ticket_RM01_02",
+          "syn_ticket_RM01_01",
+          "syn_ticket_RM01_03",
+          "syn_ticket_RM01_04"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_RM03",
+          "syn_ticket_RM01_02",
+          "syn_ticket_RM02_05",
+          "syn_kb_RM04",
+          "syn_pending_RM01"
+        ],
+        "kb_focused": [
+          "syn_kb_RM03",
+          "syn_kb_RM04",
+          "syn_kb_RM01",
+          "syn_kb_MD03",
+          "syn_kb_RM02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SA03_01",
+      "scenario_family": "SA03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_SA03",
+          "syn_kb_SA01",
+          "syn_ticket_NP02_01",
+          "syn_ticket_SA02_05",
+          "syn_ticket_SA02_01"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_SA03",
+          "syn_kb_SA01",
+          "syn_ticket_NP02_01",
+          "syn_ticket_SA02_05",
+          "syn_kb_NP01"
+        ],
+        "kb_focused": [
+          "syn_kb_SA03",
+          "syn_kb_SA01",
+          "syn_kb_SA02",
+          "syn_kb_NP01",
+          "syn_kb_MC03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SA03_02",
+      "scenario_family": "SA03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_SA03",
+          "syn_ticket_SA02_02",
+          "syn_ticket_SA02_04",
+          "syn_ticket_SA02_06",
+          "syn_ticket_NP02_02"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_SA03",
+          "syn_ticket_SA02_02",
+          "syn_ticket_NP02_02",
+          "syn_ticket_SA01_06",
+          "syn_kb_SA01"
+        ],
+        "kb_focused": [
+          "syn_kb_SA03",
+          "syn_kb_SA01",
+          "syn_kb_SA02",
+          "syn_kb_MC03",
+          "syn_kb_SA04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SA03_03",
+      "scenario_family": "SA03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_SA03",
+          "syn_ticket_NP02_01",
+          "syn_kb_SA01",
+          "syn_ticket_NP02_04",
+          "syn_ticket_SA02_05"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_SA03",
+          "syn_ticket_NP02_01",
+          "syn_kb_SA01",
+          "syn_ticket_SA02_05",
+          "syn_pending_MD01"
+        ],
+        "kb_focused": [
+          "syn_kb_SA03",
+          "syn_kb_SA01",
+          "syn_kb_SA02",
+          "syn_kb_MC03",
+          "syn_kb_SA04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SA03_04",
+      "scenario_family": "SA03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_SA03",
+          "syn_kb_SA01",
+          "syn_ticket_NP02_01",
+          "syn_ticket_SA02_05",
+          "syn_ticket_NP02_04"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_SA03",
+          "syn_kb_SA01",
+          "syn_ticket_NP02_01",
+          "syn_ticket_SA02_05",
+          "syn_ticket_MD02_01"
+        ],
+        "kb_focused": [
+          "syn_kb_SA03",
+          "syn_kb_SA01",
+          "syn_kb_SA02",
+          "syn_kb_MC03",
+          "syn_kb_SA04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SA03_05",
+      "scenario_family": "SA03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_SA03",
+          "syn_ticket_SA01_05",
+          "syn_kb_NP04",
+          "syn_ticket_SA01_08",
+          "syn_ticket_SA01_06"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_SA03",
+          "syn_ticket_SA01_05",
+          "syn_kb_NP04",
+          "syn_kb_SA01",
+          "syn_pending_SA01"
+        ],
+        "kb_focused": [
+          "syn_kb_SA03",
+          "syn_kb_NP04",
+          "syn_kb_SA01",
+          "syn_kb_BB04",
+          "syn_kb_SA02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SA03_06",
+      "scenario_family": "SA03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_SA03",
+          "syn_ticket_SA01_08",
+          "syn_ticket_SA01_06",
+          "syn_kb_NP04",
+          "syn_ticket_SA01_05"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_SA03",
+          "syn_ticket_SA01_08",
+          "syn_kb_NP04",
+          "syn_kb_SA01",
+          "syn_pending_SA01"
+        ],
+        "kb_focused": [
+          "syn_kb_SA03",
+          "syn_kb_NP04",
+          "syn_kb_SA01",
+          "syn_kb_BB04",
+          "syn_kb_SA02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SA03_07",
+      "scenario_family": "SA03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_SA01_05",
+          "syn_kb_SA03",
+          "syn_ticket_SA01_08",
+          "syn_kb_NP04",
+          "syn_ticket_SA01_06"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_SA01_05",
+          "syn_kb_SA03",
+          "syn_kb_NP04",
+          "syn_pending_SA01",
+          "syn_kb_SA01"
+        ],
+        "kb_focused": [
+          "syn_kb_SA03",
+          "syn_kb_NP04",
+          "syn_kb_SA01",
+          "syn_kb_BB04",
+          "syn_kb_SA02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SA03_08",
+      "scenario_family": "SA03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_SA03",
+          "syn_kb_NP04",
+          "syn_ticket_SA01_08",
+          "syn_ticket_SA01_05",
+          "syn_ticket_SA01_06"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_SA03",
+          "syn_kb_NP04",
+          "syn_ticket_SA01_08",
+          "syn_kb_SA01",
+          "syn_pending_SA01"
+        ],
+        "kb_focused": [
+          "syn_kb_SA03",
+          "syn_kb_NP04",
+          "syn_kb_SA01",
+          "syn_kb_BB02",
+          "syn_kb_NP02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SM03_01",
+      "scenario_family": "SM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_SM03",
+          "syn_pending_SM01",
+          "syn_ticket_SM01_05",
+          "syn_ticket_SM01_01",
+          "syn_kb_SM01"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_SM03",
+          "syn_pending_SM01",
+          "syn_ticket_SM01_05",
+          "syn_kb_SM01",
+          "syn_pending_MD01"
+        ],
+        "kb_focused": [
+          "syn_kb_SM03",
+          "syn_kb_SM01",
+          "syn_kb_SM04",
+          "syn_kb_MC04",
+          "syn_kb_SM02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SM03_02",
+      "scenario_family": "SM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_SM03",
+          "syn_ticket_SM01_02",
+          "syn_ticket_SM01_04",
+          "syn_ticket_SM02_02",
+          "syn_ticket_SM01_03"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_SM03",
+          "syn_ticket_SM01_02",
+          "syn_ticket_SM02_02",
+          "syn_ticket_MD01_04",
+          "syn_pending_SM01"
+        ],
+        "kb_focused": [
+          "syn_kb_SM03",
+          "syn_kb_SM01",
+          "syn_kb_MC04",
+          "syn_kb_SM04",
+          "syn_kb_SM02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SM03_03",
+      "scenario_family": "SM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_SM03",
+          "syn_pending_SM01",
+          "syn_ticket_SM01_05",
+          "syn_ticket_SM01_07",
+          "syn_ticket_SM01_01"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_SM03",
+          "syn_pending_SM01",
+          "syn_ticket_SM01_05",
+          "syn_ticket_SM02_01",
+          "syn_pending_MD01"
+        ],
+        "kb_focused": [
+          "syn_kb_SM03",
+          "syn_kb_SM01",
+          "syn_kb_SM04",
+          "syn_kb_MC04",
+          "syn_kb_SM02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SM03_04",
+      "scenario_family": "SM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_pending_SM02",
+          "syn_kb_SM03",
+          "syn_pending_SM01",
+          "syn_ticket_SM01_08",
+          "syn_ticket_SM01_05"
+        ],
+        "diverse_hybrid": [
+          "syn_pending_SM02",
+          "syn_kb_SM03",
+          "syn_pending_SM01",
+          "syn_ticket_SM01_08",
+          "syn_kb_SM01"
+        ],
+        "kb_focused": [
+          "syn_kb_SM03",
+          "syn_kb_SM01",
+          "syn_kb_MC04",
+          "syn_kb_SM02",
+          "syn_kb_MC03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SM03_05",
+      "scenario_family": "SM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_SM03",
+          "syn_kb_SM01",
+          "syn_pending_MD01",
+          "syn_pending_SM01",
+          "syn_ticket_SM01_03"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_SM03",
+          "syn_kb_SM01",
+          "syn_pending_MD01",
+          "syn_pending_SM01",
+          "syn_ticket_SM01_03"
+        ],
+        "kb_focused": [
+          "syn_kb_SM03",
+          "syn_kb_SM01",
+          "syn_kb_SM02",
+          "syn_kb_MC04",
+          "syn_kb_VC04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SM03_06",
+      "scenario_family": "SM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_SM03",
+          "syn_ticket_SM01_06",
+          "syn_kb_SM01",
+          "syn_pending_SM01",
+          "syn_ticket_SM01_07"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_SM03",
+          "syn_ticket_SM01_06",
+          "syn_kb_SM01",
+          "syn_pending_SM01",
+          "syn_pending_MD01"
+        ],
+        "kb_focused": [
+          "syn_kb_SM03",
+          "syn_kb_SM01",
+          "syn_kb_MC04",
+          "syn_kb_SM02",
+          "syn_kb_VC04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SM03_07",
+      "scenario_family": "SM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_SM03",
+          "syn_pending_MD01",
+          "syn_pending_SM01",
+          "syn_kb_SM01",
+          "syn_ticket_SM01_07"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_SM03",
+          "syn_pending_MD01",
+          "syn_pending_SM01",
+          "syn_kb_SM01",
+          "syn_ticket_SM01_07"
+        ],
+        "kb_focused": [
+          "syn_kb_SM03",
+          "syn_kb_SM01",
+          "syn_kb_MC04",
+          "syn_kb_SM02",
+          "syn_kb_VC04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SM03_08",
+      "scenario_family": "SM03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_SM03",
+          "syn_pending_MD01",
+          "syn_kb_SM01",
+          "syn_pending_SM01",
+          "syn_kb_SM02"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_SM03",
+          "syn_pending_MD01",
+          "syn_kb_SM01",
+          "syn_pending_SM01",
+          "syn_kb_SM02"
+        ],
+        "kb_focused": [
+          "syn_kb_SM03",
+          "syn_kb_SM01",
+          "syn_kb_MC04",
+          "syn_kb_SM02",
+          "syn_kb_MC03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SP03_01",
+      "scenario_family": "SP03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_WF02_07",
+          "syn_ticket_WF02_05",
+          "syn_ticket_WF02_06",
+          "syn_ticket_WF02_01",
+          "syn_ticket_WF02_08"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_WF02_07",
+          "syn_ticket_SP02_03",
+          "syn_kb_WF02",
+          "syn_ticket_ID02_01",
+          "syn_ticket_SP01_01"
+        ],
+        "kb_focused": [
+          "syn_kb_WF02",
+          "syn_kb_SP03",
+          "syn_kb_SP01",
+          "syn_kb_TV01",
+          "syn_kb_TV03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SP03_02",
+      "scenario_family": "SP03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_WF02_06",
+          "syn_ticket_WF02_07",
+          "syn_ticket_WF02_08",
+          "syn_ticket_WF02_05",
+          "syn_ticket_WF02_04"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_WF02_06",
+          "syn_ticket_SP02_02",
+          "syn_ticket_ID02_02",
+          "syn_ticket_SP01_03",
+          "syn_pending_WF02"
+        ],
+        "kb_focused": [
+          "syn_kb_WF02",
+          "syn_kb_SP03",
+          "syn_kb_SP01",
+          "syn_kb_ID02",
+          "syn_kb_TV01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SP03_03",
+      "scenario_family": "SP03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_WF02_05",
+          "syn_ticket_WF02_06",
+          "syn_ticket_WF02_07",
+          "syn_ticket_WF02_08",
+          "syn_ticket_SP02_03"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_WF02_05",
+          "syn_ticket_SP02_03",
+          "syn_ticket_ID02_01",
+          "syn_ticket_SP01_01",
+          "syn_pending_WF02"
+        ],
+        "kb_focused": [
+          "syn_kb_WF02",
+          "syn_kb_SP01",
+          "syn_kb_SP03",
+          "syn_kb_TV03",
+          "syn_kb_TV01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SP03_04",
+      "scenario_family": "SP03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_WF02_07",
+          "syn_ticket_SP01_01",
+          "syn_ticket_SP01_03",
+          "syn_ticket_WF02_05",
+          "syn_ticket_WF02_06"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_WF02_07",
+          "syn_ticket_SP01_01",
+          "syn_ticket_SP02_04",
+          "syn_ticket_ID02_01",
+          "syn_pending_WF02"
+        ],
+        "kb_focused": [
+          "syn_kb_WF02",
+          "syn_kb_SP01",
+          "syn_kb_SP03",
+          "syn_kb_TV01",
+          "syn_kb_SP04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SP03_05",
+      "scenario_family": "SP03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.2
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_WF02_03",
+          "syn_ticket_WF02_04",
+          "syn_ticket_WF02_01",
+          "syn_ticket_WF02_02",
+          "syn_ticket_ID02_07"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_WF02_03",
+          "syn_ticket_ID02_07",
+          "syn_ticket_ID01_05",
+          "syn_ticket_SP01_03",
+          "syn_kb_SP03"
+        ],
+        "kb_focused": [
+          "syn_kb_SP03",
+          "syn_kb_WF02",
+          "syn_kb_SP01",
+          "syn_kb_SP02",
+          "syn_kb_ID02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SP03_06",
+      "scenario_family": "SP03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.2
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_WF02_04",
+          "syn_ticket_WF02_02",
+          "syn_ticket_WF02_03",
+          "syn_ticket_WF02_01",
+          "syn_ticket_ID02_06"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_WF02_04",
+          "syn_ticket_ID02_06",
+          "syn_ticket_SP01_03",
+          "syn_ticket_ID01_08",
+          "syn_kb_SP03"
+        ],
+        "kb_focused": [
+          "syn_kb_SP03",
+          "syn_kb_ID02",
+          "syn_kb_WF02",
+          "syn_kb_SP01",
+          "syn_kb_SP04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SP03_07",
+      "scenario_family": "SP03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_WF02_03",
+          "syn_ticket_WF02_04",
+          "syn_ticket_WF02_01",
+          "syn_ticket_WF02_02",
+          "syn_ticket_ID02_07"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_WF02_03",
+          "syn_ticket_ID02_07",
+          "syn_ticket_SP01_07",
+          "syn_ticket_ID01_05",
+          "syn_pending_SP01"
+        ],
+        "kb_focused": [
+          "syn_kb_SP03",
+          "syn_kb_WF02",
+          "syn_kb_SP01",
+          "syn_kb_ID02",
+          "syn_kb_SP02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_SP03_08",
+      "scenario_family": "SP03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.2
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_WF02_03",
+          "syn_ticket_WF02_04",
+          "syn_ticket_WF02_02",
+          "syn_ticket_ID02_07",
+          "syn_ticket_WF02_01"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_WF02_03",
+          "syn_ticket_ID02_07",
+          "syn_ticket_SP01_03",
+          "syn_ticket_ID01_05",
+          "syn_kb_SP03"
+        ],
+        "kb_focused": [
+          "syn_kb_SP03",
+          "syn_kb_SP01",
+          "syn_kb_WF02",
+          "syn_kb_SP04",
+          "syn_kb_SP02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_TV03_01",
+      "scenario_family": "TV03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_TV01_01",
+          "syn_kb_TV03",
+          "syn_ticket_TV01_02",
+          "syn_ticket_TV01_04",
+          "syn_ticket_TV01_03"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_TV01_01",
+          "syn_kb_TV03",
+          "syn_kb_TV01",
+          "syn_ticket_BB01_01",
+          "syn_kb_SP02"
+        ],
+        "kb_focused": [
+          "syn_kb_TV03",
+          "syn_kb_TV01",
+          "syn_kb_SP02",
+          "syn_kb_WF02",
+          "syn_kb_SP04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_TV03_02",
+      "scenario_family": "TV03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_TV03",
+          "syn_ticket_TV01_02",
+          "syn_ticket_TV01_01",
+          "syn_ticket_TV01_04",
+          "syn_ticket_TV01_03"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_TV03",
+          "syn_ticket_TV01_02",
+          "syn_ticket_BB01_02",
+          "syn_kb_TV01",
+          "syn_ticket_TV02_02"
+        ],
+        "kb_focused": [
+          "syn_kb_TV03",
+          "syn_kb_TV01",
+          "syn_kb_SP02",
+          "syn_kb_ID02",
+          "syn_kb_SP04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_TV03_03",
+      "scenario_family": "TV03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_TV03",
+          "syn_ticket_TV01_01",
+          "syn_ticket_TV01_02",
+          "syn_ticket_TV01_03",
+          "syn_ticket_TV01_04"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_TV03",
+          "syn_ticket_TV01_01",
+          "syn_ticket_BB01_01",
+          "syn_kb_TV01",
+          "syn_pending_TV01"
+        ],
+        "kb_focused": [
+          "syn_kb_TV03",
+          "syn_kb_TV01",
+          "syn_kb_SP02",
+          "syn_kb_TV02",
+          "syn_kb_WF02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_TV03_04",
+      "scenario_family": "TV03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_TV03",
+          "syn_ticket_TV01_01",
+          "syn_ticket_TV01_02",
+          "syn_ticket_TV01_04",
+          "syn_ticket_TV01_03"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_TV03",
+          "syn_ticket_TV01_01",
+          "syn_kb_TV01",
+          "syn_pending_BB01",
+          "syn_ticket_BB01_01"
+        ],
+        "kb_focused": [
+          "syn_kb_TV03",
+          "syn_kb_TV01",
+          "syn_kb_SP02",
+          "syn_kb_SP04",
+          "syn_kb_HW04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_TV03_05",
+      "scenario_family": "TV03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_TV03",
+          "syn_ticket_TV01_03",
+          "syn_ticket_TV01_01",
+          "syn_ticket_TV01_04",
+          "syn_ticket_TV01_02"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_TV03",
+          "syn_ticket_TV01_03",
+          "syn_ticket_ID02_03",
+          "syn_ticket_HW02_01",
+          "syn_kb_SP02"
+        ],
+        "kb_focused": [
+          "syn_kb_TV03",
+          "syn_kb_HW04",
+          "syn_kb_TV01",
+          "syn_kb_NP03",
+          "syn_kb_SP02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_TV03_06",
+      "scenario_family": "TV03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_TV03",
+          "syn_ticket_TV02_03",
+          "syn_ticket_TV01_03",
+          "syn_ticket_ID02_03",
+          "syn_ticket_TV02_04"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_TV03",
+          "syn_ticket_TV02_03",
+          "syn_ticket_TV01_03",
+          "syn_ticket_ID02_03",
+          "syn_kb_SP02"
+        ],
+        "kb_focused": [
+          "syn_kb_TV03",
+          "syn_kb_HW04",
+          "syn_kb_NP03",
+          "syn_kb_SP02",
+          "syn_kb_ID03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_TV03_07",
+      "scenario_family": "TV03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_TV03",
+          "syn_ticket_TV01_03",
+          "syn_ticket_TV01_04",
+          "syn_ticket_TV01_02",
+          "syn_kb_TV02"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_TV03",
+          "syn_ticket_TV01_03",
+          "syn_kb_TV02",
+          "syn_ticket_TV02_03",
+          "syn_ticket_ID02_01"
+        ],
+        "kb_focused": [
+          "syn_kb_TV03",
+          "syn_kb_TV02",
+          "syn_kb_HW04",
+          "syn_kb_SP02",
+          "syn_kb_ID03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_TV03_08",
+      "scenario_family": "TV03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_TV03",
+          "syn_pending_BB01",
+          "syn_kb_TV01",
+          "syn_ticket_BB01_07",
+          "syn_ticket_BB01_08"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_TV03",
+          "syn_pending_BB01",
+          "syn_kb_TV01",
+          "syn_ticket_BB01_07",
+          "syn_ticket_ID02_03"
+        ],
+        "kb_focused": [
+          "syn_kb_TV03",
+          "syn_kb_TV01",
+          "syn_kb_HW04",
+          "syn_kb_BB03",
+          "syn_kb_SP02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_VC03_01",
+      "scenario_family": "VC03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 0.25
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_MD01_05",
+          "syn_ticket_MD01_07",
+          "syn_ticket_MD01_06",
+          "syn_ticket_MD01_08",
+          "syn_ticket_NP02_03"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_MD01_05",
+          "syn_ticket_NP02_03",
+          "syn_pending_MD01",
+          "syn_ticket_VC01_01",
+          "syn_ticket_RM02_03"
+        ],
+        "kb_focused": [
+          "syn_kb_MD03",
+          "syn_kb_MC04",
+          "syn_kb_SA04",
+          "syn_kb_VC03",
+          "syn_kb_SA01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_VC03_02",
+      "scenario_family": "VC03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 0.25
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_MD01_06",
+          "syn_ticket_MD01_08",
+          "syn_ticket_MD01_05",
+          "syn_ticket_NP02_02",
+          "syn_ticket_MD01_07"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_MD01_06",
+          "syn_ticket_NP02_02",
+          "syn_pending_MD01",
+          "syn_ticket_VC01_02",
+          "syn_ticket_SA02_06"
+        ],
+        "kb_focused": [
+          "syn_kb_MC04",
+          "syn_kb_MD03",
+          "syn_kb_SA04",
+          "syn_kb_VC03",
+          "syn_kb_SA01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_VC03_03",
+      "scenario_family": "VC03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_MD01_05",
+          "syn_ticket_MD01_07",
+          "syn_ticket_MD01_06",
+          "syn_ticket_MD01_08",
+          "syn_ticket_NP02_03"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_MD01_05",
+          "syn_ticket_NP02_03",
+          "syn_pending_MD01",
+          "syn_ticket_VC01_01",
+          "syn_ticket_RM02_03"
+        ],
+        "kb_focused": [
+          "syn_kb_MD03",
+          "syn_kb_MC04",
+          "syn_kb_VC03",
+          "syn_kb_SA04",
+          "syn_kb_SA01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_VC03_04",
+      "scenario_family": "VC03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 0.5
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_MD01_05",
+          "syn_ticket_MD01_06",
+          "syn_ticket_MD01_08",
+          "syn_ticket_MD01_07",
+          "syn_ticket_NP02_02"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_MD01_05",
+          "syn_ticket_NP02_02",
+          "syn_ticket_MD02_01",
+          "syn_pending_MD01",
+          "syn_ticket_RM02_03"
+        ],
+        "kb_focused": [
+          "syn_kb_MD03",
+          "syn_kb_VC03",
+          "syn_kb_SA01",
+          "syn_kb_SA04",
+          "syn_kb_MC04"
+        ]
+      }
+    },
+    {
+      "query_id": "query_VC03_05",
+      "scenario_family": "VC03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_VC02_01",
+          "syn_ticket_VC02_05",
+          "syn_ticket_VC01_01",
+          "syn_ticket_MD01_02",
+          "syn_ticket_MD01_04"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_VC02_01",
+          "syn_ticket_VC01_01",
+          "syn_ticket_MD01_02",
+          "syn_kb_MC04",
+          "syn_ticket_MC01_05"
+        ],
+        "kb_focused": [
+          "syn_kb_MC04",
+          "syn_kb_VC02",
+          "syn_kb_VC03",
+          "syn_kb_VC01",
+          "syn_kb_MD03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_VC03_06",
+      "scenario_family": "VC03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 0.25
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_MD01_02",
+          "syn_ticket_VC01_02",
+          "syn_ticket_MD01_04",
+          "syn_ticket_VC01_04",
+          "syn_ticket_MD01_06"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_MD01_02",
+          "syn_ticket_VC01_02",
+          "syn_kb_MC04",
+          "syn_ticket_VC02_02",
+          "syn_kb_VC02"
+        ],
+        "kb_focused": [
+          "syn_kb_MC04",
+          "syn_kb_VC02",
+          "syn_kb_MD03",
+          "syn_kb_VC03",
+          "syn_kb_VC01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_VC03_07",
+      "scenario_family": "VC03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 0.25
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_VC01_01",
+          "syn_ticket_MD01_02",
+          "syn_ticket_MD01_04",
+          "syn_ticket_MD01_01",
+          "syn_ticket_VC01_04"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_VC01_01",
+          "syn_ticket_MD01_02",
+          "syn_ticket_VC02_01",
+          "syn_kb_MC04",
+          "syn_pending_VC01"
+        ],
+        "kb_focused": [
+          "syn_kb_MC04",
+          "syn_kb_VC01",
+          "syn_kb_VC02",
+          "syn_kb_VC03",
+          "syn_kb_MD03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_VC03_08",
+      "scenario_family": "VC03",
+      "hybrid": {
+        "hit": 0,
+        "reciprocal_rank": 0.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_ticket_VC01_01",
+          "syn_ticket_MD01_04",
+          "syn_ticket_MD01_02",
+          "syn_ticket_VC01_04",
+          "syn_ticket_VC01_02"
+        ],
+        "diverse_hybrid": [
+          "syn_ticket_VC01_01",
+          "syn_ticket_MD01_04",
+          "syn_kb_VC03",
+          "syn_kb_MC04",
+          "syn_ticket_VC02_01"
+        ],
+        "kb_focused": [
+          "syn_kb_VC03",
+          "syn_kb_MC04",
+          "syn_kb_VC01",
+          "syn_kb_VC02",
+          "syn_kb_MD03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_WF03_01",
+      "scenario_family": "WF03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_WF03",
+          "syn_ticket_WF02_05",
+          "syn_kb_WF04",
+          "syn_ticket_WF02_06",
+          "syn_ticket_WF02_08"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_WF03",
+          "syn_ticket_WF02_05",
+          "syn_kb_WF04",
+          "syn_ticket_TV01_02",
+          "syn_pending_WF02"
+        ],
+        "kb_focused": [
+          "syn_kb_WF03",
+          "syn_kb_WF04",
+          "syn_kb_WF02",
+          "syn_kb_MC01",
+          "syn_kb_MD01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_WF03_02",
+      "scenario_family": "WF03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_WF03",
+          "syn_ticket_WF02_06",
+          "syn_ticket_WF02_08",
+          "syn_kb_WF04",
+          "syn_ticket_WF02_07"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_WF03",
+          "syn_ticket_WF02_06",
+          "syn_kb_WF04",
+          "syn_pending_WF02",
+          "syn_pending_MD01"
+        ],
+        "kb_focused": [
+          "syn_kb_WF03",
+          "syn_kb_WF04",
+          "syn_kb_ID02",
+          "syn_kb_MC01",
+          "syn_kb_MD01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_WF03_03",
+      "scenario_family": "WF03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_WF03",
+          "syn_ticket_WF02_05",
+          "syn_ticket_WF02_06",
+          "syn_kb_WF04",
+          "syn_ticket_WF02_08"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_WF03",
+          "syn_ticket_WF02_05",
+          "syn_kb_WF04",
+          "syn_pending_WF02",
+          "syn_pending_MD01"
+        ],
+        "kb_focused": [
+          "syn_kb_WF03",
+          "syn_kb_WF04",
+          "syn_kb_MC01",
+          "syn_kb_MD01",
+          "syn_kb_ID02"
+        ]
+      }
+    },
+    {
+      "query_id": "query_WF03_04",
+      "scenario_family": "WF03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_WF03",
+          "syn_ticket_WF02_05",
+          "syn_kb_WF04",
+          "syn_ticket_WF02_06",
+          "syn_ticket_WF02_08"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_WF03",
+          "syn_ticket_WF02_05",
+          "syn_kb_WF04",
+          "syn_pending_WF02",
+          "syn_pending_MD01"
+        ],
+        "kb_focused": [
+          "syn_kb_WF03",
+          "syn_kb_WF04",
+          "syn_kb_MC01",
+          "syn_kb_HW04",
+          "syn_kb_MD01"
+        ]
+      }
+    },
+    {
+      "query_id": "query_WF03_05",
+      "scenario_family": "WF03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_WF03",
+          "syn_ticket_WF01_01",
+          "syn_ticket_WF01_04",
+          "syn_ticket_WF01_03",
+          "syn_ticket_WF01_02"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_WF03",
+          "syn_ticket_WF01_01",
+          "syn_kb_HW01",
+          "syn_ticket_ID01_01",
+          "syn_kb_HW04"
+        ],
+        "kb_focused": [
+          "syn_kb_WF03",
+          "syn_kb_HW01",
+          "syn_kb_HW04",
+          "syn_kb_HW02",
+          "syn_kb_HW03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_WF03_06",
+      "scenario_family": "WF03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_WF03",
+          "syn_ticket_WF01_04",
+          "syn_ticket_WF01_02",
+          "syn_ticket_WF01_03",
+          "syn_ticket_WF01_01"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_WF03",
+          "syn_ticket_WF01_04",
+          "syn_ticket_BB02_04",
+          "syn_ticket_ID01_02",
+          "syn_kb_HW04"
+        ],
+        "kb_focused": [
+          "syn_kb_WF03",
+          "syn_kb_HW04",
+          "syn_kb_HW01",
+          "syn_kb_HW02",
+          "syn_kb_HW03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_WF03_07",
+      "scenario_family": "WF03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_WF03",
+          "syn_ticket_WF01_04",
+          "syn_ticket_WF01_01",
+          "syn_ticket_WF01_03",
+          "syn_ticket_WF01_02"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_WF03",
+          "syn_ticket_WF01_04",
+          "syn_ticket_HW01_01",
+          "syn_ticket_BB02_04",
+          "syn_ticket_ID01_01"
+        ],
+        "kb_focused": [
+          "syn_kb_WF03",
+          "syn_kb_HW04",
+          "syn_kb_HW01",
+          "syn_kb_HW02",
+          "syn_kb_HW03"
+        ]
+      }
+    },
+    {
+      "query_id": "query_WF03_08",
+      "scenario_family": "WF03",
+      "hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "diverse_hybrid": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "kb_focused": {
+        "hit": 1,
+        "reciprocal_rank": 1.0
+      },
+      "doc_ids": {
+        "hybrid": [
+          "syn_kb_WF03",
+          "syn_ticket_WF01_04",
+          "syn_ticket_WF01_01",
+          "syn_ticket_WF01_03",
+          "syn_ticket_WF01_02"
+        ],
+        "diverse_hybrid": [
+          "syn_kb_WF03",
+          "syn_ticket_WF01_04",
+          "syn_kb_HW04",
+          "syn_ticket_BB02_04",
+          "syn_ticket_ID01_01"
+        ],
+        "kb_focused": [
+          "syn_kb_WF03",
+          "syn_kb_HW04",
+          "syn_kb_RM02",
+          "syn_kb_HW03",
+          "syn_kb_BB01"
+        ]
+      }
+    }
+  ]
+}
