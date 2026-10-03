@@ -40,6 +40,15 @@ def customer_plan(response):
             steps=steps,
             note="A replacement has not been booked. Your provider must confirm eligibility, charges and timing.",
         )
+    if {p.product for p in analysis.products} == {"landline"}:
+        return CustomerPlan(
+            title="Landline support needs agent review",
+            summary="You reported a landline fault. The current knowledge base has no supported landline repair procedure.",
+            steps=[
+                "Route this issue to the fixed-line support team with the symptoms and previous attempts."
+            ],
+            note="No repair or external handoff has been performed.",
+        )
     if any(
         f.name in {"impact", "service_recovery"} and f.value == "working"
         for f in analysis.reported_facts

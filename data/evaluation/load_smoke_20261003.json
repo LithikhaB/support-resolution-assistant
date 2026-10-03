@@ -1,0 +1,45 @@
+{
+  "cold": {
+    "status": 200,
+    "ms": 39239.55089994706,
+    "language_status": "generated_for_review",
+    "provider": "groq",
+    "citation_status": "passed"
+  },
+  "warm": [
+    {
+      "status": 200,
+      "ms": 4324.205299839377,
+      "language_status": "generated_for_review",
+      "provider": "groq",
+      "citation_status": "passed"
+    },
+    {
+      "status": 200,
+      "ms": 4191.7779999785125,
+      "language_status": "generated_for_review",
+      "provider": "groq",
+      "citation_status": "passed"
+    },
+    {
+      "status": 200,
+      "ms": 4574.989499989897,
+      "language_status": "generated_for_review",
+      "provider": "groq",
+      "citation_status": "passed"
+    },
+    {
+      "status": 200,
+      "ms": 14483.313499949872,
+      "language_status": "generated_for_review",
+      "provider": "gemini",
+      "citation_status": "passed"
+    }
+  ],
+  "concurrency": 2,
+  "warm_median_ms": 4449.597399914637,
+  "warm_p95_ms": 14483.313499949872,
+  "completed_requests_per_second": 0.21264101840422817,
+  "successful_requests": 4,
+  "scope": "Local repeated synthetic complaint; cache-assisted smoke load, not varied production traffic or a capacity guarantee."
+}

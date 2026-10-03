@@ -152,7 +152,7 @@ def test_service_preserves_explicit_filters_and_requests_diverse_kb():
     result = ResolutionService(understanding=understanding, retrieval=retrieval).resolve(
         ResolutionRequest(query="My broadband drops.", filters={"queue": "technical_support"})
     )
-    request = retrieval.search.call_args.args[0]
+    request = retrieval.search.call_args_list[0].args[0]
     assert request.diversify and request.rerank
     assert request.filters.doc_type == "knowledge_base"
     assert request.filters.queue == "technical_support" and request.filters.intent is None

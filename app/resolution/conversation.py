@@ -16,7 +16,7 @@ class Observations(BaseModel):
     """Capture explicit customer answers, never provider diagnostic confirmation."""
 
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
-    wired_connection: Literal["working", "failing"] | None = None
+    wired_connection: Literal["working", "failing", "unavailable"] | None = None
     wireless_devices: Literal["one", "all"] | None = None
     impact: Literal["complete_loss", "intermittent", "working"] | None = None
     mobile_services: Literal["calls", "texts", "data", "several"] | None = None
@@ -61,7 +61,8 @@ class ConversationRequest(ResolutionRequest):
         for turn in self.turns:
             original = service_group(issues[turn.issue_id - 1])
             additional = service_group(turn.message)
-            if original and additional - original:
+            existing = set().union(*(service_group(issue) for issue in issues))
+            if original and additional - existing:
                 raise ValueError(
                     "a reply introduces another service; submit it as a separate issue"
                 )
@@ -194,8 +195,9 @@ def resolve_conversation(request, service):
     """Analyze and retrieve each issue separately, replaying only that issue's replies."""
     understanding = service.understanding or get_understanding_service()
     results = []
-    for issue_id, complaint in enumerate(split_issues(request.query), 1):
-        turns = [t for t in request.turns if t.issue_id == issue_id]
+    complaints = split_issues(request.query)
+    for issue_id, complaint in enumerate(complaints, 1):
+        turns = route_turns(complaints, request.turns, issue_id)
         text, structured = prepare_context(complaint, turns)
         analysis = understanding.analyze(AnalyzeRequest(query=text))
         analysis = apply_answers(analysis, text, turns, structured, history_start=len(complaint))
@@ -214,3 +216,31 @@ def resolve_conversation(request, service):
             )
         )
     return ConversationResponse(issues=results)
+
+
+def route_turns(complaints, turns, issue_id):
+    """Route explicitly separated reply clauses to existing issues without mixing evidence."""
+    if len(complaints) == 1:
+        return [turn for turn in turns if turn.issue_id == issue_id]
+    groups = service_group(complaints[issue_id - 1])
+    routed = []
+    for turn in turns:
+        fragments = split_issues(turn.message) if turn.message else []
+        if len(fragments) == 1:
+            if turn.issue_id == issue_id:
+                routed.append(turn)
+            continue
+        matching = [
+            part
+            for part in fragments
+            if service_group(part) & groups
+            or (not service_group(part) and turn.issue_id == issue_id)
+        ]
+        observations = turn.observations if turn.issue_id == issue_id else Observations()
+        if matching or observations.model_dump(exclude_none=True):
+            routed.append(
+                CustomerTurn(
+                    issue_id=issue_id, message=" ".join(matching), observations=observations
+                )
+            )
+    return routed

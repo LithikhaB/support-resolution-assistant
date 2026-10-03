@@ -31,6 +31,13 @@ def scope_assessment(text):
 def service_group(text):
     """Collapse router, Wi-Fi and broadband mentions into one connectivity issue."""
     products = {p.product for p in extract_products(text)}
+    if "landline" in products:
+        products.discard("mobile")
+    if products & {"home_wifi", "broadband", "router"}:
+        if not re.search(r"\b(?:SIM|SMS|OTP|roaming|mobile data|calls?|cellular)\b", text, re.I):
+            products.discard("mobile")
+        if not re.search(r"\b(?:IPTV|set.top box|channels?|TV service)\b", text, re.I):
+            products.discard("iptv")
     groups = products - {"broadband", "home_wifi", "router"}
     if products & {"broadband", "home_wifi", "router"}:
         groups.add("home_connectivity")
@@ -39,8 +46,14 @@ def service_group(text):
 
 def split_issues(text):
     """Split explicit service changes while retaining unlabelled details with their issue."""
+    if re.search(r"\b(?:floodwater|flood waters?|water.damage)\b", text, re.I) and service_group(
+        text
+    ) <= {"home_connectivity", "landline"}:
+        return [text]
     fragments = re.split(
-        r"(?<=[.!?;])\s+|\s+(?:and also|also|plus)\s+|\s+and\s+(?=(?:my|the)\s)", text, flags=re.I
+        r"(?<=[.!?;])\s+|\s+(?:and also|also|plus|but)\s+|\s+and\s+(?=(?:my|the)\s)",
+        text,
+        flags=re.I,
     )
     issues = []
     previous = set()
@@ -49,9 +62,19 @@ def split_issues(text):
         if not fragment:
             continue
         groups = service_group(fragment)
+        if (
+            "home_connectivity" in previous
+            and groups <= {"mobile", "iptv"}
+            and not re.search(
+                r"\b(?:SIM|SMS|OTP|roaming|mobile data|calls?|cellular|IPTV|channels?|set.top box)\b",
+                fragment,
+                re.I,
+            )
+        ):
+            groups = {"home_connectivity"}
         if explicitly_unsupported(fragment):
             groups = {"unsupported"}
-        if issues and (not groups or not previous or groups == previous):
+        if issues and (not groups or not previous or groups == previous or groups <= previous):
             issues[-1] += " " + fragment
             previous = groups or previous
         else:

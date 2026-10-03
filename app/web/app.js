@@ -171,10 +171,10 @@ function renderIssue(issue, updatedIssue) {
   response.id = `response-${issue.issue_id}`;
   response.tabIndex = -1;
   response.append(el("div", updated ? "UPDATED RESPONSE" : "RESOLUTION PLAN", "eyebrow"));
-  const plan = resolution.customer_plan;
+  const plan = resolution.language_plan || resolution.customer_plan;
   response.append(el("h3", plan?.title || "Resolution for agent review"));
   if (plan) {
-    response.append(el("p", plan.summary, "response-text"));
+    response.append(el("p", resolution.language_summary || plan.summary, "response-text"));
     const steps = el("ol", undefined, "resolution-steps");
     for (const step of plan.steps) steps.append(el("li", step));
     response.append(steps);
@@ -183,6 +183,7 @@ function renderIssue(issue, updatedIssue) {
   if (resolution.acknowledged_actions.length) response.append(el("p", `Already attempted: ${resolution.acknowledged_actions.join("; ")}`, "attempts"));
   if (resolution.contact_status === "unverified") response.append(el("p", "The customer asked to speak with support. Arrange a human follow-up through the support desk; this demo does not provide telephone numbers.", "notice"));
   panel.append(response);
+  if (resolution.language_status === "fallback" || resolution.analysis.language_method === "rules_fallback") response.append(el("p", "Language assistance was unavailable for part of this request. Review the evidence-controlled plan and extracted observations.", "source-note"));
   const reply = followupForm(issue);
   if (resolution.clarification_questions.length) panel.append(reply);
   else {
@@ -205,9 +206,20 @@ function renderIssue(issue, updatedIssue) {
   const tools = el("details", undefined, "review-tools");
   tools.append(el("summary", "Agent tools · evidence, draft and review"));
   tools.append(el("p", `Next action: ${pretty(resolution.decision.action)} · Category: ${resolution.analysis.category ? pretty(resolution.analysis.category) : "uncertain"} · Citation check: ${resolution.validation.status}`, "source-note"));
+  if (resolution.language_status) tools.append(el("p", `Language draft: ${pretty(resolution.language_status)}${resolution.language_provider ? ` · ${pretty(resolution.language_provider)}` : ""} · Wording check: ${pretty(resolution.faithfulness_status || "not_run")}`, "source-note"));
   const latest = [...activeCase.reviews].reverse().find(r => r.generation === activeCase.generation && r.review.issue_id === issue.issue_id);
   if (latest) tools.append(el("p", `Latest review: ${pretty(latest.review.action)} · Outcome: ${latest.review.outcome}`, "notice"));
   const columns = el("div", undefined, "columns");
+  if (resolution.language_draft) {
+    const generated = el("details");
+    generated.append(el("summary", "Language draft · review wording before use"), el("p", resolution.language_draft, "response-text"));
+    tools.append(generated);
+  }
+  for (const historical of resolution.historical_cases || []) {
+    const entry = el("details");
+    entry.append(el("summary", `[${historical.citation_id}] ${historical.title} · ${pretty(historical.outcome_status)}`), el("p", historical.resolution));
+    tools.append(entry);
+  }
   const left = el("div");
   const label = el("label", "Internal draft for agent review");
   const draft = el("textarea", undefined, "draft");
@@ -221,7 +233,18 @@ function renderIssue(issue, updatedIssue) {
   const download = el("a", "Download handoff", "secondary download");
   download.href = `/api/v1/cases/${activeCase.id}/handoff/${issue.issue_id}`;
   download.download = `handoff-${activeCase.id}-${issue.issue_id}.json`;
-  left.append(label, draft, restore, reviewForm(issue, draft), download);
+  const review = reviewForm(issue, draft);
+  if (resolution.language_draft) {
+    const useGenerated = el("button", "Review language draft", "secondary");
+    useGenerated.type = "button";
+    useGenerated.onclick = () => {
+      draft.value = resolution.language_draft;
+      review.querySelector('[name="action"]').value = "edit";
+      draft.focus();
+    };
+    left.append(useGenerated);
+  }
+  left.append(label, draft, restore, review, download);
   columns.append(left, evidencePanel(resolution));
   tools.append(columns);
   panel.append(tools);

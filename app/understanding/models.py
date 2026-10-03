@@ -85,4 +85,10 @@ class AnalysisResponse(BaseModel):
     needs_clarification: bool
     clarification_questions: list[str]
     model_version: str
+    language_method: Literal[
+        "rules_v1", "groq_extraction_v1", "gemini_extraction_v1", "rules_fallback"
+    ] = "rules_v1"
+    language_provider: str | None = None
+    language_model: str | None = None
+    language_error: str | None = None
     elapsed_ms: float = Field(ge=0, allow_inf_nan=False)

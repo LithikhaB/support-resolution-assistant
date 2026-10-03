@@ -2,8 +2,10 @@
 
 import argparse
 import json
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
+from time import sleep
 
 from fastapi import HTTPException
 from pydantic import ValidationError
@@ -14,11 +16,13 @@ from app.resolution.conversation import ConversationRequest, resolve_conversatio
 from app.resolution.service import get_resolution_service
 
 
-def evaluate_case(case, service):
+def evaluate_case(case, service, delay_seconds=0):
     """Replay every prefix to expose how the plan and clarification evolve after each reply."""
     turns = case["turns"]
     snapshots = []
     for count in range(len(turns) + 1):
+        if delay_seconds:
+            sleep(delay_seconds)
         try:
             request = ConversationRequest(query=case["query"], turns=turns[:count])
             response = run_request(lambda: resolve_conversation(request, service))
@@ -63,9 +67,9 @@ def print_case(case):
             print(
                 f"Issue {issue['issue_id']} | Category: {result['analysis']['category']} | {result['decision']['action']}"
             )
-            plan = result["customer_plan"]
+            plan = result.get("language_plan") or result["customer_plan"]
             if plan:
-                print(plan["title"] + "\n" + plan["summary"])
+                print(plan["title"] + "\n" + (result.get("language_summary") or plan["summary"]))
                 for index, step in enumerate(plan["steps"], 1):
                     print(f"  {index}. {step}")
                 print(plan["note"])
@@ -81,13 +85,23 @@ def print_case(case):
 
 def main():
     """Save a uniquely named review artifact without replacing frozen evaluations."""
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--cases", type=Path, default=Path("data/evaluation/response_quality_cases.json")
     )
     parser.add_argument("--case", action="append", default=[])
     parser.add_argument("--output", type=Path)
+    parser.add_argument(
+        "--delay-seconds",
+        type=float,
+        default=0,
+        help="Pause between snapshots for provider limits (0 to 60).",
+    )
     args = parser.parse_args()
+    if not 0 <= args.delay_seconds <= 60:
+        parser.error("delay-seconds must be between 0 and 60")
     now = datetime.now(timezone.utc)
     output = args.output or Path("data/evaluation/quality_runs") / (
         now.strftime("%Y%m%dT%H%M%S%fZ") + ".json"
@@ -115,7 +129,7 @@ def main():
     }
     service = get_resolution_service()
     for case in selected:
-        result = evaluate_case(case, service)
+        result = evaluate_case(case, service, args.delay_seconds)
         report["results"].append(result)
         write_json(output, report)
         print_case(result)

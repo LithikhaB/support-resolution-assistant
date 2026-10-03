@@ -4,6 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
+from app.resolution.history import HistoricalCase
 from app.retrieval.models import RetrievalFilters
 from app.understanding.models import AnalysisResponse, AnalyzeRequest, TextEvidence
 
@@ -92,6 +93,15 @@ class ResolutionResponse(BaseModel):
     decision: SupportDecision = Field(default_factory=SupportDecision)
     validation: CitationValidation = Field(default_factory=CitationValidation)
     method: Literal["local_extractive_v1"] = "local_extractive_v1"
+    language_summary: str | None = None
+    language_plan: CustomerPlan | None = None
+    language_draft: str | None = None
+    language_status: Literal["disabled", "generated_for_review", "fallback"] = "disabled"
+    language_model: str | None = None
+    language_provider: str | None = None
+    faithfulness_status: Literal["not_run", "model_checked", "rejected"] = "not_run"
+    language_error: str | None = None
+    historical_cases: list[HistoricalCase] = Field(default_factory=list)
     agent_review_required: Literal[True] = True
     draft: str
     analysis: AnalysisResponse

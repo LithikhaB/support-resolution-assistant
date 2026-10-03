@@ -7,10 +7,18 @@ from time import perf_counter
 
 from app.config.settings import get_settings
 from app.ingestion.artifacts import digest
-from app.understanding.classifier import CategoryClassifier
+from app.llm.client import LanguageUnavailable
+from app.llm.providers import ProviderChain, get_language_client, last_provider
+from app.understanding.classifier import CategoryClassifier, UnderstandingUnavailable
 from app.understanding.context import clarification_questions, extract_facts, extract_requests
+from app.understanding.language import interpret
 from app.understanding.models import AnalysisResponse, AnalyzeRequest
-from app.understanding.routing import compatible_category, explicit_category, load_policy
+from app.understanding.routing import (
+    compatible_category,
+    explicit_category,
+    load_category_products,
+    load_policy,
+)
 from app.understanding.scope import scope_assessment
 from app.understanding.signals import (
     assess_sentiment,
@@ -26,11 +34,18 @@ _factory_lock = Lock()
 class UnderstandingService:
     """Analyze complaints without treating predicted categories as confirmed diagnoses."""
 
-    def __init__(self, classifier: CategoryClassifier, *, settings=None):
+    def __init__(self, classifier: CategoryClassifier, *, settings=None, language=None):
         self.classifier = classifier
         self.settings = settings or get_settings()
+        self.language = language or (
+            ProviderChain(self.settings) if settings is not None else get_language_client()
+        )
         self.model_version = digest(classifier.artifact.model_dump(mode="json"))[:16]
         self.routing = load_policy(self.settings, self.model_version)
+        try:
+            self.category_products = load_category_products(self.settings.category_products_path)
+        except (ValueError, OSError):
+            raise UnderstandingUnavailable("invalid_category_mapping") from None
 
     def analyze(self, request: AnalyzeRequest) -> AnalysisResponse:
         """Keep category uncertainty, observed products, impact and prior actions distinct."""
@@ -43,14 +58,29 @@ class UnderstandingService:
             self.routing.min_margin if self.routing else self.settings.understanding_min_margin
         )
         products = extract_products(request.query)
-        accepted = accepted and compatible_category(candidates[0].category, products)
+        facts = extract_facts(request.query)
+        language_method, language_error = "rules_v1", None
+        if self.settings.llm_enabled:
+            try:
+                products, facts = interpret(request.query, self.language or get_language_client())
+                trace = last_provider.get() or {
+                    "provider": "groq",
+                    "model": self.settings.groq_model,
+                }
+                language_method = trace["provider"] + "_extraction_v1"
+                if products and scope_status != "unsupported":
+                    scope_status, scope_reason = "supported", "interpreted_service_mention"
+            except LanguageUnavailable as exc:
+                language_method, language_error = "rules_fallback", str(exc)
+        accepted = accepted and compatible_category(
+            candidates[0].category, products, self.category_products
+        )
         severity = assess_severity(request.query)
         reported_category = explicit_category(products, severity)
         category = reported_category or (candidates[0].category if accepted else None)
         if scope_status == "unsupported":
             category = reported_category = None
         accepted = category is not None
-        facts = extract_facts(request.query)
         requests = extract_requests(request.query)
         questions = clarification_questions(
             accepted=accepted, products=products, severity=severity, facts=facts, requests=requests
@@ -77,6 +107,12 @@ class UnderstandingService:
             needs_clarification=bool(questions),
             clarification_questions=questions,
             model_version=self.model_version,
+            language_method=language_method,
+            language_provider=trace["provider"]
+            if language_method.endswith("extraction_v1")
+            else None,
+            language_model=trace["model"] if language_method.endswith("extraction_v1") else None,
+            language_error=language_error,
             elapsed_ms=(perf_counter() - started) * 1000,
         )
         logger.info(

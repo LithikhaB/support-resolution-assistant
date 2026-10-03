@@ -1,0 +1,938 @@
+{
+  "created_at": "2026-10-03T14:34:05.122078+00:00",
+  "cases_sha256": "ea220209cc3767b19ac50493f522d7d20d7fbde54201003ce923cc20ff9792f0",
+  "provenance": "AI-authored natural-language prompts. C02 and C03 are informed by the reported UI failure. These are not independently human-written.",
+  "purpose": "Development response-quality review; not a frozen or independent held-out benchmark.",
+  "scoring": {
+    "context": "0 missed/misread; 1 partial; 2 accurate",
+    "relevance": "0 unrelated; 1 mixed; 2 relevant",
+    "conversation": "0 repeats an answered/unavailable question or loses corrections; 1 partial; 2 coherent; leave null for single-turn cases",
+    "grounding": "0 invented cause/action/citation; 1 uncertain support; 2 traceable and appropriately conditional",
+    "clarity": "0 confusing; 1 usable with effort; 2 clear and actionable"
+  },
+  "results": [
+    {
+      "id": "C01",
+      "name": "Explicit answer control",
+      "query": "My broadband keeps dropping in the evenings. I restarted the router twice already.",
+      "turns": [
+        {
+          "issue_id": 1,
+          "message": "Ethernet works. All wireless devices disconnect."
+        }
+      ],
+      "expected": [
+        "Stop asking whether Ethernet works.",
+        "Keep the two previous restarts; do not suggest repeating them.",
+        "Investigate wireless connectivity without diagnosing a confirmed fault."
+      ],
+      "snapshots": [
+        {
+          "after_reply": 0,
+          "response": {
+            "issues": [
+              {
+                "issue_id": 1,
+                "complaint": "My broadband keeps dropping in the evenings. I restarted the router twice already.",
+                "analysis_text": "My broadband keeps dropping in the evenings. I restarted the router twice already.",
+                "resolution": {
+                  "status": "needs_diagnostic_confirmation",
+                  "decision": {
+                    "action": "clarify",
+                    "priority": "normal",
+                    "reasons": [
+                      "missing_customer_observations"
+                    ],
+                    "target": "support_agent",
+                    "handoff_created": false
+                  },
+                  "validation": {
+                    "status": "passed",
+                    "checked_sources": 3,
+                    "issues": [],
+                    "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+                  },
+                  "method": "local_extractive_v1",
+                  "language_summary": "We see your broadband is intermittently dropping in the evenings and you’ve already rebooted the router twice. Your earlier attempts are noted, and we’ll need to know whether wired devices also lose connectivity during a drop. Please answer the question below so we can determine the next investigative step. [T1] Historical references are simulated examples.",
+                  "language_plan": {
+                    "title": "Let's narrow down the problem",
+                    "summary": "We see your broadband is intermittently dropping in the evenings and you’ve already rebooted the router twice. Your earlier attempts are noted, and we’ll need to know whether wired devices also lose connectivity during a drop. Please answer the question below so we can determine the next investigative step. [T1] Historical references are simulated examples.",
+                    "steps": [
+                      "Answer the questions below together in the reply box."
+                    ],
+                    "note": "Your previous attempts are retained so they can be reviewed."
+                  },
+                  "language_draft": "We see your broadband is intermittently dropping in the evenings and you’ve already rebooted the router twice. Your earlier attempts are noted, and we’ll need to know whether wired devices also lose connectivity during a drop. Please answer the question below so we can determine the next investigative step. [T1] Historical references are simulated examples.\n\nAnswer the questions below together in the reply box.\n\nDuring a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?\n\nYour previous attempts are retained so they can be reviewed.",
+                  "language_status": "generated_for_review",
+                  "language_model": "openai/gpt-oss-120b",
+                  "language_provider": "groq",
+                  "faithfulness_status": "model_checked",
+                  "language_error": null,
+                  "historical_cases": [
+                    {
+                      "citation_id": "T1",
+                      "doc_id": "syn_ticket_BB01_08",
+                      "chunk_id": 98,
+                      "title": "Broadband outage support case",
+                      "resolution": "Finding: Agent optical test reports no received signal; account is active. Action: Raise a fibre repair job; an authorized technician repairs the external span. Simulated follow-up: optical signal restored and wired browsing works.",
+                      "outcome_status": "simulated_resolved",
+                      "is_synthetic": true
+                    }
+                  ],
+                  "agent_review_required": true,
+                  "draft": "Draft for agent review. A cause has not been confirmed.\n\nAlready attempted, according to the customer: I restarted the router twice already\n\nCustomer-reported observations: My broadband keeps dropping in the evenings.; broadband keeps dropping\n\nClarify: During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?\n\nAnswer the clarification questions before choosing a repair. Retrieved procedures are attached for agent review, not recommended actions yet.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: clarify. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+                  "analysis": {
+                    "category": null,
+                    "scope_status": "supported",
+                    "scope_reason": "interpreted_service_mention",
+                    "category_status": "uncertain",
+                    "category_basis": "uncertain",
+                    "category_evidence": [],
+                    "routing_policy": "development_selected_v1",
+                    "candidates": [
+                      {
+                        "category": "intermittent_broadband",
+                        "score": 0.1690003300735962
+                      },
+                      {
+                        "category": "router_ont_hardware",
+                        "score": 0.10757826319758755
+                      },
+                      {
+                        "category": "wifi_connectivity",
+                        "score": 0.10484819856843751
+                      }
+                    ],
+                    "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                    "products": [
+                      {
+                        "text": "My broadband keeps dropping in the evenings.",
+                        "start": 0,
+                        "end": 44,
+                        "product": "broadband"
+                      }
+                    ],
+                    "severity": {
+                      "value": "unknown",
+                      "rule": "insufficient_impact_evidence",
+                      "evidence": [],
+                      "method": "rules_v1"
+                    },
+                    "sentiment": {
+                      "value": "unknown",
+                      "rule": "no_explicit_tone",
+                      "evidence": [],
+                      "method": "rules_v1"
+                    },
+                    "actions": [
+                      {
+                        "text": "I restarted the router twice already",
+                        "start": 45,
+                        "end": 81,
+                        "action": "restart_device",
+                        "status": "attempted"
+                      }
+                    ],
+                    "reported_facts": [
+                      {
+                        "text": "My broadband keeps dropping in the evenings.",
+                        "start": 0,
+                        "end": 44,
+                        "name": "impact",
+                        "value": "intermittent"
+                      },
+                      {
+                        "text": "broadband keeps dropping",
+                        "start": 3,
+                        "end": 27,
+                        "name": "connection_pattern",
+                        "value": "intermittent"
+                      }
+                    ],
+                    "requests": [],
+                    "needs_clarification": true,
+                    "clarification_questions": [
+                      "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?"
+                    ],
+                    "model_version": "3ff37cba26815532",
+                    "language_method": "groq_extraction_v1",
+                    "language_provider": "groq",
+                    "language_model": "openai/gpt-oss-120b",
+                    "language_error": null,
+                    "elapsed_ms": 20531.76539996639
+                  },
+                  "suggestions": [
+                    {
+                      "citation_id": "S1",
+                      "required_finding": "Agent optical test reports no received signal; account is active.",
+                      "proposed_action": "Raise a fibre repair job; an authorized technician repairs the external span.",
+                      "restriction": "Do not factory-reset the router or tell the customer to handle exposed fibre.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S2",
+                      "required_finding": "Authorized technician reproduces voltage drops with the ONT power adapter.",
+                      "proposed_action": "Replace the adapter with the provider-approved matching unit.",
+                      "restriction": "Do not suggest opening the adapter or using an incompatible supply.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S3",
+                      "required_finding": "Gateway logs show session renewals failing against a stale lease record.",
+                      "proposed_action": "Authorized access team clears the stale lease and applies the validated renewal configuration.",
+                      "restriction": "Do not diagnose a broken optical cable without optical fault evidence.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    }
+                  ],
+                  "sources": [
+                    {
+                      "citation_id": "S1",
+                      "doc_id": "syn_kb_BB01",
+                      "chunk_id": 1,
+                      "title": "External fibre break. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "fibre_broadband",
+                          "start": 123,
+                          "end": 138,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Agent optical test reports no received signal; account is active.",
+                          "start": 290,
+                          "end": 355,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Raise a fibre repair job; an authorized technician repairs the external span.",
+                          "start": 393,
+                          "end": 470,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not factory-reset the router or tell the customer to handle exposed fibre.",
+                          "start": 683,
+                          "end": 760,
+                          "field": "restriction"
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "S2",
+                      "doc_id": "syn_kb_ID04",
+                      "chunk_id": 16,
+                      "title": "Failing ONT power adapter. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "fibre_broadband",
+                          "start": 128,
+                          "end": 143,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Authorized technician reproduces voltage drops with the ONT power adapter.",
+                          "start": 301,
+                          "end": 375,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Replace the adapter with the provider-approved matching unit.",
+                          "start": 413,
+                          "end": 474,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not suggest opening the adapter or using an incompatible supply.",
+                          "start": 707,
+                          "end": 774,
+                          "field": "restriction"
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "S3",
+                      "doc_id": "syn_kb_ID03",
+                      "chunk_id": 15,
+                      "title": "Access-session renewal failure. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "fibre_broadband",
+                          "start": 133,
+                          "end": 148,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Gateway logs show session renewals failing against a stale lease record.",
+                          "start": 306,
+                          "end": 378,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Authorized access team clears the stale lease and applies the validated renewal configuration.",
+                          "start": 416,
+                          "end": 510,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not diagnose a broken optical cable without optical fault evidence.",
+                          "start": 728,
+                          "end": 798,
+                          "field": "restriction"
+                        }
+                      ]
+                    }
+                  ],
+                  "clarification_questions": [
+                    "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?"
+                  ],
+                  "acknowledged_actions": [
+                    "I restarted the router twice already"
+                  ],
+                  "contact_status": "not_requested",
+                  "customer_plan": {
+                    "title": "Let's narrow down the problem",
+                    "summary": "We need the details below to choose the next step without guessing a cause.",
+                    "steps": [
+                      "Answer the questions below together in the reply box."
+                    ],
+                    "note": "Your previous attempts are retained so they can be reviewed."
+                  },
+                  "limitations": [
+                    "Extractive local drafting; no generative LLM is used.",
+                    "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                    "Exact-source validation does not confirm applicability or real-world diagnostic correctness.",
+                    "Language-generated introduction requires agent review; exact-source validation applies only to the original conditional draft."
+                  ],
+                  "elapsed_ms": 5123.065399937332
+                }
+              }
+            ],
+            "storage": "client_replayed",
+            "limitations": [
+              "Send the same original query and full customer-turn history on each request.",
+              "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+              "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+            ]
+          }
+        },
+        {
+          "after_reply": 1,
+          "response": {
+            "issues": [
+              {
+                "issue_id": 1,
+                "complaint": "My broadband keeps dropping in the evenings. I restarted the router twice already.",
+                "analysis_text": "My broadband keeps dropping in the evenings. I restarted the router twice already.. Ethernet works. All wireless devices disconnect.",
+                "resolution": {
+                  "status": "needs_diagnostic_confirmation",
+                  "decision": {
+                    "action": "agent_review",
+                    "priority": "normal",
+                    "reasons": [
+                      "diagnostic_confirmation_required"
+                    ],
+                    "target": "support_agent",
+                    "handoff_created": false
+                  },
+                  "validation": {
+                    "status": "passed",
+                    "checked_sources": 2,
+                    "issues": [],
+                    "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+                  },
+                  "method": "local_extractive_v1",
+                  "language_summary": "The broadband drops in the evenings affecting all Wi‑Fi devices while Ethernet remains stable, and the router has already been restarted twice. We will verify the wireless environment against the two diagnostic checks in the plan and, based on the findings, either adjust the channel or reposition the access point. The next step is to perform the wireless survey and coverage assessment before any configuration changes are applied. [T1] [T2] Historical references are simulated examples.",
+                  "language_plan": {
+                    "title": "Suggested resolution for agent review",
+                    "summary": "The broadband drops in the evenings affecting all Wi‑Fi devices while Ethernet remains stable, and the router has already been restarted twice. We will verify the wireless environment against the two diagnostic checks in the plan and, based on the findings, either adjust the channel or reposition the access point. The next step is to perform the wireless survey and coverage assessment before any configuration changes are applied. [T1] [T2] Historical references are simulated examples.",
+                    "steps": [
+                      "[S1] Verify: Wireless survey shows a crowded channel; wired tests and WAN counters are normal. Only if confirmed: Choose an appropriate supported channel or band after checking device compatibility. Restriction: Do not blame provider backhaul when concurrent Ethernet tests are normal.",
+                      "[S2] Verify: Coverage survey shows weak signal behind several walls; WAN is stable. Only if confirmed: Reposition the access point safely; assess a supported mesh node if coverage remains inadequate. Restriction: Do not label this a broadband outage or promise coverage without checking placement."
+                    ],
+                    "note": "Sources are synthetic demonstration procedures. No repair has been executed."
+                  },
+                  "language_draft": "The broadband drops in the evenings affecting all Wi‑Fi devices while Ethernet remains stable, and the router has already been restarted twice. We will verify the wireless environment against the two diagnostic checks in the plan and, based on the findings, either adjust the channel or reposition the access point. The next step is to perform the wireless survey and coverage assessment before any configuration changes are applied. [T1] [T2] Historical references are simulated examples.\n\n[S1] Verify: Wireless survey shows a crowded channel; wired tests and WAN counters are normal. Only if confirmed: Choose an appropriate supported channel or band after checking device compatibility. Restriction: Do not blame provider backhaul when concurrent Ethernet tests are normal.\n\n[S2] Verify: Coverage survey shows weak signal behind several walls; WAN is stable. Only if confirmed: Reposition the access point safely; assess a supported mesh node if coverage remains inadequate. Restriction: Do not label this a broadband outage or promise coverage without checking placement.\n\nSources are synthetic demonstration procedures. No repair has been executed.",
+                  "language_status": "generated_for_review",
+                  "language_model": "openai/gpt-oss-120b",
+                  "language_provider": "groq",
+                  "faithfulness_status": "model_checked",
+                  "language_error": null,
+                  "historical_cases": [
+                    {
+                      "citation_id": "T1",
+                      "doc_id": "syn_ticket_WF02_05",
+                      "chunk_id": 327,
+                      "title": "Wifi connectivity support case",
+                      "resolution": "Finding: Wireless survey shows a crowded channel; wired tests and WAN counters are normal. Action: Choose an appropriate supported channel or band after checking device compatibility. Simulated follow-up: wireless retries decrease and the evening test improves.",
+                      "outcome_status": "simulated_resolved",
+                      "is_synthetic": true
+                    },
+                    {
+                      "citation_id": "T2",
+                      "doc_id": "syn_ticket_WF01_05",
+                      "chunk_id": 319,
+                      "title": "Wifi connectivity support case",
+                      "resolution": "Finding: Coverage survey shows weak signal behind several walls; WAN is stable. Action: Reposition the access point safely; assess a supported mesh node if coverage remains inadequate. Simulated follow-up: signal and browsing improve in the previously affected room.",
+                      "outcome_status": "simulated_resolved",
+                      "is_synthetic": true
+                    }
+                  ],
+                  "agent_review_required": true,
+                  "draft": "Draft for agent review. A cause has not been confirmed.\n\nAlready attempted, according to the customer: I restarted the router twice already\n\nCustomer-reported observations: My broadband keeps dropping in the evenings.; broadband keeps dropping; Ethernet works; All wireless devices disconnect\n\n[S1] Ask an authorized agent to verify: Wireless survey shows a crowded channel; wired tests and WAN counters are normal. Only if confirmed, the procedure proposes: Choose an appropriate supported channel or band after checking device compatibility.\n\n[S1] Restriction: Do not blame provider backhaul when concurrent Ethernet tests are normal.\n\n[S2] Ask an authorized agent to verify: Coverage survey shows weak signal behind several walls; WAN is stable. Only if confirmed, the procedure proposes: Reposition the access point safely; assess a supported mesh node if coverage remains inadequate.\n\n[S2] Restriction: Do not label this a broadband outage or promise coverage without checking placement.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: agent_review. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+                  "analysis": {
+                    "category": null,
+                    "scope_status": "supported",
+                    "scope_reason": "interpreted_service_mention",
+                    "category_status": "uncertain",
+                    "category_basis": "uncertain",
+                    "category_evidence": [],
+                    "routing_policy": "development_selected_v1",
+                    "candidates": [
+                      {
+                        "category": "intermittent_broadband",
+                        "score": 0.24960534522910482
+                      },
+                      {
+                        "category": "wifi_connectivity",
+                        "score": 0.14882772148443793
+                      },
+                      {
+                        "category": "broadband_outage",
+                        "score": 0.09756879606568906
+                      }
+                    ],
+                    "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                    "products": [
+                      {
+                        "text": "My broadband keeps dropping in the evenings.",
+                        "start": 0,
+                        "end": 44,
+                        "product": "broadband"
+                      },
+                      {
+                        "text": "I restarted the router twice already.",
+                        "start": 45,
+                        "end": 82,
+                        "product": "router"
+                      },
+                      {
+                        "text": "All wireless devices disconnect.",
+                        "start": 100,
+                        "end": 132,
+                        "product": "home_wifi"
+                      }
+                    ],
+                    "severity": {
+                      "value": "medium",
+                      "rule": "reported_degradation_or_work_impact",
+                      "evidence": [
+                        {
+                          "text": "disconnect",
+                          "start": 121,
+                          "end": 131
+                        }
+                      ],
+                      "method": "rules_v1"
+                    },
+                    "sentiment": {
+                      "value": "unknown",
+                      "rule": "no_explicit_tone",
+                      "evidence": [],
+                      "method": "rules_v1"
+                    },
+                    "actions": [
+                      {
+                        "text": "I restarted the router twice already",
+                        "start": 45,
+                        "end": 81,
+                        "action": "restart_device",
+                        "status": "attempted"
+                      }
+                    ],
+                    "reported_facts": [
+                      {
+                        "text": "My broadband keeps dropping in the evenings.",
+                        "start": 0,
+                        "end": 44,
+                        "name": "impact",
+                        "value": "intermittent"
+                      },
+                      {
+                        "text": "broadband keeps dropping",
+                        "start": 3,
+                        "end": 27,
+                        "name": "connection_pattern",
+                        "value": "intermittent"
+                      },
+                      {
+                        "text": "Ethernet works",
+                        "start": 84,
+                        "end": 98,
+                        "name": "wired_connection",
+                        "value": "working"
+                      },
+                      {
+                        "text": "All wireless devices disconnect",
+                        "start": 100,
+                        "end": 131,
+                        "name": "wireless_devices",
+                        "value": "all"
+                      }
+                    ],
+                    "requests": [],
+                    "needs_clarification": false,
+                    "clarification_questions": [],
+                    "model_version": "3ff37cba26815532",
+                    "language_method": "groq_extraction_v1",
+                    "language_provider": "groq",
+                    "language_model": "openai/gpt-oss-120b",
+                    "language_error": null,
+                    "elapsed_ms": 1632.242999970913
+                  },
+                  "suggestions": [
+                    {
+                      "citation_id": "S1",
+                      "required_finding": "Wireless survey shows a crowded channel; wired tests and WAN counters are normal.",
+                      "proposed_action": "Choose an appropriate supported channel or band after checking device compatibility.",
+                      "restriction": "Do not blame provider backhaul when concurrent Ethernet tests are normal.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S2",
+                      "required_finding": "Coverage survey shows weak signal behind several walls; WAN is stable.",
+                      "proposed_action": "Reposition the access point safely; assess a supported mesh node if coverage remains inadequate.",
+                      "restriction": "Do not label this a broadband outage or promise coverage without checking placement.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    }
+                  ],
+                  "sources": [
+                    {
+                      "citation_id": "S1",
+                      "doc_id": "syn_kb_WF02",
+                      "chunk_id": 58,
+                      "title": "Wireless channel contention. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "home_wifi",
+                          "start": 130,
+                          "end": 139,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Wireless survey shows a crowded channel; wired tests and WAN counters are normal.",
+                          "start": 292,
+                          "end": 373,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Choose an appropriate supported channel or band after checking device compatibility.",
+                          "start": 411,
+                          "end": 495,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not blame provider backhaul when concurrent Ethernet tests are normal.",
+                          "start": 715,
+                          "end": 788,
+                          "field": "restriction"
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "S2",
+                      "doc_id": "syn_kb_WF01",
+                      "chunk_id": 57,
+                      "title": "Insufficient indoor wireless coverage. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "home_wifi",
+                          "start": 140,
+                          "end": 149,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Coverage survey shows weak signal behind several walls; WAN is stable.",
+                          "start": 302,
+                          "end": 372,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Reposition the access point safely; assess a supported mesh node if coverage remains inadequate.",
+                          "start": 410,
+                          "end": 506,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not label this a broadband outage or promise coverage without checking placement.",
+                          "start": 730,
+                          "end": 814,
+                          "field": "restriction"
+                        }
+                      ]
+                    }
+                  ],
+                  "clarification_questions": [],
+                  "acknowledged_actions": [
+                    "I restarted the router twice already"
+                  ],
+                  "contact_status": "not_requested",
+                  "customer_plan": {
+                    "title": "Suggested resolution for agent review",
+                    "summary": "These steps depend on the diagnostic checks shown below. Similar symptoms alone do not confirm the cause.",
+                    "steps": [
+                      "[S1] Verify: Wireless survey shows a crowded channel; wired tests and WAN counters are normal. Only if confirmed: Choose an appropriate supported channel or band after checking device compatibility. Restriction: Do not blame provider backhaul when concurrent Ethernet tests are normal.",
+                      "[S2] Verify: Coverage survey shows weak signal behind several walls; WAN is stable. Only if confirmed: Reposition the access point safely; assess a supported mesh node if coverage remains inadequate. Restriction: Do not label this a broadband outage or promise coverage without checking placement."
+                    ],
+                    "note": "Sources are synthetic demonstration procedures. No repair has been executed."
+                  },
+                  "limitations": [
+                    "Extractive local drafting; no generative LLM is used.",
+                    "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                    "Exact-source validation does not confirm applicability or real-world diagnostic correctness.",
+                    "Language-generated introduction requires agent review; exact-source validation applies only to the original conditional draft."
+                  ],
+                  "elapsed_ms": 4276.490400079638
+                }
+              }
+            ],
+            "storage": "client_replayed",
+            "limitations": [
+              "Send the same original query and full customer-turn history on each request.",
+              "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+              "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+            ]
+          }
+        }
+      ],
+      "manual_scores": {
+        "context": null,
+        "relevance": null,
+        "conversation": null,
+        "grounding": null,
+        "clarity": null
+      },
+      "review_notes": ""
+    },
+    {
+      "id": "C07",
+      "name": "Confirmed duplicate billing",
+      "query": "My statement has two settled charges for the same monthly bill. Both have different transaction references. I want the duplicate checked.",
+      "turns": [],
+      "expected": [
+        "Recognize a duplicate billing dispute.",
+        "Do not treat settled charges as merely a pending authorization.",
+        "Suggest reconciliation/review, without promising a refund."
+      ],
+      "snapshots": [
+        {
+          "after_reply": 0,
+          "response": {
+            "issues": [
+              {
+                "issue_id": 1,
+                "complaint": "My statement has two settled charges for the same monthly bill. Both have different transaction references. I want the duplicate checked.",
+                "analysis_text": "My statement has two settled charges for the same monthly bill. Both have different transaction references. I want the duplicate checked.",
+                "resolution": {
+                  "status": "needs_diagnostic_confirmation",
+                  "decision": {
+                    "action": "agent_review",
+                    "priority": "normal",
+                    "reasons": [
+                      "diagnostic_confirmation_required"
+                    ],
+                    "target": "support_agent",
+                    "handoff_created": false
+                  },
+                  "validation": {
+                    "status": "passed",
+                    "checked_sources": 3,
+                    "issues": [],
+                    "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+                  },
+                  "method": "local_extractive_v1",
+                  "language_summary": "I see you’ve identified two settled charges on the same monthly bill with different transaction references and want this duplicate investigated. Based on the current information, the next step is to verify whether the ledger confirms a duplicate settled payment against a single invoice before any reconciliation action is taken. [T1] Historical references are simulated examples.",
+                  "language_plan": {
+                    "title": "Suggested resolution for agent review",
+                    "summary": "I see you’ve identified two settled charges on the same monthly bill with different transaction references and want this duplicate investigated. Based on the current information, the next step is to verify whether the ledger confirms a duplicate settled payment against a single invoice before any reconciliation action is taken. [T1] Historical references are simulated examples.",
+                    "steps": [
+                      "[S1] Verify: Ledger confirms duplicate settled payments against one invoice. Only if confirmed: Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment. Restriction: Do not refund a pending authorization or promise a universal refund deadline."
+                    ],
+                    "note": "Sources are synthetic demonstration procedures. No repair has been executed."
+                  },
+                  "language_draft": "I see you’ve identified two settled charges on the same monthly bill with different transaction references and want this duplicate investigated. Based on the current information, the next step is to verify whether the ledger confirms a duplicate settled payment against a single invoice before any reconciliation action is taken. [T1] Historical references are simulated examples.\n\n[S1] Verify: Ledger confirms duplicate settled payments against one invoice. Only if confirmed: Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment. Restriction: Do not refund a pending authorization or promise a universal refund deadline.\n\nSources are synthetic demonstration procedures. No repair has been executed.",
+                  "language_status": "generated_for_review",
+                  "language_model": "openai/gpt-oss-120b",
+                  "language_provider": "groq",
+                  "faithfulness_status": "model_checked",
+                  "language_error": null,
+                  "historical_cases": [
+                    {
+                      "citation_id": "T1",
+                      "doc_id": "syn_ticket_BD01_07",
+                      "chunk_id": 113,
+                      "title": "Billing dispute support case",
+                      "resolution": "Finding: Ledger confirms duplicate settled payments against one invoice. Action: Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment. Simulated follow-up: adjustment appears in the ledger and is communicated to the customer.",
+                      "outcome_status": "simulated_resolved",
+                      "is_synthetic": true
+                    }
+                  ],
+                  "agent_review_required": true,
+                  "draft": "Draft for agent review. A cause has not been confirmed.\n\nCustomer-reported observations: two settled charges for the same monthly bill; two settled\n\n[S1] Ask an authorized agent to verify: Ledger confirms duplicate settled payments against one invoice. Only if confirmed, the procedure proposes: Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment.\n\n[S1] Restriction: Do not refund a pending authorization or promise a universal refund deadline.\n\n[S2] Ask an authorized agent to verify: Ledger shows correct non-overlapping prorated periods and no duplicate charge. Only if confirmed, the procedure proposes: Explain the dated line items and calculation; retain the valid charges unless new evidence shows an error.\n\n[S2] Restriction: Do not issue a credit merely because the customer is angry.\n\n[S3] Ask an authorized agent to verify: Ledger identifies a settled payment on the wrong customer-owned account. Only if confirmed, the procedure proposes: Authorized billing staff verify ownership and follow the approved reallocation procedure.\n\n[S3] Restriction: Do not move funds across unverified accounts.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: agent_review. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+                  "analysis": {
+                    "category": "billing_dispute",
+                    "scope_status": "supported",
+                    "scope_reason": "interpreted_service_mention",
+                    "category_status": "predicted",
+                    "category_basis": "model",
+                    "category_evidence": [],
+                    "routing_policy": "development_selected_v1",
+                    "candidates": [
+                      {
+                        "category": "billing_dispute",
+                        "score": 0.43781017629230023
+                      },
+                      {
+                        "category": "payment_restoration",
+                        "score": 0.11692628349000289
+                      },
+                      {
+                        "category": "number_porting",
+                        "score": 0.07729529280642071
+                      }
+                    ],
+                    "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                    "products": [
+                      {
+                        "text": "My statement has two settled charges for the same monthly bill.",
+                        "start": 0,
+                        "end": 63,
+                        "product": "billing"
+                      }
+                    ],
+                    "severity": {
+                      "value": "unknown",
+                      "rule": "insufficient_impact_evidence",
+                      "evidence": [],
+                      "method": "rules_v1"
+                    },
+                    "sentiment": {
+                      "value": "unknown",
+                      "rule": "no_explicit_tone",
+                      "evidence": [],
+                      "method": "rules_v1"
+                    },
+                    "actions": [],
+                    "reported_facts": [
+                      {
+                        "text": "two settled charges for the same monthly bill",
+                        "start": 17,
+                        "end": 62,
+                        "name": "charge",
+                        "value": "duplicate"
+                      },
+                      {
+                        "text": "two settled",
+                        "start": 17,
+                        "end": 28,
+                        "name": "billing_status",
+                        "value": "settled"
+                      }
+                    ],
+                    "requests": [],
+                    "needs_clarification": false,
+                    "clarification_questions": [],
+                    "model_version": "3ff37cba26815532",
+                    "language_method": "groq_extraction_v1",
+                    "language_provider": "groq",
+                    "language_model": "openai/gpt-oss-120b",
+                    "language_error": null,
+                    "elapsed_ms": 910.9986999537796
+                  },
+                  "suggestions": [
+                    {
+                      "citation_id": "S1",
+                      "required_finding": "Ledger confirms duplicate settled payments against one invoice.",
+                      "proposed_action": "Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment.",
+                      "restriction": "Do not refund a pending authorization or promise a universal refund deadline.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S2",
+                      "required_finding": "Ledger shows correct non-overlapping prorated periods and no duplicate charge.",
+                      "proposed_action": "Explain the dated line items and calculation; retain the valid charges unless new evidence shows an error.",
+                      "restriction": "Do not issue a credit merely because the customer is angry.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S3",
+                      "required_finding": "Ledger identifies a settled payment on the wrong customer-owned account.",
+                      "proposed_action": "Authorized billing staff verify ownership and follow the approved reallocation procedure.",
+                      "restriction": "Do not move funds across unverified accounts.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    }
+                  ],
+                  "sources": [
+                    {
+                      "citation_id": "S1",
+                      "doc_id": "syn_kb_BD01",
+                      "chunk_id": 5,
+                      "title": "Duplicate settled payment. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "billing",
+                          "start": 128,
+                          "end": 135,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Ledger confirms duplicate settled payments against one invoice.",
+                          "start": 286,
+                          "end": 349,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment.",
+                          "start": 387,
+                          "end": 488,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not refund a pending authorization or promise a universal refund deadline.",
+                          "start": 721,
+                          "end": 798,
+                          "field": "restriction"
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "S2",
+                      "doc_id": "syn_kb_BD03",
+                      "chunk_id": 7,
+                      "title": "Valid prorated billing misunderstood. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "billing",
+                          "start": 139,
+                          "end": 146,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Ledger shows correct non-overlapping prorated periods and no duplicate charge.",
+                          "start": 297,
+                          "end": 375,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Explain the dated line items and calculation; retain the valid charges unless new evidence shows an error.",
+                          "start": 413,
+                          "end": 519,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not issue a credit merely because the customer is angry.",
+                          "start": 745,
+                          "end": 804,
+                          "field": "restriction"
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "S3",
+                      "doc_id": "syn_kb_PR03",
+                      "chunk_id": 31,
+                      "title": "Payment allocated to the wrong account. — procedure",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "billing",
+                          "start": 141,
+                          "end": 148,
+                          "field": "scope"
+                        },
+                        {
+                          "text": "Ledger identifies a settled payment on the wrong customer-owned account.",
+                          "start": 303,
+                          "end": 375,
+                          "field": "condition"
+                        },
+                        {
+                          "text": "Authorized billing staff verify ownership and follow the approved reallocation procedure.",
+                          "start": 413,
+                          "end": 502,
+                          "field": "action"
+                        },
+                        {
+                          "text": "Do not move funds across unverified accounts.",
+                          "start": 729,
+                          "end": 774,
+                          "field": "restriction"
+                        }
+                      ]
+                    }
+                  ],
+                  "clarification_questions": [],
+                  "acknowledged_actions": [],
+                  "contact_status": "not_requested",
+                  "customer_plan": {
+                    "title": "Suggested resolution for agent review",
+                    "summary": "These steps depend on the diagnostic checks shown below. Similar symptoms alone do not confirm the cause.",
+                    "steps": [
+                      "[S1] Verify: Ledger confirms duplicate settled payments against one invoice. Only if confirmed: Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment. Restriction: Do not refund a pending authorization or promise a universal refund deadline.",
+                      "[S2] Verify: Ledger shows correct non-overlapping prorated periods and no duplicate charge. Only if confirmed: Explain the dated line items and calculation; retain the valid charges unless new evidence shows an error. Restriction: Do not issue a credit merely because the customer is angry.",
+                      "[S3] Verify: Ledger identifies a settled payment on the wrong customer-owned account. Only if confirmed: Authorized billing staff verify ownership and follow the approved reallocation procedure. Restriction: Do not move funds across unverified accounts."
+                    ],
+                    "note": "Sources are synthetic demonstration procedures. No repair has been executed."
+                  },
+                  "limitations": [
+                    "Extractive local drafting; no generative LLM is used.",
+                    "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                    "Exact-source validation does not confirm applicability or real-world diagnostic correctness.",
+                    "Language-generated introduction requires agent review; exact-source validation applies only to the original conditional draft."
+                  ],
+                  "elapsed_ms": 3486.325199948624
+                }
+              }
+            ],
+            "storage": "client_replayed",
+            "limitations": [
+              "Send the same original query and full customer-turn history on each request.",
+              "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+              "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+            ]
+          }
+        }
+      ],
+      "manual_scores": {
+        "context": null,
+        "relevance": null,
+        "conversation": null,
+        "grounding": null,
+        "clarity": null
+      },
+      "review_notes": ""
+    }
+  ]
+}

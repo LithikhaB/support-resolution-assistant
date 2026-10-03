@@ -4,10 +4,15 @@ import logging
 from functools import lru_cache
 from time import perf_counter
 
+from app.config.settings import get_settings
+from app.ingestion.schema import DocType
+from app.llm.providers import ProviderChain, get_language_client
 from app.resolution.applicability import evidence_query
 from app.resolution.customer import physical_damage
 from app.resolution.drafting import draft_resolution
 from app.resolution.evidence import supported_scopes
+from app.resolution.history import select_history
+from app.resolution.language import add_language_draft
 from app.resolution.validation import finalize_resolution
 from app.retrieval.embeddings import EmbeddingInputTooLong
 from app.retrieval.models import RetrievalFilters, SearchRequest
@@ -21,9 +26,13 @@ logger = logging.getLogger(__name__)
 class ResolutionService:
     """Keep infrastructure failures distinct from an honest lack of applicable evidence."""
 
-    def __init__(self, *, understanding=None, retrieval=None):
+    def __init__(self, *, understanding=None, retrieval=None, settings=None, language=None):
         self.understanding = understanding
         self.retrieval = retrieval
+        self.settings = settings or get_settings()
+        self.language = language or (
+            ProviderChain(self.settings) if settings is not None else get_language_client()
+        )
 
     def resolve(self, request, *, analysis=None):
         """Generate a local draft without executing repairs or inferring diagnostic findings."""
@@ -53,11 +62,17 @@ class ResolutionService:
             except EmbeddingInputTooLong:
                 if search.query == request.query:
                     raise
-                evidence = retrieval.search(
-                    search.model_copy(update={"query": request.query})
-                ).results
+                search = search.model_copy(update={"query": request.query})
+                evidence = retrieval.search(search).results
         result = draft_resolution(analysis, evidence, max_sources=request.max_sources)
         result = finalize_resolution(result, evidence, analysis)
+        if result.sources:
+            history_search = search.model_copy(
+                update={"filters": filters.model_copy(update={"doc_type": DocType.RESOLVED_TICKET})}
+            )
+            history = retrieval.search(history_search).results
+            result.historical_cases = select_history(history, result.sources)
+        result = add_language_draft(result, request.query, self.settings, self.language)
         result.elapsed_ms = (perf_counter() - started) * 1000
         logger.info(
             "Resolution query_chars=%d status=%s sources=%d elapsed_ms=%.1f",

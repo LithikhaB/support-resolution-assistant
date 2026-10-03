@@ -11,11 +11,15 @@ from app.api.understanding import router as understanding_router
 from app.api.workflow import router as workflow_router
 from app.config.settings import get_settings
 from app.monitoring.logging import configure_logging
+from app.monitoring.metrics import measure_request
+from app.monitoring.metrics import router as metrics_router
 
 settings = get_settings()
 configure_logging(settings.log_level)
 
 app = FastAPI(title=settings.app_name, version="0.1.0")
+app.middleware("http")(measure_request)
+app.include_router(metrics_router)
 app.include_router(router)
 app.include_router(retrieval_router)
 app.include_router(understanding_router)

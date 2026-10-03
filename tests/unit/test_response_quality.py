@@ -35,7 +35,7 @@ def test_validation_failure_is_recorded_as_a_quality_limitation(monkeypatch):
     result = evaluate_case(
         {
             "query": "My broadband drops.",
-            "turns": [{"issue_id": 1, "message": "I only have a phone using Wi-Fi."}],
+            "turns": [{"issue_id": 1, "message": "My SIM cannot make calls."}],
         },
         Mock(),
     )

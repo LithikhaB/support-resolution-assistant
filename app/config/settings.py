@@ -1,7 +1,7 @@
 from functools import lru_cache
 from pathlib import Path
 
-from pydantic import Field
+from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -12,6 +12,20 @@ class Settings(BaseSettings):
 
     app_name: str = "support-resolution-assistant"
     log_level: str = "INFO"
+    llm_enabled: bool = False
+    groq_api_key: SecretStr = SecretStr("")
+    groq_model: str = "openai/gpt-oss-120b"
+    gemini_api_key: SecretStr = SecretStr("")
+    gemini_model: str = "gemini-2.5-flash"
+    llm_circuit_seconds: float = Field(default=60, ge=0, le=300)
+    llm_cache_seconds: float = Field(default=120, ge=0, le=600)
+    max_resolution_requests: int = Field(default=2, ge=1, le=16)
+    category_products_path: Path = Path("data/category_products.json")
+    groq_input_cost_per_million: float | None = Field(default=None, ge=0)
+    groq_output_cost_per_million: float | None = Field(default=None, ge=0)
+    gemini_input_cost_per_million: float | None = Field(default=None, ge=0)
+    gemini_output_cost_per_million: float | None = Field(default=None, ge=0)
+    llm_timeout_seconds: float = Field(default=25, ge=1, le=90)
 
     postgres_user: str = "support"
     postgres_password: str = "support_pass"

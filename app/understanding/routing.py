@@ -1,5 +1,7 @@
 """Versioned development-selected abstention thresholds and explicit incident context."""
 
+import json
+
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -66,6 +68,26 @@ CATEGORY_PRODUCTS = {
 }
 
 
-def compatible_category(category, products):
+def load_category_products(path):
+    """Add configured category/service mappings without modifying application logic."""
+    if not path.exists():
+        return CATEGORY_PRODUCTS
+    data = json.loads(path.read_text(encoding="utf-8"))
+    allowed = {"broadband", "home_wifi", "router", "mobile", "iptv", "billing", "landline"}
+    if not isinstance(data, dict) or any(
+        not isinstance(key, str)
+        or not key.strip()
+        or not isinstance(value, list)
+        or not value
+        or any(not isinstance(item, str) or item not in allowed for item in value)
+        for key, value in data.items()
+    ):
+        raise ValueError("invalid category-to-service mapping")
+    return {**CATEGORY_PRODUCTS, **{key: set(value) for key, value in data.items()}}
+
+
+def compatible_category(category, products, mappings=None):
     """Require a mentioned compatible service before accepting a model-only route."""
-    return bool(CATEGORY_PRODUCTS.get(category, set()) & {p.product for p in products})
+    return bool(
+        (mappings or CATEGORY_PRODUCTS).get(category, set()) & {p.product for p in products}
+    )

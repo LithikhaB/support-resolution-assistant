@@ -1,31 +1,37 @@
 # AI-Powered Telecom Support Resolution Assistant
 
-A local-first support retrieval service for the Synapt hiring challenge.
+An evidence-grounded ticket resolution assistant for support agents, implemented as a FastAPI service with a local agent workspace.
 
-## Problem and understanding
+## Problem statement: what I understood
 
-An agent receives a complaint such as: “My broadband drops every evening. I already restarted the router twice, and I work from home.” Keyword search can miss equivalent symptoms, and a similar ticket does not necessarily establish the same cause.
+Agents receive incomplete complaints, changing answers and repeated troubleshooting attempts. Keyword search can miss equivalent symptoms, while a similar historical ticket can have a different cause. An assistant should help the agent find a supported next step without pretending it has diagnosed or repaired the service.
 
-The complete application should:
+The selected problem statement requires:
 
-1. Identify the service, category, impact, sentiment and attempted troubleshooting.
-2. Retrieve relevant historical cases and knowledge-base procedures.
-3. Draft evidence-grounded next steps with citations.
-4. Ask for missing information or escalate when a diagnosis is unsupported.
-5. Accept new knowledge and ticket categories without redesigning storage.
+- Understand intent/category, affected product, severity and sentiment.
+- Retrieve relevant **resolved tickets and knowledge-base articles** using semantic search.
+- Use an LLM to draft a step-by-step resolution with citations.
+- Support evolving knowledge and ticket categories through a simple microservice design.
 
-## Current implementation
+## What conventional solutions provide
 
-- Deterministic synthetic telecom dataset with linked diagnostic findings and KB procedures.
-- Validated evidence schema distinguishing simulated outcomes from real verification.
-- Token-aware chunks and pinned local CPU embeddings.
-- PostgreSQL/pgvector indexing with transactional batches, safe resume and cosine HNSW.
-- BM25 keyword search, vector search and Reciprocal Rank Fusion.
-- FastAPI retrieval and complaint-analysis endpoints, local CLIs and regression tests.
-- Trained local category classifier plus explainable product, impact, sentiment, prior-action and reported-condition rules.
-- Optional local cross-encoder reranking over a bounded retrieval pool.
+- Keyword search or static scripts require agents to translate the complaint into search terms.
+- A chatbot can produce fluent instructions without showing their source or diagnostic conditions.
+- A retrieved similar case helps investigation, but its historical outcome does not confirm the current cause.
 
-Answer generation, citation-support validation and a UI are **not implemented yet**. Current responses are ranked evidence, not generated resolutions. Retrieval does not guarantee relevance or automatically abstain on out-of-domain queries.
+These describe the design problem, not measured claims about a particular commercial product.
+
+## What this solution does
+
+1. **Understand:** a locally trained classifier proposes a category; language extraction identifies quoted customer observations. Severity and sentiment remain separately explained assessments.
+2. **Retrieve:** BM25 and MiniLM/pgvector search feed reciprocal rank fusion; an optional local cross-encoder reranks a bounded pool.
+3. **Ground:** complete applicable KB procedures provide exact diagnostic gates, actions and restrictions. Resolved histories linked to those KB articles provide separate `T` citations.
+4. **Draft:** Groq selects relevant supplied procedures and writes a short introduction. A model critique checks the introduction and choices; the application appends exact conditional steps and citations.
+5. **Degrade gracefully:** **Groq → Gemini → extractive cited plan**. Invalid JSON, unsupported citations, faithfulness rejection, timeout or rate limit can trigger fallback. A short circuit avoids repeatedly calling a failing provider.
+6. **Review:** agents clarify, edit, accept or reject drafts and record outcome evidence. Reviews retain the original response and generation; no repair, payment or external handoff is performed.
+7. **Evolve:** validated new articles/tickets are staged additively. New classifier labels require train/development examples, retraining, evaluation and a category/service mapping, rather than a storage redesign.
+
+Generative wording is marked for agent review. `validation` covers the original exact-source contract; `faithfulness_status=model_checked` describes a fallible model critique, not proof of correctness. The workspace offers “Review language draft” to save reviewed wording as an explicit agent edit.
 
 ## Architecture
 
@@ -35,187 +41,140 @@ The SVG shows the full project direction. The implemented request path is:
 
 `API / CLI → RetrievalService → BM25 + pgvector → RRF → ranked evidence`
 
-## Dataset
+## Dataset and why it changed
 
-The primary corpus is `data/synthetic/telecom_v1`, authored for a fictional provider. The previous Hugging Face corpus was useful for engineering retrieval, but its broad domains and unverified replies do not supply focused telecom resolution evidence.
+The [Hugging Face support dataset](https://huggingface.co/datasets/Tobi-Bueck/customer-support-tickets) helped build the first ingestion/retrieval pipeline. Its broad domains and unverified replies did not provide the focused telecom diagnostic evidence needed for this challenge. The [GitHub Ticket_data alternative](https://github.com/santhoshmishra/Ticket_data) was a candidate, rather than evidence of verified telecom repairs. The engineering reason for initially using Hugging Face was its dataset interface; this project makes no unsupported claim that its resolution quality exceeds the GitHub data.
 
-| Artifact | Count and purpose |
+The active dataset is an authored **fictional telecom corpus**, not real provider policy:
+
+| Artifact | Purpose |
 |---|---|
-| Scenario families | 60 distinct authored diagnostic situations across 15 categories |
-| Tickets | 480 simulated resolved variants and 30 unresolved cases |
-| KB | 60 conditional fictional-provider procedures |
-| Train / development / test | 240 / 120 / 120 labeled queries; families never cross splits |
-| Challenge cases | 15 ambiguity, safety, unsupported-request and repeated-action cases |
-| Indexed corpus | 330 documents: 240 training tickets, 30 unresolved cases and 60 KB articles |
+| 60 diagnostic families / 15 categories | Distinct telecom investigation scenarios |
+| 480 simulated resolved variants + 30 unresolved examples | Historical evidence with explicit outcome provenance |
+| 60 conditional KB procedures | Diagnostic gate, action and restriction |
+| 240 train / 120 development / 120 test queries | Scenario families remain separated |
+| 330 indexed records | Training histories, unresolved histories and KB; development/test tickets are excluded |
+| 16 natural complaint cases + declarative golden checks | Development conversation regression checks |
 
-Categories: broadband outage, intermittent broadband, slow broadband, Wi-Fi connectivity, router/ONT hardware, mobile coverage, voice failure, mobile data, SIM/eSIM activation, porting, SMS/OTP, roaming, billing disputes, payment restoration and IPTV.
+Synthetic outcomes stay `simulated_resolved`. Author-written relevance labels and golden expectations require independent support-agent review before they can be described as an independent quality benchmark.
 
-Only `processed/documents.jsonl` is indexed. The full `tickets.jsonl` includes held-out examples and must not be used wholesale as a retrieval corpus. Each scenario has controlled wording/tone variants; those variants are not independent real incidents. Outcome status is `simulated_resolved` or `unknown`, never fabricated real verification.
+## Phases and implemented endpoints
 
-The corpus has automatic integrity checks, not expert certification. Human review and independent evaluation questions remain necessary. All KBs are available at evaluation time; this tests unseen tickets against existing knowledge, not unseen knowledge. See [interview notes](docs/interview-notes.md).
+| Phase | Work | Progress |
+|---|---|---|
+| Foundation and dataset | Evidence schema; synthetic provenance; reproducible preparation | Complete |
+| Retrieval | Chunking/indexing; BM25 + vectors + fusion; reranker and ablation | `POST /api/v1/retrieve` |
+| Understanding | Local category model; quoted observations; impact/tone and prior attempts | `POST /api/v1/analyze` |
+| Grounded resolution | KB and resolved histories; provider interface; cited conditional drafts | `POST /api/v1/resolve` |
+| Conversation | Latest corrections; achievable clarification; separate issues | `POST /api/v1/conversation` |
+| Human review | Saved cases; review/outcome history; local handoff download | `/api/v1/cases` and case follow-up/review/handoff routes |
+| Evaluation and operations | Golden checks; privacy masking; fallback/cost counters; load smoke | `/api/v1/health`, `/ready`, `/metrics` |
+| Knowledge evolution | Additive staging; reindexing; configurable category/service mappings | `scripts.stage_corpus_update` |
 
-## Setup and run
+## Models and trade-offs
 
-Use Python 3.12 or newer, PostgreSQL 16 with pgvector, and a CPU-capable machine. Commands below are PowerShell from the repository root.
+| Component | Implementation | Reason and limitation |
+|---|---|---|
+| Embeddings | `all-MiniLM-L6-v2`, 384 dimensions, CPU | Small local model; limited context length |
+| Category model | Logistic regression over local MiniLM features | Trainable local component; scores are uncalibrated and can abstain |
+| Reranker | `cross-encoder/ms-marco-MiniLM-L6-v2`, CPU | Optional relevance scoring; measured ablation does not show a universal improvement |
+| Primary LLM | Groq `openai/gpt-oss-120b` | Remote understanding/drafting; account availability and quotas apply |
+| Secondary LLM | Gemini `gemini-2.5-flash` | Independent provider fallback; also subject to quotas |
+| Last fallback | Local extractive cited plan | Preserves sources and conditions; less flexible language understanding |
+
+The previous Groq model was unavailable for the configured account; discovery and live checks confirmed the replacement. See [Groq model documentation](https://console.groq.com/docs/model/openai/gpt-oss-120b) and [Gemini structured output documentation](https://ai.google.dev/gemini-api/docs/structured-output).
+
+The existing development reranker ablation reported expected-KB hit@5 of **50.0% for hybrid vs 36.7% with reranking** on the same candidate pools. This is a measured regression, so reranking remains configurable. Retrieval relevance, exact citation integrity and answer quality are measured separately.
+
+## Run and test
+
+Use the project virtual environment, PostgreSQL and the prepared local model/index artifacts. For a fresh setup, use Python 3.11 or 3.12, create `.venv`, install `requirements.txt`, copy `.env.example` to `.env`, and prepare the corpus/models/index with the scripts below. The working environment was also tested on Python 3.14; dependencies emit deprecation warnings there.
 
 ```powershell
-python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
-if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 ```
 
-Set database credentials in `.env`. The active defaults are:
+Configure the existing `.env`:
 
 ```dotenv
-POSTGRES_DB=support_telecom
-CORPUS_DIR=data/synthetic/telecom_v1
+LLM_ENABLED=true
+GROQ_API_KEY=your_groq_key
+GROQ_MODEL=openai/gpt-oss-120b
+GEMINI_API_KEY=your_gemini_key
+GEMINI_MODEL=gemini-2.5-flash
+LLM_TIMEOUT_SECONDS=25
+LLM_CIRCUIT_SECONDS=60
+LLM_CACHE_SECONDS=120
+MAX_RESOLUTION_REQUESTS=2
 ```
 
-Start PostgreSQL if needed. Skip Docker startup if your existing PostgreSQL server is already running on the configured port.
+Keys stay in `.env`, which Git ignores. A blank/missing key skips that provider. `LLM_ENABLED=false` demonstrates the completely local fallback. Restart the server after configuration or model changes.
+
+For the existing prepared project:
 
 ```powershell
-docker compose up -d
-python -m scripts.setup_database
+python -m scripts.check_db
+python -m scripts.check_index
+.\run.ps1
+```
+
+Open `http://127.0.0.1:8000` for the home page, `/workspace` for tickets or `/docs` for Swagger. The launcher uses the project virtual environment to avoid the global-Python missing-dependency problem.
+
+For dataset/model preparation when artifacts are missing:
+
+```powershell
 python -m scripts.prepare_synthetic
 python -m scripts.chunk_documents
+python -m scripts.setup_database
 python -m scripts.index_documents
-python -m scripts.check_index
-```
-
-`setup_database` creates the configured database if missing, then initializes tables and constraints. The database user needs create-database and extension privileges, or an administrator must provision them first. Existing rows are preserved. Do not use `docker compose down -v` to switch datasets.
-
-First use may download the pinned model into `data/models`. After caching, offline operation can be enabled:
-
-```powershell
-$env:EMBEDDING_LOCAL_FILES_ONLY="true"
-$env:TOKENIZER_LOCAL_FILES_ONLY="true"
-```
-
-Expected index check: `status=ready`, 330 documents, 330 embeddings, zero invalid embeddings and a valid cosine HNSW index. Reindexing unchanged artifacts skips existing documents. Old Hugging Face rows remain in the separate `support_db` database, not the active index.
-
-### CLI
-
-```powershell
-python -m scripts.test_retrieval "Wi-Fi is poor upstairs but Ethernet works" --top-k 5
-python -m scripts.test_retrieval "Two payments for one invoice have both settled" --mode bm25 --queue billing_support
-python -m scripts.test_retrieval "Outgoing calls fail but mobile data works" --mode vector --product mobile_voice --json
-```
-
-Modes are `hybrid` (default), `vector`, and `bm25`. Filters include queue, intent, product and document type. Use `--help` for arguments. Historical response and simulated resolution are displayed separately.
-
-### Local complaint understanding
-
-Train or rebuild the classifier, then analyze a complaint:
-
-```powershell
 python -m scripts.train_understanding
-python -m scripts.analyze_complaint "My broadband drops every evening. I already restarted the router twice."
-```
-
-Training compares TF-IDF and frozen MiniLM features with logistic regression at three regularization settings. Only train/development splits are loaded. The selected JSON weights are saved under `data/models/understanding`; restart the API after retraining.
-
-Current development result: **60% accuracy, 0.552 macro-F1**, across 120 synthetic variants from 15 families. This is model-selection evidence, not a test-set or real-world result. Detailed comparisons are in `data/evaluation/understanding_development.json`.
-
-### API
-
-```powershell
-python -m uvicorn app.main:app --reload
-```
-
-Open http://127.0.0.1:8000/docs. Submit to `POST /api/v1/retrieve`:
-
-```json
-{
-  "query": "Wi-Fi is poor upstairs but Ethernet works",
-  "top_k": 5,
-  "mode": "hybrid",
-  "filters": {"intent": "wifi_connectivity"}
-}
-```
-
-For complaint understanding, submit to `POST /api/v1/analyze`:
-
-```json
-{"query": "My broadband drops every evening. I already restarted the router twice."}
-```
-
-Analysis returns category candidates, explicitly mentioned products, severity, sentiment, attempted/negated/suggested actions, reported facts, contact/next-step requests, supporting text spans and clarification questions. A reported intact cable remains a customer statement. Contact requests ask for provider and region; the application does not invent a phone number. Known service details guide follow-up questions. It runs locally without database access. Low category scores or small score margins return `category_status=uncertain`; scores are uncalibrated and do not reliably detect unsupported topics. English rules can miss unfamiliar phrasing. Analysis and retrieval remain separate; predicted categories do not automatically filter evidence.
-
-The retrieval response includes evidence, document IDs, source ranks, score contributions and elapsed milliseconds. `GET /api/v1/health` checks process liveness; `GET /api/v1/ready` checks database schema availability only. `scripts.check_index` checks the retrieval index.
-
-| Response | Meaning |
-|---|---|
-| 200, empty results | No eligible documents or no lexical matches |
-| 422 | Invalid fields, candidate depth, or model token budget exceeded |
-| 503 | Database/index/model unavailable or indexing in progress |
-| 504 | Database statement timed out |
-
-Queries are limited to 10,000 characters; semantic modes also enforce the model's 256-token ceiling. `top_k` is 1–100. Hybrid `candidate_k` must be at least top_k and at most 100. Unsupported filter fields are rejected. There is no automatic query truncation.
-
-### Optional local reranking
-
-Prepare the pretrained reranker once, then compare rankings:
-
-```powershell
+python -m scripts.calibrate_routing
 python -m scripts.prepare_reranker
-python -m scripts.test_retrieval "My broadband drops every evening. I restarted the router twice." --rerank --rerank-k 20 --top-k 5
-python -m scripts.evaluate_reranking
 ```
 
-For Swagger, use `POST /api/v1/retrieve`:
+Check each script's `--help` and the configured database before first-time preparation; indexing preserves existing IDs and rejects incompatible corpus/embedding profiles.
 
-```json
-{
-  "query": "My broadband drops every evening. I already restarted the router twice.",
-  "mode": "hybrid",
-  "top_k": 5,
-  "rerank": true,
-  "rerank_k": 20
-}
-```
-
-`rerank_k` is the pool scored by the local cross-encoder (maximum 50, at least `top_k`). It defaults to the larger of 20 and `top_k`. Hybrid `candidate_k`, when supplied, must cover this pool. All three retrieval modes support reranking, using the caller's filters. Empty pools return no results without loading the reranker. Missing models return 503 rather than silently changing the requested ranking method.
-
-Results retain original ranks and evidence alongside `rerank_score` and `rerank_rank`. Scores measure relevance, not correctness or resolution confidence. Query inputs are limited to 256 reranker tokens; pairs exceeding 512 tokens are truncated for scoring and flagged with `rerank_input_truncated`, while returned evidence stays complete. The first request loads models; later requests reuse them. After preparation, set `RERANKER_LOCAL_FILES_ONLY=true` for offline loading.
-
-The development comparison uses the same 20 candidates for each ranking method and provisional authored KB relevance labels. It does not evaluate final answers or real customer outcomes. Across 120 development queries, expected-KB hit@5 was **50.0% for hybrid versus 36.7% with reranking**; MRR@5 was 0.461 versus 0.341. The expected KB was present in only 62.5% of the 20-candidate pools. Median reranking time was about 759 ms on this machine. This measured regression is why reranking remains optional. Repeated scenario variants and candidate coverage need further work. See `data/evaluation/reranking_development.json` for per-query results.
-
-## Verification
-
-Verified after complaint-context improvements and local reranking: **190 tests passed**, Ruff lint/format checks passed. Live API checks validated the reported broadband complaint, reranked evidence and empty filtered results. Earlier dataset-switch checks confirmed all three retrieval modes returned synthetic-only evidence. Nine smoke searches completed. A second indexing run skipped all 330 documents and generated zero new embeddings. Existing FastAPI/Starlette dependency deprecation warnings remain.
+CLI demonstration and automated checks:
 
 ```powershell
+python -m scripts.resolve_complaint "My broadband drops. Ethernet works. All wireless devices disconnect. I already restarted the router." --json
 python -m ruff check app scripts tests
 python -m ruff format --check app scripts tests
 python -m pytest tests/unit -q -p no:cacheprovider
 $env:RUN_DB_TESTS="1"
 python -m pytest -q -p no:cacheprovider
-python -m scripts.check_retrieval --output data/evaluation/retrieval_report.json
+python -m scripts.evaluate_response_quality --delay-seconds 15 --output data/evaluation/quality_runs/my_run.json
+python -m scripts.review_quality_report data/evaluation/quality_runs/my_run.json --output data/evaluation/my_summary.json
+python -m scripts.load_test --requests 6 --concurrency 2 --output data/evaluation/my_load.json
+python -m scripts.demo_provider_fallback --fail groq
+python -m scripts.demo_provider_fallback --fail both
 ```
 
-Unit tests do not download models or require PostgreSQL. Integration tests use rollback-only schemas, plus a separate-session indexing-lock check; do not run them while indexing. Smoke queries exercise all three retrieval modes but are not a relevance benchmark. Test coverage includes corrupt artifacts, train/test leakage, synthetic evidence claims, invalid filters, duplicate rank candidates, SQL injection inputs, cache refresh, transaction rollback and indexing/retrieval exclusion.
+Evaluation/load output paths must be new. Golden checks cover facts, service scope, question progression and unsafe wording; the report keeps manual quality ratings empty for human review. `review_quality_report --baseline previous_run.json` compares uncertainty, clarification and fallback rates only when the case packs and selected cases match. These are drift indicators, not a statistical production drift detector.
 
-## Project structure and progress
+For knowledge updates and feedback:
 
-| Location | Responsibility |
-|---|---|
-| `app/api` | HTTP contracts and sanitized errors |
-| `app/ingestion` | Evidence validation, synthetic generation and artifact integrity |
-| `app/understanding` | Local classifier training, inference and explainable complaint signals |
-| `app/retrieval` | Chunking, embeddings, lexical/semantic search and fusion |
-| `app/database` | Connections, persistence and indexing checkpoints |
-| `scripts` | Dataset preparation, database setup, indexing and demonstrations |
-| `tests` | Unit and opt-in PostgreSQL integration tests |
+```powershell
+python -m scripts.stage_corpus_update new_records.jsonl --output data/synthetic/telecom_v2/processed
+python -m scripts.chunk_documents --directory data/synthetic/telecom_v2/processed
+$env:CORPUS_DIR="data/synthetic/telecom_v2"
+python -m scripts.index_documents
+python -m scripts.export_feedback --output data/workflow/feedback_review.jsonl
+```
 
-| Phase | Status |
-|---|---|
-| Day 1: foundation and evidence semantics | Complete |
-| Day 2 A–D: design, chunks, embeddings and indexing | Complete |
-| Day 2 E–I: vector/BM25/fusion, API/CLI and verification | Complete |
-| Dataset transition: telecom corpus and isolated index | Complete |
-| Day 3a: local understanding | Implemented: `POST /api/v1/analyze`, training and analysis CLIs |
-| Day 3b: local reranking | Implemented: optional `/api/v1/retrieve` reranking, CLI and development comparison |
-| Day 3c: grounded drafting and citation validation | Planned |
-| Day 4: reviewed evaluation and model comparisons | Planned |
-| Later: evolving categories, operational metrics and UI | Planned |
+Review the staged corpus before activation. New categories need a valid train/development dataset with fresh checksums and separated families, retrained classifier/routing evaluation, plus an entry such as `{"new_wifi_category": ["home_wifi"]}` in `data/category_products.json`. Restart after publishing. Feedback exports are **curation candidates**, never automatically trusted resolutions or training labels.
+
+Verified automated checks: **372 tests passed**, including rollback-only database integration tests. Ruff lint and format checks passed. Dependency deprecation warnings remain.
+
+## Production considerations and measured limits
+
+- **Privacy:** common emails, phone numbers and labelled account/customer/ticket identifiers are masked before remote calls. Quoted observations are restored locally for span validation. Masking is heuristic; names, addresses and unusual identifiers still need review. Local case files retain transcripts; this local demo has no multi-user access-control layer.
+- **Guardrails:** untrusted data is separated from system instructions; schemas and exact quotes are checked. Generated citations must exist. Conditional repairs retain their source gates/restrictions. Model faithfulness critiques can still miss semantic errors, so human review remains required.
+- **Latency and resilience:** timeout per provider call; Groq/Gemini failover; short circuit cooldown; bounded 128-entry short-lived cache; at most two expensive API requests per process by default. Overload returns 503 with `Retry-After`; health remains available.
+- **Monitoring and cost:** `/metrics` exposes request latency/errors, provider tokens/timing, rate limits, fallback, cache and faithfulness rejection counts. Set optional `GROQ_INPUT_COST_PER_MILLION`, `GROQ_OUTPUT_COST_PER_MILLION`, `GEMINI_INPUT_COST_PER_MILLION`, `GEMINI_OUTPUT_COST_PER_MILLION` to current contracted rates; missing cost is unknown, not zero. Process counters reset at restart.
+- **Scale:** PostgreSQL/pgvector is the shared retrieval index; model caches and language circuits are per process. Workers multiply model memory and provider traffic. SQLite cases are suitable for this local demo; multi-user deployment needs a shared transactional case store, authentication, connection pooling, distributed limits and durable metrics before claiming production readiness.
+- **Evidence:** the local two-client load smoke completed 4/4 warm requests with passing source contracts. Cold latency was about 39.2 s; warm median 4.45 s and p95 14.48 s. Repeated inputs benefited from caching; these are not varied-traffic capacity figures.
+- **Quality:** the five-case live provider-chain run passed 5/5 authored behavioural checks, with Groq, Gemini and extractive responses all observed. A broader 16-case run passed 15/16 and exposed a repeated billing-status question; that defect was fixed and its live regression retest passed. The final disabled-LLM run passed **16/16** authored behaviours. Both provider quotas were reached during the broader run, so 17 of its 26 issue snapshots used extractive fallback. These outcomes do not establish independent human-rated answer quality. Reports are preserved under `data/evaluation`.
+
+The remaining submission work is independent support-agent review of golden answers and generated wording, plus a deployment-specific security/capacity validation if this prototype is exposed beyond the local interviewer demonstration. No provider contact directory or extra ticketing integration is included.

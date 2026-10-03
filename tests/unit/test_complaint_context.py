@@ -5,9 +5,10 @@ from unittest.mock import Mock
 import pytest
 
 from app.config.settings import Settings
-from app.understanding.context import extract_facts, extract_requests
-from app.understanding.models import AnalyzeRequest, CategoryCandidate
+from app.understanding.context import clarification_questions, extract_facts, extract_requests
+from app.understanding.models import AnalyzeRequest, CategoryCandidate, ReportedFact
 from app.understanding.service import UnderstandingService
+from app.understanding.signals import assess_severity, extract_products
 
 
 @pytest.mark.parametrize(
@@ -44,6 +45,34 @@ def test_facts_preserve_unicode_offsets_and_conflicting_reports():
 def test_negated_contact_request_is_not_requested():
 
     assert extract_requests("I don't need a helpline number.") == []
+
+
+def test_known_payment_status_is_not_requested_again_without_charge_description():
+    text = "Both transactions are settled."
+    fact = ReportedFact(name="billing_status", value="settled", text=text, start=0, end=len(text))
+    questions = clarification_questions(
+        accepted=False,
+        products=extract_products("My bill has a payment problem"),
+        severity=assess_severity(text),
+        facts=[fact],
+        requests=[],
+    )
+    assert len(questions) == 1 and "Which bill or charge" in questions[0]
+    assert "pending or settled" not in questions[0]
+
+
+def test_settled_duplicate_description_does_not_repeat_known_billing_details():
+    text = "My statement has two settled charges for the same monthly bill."
+    facts = extract_facts(text)
+    questions = clarification_questions(
+        accepted=False,
+        products=extract_products(text),
+        severity=assess_severity(text),
+        facts=facts,
+        requests=[],
+    )
+    assert {fact.name for fact in facts} >= {"billing_status", "charge"}
+    assert questions == []
 
 
 def test_user_complaint_retains_context_without_fabricating_category():

@@ -1,6 +1,7 @@
 """Produce a local evidence-based resolution draft for agent review."""
 
 import argparse
+import sys
 
 import psycopg
 from pydantic import ValidationError
@@ -14,6 +15,8 @@ from app.understanding.classifier import UnderstandingUnavailable
 
 def main():
     """Print a readable draft, or JSON with analysis, source spans and conditional actions."""
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("query")
     parser.add_argument("--max-sources", type=int, default=3)
@@ -40,7 +43,12 @@ def main():
     if args.json:
         print(response.model_dump_json(indent=2))
         return
-    print(response.draft)
+    print(response.language_draft or response.draft)
+    print(f"Language drafting: {response.language_status}")
+    for source in response.historical_cases:
+        print(
+            f"[{source.citation_id}] {source.doc_id} | {source.outcome_status} | {source.resolution}"
+        )
     if response.sources:
         print("\nSources:")
         for source in response.sources:

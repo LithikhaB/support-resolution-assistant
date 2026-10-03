@@ -61,6 +61,51 @@ def run(service, query="My broadband drops. I already restarted the router twice
     ).issues[0]
 
 
+def test_unavailable_ethernet_asks_achievable_alternative(service):
+    result = run(
+        service,
+        turns=[
+            {
+                "issue_id": 1,
+                "message": "Wi-Fi is affected. I don't have any devices with Ethernet, please don't ask me to do that.",
+            }
+        ],
+    ).resolution
+    assert any(
+        f.name == "wired_connection" and f.value == "unavailable"
+        for f in result.analysis.reported_facts
+    )
+    assert any("Without using Ethernet" in q for q in result.clarification_questions)
+    assert not any("connected by Ethernet" in q for q in result.clarification_questions)
+
+
+def test_devices_on_wifi_do_not_split_into_mobile_and_tv_issues(service):
+    request = ConversationRequest(
+        query="Wi-Fi is fine on my laptop and TV. My phone is the only thing that disconnects, usually when I lock the screen."
+    )
+    response = resolve_conversation(request, service)
+    assert len(response.issues) == 1
+    assert {p.product for p in response.issues[0].resolution.analysis.products} == {"home_wifi"}
+
+
+def test_flood_damage_keeps_related_equipment_together(service):
+    request = ConversationRequest(
+        query="The floodwater got into my modem and the phone wiring. The street has power again, but my equipment is damaged. Can someone arrange a replacement?"
+    )
+    response = resolve_conversation(request, service)
+    assert len(response.issues) == 1
+    assert response.issues[0].resolution.decision.target == "field_service"
+    assert not response.issues[0].resolution.clarification_questions
+    service.retrieval.search.assert_not_called()
+
+
+def test_landline_gap_is_explicit_instead_of_reasking_service(service):
+    result = run(service, query="My landline has been dead for two days.").resolution
+    assert "landline" in result.customer_plan.summary
+    assert not result.clarification_questions
+    assert result.decision.action == "escalate"
+
+
 def test_followup_advances_question_without_forgetting_restart(service):
     first = run(service)
     assert any("Ethernet" in q for q in first.resolution.clarification_questions)
@@ -314,7 +359,7 @@ def test_multi_issue_can_separate_unsupported_request(service):
     assert len(result.issues) == 2
     assert result.issues[0].resolution.analysis.scope_status == "supported"
     assert result.issues[1].resolution.analysis.scope_status == "unsupported"
-    assert service.retrieval.search.call_count == 1
+    assert service.retrieval.search.call_count == 2
 
 
 def test_complete_loss_takes_precedence_over_degradation():
@@ -380,7 +425,10 @@ def test_negated_or_hypothetical_damage_does_not_confirm_damage(service, text):
     """A mention of a damaged router is not automatically a reported equipment fault."""
     result = run(service, query=text).resolution
     assert result.decision.target != "field_service"
-    service.retrieval.search.assert_called_once()
+    assert [call.args[0].filters.doc_type for call in service.retrieval.search.call_args_list] == [
+        "knowledge_base",
+        "resolved_ticket",
+    ]
 
 
 def test_current_correction_can_clear_old_damage_but_connectivity_answer_cannot(service):

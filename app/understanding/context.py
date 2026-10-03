@@ -12,6 +12,29 @@ EQUIPMENT_LINK = r"(?:\s+(?:is|are|was|were|has|have|been|got|looks?|seems?|ever
 
 FACT_PATTERNS = (
     (
+        "wired_connection",
+        "unavailable",
+        r"\b(?:cannot|can't)\s+(?:plug|use|test|connect)[^.!?]{0,60}\bEthernet\b|\b(?:don't|do not) have\s+(?:any\s+)?devices? with Ethernet\b",
+    ),
+    (
+        "equipment_condition",
+        "water_exposed",
+        r"\bfloodwater\s+(?:got|came)\s+into\s+(?:my|the)\s+(?:modem|router|equipment)\b",
+    ),
+    ("billing_status", "pending", r"\b(?:money|payment|transaction)[^.!?]{0,35}\bpending\b"),
+    ("billing_status", "settled", r"\b(?:both|two)[^.!?]{0,40}\bsettled\b"),
+    ("charge", "bill_payment", r"\b(?:paid my bill|same(?: monthly)? bill|duplicate charges?)\b"),
+    (
+        "mobile_services",
+        "texts",
+        r"\b(?:banking verification texts|verification texts|OTP|SMS)[^.!?]{0,35}\b(?:never arrive|missing|not arriving)\b",
+    ),
+    (
+        "wireless_devices",
+        "one",
+        r"\b(?:my |the )?phone is the only (?:thing|device) that disconnects\b",
+    ),
+    (
         "equipment_condition",
         "water_exposed",
         rf"\b{EQUIPMENT}\b{EQUIPMENT_LINK}(?:soaked|submerged|water[ -]damaged|flood[ -]damaged|wet)\b",
@@ -135,11 +158,24 @@ def clarification_questions(*, accepted, products, severity, facts, requests) ->
         for name, value in known
     ):
         return []
+    if ("service_recovery", "working") in known or ("impact", "working") in known:
+        return []
+    if services == {"landline"}:
+        return []
     if severity.rule == "reported_area_outage":
         questions.append(AREA_OUTAGE_QUESTION)
     else:
         if services & {"broadband", "home_wifi", "router"}:
-            if ("wired_connection", "working") in known:
+            if ("wireless_devices", "one") in known:
+                questions.append(
+                    "Does the affected device reconnect by itself, or do you need to turn its Wi-Fi off and on?"
+                )
+            elif ("wired_connection", "unavailable") in known:
+                if not any(name == "wireless_devices" for name, _ in known):
+                    questions.append(
+                        "Without using Ethernet, do all your Wi-Fi devices lose connection at the same time, or just one?"
+                    )
+            elif ("wired_connection", "working") in known:
                 if not any(name == "wireless_devices" for name, _ in known):
                     questions.append(
                         "Does the Wi-Fi problem affect one device or every wireless device?"
@@ -151,7 +187,16 @@ def clarification_questions(*, accepted, products, severity, facts, requests) ->
                     "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?"
                 )
         elif "billing" in services:
-            if not {"charge", "billing_status"} <= {name for name, _ in known}:
+            fields = {name for name, _ in known}
+            if "billing_status" in fields and "charge" not in fields:
+                questions.append(
+                    "Which bill or charge do these payments relate to? Share a non-sensitive description; do not send bank credentials or card details."
+                )
+            elif "charge" in fields and "billing_status" not in fields:
+                questions.append(
+                    "Does your payment record show pending or settled? Do not share bank credentials or card details."
+                )
+            elif not {"charge", "billing_status"} <= fields:
                 questions.append(
                     "Which charge or payment is affected, and is it pending or settled?"
                 )
@@ -167,6 +212,8 @@ def clarification_questions(*, accepted, products, severity, facts, requests) ->
         severity.value == "unknown"
         and services != {"billing"}
         and not any(name == "service_recovery" for name, _ in known)
+        and not any(name == "impact" for name, _ in known)
+        and not any(name == "mobile_services" for name, _ in known)
     ):
         questions.append(
             "Is service completely unavailable or intermittent, and which devices or people are affected?"

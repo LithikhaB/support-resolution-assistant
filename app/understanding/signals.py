@@ -10,7 +10,8 @@ from app.understanding.models import (
 )
 
 PRODUCT_PATTERNS = {
-    "broadband": r"\b(?:broadband|fibre|fiber|ONT|Ethernet|wired (?:connection|computers?|devices?|tests?))\b",
+    "broadband": r"\b(?:broadband|internet|fibre|fiber|ONT|Ethernet|wired (?:connection|computers?|devices?|tests?))\b",
+    "landline": r"\b(?:landline|home phone|phone wiring)\b",
     "home_wifi": r"\bwi[ -]?fi\b",
     "router": r"\b(?:router|gateway|modem|access point)\b",
     "mobile": r"\b(?:mobile|phones?(?!\s+(?:number|support))|handsets?|SIM|eSIM|roaming|SMS|OTP|calls?|text messages?|login text|travel pack)\b",
@@ -56,6 +57,14 @@ def extract_products(text: str) -> list[ProductObservation]:
         match = re.search(pattern, text, re.I)
         if match:
             results.append(ProductObservation(**span(text, match).model_dump(), product=product))
+    products = {item.product for item in results}
+    if "landline" in products:
+        results = [item for item in results if item.product != "mobile"]
+    if "home_wifi" in products:
+        if not re.search(r"\b(?:SIM|SMS|OTP|roaming|mobile|calls?|cellular)\b", text, re.I):
+            results = [item for item in results if item.product != "mobile"]
+        if not re.search(r"\b(?:IPTV|channels?|set.top box|TV service)\b", text, re.I):
+            results = [item for item in results if item.product != "iptv"]
     return sorted(results, key=lambda item: item.start)
 
 

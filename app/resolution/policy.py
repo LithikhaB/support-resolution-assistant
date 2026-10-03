@@ -16,6 +16,10 @@ def choose_decision(response):
         )
     if response.analysis.scope_status == "unsupported":
         return SupportDecision(action="agent_review", reasons=["unsupported_request"])
+    if {p.product for p in response.analysis.products} == {"landline"}:
+        return SupportDecision(
+            action="escalate", priority=priority, reasons=["landline_knowledge_gap"]
+        )
     if physical_damage(response.analysis):
         return SupportDecision(
             action="escalate",
@@ -63,6 +67,8 @@ def questions_for(analysis):
     questions = list(analysis.clarification_questions)
     if analysis.scope_status == "unsupported":
         return []
+    if {p.product for p in analysis.products} == {"landline"}:
+        return []
     if analysis.severity.rule == "reported_area_outage":
         known = {f.name for f in analysis.reported_facts}
         questions = [] if {"area", "started"} <= known else [AREA_OUTAGE_QUESTION]
@@ -76,6 +82,8 @@ def questions_for(analysis):
     for fact in analysis.reported_facts:
         values.setdefault(fact.name, set()).add(fact.value)
     for name, reported in sorted(values.items()):
+        if name == "equipment_condition" and reported <= {"damaged", "water_exposed"}:
+            continue
         if len(reported) > 1:
             questions.append(
                 f"You reported conflicting {name.replace('_', ' ')} observations. Which observation is current?"
