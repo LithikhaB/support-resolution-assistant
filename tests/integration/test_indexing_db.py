@@ -103,3 +103,26 @@ def test_finish_refuses_partial_corpus(repository):
     with pytest.raises(ValueError, match="counts"):
         repo.finish(2, 2)
     assert repo.conn.execute("SELECT status FROM retrieval_index_state").fetchone()[0] == "indexing"
+
+
+def test_configuration_rebuild_preserves_evidence_and_resumes(repository):
+    repo = repository
+    begin(repo)
+    record = item()
+    repo.write_batch([record], vectors(1), "config")
+    repo.finish(1, 1)
+    chunk_id = repo.conn.execute("SELECT chunk_id FROM chunks").fetchone()[0]
+    manifest = {"source_sha256": "docs", "output_sha256": "chunks"}
+    with pytest.raises(ValueError, match="omits"):
+        repo.begin({}, "container", manifest, set(), rebuild=True)
+    repo.begin({"model": "test"}, "container", manifest, {"test"}, rebuild=True)
+    assert repo.conn.execute("SELECT status FROM retrieval_index_state").fetchone()[0] == "indexing"
+    assert repo.unchanged([record], "container") == set()
+    repo.write_batch([record], vectors(1), "container")
+    # A restarted bootstrap skips batches already regenerated with this configuration.
+    repo.begin({"model": "test"}, "container", manifest, {"test"}, rebuild=True)
+    assert repo.unchanged([record], "container") == {"test"}
+    repo.finish(1, 1)
+    assert repo.conn.execute("SELECT chunk_id FROM chunks").fetchone()[0] == chunk_id
+    assert repo.conn.execute("SELECT response FROM documents").fetchone()[0] == record.document.response
+    assert repo.conn.execute("SELECT status FROM retrieval_index_state").fetchone()[0] == "ready"

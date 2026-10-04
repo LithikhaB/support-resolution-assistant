@@ -1,0 +1,61 @@
+{
+  "files": [
+    {
+      "original": "data/evaluation/day3_phase_smoke.json",
+      "archived": "data/evaluation/archive/20261004/day3_phase_smoke.json"
+    },
+    {
+      "original": "data/evaluation/extractive_verified_summary_20261003.json",
+      "archived": "data/evaluation/archive/20261004/extractive_verified_summary_20261003.json"
+    },
+    {
+      "original": "data/evaluation/final_provider_chain_summary_20261003.json",
+      "archived": "data/evaluation/archive/20261004/final_provider_chain_summary_20261003.json"
+    },
+    {
+      "original": "data/evaluation/final_regressions_summary_20261003.json",
+      "archived": "data/evaluation/archive/20261004/final_regressions_summary_20261003.json"
+    },
+    {
+      "original": "data/evaluation/guard_resolution_smoke.json",
+      "archived": "data/evaluation/archive/20261004/guard_resolution_smoke.json"
+    },
+    {
+      "original": "data/evaluation/improved_extractive_summary_20261003.json",
+      "archived": "data/evaluation/archive/20261004/improved_extractive_summary_20261003.json"
+    },
+    {
+      "original": "data/evaluation/load_smoke_20261003.json",
+      "archived": "data/evaluation/archive/20261004/load_smoke_20261003.json"
+    },
+    {
+      "original": "data/evaluation/phase123_blank_review_validation.json",
+      "archived": "data/evaluation/archive/20261004/phase123_blank_review_validation.json"
+    },
+    {
+      "original": "data/evaluation/provider_chain_summary_20261003.json",
+      "archived": "data/evaluation/archive/20261004/provider_chain_summary_20261003.json"
+    },
+    {
+      "original": "data/evaluation/regression_verified_summary_20261003.json",
+      "archived": "data/evaluation/archive/20261004/regression_verified_summary_20261003.json"
+    },
+    {
+      "original": "data/evaluation/resolution_smoke.json",
+      "archived": "data/evaluation/archive/20261004/resolution_smoke.json"
+    },
+    {
+      "original": "data/evaluation/user_acceptance_final_local_summary_20261003.json",
+      "archived": "data/evaluation/archive/20261004/user_acceptance_final_local_summary_20261003.json"
+    },
+    {
+      "original": "data/evaluation/user_acceptance_final_summary_20261003.json",
+      "archived": "data/evaluation/archive/20261004/user_acceptance_final_summary_20261003.json"
+    },
+    {
+      "original": "data/evaluation/user_acceptance_first_verification_summary_20261003.json",
+      "archived": "data/evaluation/archive/20261004/user_acceptance_first_verification_summary_20261003.json"
+    }
+  ],
+  "purpose": "Historical smoke and intermediate summary evidence; preserved, not current quality results"
+}

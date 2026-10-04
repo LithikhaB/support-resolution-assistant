@@ -2,7 +2,7 @@
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class AnalyzeRequest(BaseModel):
@@ -10,6 +10,13 @@ class AnalyzeRequest(BaseModel):
 
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
     query: str = Field(min_length=1, max_length=10000)
+
+    @field_validator("query")
+    @classmethod
+    def protect_credentials(cls, value):
+        from app.llm.privacy import scrub_credentials
+
+        return scrub_credentials(value)
 
 
 class CategoryCandidate(BaseModel):
@@ -33,7 +40,7 @@ class RuleAssessment(BaseModel):
     value: str
     rule: str
     evidence: list[TextEvidence] = Field(default_factory=list)
-    method: Literal["rules_v1"] = "rules_v1"
+    method: Literal["rules_v1", "language_assisted"] = "rules_v1"
 
 
 class ActionObservation(TextEvidence):

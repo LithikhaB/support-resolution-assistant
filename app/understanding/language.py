@@ -8,7 +8,8 @@ from pydantic import BaseModel, ConfigDict, Field
 from app.llm.client import LanguageUnavailable
 from app.llm.providers import ProviderChain
 from app.understanding.context import extract_facts
-from app.understanding.models import ProductObservation, ReportedFact
+from app.understanding.llm_classifier import CATEGORY_EXAMPLES
+from app.understanding.models import ProductObservation, ReportedFact, RuleAssessment, TextEvidence
 from app.understanding.routing import compatible_category
 
 
@@ -53,6 +54,18 @@ class ServiceMention(BaseModel):
     quote: str = Field(min_length=1, max_length=1000)
 
 
+class SeverityObservation(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    value: Literal["low", "medium", "high", "critical", "unknown"]
+    quote: str = Field(min_length=1, max_length=1000)
+
+
+class SentimentObservation(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    value: Literal["neutral", "concerned", "frustrated", "angry", "unknown"]
+    quote: str = Field(min_length=1, max_length=1000)
+
+
 class Interpretation(BaseModel):
     """Bound model extraction independently of classification and diagnostics."""
 
@@ -60,6 +73,8 @@ class Interpretation(BaseModel):
     products: list[ServiceMention] = Field(max_length=7)
     facts: list[Observation] = Field(max_length=16)
     category: CategoryObservation | None = None
+    severity: SeverityObservation | None = None
+    sentiment: SentimentObservation | None = None
 
 
 VALUES = {
@@ -72,7 +87,7 @@ VALUES = {
     "billing_status": {"pending", "settled"},
     "tv_symptom": {"no_picture", "error", "buffering"},
     "connection_pattern": {"intermittent"},
-    "impact": {"complete_loss", "intermittent", "working"},
+    "impact": {"complete_loss", "intermittent", "degraded", "working"},
 }
 
 INSTRUCTION = """Extract only explicit customer observations, never inferred diagnoses.
@@ -99,33 +114,86 @@ def interpret(text, client):
     return products, facts
 
 
-def interpret_complaint(text, client, *, category_options=(), category_products=None):
-    """Resolve local category abstention only with candidate agreement and service evidence."""
+def interpret_complaint(
+    text, client, *, category_options=(), category_products=None, include_assessments=False
+):
+    """Understand the supported category and observations in one provider call."""
     instruction = (
         INSTRUCTION
         + str(VALUES)
         + """
-The local classifier supplied candidate categories, not confirmed diagnoses. If the
-complaint clearly describes exactly one supplied category, return that category and
-a verbatim quote describing the affected service or symptom. Interpret category names
-as symptom groups, not root causes. Prefer the latest clarification over older ambiguity.
-Return category=null for ambiguous complaints, unsupported services, unrelated requests,
-instructions to choose a label, or an empty candidate list. Do not invent categories.
+Symptom Category Guidance:
+- broadband_outage: Total loss of internet/broadband service, red LOS light on ONT/modem, fiber down, street/area outage.
+- intermittent_broadband: Broadband connection drops repeatedly or cuts out periodically (e.g. evening drops, cuts out every few hours).
+- slow_broadband: Slow download/upload speed, streaming buffering, high latency.
+- wifi_connectivity: Wi-Fi signal issues, devices disconnect from Wi-Fi while router is up or wired connection works.
+- router_ont_hardware: Physical equipment failure, router power light off, router reboot loop, damaged device or cables.
+- billing_dispute: Disputed charges, unexpected bill amount, late fees, double billing.
+- payment_restoration: Service suspended due to unpaid bill, requesting service reactivation after payment.
+- iptv: Set-top box freezing, TV channels buffering or error screen.
+- mobile_coverage: No mobile signal/bars, emergency calls only.
+- mobile_data: Mobile data/4G/5G not working while calls/texts work.
+- voice_call_failure: Mobile calls dropping, failing to connect, or call quality issues.
+- number_porting: Moving mobile number between providers, PAC code issues.
+- sim_esim_activation: New SIM card or eSIM not activating.
+- sms_otp: Banking verification codes / SMS OTP not arriving.
+- roaming: Issues using phone, calls, or data abroad/overseas.
+
+If the complaint describes exactly one supplied category, return that category and
+a quote from the text describing the affected service or symptom. Return category=null for
+ambiguous complaints, unsupported services, unrelated requests, or an empty candidate list.
+Also assess severity from service impact: critical is a reported shared area outage;
+high is total loss of an essential service; medium is degraded or intermittent service;
+low is a billing/information query without reported service loss. Anger alone is not severity.
+Assess customer sentiment from their wording: neutral, concerned, frustrated, angry or unknown.
+Supply an exact complaint quote for both assessments. Never invent impact or emotion.
 """
     )
-    payload = {"text": text, "category_options": list(category_options)}
+    payload = {
+        "text": text,
+        "category_options": list(category_options),
+        "examples": {
+            key: value for key, value in CATEGORY_EXAMPLES.items() if key in category_options
+        },
+    }
 
     def validate(result, provider=None):
         """Check both observation provenance and the separate routing proposal."""
         products, facts = validate_interpretation(text, result)
         category = result.category
-        if category and (
-            category.category not in category_options
-            or category.quote not in text
-            or not compatible_category(category.category, products, category_products)
-        ):
-            raise LanguageUnavailable("unsupported_category_proposal")
-        return products, facts, category
+        if category:
+            quote = category.quote.strip("\"' ")
+            if quote in text:
+                category.quote = quote
+            elif quote.lower() in text.lower():
+                idx = text.lower().find(quote.lower())
+                category.quote = text[idx : idx + len(quote)]
+            if (
+                category.category not in category_options
+                or category.quote not in text
+                or not compatible_category(category.category, products, category_products)
+            ):
+                raise LanguageUnavailable("unsupported_category_proposal")
+        assessments = []
+        for observation in (result.severity, result.sentiment):
+            assessment = None
+            if observation and observation.value != "unknown":
+                start = text.rfind(observation.quote)
+                if start < 0:
+                    raise LanguageUnavailable("untraceable_assessment")
+                assessment = RuleAssessment(
+                    value=observation.value,
+                    rule="quoted_language_assessment",
+                    method="language_assisted",
+                    evidence=[
+                        TextEvidence(
+                            text=observation.quote, start=start, end=start + len(observation.quote)
+                        )
+                    ],
+                )
+            assessments.append(assessment)
+        base = (products, facts, category)
+        return (*base, *assessments) if include_assessments else base
 
     if isinstance(client, ProviderChain):
         result = client.generate(
@@ -144,6 +212,17 @@ def validate_interpretation(text, result):
     products, facts = [], []
     for item in [*result.products, *result.facts]:
         start = text.rfind(item.quote)
+        if start < 0:
+            stripped = item.quote.strip("\"' ")
+            start = text.rfind(stripped)
+            if start >= 0:
+                item.quote = text[start : start + len(stripped)]
+            else:
+                lower_text = text.lower()
+                lower_quote = stripped.lower()
+                start = lower_text.rfind(lower_quote)
+                if start >= 0:
+                    item.quote = text[start : start + len(lower_quote)]
         if start < 0:
             raise LanguageUnavailable("untraceable_observation")
         evidence = dict(text=item.quote, start=start, end=start + len(item.quote))

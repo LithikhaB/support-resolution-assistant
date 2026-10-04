@@ -6,6 +6,7 @@ from app.resolution.evidence import parse_procedure, supported_scopes
 from app.resolution.models import ConditionalSuggestion, DraftSource, ResolutionResponse
 from app.resolution.policy import choose_decision, questions_for
 from app.resolution.rendering import render_draft
+from app.resolution.selection import action_key
 from app.understanding.signals import extract_actions
 
 
@@ -19,15 +20,28 @@ def draft_resolution(analysis, evidence, *, max_sources=3, elapsed_ms=0):
     sources = []
     suggestions = []
     seen = set()
-    for result in evidence:
+    remedies = set()
+    # When applicable procedures exist for the accepted category, avoid filling the
+    # plan with unrelated repairs merely because they share a broad product scope.
+    matching = [
+        row for row in evidence
+        if analysis.category
+        and row.metadata.get("category", row.metadata.get("intent")) == analysis.category
+        and (procedure := parse_procedure(row)) is not None
+        and applicability_issue(procedure, analysis) is None
+    ]
+    ordered = matching or evidence
+    for result in ordered:
         procedure = parse_procedure(result)
         if (
             procedure is None
             or applicability_issue(procedure, analysis) is not None
             or result.doc_id in seen
+            or action_key(procedure) in remedies
         ):
             continue
         seen.add(result.doc_id)
+        remedies.add(action_key(procedure))
         citation_id = f"S{len(sources) + 1}"
         action = procedure.quotes["action"].text
         repeated = sorted(attempted & {item.action for item in extract_actions(action)})

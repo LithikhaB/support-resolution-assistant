@@ -1,5 +1,6 @@
 """Index verified local artifacts in restartable batches; never reset the database."""
 
+import argparse
 import json
 import logging
 from importlib.metadata import version
@@ -54,6 +55,12 @@ def indexing_configuration(settings, manifest: dict) -> dict:
 def main() -> None:
     """Run the command and report its result to the terminal."""
     settings = get_settings()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--rebuild", action="store_true",
+        help="Re-embed tracked documents when the runtime configuration changes; preserve source rows and resume completed batches.",
+    )
+    args = parser.parse_args()
     configure_logging(settings.log_level)
     started = perf_counter()
     corpus = PreparedCorpus(settings.processed_dir)
@@ -76,7 +83,7 @@ def main() -> None:
         try:
             repo = IndexRepository(conn)
             repo.migrate()
-            repo.begin(config, config_hash, corpus.manifest, ids)
+            repo.begin(config, config_hash, corpus.manifest, ids, rebuild=args.rebuild)
             for group in batched(corpus, settings.indexing_batch_size):
                 batch = list(group)
                 unchanged = repo.unchanged(batch, config_hash)

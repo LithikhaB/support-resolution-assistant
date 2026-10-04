@@ -2,10 +2,26 @@
 
 import re
 
+CREDENTIAL_PATTERN = re.compile(
+    r"\b(?:password|passcode|OTP|verification code|api key)\s*(?:is\s+|[:=]\s*)[^\s,;]+",
+    re.I,
+)
+
+
+def scrub_credentials(text):
+    """Permanently remove explicitly supplied credentials before inference or persistence."""
+    return CREDENTIAL_PATTERN.sub(
+        lambda match: re.sub(
+            r"(?:is\s+|[:=]\s*)[^\s,;]+$", "= [REDACTED]", match.group(), flags=re.I
+        ),
+        text,
+    )
+
+
 PATTERN = re.compile(
     r"[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}"
     r"|\b(?:gsk_[A-Za-z0-9_-]{10,}|AIza[A-Za-z0-9_-]{10,})\b"
-    r"|\b(?:password|passcode|OTP|verification code)\s*[:=]\s*\S+"
+    r"|\b(?:password|passcode|OTP|verification code)\s*(?:is\s+|[:=]\s*)\S+"
     r"|(?<!\w)(?:\+?\d[\d ()-]{7,}\d)(?!\w)"
     r"|\b(?:account|customer|ticket)\s*(?:id|number|no\.?|#)\s*[:=]?\s*[A-Za-z0-9-]{4,}",
     re.I,

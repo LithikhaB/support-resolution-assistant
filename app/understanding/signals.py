@@ -14,7 +14,7 @@ PRODUCT_PATTERNS = {
     "landline": r"\b(?:landline|home phone|phone wiring)\b",
     "home_wifi": r"\bwi[ -]?fi\b",
     "router": r"\b(?:router|gateway|modem|access point)\b",
-    "mobile": r"\b(?:mobile|phones?(?!\s+(?:number|support))|handsets?|SIM|eSIM|roaming|SMS|OTP|calls?|text messages?|login text|travel pack)\b",
+    "mobile": r"\b(?:mobile|phones?(?!\s+(?:number|support))|handsets?|SIM|eSIM|roaming|SMS|OTP|calls?|text messages?|login text|travel pack|number (?:transfer|porting))\b",
     "iptv": r"\b(?:IPTV|TV|television|set.top box|live channels?)\b",
     "billing": r"\b(?:bills?|invoices?|payments?|charges?|refunds?|paid|account.*suspended)\b",
 }
@@ -54,10 +54,25 @@ def extract_products(text: str) -> list[ProductObservation]:
     """Return the first explicit mention of each supported service or equipment family."""
     results = []
     for product, pattern in PRODUCT_PATTERNS.items():
-        match = re.search(pattern, text, re.I)
+        matches = list(re.finditer(pattern, text, re.I))
+        if product in {"broadband", "home_wifi", "router"} and re.search(
+            PRODUCT_PATTERNS["billing"], text, re.I
+        ):
+            matches = [match for match in matches if not working_service_clause(text, match)]
+        match = matches[0] if matches else None
         if match:
             results.append(ProductObservation(**span(text, match).model_dump(), product=product))
     products = {item.product for item in results}
+    if (
+        "billing" in products
+        and re.search(r"\b(?:TV|television|IPTV)\s+(?:package|add.on|subscription)\b", text, re.I)
+        and not re.search(
+            r"\b(?:no picture|buffers?|buffering|freez\w*|channels? (?:missing|unavailable)|TV (?:fails?|does not work))\b",
+            text,
+            re.I,
+        )
+    ):
+        results = [item for item in results if item.product != "iptv"]
     if "landline" in products:
         results = [item for item in results if item.product != "mobile"]
     if "home_wifi" in products:
@@ -66,6 +81,21 @@ def extract_products(text: str) -> list[ProductObservation]:
         if not re.search(r"\b(?:IPTV|channels?|set.top box|TV service)\b", text, re.I):
             results = [item for item in results if item.product != "iptv"]
     return sorted(results, key=lambda item: item.start)
+
+
+def working_service_clause(text: str, match: re.Match) -> bool:
+    """Recognize an explicitly working comparator without suppressing reported failures."""
+    start = max(text.rfind(mark, 0, match.start()) for mark in ".!?;,") + 1
+    ends = [text.find(mark, match.end()) for mark in ".!?;,"]
+    end = min((position for position in ends if position >= 0), default=len(text))
+    clause = text[start:end]
+    return bool(
+        re.search(r"\b(?:works?|working|fine|stable|okay)\b", clause, re.I)
+    ) and not re.search(
+        r"\b(?:not|no|isn't|isn’t|fails?|drops?|disconnects?|slow|offline|unavailable)\b",
+        clause,
+        re.I,
+    )
 
 
 def assess_sentiment(text: str) -> RuleAssessment:
@@ -82,7 +112,7 @@ def assess_sentiment(text: str) -> RuleAssessment:
 def assess_severity(text: str) -> RuleAssessment:
     """Use reported service impact rather than sentiment; ambiguous impact stays unknown."""
     clauses = list(re.finditer(r"[^.!?;]+", text))
-    area_pattern = r"\b(?:(?:whole|entire) (?:street|area)|(?:our|my) street|neighbou?ring blocks|multiple buildings|regional|several neighbou?rs)\b"
+    area_pattern = r"\b(?:(?:whole|entire) (?:street|area|road|block|lane)|(?:our|my|the) (?:street|road|lane|block)|neighbou?ring blocks|multiple buildings|regional|several neighbou?rs|neighbou?rs and I|every (?:shop|property|house|home|flat|building)s? (?:on|in|along) (?:our|the|this) (?:lane|road|street|block|area)|whole (?:lane|road|block))\b"
     loss_pattern = (
         r"\b(?:lost|loss|outage|offline|no (?:internet|signal|service)|down|disconnected)\b"
     )
@@ -103,6 +133,21 @@ def assess_severity(text: str) -> RuleAssessment:
                 evidence=[span(text, area, clause.start()), span(text, loss, clause.start())],
             )
     rules = [
+        (
+            "high",
+            "reported_complete_loss",
+            r"\b(?:no cellular browsing|cannot (?:reach|receive|send|dial|call)|will not register|turns? off|no dial tone|no (?:calls|texts|SMS)|(?:codes|messages|texts) (?:never arrive|do not arrive|don't arrive))\b",
+        ),
+        (
+            "medium",
+            "reported_degradation_or_work_impact",
+            r"\b(?:stutter\w*|lags?|latency|unusable|barely works|not authori[sz]ed|activation (?:failed|stuck)|(?:speed|rate).{0,20}(?:below|only|stops? at))\b",
+        ),
+        (
+            "low",
+            "reported_billing_question",
+            r"\b(?:(?:invoice|bill).{0,40}(?:higher|wrong|unexpected|part.month|dispute)|(?:duplicate|unexpected|incorrect|disputed) (?:charges?|payments?)|late (?:payment )?fee)\b",
+        ),
         (
             "high",
             "reported_complete_loss",

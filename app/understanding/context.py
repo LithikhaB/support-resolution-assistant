@@ -11,6 +11,70 @@ EQUIPMENT = r"(?:modem|router|ont|equipment|cables?|landlines?|ethernet line)"
 EQUIPMENT_LINK = r"(?:\s+(?:is|are|was|were|has|have|been|got|looks?|seems?|everything|all|physically|completely|badly|casing)){0,6}\s+"
 
 FACT_PATTERNS = (
+    ("port_status", "rejected", r"\b(?:number transfer|port(?:ing)?(?: request| order)?)\s+(?:was |is |has been )?rejected\b"),
+    ("port_reason", "account_mismatch", r"\bdetails\s+(?:do not|don't|don’t)\s+match\b|\baccount\s+(?:details?\s+)?mismatch\b"),
+    (
+        "security_request",
+        "otp_sharing",
+        r"\b(?:read out|share|give|send|tell)[^.!?]{0,40}\b(?:OTP|verification code|one.time (?:password|code))\b",
+    ),
+    ("started", "reported", r"\b(?:at|since|from)\s+\d{1,2}(?::\d{2})?\s*(?:am|pm)\b"),
+    (
+        "optical_signal",
+        "normal_reported",
+        r"\b(?:optical|PON|LOS)\s+(?:light|signal)\s+(?:is|remains|stays)\s+(?:normal|green)\b",
+    ),
+    (
+        "equipment_condition",
+        "water_exposed",
+        r"\bwater\s+(?:got|came)\s+into\s+(?:my|the)\s+(?:broadband\s+)?(?:router|modem|ONT|equipment)\b",
+    ),
+    ("charge", "late_fee", r"\blate\s+(?:payment\s+)?fee\b"),
+    (
+        "bill_status",
+        "unpaid",
+        r"\b(?:will|I'll|I’ll)\s+(?:pay|settle)\b[^.!?;]{0,35}\bbill\b|\bbill\s+(?:is\s+)?(?:still\s+)?(?:unpaid|pending)\b|\b(?:haven't|have not)\s+paid\s+(?:my|the)\s+bill\b",
+    ),
+    (
+        "optical_signal",
+        "loss_reported",
+        r"\b(?:red\s+LOS(?:\s+light)?|LOS\s+(?:light\s+)?(?:is\s+)?red)\b",
+    ),
+    (
+        "wired_connection",
+        "failing",
+        r"\b(?:wired|Ethernet)\s+(?:PC|desktop|laptop|computer|device)\s+(?:\w+\s+){0,3}and\s+it\s+(?:also\s+|still\s+)?(?:loses? internet|drops?|disconnects?)\b",
+    ),
+    (
+        "wired_connection",
+        "failing",
+        r"\b(?:wired|Ethernet|cable.connected)\s+(?:PC|desktop|laptop|computer|device|connection)\s+(?:(?:still|also|keeps?|is)\s+)*(?:drops?|disconnects?|loses? (?:internet|connection)|offline|cuts? out)\b|\b(?:laptop|desktop|PC|computer|connection)\s+(?:(?:still|also|keeps?)\s+)*(?:drops?|disconnects?|cuts? out)\s+(?:over|via|on)\s+Ethernet\b",
+    ),
+    (
+        "wired_connection",
+        "failing",
+        r"\b(?:a\s+device\s+connected\s+by\s+Ethernet\s+also\s+loses\s+internet|device\s+on\s+Ethernet\s+also\s+loses\s+connection|Ethernet\s+also\s+loses\s+internet)\b",
+    ),
+    (
+        "wired_connection",
+        "unavailable",
+        r"\b(?:no\s+(?:ethernet|wired)\s+(?:cable|device|port|connection)?|cannot\s+(?:do|use|test)\s+ethernet|can't\s+(?:do|use|test)\s+ethernet)\b",
+    ),
+    (
+        "impact",
+        "complete_loss",
+        r"\b(?:all\s+devices\s+are\s+shut\s+down|service\s+is\s+completely\s+lost|completely\s+lost|all\s+devices\s+lost\s+internet)\b",
+    ),
+    (
+        "wired_connection",
+        "working",
+        r"\b(?:wired|Ethernet|cable.connected)\s+(?:PC|desktop|laptop|computer|device|connection)\s+(?:stays? online|works?(?: fine)?|is (?:fine|stable)|remains? connected)\b|\bEthernet\s+works?\s+fine\s+on\s+(?:my|the)\s+(?:desktop|laptop|PC|computer)\b",
+    ),
+    (
+        "wired_connection",
+        "unavailable",
+        r"\b(?:can't|cannot)\s+(?:try|test)\s+Ethernet\b",
+    ),
     (
         "wired_connection",
         "failing",
@@ -36,7 +100,7 @@ FACT_PATTERNS = (
         "buffering",
         r"\b(?:live channels?|TV|television|picture|set.top box)\s+(?:(?:keeps?|is|are|still)\s+)*(?:freez(?:e|es|ing)|buffers?|buffering)\b",
     ),
-    ("charge", "bill_payment", r"\b(?:two|duplicate)\s+(?:charges|payments)\b"),
+    ("charge", "bill_payment", r"\b(?:two|duplicate)\s+(?:(?:completed|settled)\s+)?(?:charges|payments)\b"),
     (
         "wired_connection",
         "unavailable",
@@ -47,8 +111,8 @@ FACT_PATTERNS = (
         "water_exposed",
         r"\bfloodwater\s+(?:got|came)\s+into\s+(?:my|the)\s+(?:modem|router|equipment)\b",
     ),
-    ("billing_status", "pending", r"\b(?:money|payment|transaction)[^.!?]{0,35}\bpending\b"),
-    ("billing_status", "settled", r"\b(?:both|two)[^.!?]{0,40}\bsettled\b"),
+    ("billing_status", "pending", r"\b(?:money|payments?|transactions?)\b(?:(?!\b(?:not|no)\b)[^.!?]){0,35}\bpending\b"),
+    ("billing_status", "settled", r"\b(?:both|two)[^.!?]{0,40}\b(?:settled|completed)\b"),
     ("charge", "bill_payment", r"\b(?:paid my bill|same(?: monthly)? bill|duplicate charges?)\b"),
     (
         "mobile_services",
@@ -79,6 +143,21 @@ FACT_PATTERNS = (
         "wired_connection",
         "failing",
         r"\b(?:Ethernet|wired(?: connection)?)\s+(?:also\s+)?(?:drops|disconnects|fails|is offline|does not work|doesn't work)\b",
+    ),
+    (
+        "wired_connection",
+        "failing",
+        r"\ba device connected by Ethernet\s+(?:also\s+)?(?:loses? (?:internet|connection)|drops?|disconnects?|is offline|cuts? out)\b",
+    ),
+    (
+        "wired_connection",
+        "failing",
+        r"\bdevice(?:s)?\s+(?:on|via|using|connected (?:by|via|with))\s+Ethernet\s+(?:also\s+)?(?:loses? (?:internet|connection)|drops?|disconnects?|is offline|has no internet)\b",
+    ),
+    (
+        "wired_connection",
+        "failing",
+        r"\bEthernet[- ]connected device\s+(?:is\s+)?(?:also\s+)?(?:offline|losing internet|disconnected|has no internet|drops?)\b",
     ),
     (
         "wireless_devices",
@@ -179,22 +258,36 @@ def clarification_questions(*, accepted, products, severity, facts, requests) ->
     questions = []
     services = {item.product for item in products}
     known = {(item.name, item.value) for item in facts}
+    if ("security_request", "otp_sharing") in known:
+        return []
     if any(
         name == "equipment_condition" and value in {"damaged", "water_exposed"}
         for name, value in known
     ):
         return []
-    if ("service_recovery", "working") in known or ("impact", "working") in known:
+    if "billing" not in services and (
+        ("service_recovery", "working") in known or ("impact", "working") in known
+    ):
         return []
     if services == {"landline"}:
         return []
     if severity.rule == "reported_area_outage":
-        questions.append(AREA_OUTAGE_QUESTION)
+        questions.append(
+            "Which area is affected? Do not delay incident review while collecting these details."
+            if any(name == "started" for name, _ in known)
+            else AREA_OUTAGE_QUESTION
+        )
     else:
         if "iptv" in services and any(name == "tv_symptom" for name, _ in known):
             pass
         elif services & {"broadband", "home_wifi", "router"}:
-            if ("wireless_devices", "one") in known:
+            # If impact is already confirmed as complete loss, wired/wireless isolation
+            # is not actionable — everything is down, no point asking about Ethernet.
+            impact_complete = ("impact", "complete_loss") in known
+            if impact_complete and any(name == "wired_connection" for name, _ in known):
+                # Both impact and wired status are known — no connectivity question needed.
+                pass
+            elif ("wireless_devices", "one") in known:
                 questions.append(
                     "Does the affected device reconnect by itself, or do you need to turn its Wi-Fi off and on?"
                 )
@@ -209,14 +302,26 @@ def clarification_questions(*, accepted, products, severity, facts, requests) ->
                         "Does the Wi-Fi problem affect one device or every wireless device?"
                     )
             elif ("wired_connection", "failing") in known:
+                # Wired is confirmed failing — no need to ask about it.
                 pass
+            elif impact_complete:
+                # Complete loss reported but no wired observation yet — still relevant to ask.
+                questions.append(
+                    "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?"
+                )
             else:
                 questions.append(
                     "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?"
                 )
         elif "billing" in services:
             fields = {name for name, _ in known}
-            if "billing_status" in fields and "charge" not in fields:
+            if ("bill_status", "unpaid") in known:
+                pass
+            elif ("charge", "late_fee") in known:
+                questions.append(
+                    "Was this bill paid before the due date, after it, or is it still unpaid?"
+                )
+            elif "billing_status" in fields and "charge" not in fields:
                 questions.append(
                     "Which bill or charge do these payments relate to? Share a non-sensitive description; do not send bank credentials or card details."
                 )
@@ -238,7 +343,7 @@ def clarification_questions(*, accepted, products, severity, facts, requests) ->
             questions.append("Which service is affected, and what exactly happens when you use it?")
     if (
         severity.value == "unknown"
-        and services != {"billing"}
+        and "billing" not in services
         and not any(name == "service_recovery" for name, _ in known)
         and not any(name == "impact" for name, _ in known)
         and not any(name == "mobile_services" for name, _ in known)

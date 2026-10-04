@@ -55,6 +55,22 @@ def working_comparison(text):
     )
 
 
+def followup_groups(text, original):
+    """Allow a billing answer to name its service without accepting another technical fault."""
+    groups = service_group(text)
+    if (
+        original == {"billing"}
+        and "billing" in groups
+        and not re.search(
+            r"\b(?:offline|outage|down|disconnect\w*|no (?:signal|service|data|picture)|not working|does(?:n't| not) work|cannot (?:activate|call)|won't activate|slow|buffers?|freez\w*)\b",
+            text,
+            re.I,
+        )
+    ):
+        return {"billing"}
+    return groups
+
+
 def split_issues(text):
     """Split explicit service changes while retaining unlabelled details with their issue."""
     if re.search(r"\b(?:floodwater|flood waters?|water.damage)\b", text, re.I) and service_group(

@@ -169,6 +169,69 @@ def test_source_limit_and_duplicates_are_stable():
     assert parse_procedure(first).scope == "fibre_broadband"
 
 
+def test_capacity_remedies_are_deduplicated_before_source_limit():
+    """Keep the best-ranked cited remedy and leave room for a distinct investigation."""
+    first = kb(
+        "Network operations expand or rebalance backhaul capacity and verify peak-hour throughput."
+    )
+    duplicate = kb(
+        "Network operations rebalance capacity and monitor the affected segment during peak hours."
+    ).model_copy(update={"doc_id": "capacity2", "chunk_id": 2})
+    distinct = kb("An authorized technician tests the optical connector.").model_copy(
+        update={"doc_id": "optical", "chunk_id": 3}
+    )
+    observed = analysis("My broadband drops every evening.")
+    response = draft_resolution(observed, [first, duplicate, distinct], max_sources=2)
+    assert [source.doc_id for source in response.sources] == ["kb1", "optical"]
+    assert response.suggestions[0].proposed_action == parse_procedure(first).quotes["action"].text
+    from app.resolution.validation import validate_citations
+
+    assert validate_citations(response, [first, duplicate, distinct], observed).status == "passed"
+
+
+def test_exact_duplicate_action_from_distinct_articles_is_shown_once():
+    """Document IDs alone must not make repeated advice appear independent."""
+    first = kb()
+    second = first.model_copy(update={"doc_id": "other", "chunk_id": 2})
+    response = draft_resolution(analysis("My broadband drops."), [first, second])
+    assert len(response.suggestions) == 1
+
+
+def test_distinct_capacity_actions_and_scopes_are_not_collapsed():
+    """A measurement and a network change are different proposed actions."""
+    first = kb("Network operations rebalance capacity.")
+    check = kb("Network operations measure capacity without changing configuration.").model_copy(
+        update={"doc_id": "check", "chunk_id": 2}
+    )
+    other = kb("Network operations rebalance capacity.", scope="home_wifi").model_copy(
+        update={"doc_id": "wireless", "chunk_id": 3}
+    )
+    assert (
+        len(draft_resolution(analysis("My broadband drops."), [first, check, other]).suggestions)
+        == 3
+    )
+
+
+@pytest.mark.parametrize(
+    "query, expected",
+    [
+        ("My broadband drops every evening.", ["kb1"]),
+        ("My broadband drops every evening. The optical signal remains normal.", []),
+        ("My broadband drops every evening. The ONT has a red LOS light.", ["kb1"]),
+        ("My broadband is down completely.", ["kb1"]),
+    ],
+)
+def test_total_optical_loss_needs_matching_reported_context(query, expected):
+    """Missing diagnostic evidence leaves a condition open; explicit contradiction excludes it."""
+    source = kb("Raise a fibre repair job after an authorized optical test.")
+    source.content = source.content.replace(
+        "An authorized line test confirms the fault.",
+        "Agent optical test reports no received signal; account is active.",
+    )
+    result = draft_resolution(analysis(query), [source])
+    assert [record.doc_id for record in result.sources] == expected
+
+
 @pytest.mark.parametrize(
     "payload",
     [

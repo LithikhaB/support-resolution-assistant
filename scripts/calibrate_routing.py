@@ -1,5 +1,8 @@
 """Select category acceptance thresholds on development families without using test queries."""
 
+import argparse
+from pathlib import Path
+
 from app.config.settings import get_settings
 from app.ingestion.artifacts import digest, file_sha256, write_json
 from app.understanding.calibration import select_thresholds
@@ -11,6 +14,9 @@ from app.understanding.training import load_split
 def main():
     """Publish a model-bound routing profile only when the prespecified criterion is met."""
     settings = get_settings()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--report", type=Path, help="Separate report path for isolated experiments")
+    args = parser.parse_args()
     classifier = CategoryClassifier.load(settings.understanding_model_path, settings=settings)
     rows = load_split(settings.corpus_dir, "dev")
     dev_hash = file_sha256(settings.corpus_dir / "dev.jsonl")
@@ -39,7 +45,7 @@ def main():
     )
     write_json(settings.understanding_routing_path, profile.model_dump(mode="json"))
     write_json(
-        settings.data_dir / "evaluation/routing_development_v2.json",
+        args.report or settings.data_dir / "evaluation/routing_development_v2.json",
         {
             **profile.model_dump(mode="json"),
             "test_split_used": False,

@@ -1,0 +1,80 @@
+{
+  "run_complete": true,
+  "counts": {
+    "snapshots": 5,
+    "issues": 5,
+    "uncertain_categories": 0,
+    "needs_clarification": 3,
+    "extractive_fallbacks": 1,
+    "language_drafts": 4,
+    "faithfulness_checked": 4
+  },
+  "providers": {
+    "groq": 3,
+    "extractive": 1,
+    "gemini": 1
+  },
+  "rates": {
+    "uncertain_categories": 0.0,
+    "needs_clarification": 0.6,
+    "extractive_fallbacks": 0.2
+  },
+  "median_issue_ms": 4745.804705016781,
+  "golden_passed": 5,
+  "golden_checked": 5,
+  "golden_results": [
+    {
+      "id": "S01",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "S02",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "S03",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "S04",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "id": "S05",
+      "passed": true,
+      "failures": []
+    }
+  ],
+  "human_review": {
+    "fully_reviewed_cases": 0,
+    "total_cases": 5,
+    "dimensions": {
+      "context": {
+        "rated_cases": 0,
+        "mean_out_of_2": null
+      },
+      "relevance": {
+        "rated_cases": 0,
+        "mean_out_of_2": null
+      },
+      "conversation": {
+        "rated_cases": 0,
+        "mean_out_of_2": null
+      },
+      "grounding": {
+        "rated_cases": 0,
+        "mean_out_of_2": null
+      },
+      "clarity": {
+        "rated_cases": 0,
+        "mean_out_of_2": null
+      }
+    },
+    "note": "Supplied manual ratings only; reviewer identity and independence are not verified by this script."
+  },
+  "scope": "Authored development behaviour checks; not independent human answer-quality ratings or a production drift significance test."
+}

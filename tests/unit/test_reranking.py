@@ -128,7 +128,7 @@ def test_reranking_failure_is_503_not_silent_fallback():
 
 
 def test_evaluation_does_not_look_beyond_top_k_to_skip_duplicates():
-    from scripts.evaluate_reranking import relevance
+    from app.evaluation.metrics import relevance
 
     pool = [evidence(1), evidence(1), evidence(2)]
     assert relevance(pool, {"2"}, 2) == {"hit": 0, "reciprocal_rank": 0.0}

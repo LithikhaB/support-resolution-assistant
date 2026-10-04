@@ -1,0 +1,60 @@
+{
+  "provenance": "AI-authored fictional knowledge-evolution demonstration. Separate from the active corpus and response-quality holdout.",
+  "category": "broadband_dns",
+  "products": [
+    "broadband",
+    "router",
+    "home_wifi"
+  ],
+  "query": "My broadband is connected but websites fail with DNS lookup errors. The router shows connected and a DNS test cannot resolve domain names.",
+  "knowledge": {
+    "doc_id": "demo_kb_dns_failure",
+    "doc_type": "knowledge_base",
+    "title": "Broadband DNS lookup failure investigation",
+    "body": "Scope: fibre_broadband; support category: broadband_dns\nDiagnostic gate: A support agent confirms that the broadband link is connected but the configured DNS resolver fails domain-name lookups.\nOnly if that finding is established: Restore the validated DNS resolver configuration on the broadband router, then verify domain-name resolution and website access.\nRestriction: Do not factory-reset the router, change billing settings or claim a repair before DNS lookup verification succeeds.",
+    "intent": "broadband_dns",
+    "product": "fibre_broadband",
+    "metadata": {
+      "authority": "fictional_provider_policy",
+      "is_synthetic": true,
+      "scenario_family": "DNS_TRAIN_A",
+      "source": "evolution_demo",
+      "dataset_version": "evolution_demo_v1",
+      "split": "train"
+    }
+  },
+  "train_families": {
+    "DNS_TRAIN_A": [
+      "My broadband is connected but the router DNS resolver cannot look up website names.",
+      "Internet over broadband is up, yet the configured DNS server fails name resolution.",
+      "The broadband router says connected but DNS queries time out for all website domains.",
+      "My home broadband has a DNS resolver error while the physical connection remains active.",
+      "Domain-name lookups fail on the configured broadband DNS server despite a working link.",
+      "The router is online but reports DNS resolution failure for internet sites.",
+      "The broadband session works but the assigned DNS resolver cannot answer queries.",
+      "I need help with DNS failures on a connected home broadband router."
+    ],
+    "DNS_TRAIN_B": [
+      "After changing the broadband router settings, DNS domain lookups stopped working.",
+      "Website names stopped resolving when I edited the DNS server on my broadband router.",
+      "Broadband stays connected but a wrong DNS resolver setting prevents website access.",
+      "I entered a new DNS address in the router and now home internet domain lookup fails.",
+      "The broadband router has an invalid DNS server setting and websites do not resolve.",
+      "Changing the router DNS configuration broke name resolution although broadband is online.",
+      "The broadband link is active but my edited DNS settings cannot resolve internet domains.",
+      "Home broadband domain-name resolution stopped after a DNS configuration change."
+    ]
+  },
+  "dev_families": {
+    "DNS_DEV_C": [
+      "My broadband connection is alive but every DNS lookup returns a resolver error.",
+      "The fibre broadband link is up and name resolution fails with the assigned DNS service.",
+      "I can connect to broadband but cannot resolve website domain names through DNS.",
+      "A DNS check fails to resolve hostnames despite an active broadband session.",
+      "My connected broadband router cannot obtain answers for DNS name requests.",
+      "Broadband connectivity remains active but hostname resolution reports DNS errors.",
+      "DNS requests do not receive answers on our otherwise connected home broadband.",
+      "Website hostnames fail DNS resolution with the broadband router still connected."
+    ]
+  }
+}

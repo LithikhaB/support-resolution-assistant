@@ -1,0 +1,55 @@
+{
+  "run_complete": true,
+  "counts": {
+    "snapshots": 7,
+    "issues": 7,
+    "uncertain_categories": 3,
+    "needs_clarification": 6,
+    "extractive_fallbacks": 4,
+    "language_drafts": 3,
+    "faithfulness_checked": 3
+  },
+  "providers": {
+    "groq": 3,
+    "extractive": 4
+  },
+  "rates": {
+    "uncertain_categories": 0.42857142857142855,
+    "needs_clarification": 0.8571428571428571,
+    "extractive_fallbacks": 0.5714285714285714
+  },
+  "median_issue_ms": 6129.803699906915,
+  "golden_passed": 0,
+  "golden_checked": 0,
+  "golden_results": [],
+  "human_review": {
+    "fully_reviewed_cases": 0,
+    "total_cases": 5,
+    "dimensions": {
+      "context": {
+        "rated_cases": 0,
+        "mean_out_of_2": null
+      },
+      "relevance": {
+        "rated_cases": 0,
+        "mean_out_of_2": null
+      },
+      "conversation": {
+        "rated_cases": 0,
+        "mean_out_of_2": null
+      },
+      "grounding": {
+        "rated_cases": 0,
+        "mean_out_of_2": null
+      },
+      "clarity": {
+        "rated_cases": 0,
+        "mean_out_of_2": null
+      }
+    },
+    "note": "Supplied manual ratings only; reviewer identity and independence are not verified by this script."
+  },
+  "scope": "Authored development behaviour checks; not independent human answer-quality ratings or a production drift significance test.",
+  "case_count": 5,
+  "evaluation_mode": "Configured Groq/Gemini provider chain on five explicitly approved AI-authored cases. Human review pending."
+}

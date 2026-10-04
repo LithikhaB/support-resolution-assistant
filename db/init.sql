@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS chunks (
     doc_id      TEXT NOT NULL REFERENCES documents(doc_id) ON DELETE CASCADE,
     chunk_index INT  NOT NULL,
     content     TEXT NOT NULL,
+    search_vector tsvector GENERATED ALWAYS AS (to_tsvector('english', content)) STORED,
     embedding   vector(384),
     UNIQUE (doc_id, chunk_index)
 );
@@ -41,3 +42,4 @@ CREATE TABLE IF NOT EXISTS chunks (
 CREATE INDEX IF NOT EXISTS idx_documents_intent  ON documents(intent);
 CREATE INDEX IF NOT EXISTS idx_documents_product ON documents(product);
 CREATE INDEX IF NOT EXISTS idx_documents_type    ON documents(doc_type);
+CREATE INDEX IF NOT EXISTS idx_chunks_search_vector ON chunks USING gin(search_vector);

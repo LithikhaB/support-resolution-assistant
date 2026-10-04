@@ -1,0 +1,219 @@
+{
+  "purpose": "Request-validation tests kept separate from the quality pack because the quality runner validates a whole pack first.",
+  "provenance": "AI-authored by Claude. Observed results were produced by calling ConversationRequest on commit 1a9636f; no models or database were used.",
+  "tests": [
+    {
+      "id": "V01",
+      "name": "Five separate issues",
+      "query": "My broadband drops every night. My mobile bill has a wrong charge. The TV shows no picture. Roaming data fails abroad. My new SIM will not activate.",
+      "turns": [],
+      "expect": "rejected",
+      "why": "At most four separate issues are accepted.",
+      "observed_on_commit": "1a9636f",
+      "observed": "accepted",
+      "matches_expectation": false
+    },
+    {
+      "id": "V02",
+      "name": "Reply to a nonexistent issue",
+      "query": "My broadband drops every evening.",
+      "turns": [
+        {
+          "issue_id": 2,
+          "message": "Ethernet works."
+        }
+      ],
+      "expect": "rejected",
+      "why": "Reply issue_id must exist.",
+      "observed_on_commit": "1a9636f",
+      "observed": "rejected",
+      "matches_expectation": true
+    },
+    {
+      "id": "V03",
+      "name": "Reply introduces another service",
+      "query": "My broadband drops every evening.",
+      "turns": [
+        {
+          "issue_id": 1,
+          "message": "Also my mobile bill has a wrong charge."
+        }
+      ],
+      "expect": "rejected",
+      "why": "Another service must be a separate issue.",
+      "observed_on_commit": "1a9636f",
+      "observed": "rejected",
+      "matches_expectation": true
+    },
+    {
+      "id": "V04",
+      "name": "TV observation on a broadband issue",
+      "query": "My broadband drops every evening.",
+      "turns": [
+        {
+          "issue_id": 1,
+          "message": "The picture buffers.",
+          "observations": {
+            "tv_symptom": "buffering"
+          }
+        }
+      ],
+      "expect": "rejected",
+      "why": "Observation must match the issue's service.",
+      "observed_on_commit": "1a9636f",
+      "observed": "rejected",
+      "matches_expectation": true
+    },
+    {
+      "id": "V05",
+      "name": "Empty reply",
+      "query": "My broadband drops every evening.",
+      "turns": [
+        {
+          "issue_id": 1,
+          "message": ""
+        }
+      ],
+      "expect": "rejected",
+      "why": "A turn needs a message or an observation.",
+      "observed_on_commit": "1a9636f",
+      "observed": "rejected",
+      "matches_expectation": true
+    },
+    {
+      "id": "V06",
+      "name": "Empty query",
+      "query": "",
+      "turns": [],
+      "expect": "rejected",
+      "why": "Query is required.",
+      "observed_on_commit": "1a9636f",
+      "observed": "rejected",
+      "matches_expectation": true
+    },
+    {
+      "id": "V07",
+      "name": "Whitespace-only query",
+      "query": "   ",
+      "turns": [],
+      "expect": "rejected",
+      "why": "Blank input must not be analysed.",
+      "observed_on_commit": "1a9636f",
+      "observed": "rejected",
+      "matches_expectation": true
+    },
+    {
+      "id": "V08",
+      "name": "Query of 10,001 characters",
+      "query": "My broadband drops every evening. My broadband drops every e... [13600 characters]",
+      "turns": [],
+      "expect": "rejected",
+      "why": "Query limit is 10,000 characters.",
+      "observed_on_commit": "1a9636f",
+      "observed": "rejected",
+      "matches_expectation": true
+    },
+    {
+      "id": "V09",
+      "name": "Nine replies",
+      "query": "My broadband drops every evening.",
+      "turns": [
+        {
+          "issue_id": 1,
+          "message": "Reply 0."
+        },
+        {
+          "issue_id": 1,
+          "message": "Reply 1."
+        },
+        {
+          "issue_id": 1,
+          "message": "Reply 2."
+        },
+        {
+          "issue_id": 1,
+          "message": "Reply 3."
+        },
+        {
+          "issue_id": 1,
+          "message": "Reply 4."
+        },
+        {
+          "issue_id": 1,
+          "message": "Reply 5."
+        },
+        {
+          "issue_id": 1,
+          "message": "Reply 6."
+        },
+        {
+          "issue_id": 1,
+          "message": "Reply 7."
+        },
+        {
+          "issue_id": 1,
+          "message": "Reply 8."
+        }
+      ],
+      "expect": "rejected",
+      "why": "At most eight replies.",
+      "observed_on_commit": "1a9636f",
+      "observed": "rejected",
+      "matches_expectation": true
+    },
+    {
+      "id": "V10",
+      "name": "Wired observation on a billing issue",
+      "query": "My bill has a wrong late fee.",
+      "turns": [
+        {
+          "issue_id": 1,
+          "message": "",
+          "observations": {
+            "wired_connection": "working"
+          }
+        }
+      ],
+      "expect": "rejected",
+      "why": "Wired and wireless observations need a home connectivity issue.",
+      "observed_on_commit": "1a9636f",
+      "observed": "rejected",
+      "matches_expectation": true
+    },
+    {
+      "id": "V11",
+      "name": "Unknown observation field",
+      "query": "My broadband drops every evening.",
+      "turns": [
+        {
+          "issue_id": 1,
+          "message": "hi",
+          "observations": {
+            "colour": "red"
+          }
+        }
+      ],
+      "expect": "rejected",
+      "why": "Unknown fields are forbidden.",
+      "observed_on_commit": "1a9636f",
+      "observed": "rejected",
+      "matches_expectation": true
+    },
+    {
+      "id": "V12",
+      "name": "Device word 'phone' in a Wi-Fi reply",
+      "query": "The Wi-Fi gets very slow every evening.",
+      "turns": [
+        {
+          "issue_id": 1,
+          "message": "My phone is slow but I haven't tried the laptop yet."
+        }
+      ],
+      "expect": "accepted",
+      "why": "A phone named as a device on a Wi-Fi issue is not a second service.",
+      "observed_on_commit": "1a9636f",
+      "observed": "rejected",
+      "matches_expectation": false
+    }
+  ]
+}

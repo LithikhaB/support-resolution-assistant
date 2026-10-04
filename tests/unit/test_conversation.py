@@ -79,6 +79,164 @@ def test_unavailable_ethernet_asks_achievable_alternative(service):
     assert not any("connected by Ethernet" in q for q in result.clarification_questions)
 
 
+@pytest.mark.parametrize(
+    "reply",
+    [
+        "The laptop disconnects over Ethernet at the same time as Wi-Fi.",
+        "The wired PC loses internet as well.",
+        "I watched the wired PC tonight and it loses internet along with the wireless devices.",
+        "Actually Ethernet also drops.",
+    ],
+)
+def test_natural_wired_failure_replaces_previous_working_answer(service, reply):
+    """Use the corrected observation and stop repeating the answered comparison."""
+    result = run(
+        service,
+        turns=[
+            {"issue_id": 1, "message": "Ethernet works fine on my desktop."},
+            {"issue_id": 1, "message": reply},
+        ],
+    ).resolution
+    wired = [f.value for f in result.analysis.reported_facts if f.name == "wired_connection"]
+    assert wired and set(wired) == {"failing"}
+    assert not any("Ethernet" in q for q in result.clarification_questions)
+
+
+def test_cannot_try_ethernet_does_not_count_as_failed_test(service):
+    """Offer an achievable question when no cable test can be performed."""
+    result = run(
+        service, turns=[{"issue_id": 1, "message": "Can't try Ethernet, only phones here."}]
+    ).resolution
+    assert any(
+        f.value == "unavailable"
+        for f in result.analysis.reported_facts
+        if f.name == "wired_connection"
+    )
+    assert any("Without using Ethernet" in q for q in result.clarification_questions)
+
+
+def test_conditional_wired_failure_is_not_an_answer(service):
+    """A hypothetical outcome must leave the diagnostic question outstanding."""
+    result = run(
+        service,
+        turns=[{"issue_id": 1, "message": "If the wired PC loses internet, what should I do?"}],
+    ).resolution
+    assert not any(f.name == "wired_connection" for f in result.analysis.reported_facts)
+    assert any("connected by Ethernet" in q for q in result.clarification_questions)
+
+
+def test_billing_with_working_broadband_does_not_ask_for_ethernet(service):
+    """Keep a working service comparison from becoming an unrelated repair question."""
+    result = run(
+        service, query="My bill has an unwanted TV charge. My broadband works fine."
+    ).resolution
+    assert "broadband" not in {p.product for p in result.analysis.products}
+    assert not any("Ethernet" in q for q in result.clarification_questions)
+
+
+def test_tv_package_charge_is_not_a_tv_picture_fault(service):
+    """An invoice item must not trigger a service-availability question."""
+    result = run(
+        service,
+        query="There is a charge for an extra TV package on my bill. The broadband itself is working normally.",
+    ).resolution
+    assert {p.product for p in result.analysis.products} == {"billing"}
+    assert not any("unavailable or intermittent" in q for q in result.clarification_questions)
+
+
+def test_billing_does_not_hide_genuine_broadband_failure(service):
+    """Separate two failing services and retain the connectivity investigation."""
+    response = resolve_conversation(
+        ConversationRequest(query="My broadband drops. My bill has a duplicate charge."), service
+    )
+    assert len(response.issues) == 2
+    assert any("Ethernet" in q for q in response.issues[0].resolution.clarification_questions)
+
+
+def test_bill_reply_can_identify_sim_and_request_customer_care(service):
+    """Accept the reported UI reply and prioritize its request for human support."""
+    result = run(
+        service,
+        query="I am absolutely furious with this company! My bill has a Rs 50 late fee and every service works fine. Explain why.",
+        turns=[
+            {
+                "issue_id": 1,
+                "message": "My SIM card, the bill is still pending. I will pay the bill, I want a CUSTOMER CARE NUMBER.",
+            }
+        ],
+    ).resolution
+    assert result.contact_status == "unverified"
+    assert result.decision.action == "escalate"
+    assert not result.clarification_questions
+    assert "human support" in result.customer_plan.title
+    assert "No call has been arranged" in result.customer_plan.note
+
+
+@pytest.mark.parametrize(
+    "reply",
+    [
+        "My SIM card bill, once it clarifies I will settle the bill amount.",
+        "The bill is still unpaid.",
+        "I will pay the bill after you explain the late fee.",
+    ],
+)
+def test_unpaid_bill_answer_ends_the_payment_status_loop(service, reply):
+    """A promise to pay is an unpaid bill, not a pending bank transaction."""
+    query = "My bill has a Rs 50 late fee and every service works fine. Explain why."
+    initial = run(service, query=query).resolution
+    assert any("due date" in question for question in initial.clarification_questions)
+    result = run(service, query=query, turns=[{"issue_id": 1, "message": reply}]).resolution
+    assert not result.clarification_questions
+    assert result.customer_plan.title == "Your bill is still unpaid"
+    assert "account" in result.customer_plan.note
+    assert not any(
+        f.name == "billing_status" and f.value == "pending" for f in result.analysis.reported_facts
+    )
+
+
+def test_pending_bank_transaction_is_not_treated_as_an_unpaid_bill(service):
+    """Keep the distinction between money sent and a future intention to pay."""
+    result = run(service, query="I paid my bill and the payment is pending at the bank.").resolution
+    assert result.customer_plan.title != "Your bill is still unpaid"
+    assert any(
+        f.name == "billing_status" and f.value == "pending" for f in result.analysis.reported_facts
+    )
+
+
+def test_working_services_do_not_close_a_billing_complaint(service):
+    """Operational telecom services do not resolve a disputed fee."""
+    result = run(service, query="My bill has a late fee. All services are working.").resolution
+    assert result.customer_plan.title != "You reported that service is working again"
+    assert any("due date" in question for question in result.clarification_questions)
+
+
+def test_water_in_router_skips_routine_connectivity_questions(service):
+    """Water exposure must take priority even when no matching procedure is retrieved."""
+    result = run(
+        service,
+        query="Water got into the broadband router during a leak. It smells burnt and has no lights.",
+    ).resolution
+    assert "inspection" in result.customer_plan.title
+    assert not result.clarification_questions
+    assert not result.suggestions
+
+
+@pytest.mark.parametrize(
+    "reply",
+    [
+        "My SIM has no signal and my bill is pending.",
+        "My mobile data is not working and my bill is pending.",
+        "My TV has no picture and my bill is pending.",
+    ],
+)
+def test_billing_followup_cannot_add_a_new_technical_fault(reply):
+    """Naming the bill's service must not permit an unrelated fault in the same turn."""
+    with pytest.raises(ValidationError, match="another service"):
+        ConversationRequest(
+            query="My bill has a late fee.", turns=[{"issue_id": 1, "message": reply}]
+        )
+
+
 def test_devices_on_wifi_do_not_split_into_mobile_and_tv_issues(service):
     request = ConversationRequest(
         query="Wi-Fi is fine on my laptop and TV. My phone is the only thing that disconnects, usually when I lock the screen."

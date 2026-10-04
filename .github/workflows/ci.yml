@@ -1,0 +1,49 @@
+name: checks
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: support
+          POSTGRES_PASSWORD: support_pass
+          POSTGRES_DB: support_telecom
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U support -d support_telecom"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      LLM_ENABLED: "false"
+      RUN_DB_TESTS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - run: pip install -r requirements.txt
+      - run: python -m ruff check app scripts tests
+      - run: python -m scripts.setup_database
+      - run: python -m pytest -q
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t support-resolution-assistant:local .
+      - name: Verify container bootstrap and readiness
+        run: |
+          cp .env.example .env
+          docker compose --profile app up -d --wait --wait-timeout 600
+          curl --fail http://127.0.0.1:8000/api/v1/ready
+          docker compose exec -T api python -m scripts check
+      - name: Container logs on failure
+        if: failure()
+        run: docker compose logs --tail 100
+      - run: docker save support-resolution-assistant:local | gzip > support-resolution-assistant.tar.gz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: support-resolution-assistant.tar.gz

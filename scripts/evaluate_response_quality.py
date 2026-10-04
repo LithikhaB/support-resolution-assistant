@@ -120,7 +120,11 @@ def main():
     )
     parser.add_argument("--case", action="append", default=[])
     parser.add_argument("--output", type=Path)
-    parser.add_argument("--holdout", action="store_true", help="Reject complaints already present in dataset splits or training paraphrases")
+    parser.add_argument(
+        "--holdout",
+        action="store_true",
+        help="Reject complaints already present in dataset splits or training paraphrases",
+    )
     parser.add_argument(
         "--delay-seconds",
         type=float,

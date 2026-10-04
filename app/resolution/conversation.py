@@ -2,12 +2,12 @@
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from app.resolution.models import ResolutionRequest, ResolutionResponse
 from app.understanding.context import clarification_questions, extract_facts
 from app.understanding.models import AnalyzeRequest, ReportedFact, RuleAssessment, TextEvidence
-from app.understanding.scope import service_group, split_issues
+from app.understanding.scope import followup_groups, service_group, split_issues
 from app.understanding.service import get_understanding_service
 from app.understanding.signals import assess_severity
 
@@ -37,6 +37,13 @@ class CustomerTurn(BaseModel):
     message: str = Field(default="", max_length=1000)
     observations: Observations = Field(default_factory=Observations)
 
+    @field_validator("message")
+    @classmethod
+    def protect_credentials(cls, value):
+        from app.llm.privacy import scrub_credentials
+
+        return scrub_credentials(value)
+
     @model_validator(mode="after")
     def require_answer(self):
         """Reject empty turns rather than counting them as an answered question."""
@@ -60,7 +67,7 @@ class ConversationRequest(ResolutionRequest):
             raise ValueError("reply issue_id does not exist in this complaint")
         for turn in self.turns:
             original = service_group(issues[turn.issue_id - 1])
-            additional = service_group(turn.message)
+            additional = followup_groups(turn.message, original)
             existing = set().union(*(service_group(issue) for issue in issues))
             if original and additional - existing:
                 raise ValueError(

@@ -41,13 +41,15 @@ class IndexRepository:
         with self.conn.transaction():
             self.conn.execute(path.read_text(encoding="utf-8"))
 
-    def begin(self, config: dict, config_hash: str, manifest: dict, source_ids: set[str]) -> None:
+    def begin(
+        self, config: dict, config_hash: str, manifest: dict, source_ids: set[str], *, rebuild=False
+    ) -> None:
         """Reject incompatible or incomplete source sets before marking indexing active."""
         with self.conn.transaction():
             rows = self.conn.execute(
                 "SELECT doc_id,config_hash FROM document_index_state"
             ).fetchall()
-            if any(row[1] != config_hash for row in rows):
+            if not rebuild and any(row[1] != config_hash for row in rows):
                 raise ValueError(
                     "Existing embeddings use a different configuration; explicit rebuild required"
                 )

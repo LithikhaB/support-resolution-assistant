@@ -199,5 +199,7 @@ def train_classifier(settings: Settings, *, embedder=None, report_path: Path | N
             "note": "Conservative fixed heuristics, not calibrated confidence or proven OOD detection.",
         },
     }
-    write_json(report_path or settings.data_dir / "evaluation/understanding_development.json", report)
+    write_json(
+        report_path or settings.data_dir / "evaluation/understanding_development.json", report
+    )
     return report

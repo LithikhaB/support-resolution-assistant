@@ -34,7 +34,11 @@ def main() -> None:
     root = Path(__file__).resolve().parents[1]
     with get_connection(statement_timeout_ms=60000) as conn:
         conn.execute((root / "db/init.sql").read_text(encoding="utf-8"))
-        for name in ("003_retrieval_indexing.sql", "004_synthetic_outcomes.sql"):
+        for name in (
+            "003_retrieval_indexing.sql",
+            "004_synthetic_outcomes.sql",
+            "005_shared_lexical.sql",
+        ):
             conn.execute((root / "db/migrations" / name).read_text(encoding="utf-8"))
     print(f"Database {settings.postgres_db} initialized; existing rows preserved.")
 

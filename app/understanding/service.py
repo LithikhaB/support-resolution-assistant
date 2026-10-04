@@ -12,7 +12,7 @@ from app.llm.providers import ProviderChain, get_language_client, last_provider
 from app.understanding.classifier import CategoryClassifier, UnderstandingUnavailable
 from app.understanding.context import clarification_questions, extract_facts, extract_requests
 from app.understanding.language import interpret_complaint
-from app.understanding.models import AnalysisResponse, AnalyzeRequest, TextEvidence
+from app.understanding.models import AnalysisResponse, AnalyzeRequest, RuleAssessment, TextEvidence
 from app.understanding.routing import (
     compatible_category,
     explicit_category,
@@ -61,13 +61,21 @@ class UnderstandingService:
         facts = extract_facts(request.query)
         language_method, language_error = "rules_v1", None
         language_category = None
+        language_severity = language_sentiment = None
         if self.settings.llm_enabled:
             try:
-                interpreted_products, facts, language_category = interpret_complaint(
+                (
+                    interpreted_products,
+                    facts,
+                    language_category,
+                    language_severity,
+                    language_sentiment,
+                ) = interpret_complaint(
                     request.query,
                     self.language or get_language_client(),
-                    category_options=[c.category for c in candidates] if not accepted else [],
+                    category_options=sorted(self.category_products),
                     category_products=self.category_products,
+                    include_assessments=True,
                 )
                 products = interpreted_products or products
                 trace = last_provider.get() or {
@@ -83,23 +91,59 @@ class UnderstandingService:
             candidates[0].category, products, self.category_products
         )
         severity = assess_severity(request.query)
+        if severity.value == "unknown" and language_severity is not None:
+            severity = language_severity
+        sentiment = assess_sentiment(request.query)
+        if sentiment.value == "unknown" and language_sentiment is not None:
+            sentiment = language_sentiment
+        if severity.value == "unknown":
+            impacts = [fact for fact in facts if fact.name == "impact"]
+            values = {fact.value for fact in impacts}
+            if len(values) == 1:
+                impact = impacts[-1]
+                value = {
+                    "complete_loss": "high",
+                    "intermittent": "medium",
+                    "degraded": "medium",
+                    "working": "low",
+                }.get(impact.value)
+                if value:
+                    severity = RuleAssessment(
+                        value=value,
+                        rule="quoted_service_impact",
+                        evidence=[
+                            TextEvidence(**impact.model_dump(include={"text", "start", "end"}))
+                        ],
+                    )
         reported_category = explicit_category(products, severity)
         category = reported_category or (candidates[0].category if accepted else None)
         category_evidence = severity.evidence if reported_category else []
         category_basis = (
             "explicit_report" if reported_category else ("model" if category else "uncertain")
         )
-        if category is None and language_category is not None:
+        if language_category is not None and not reported_category:
             category = language_category.category
             category_basis = "language_assisted"
             start = request.query.rfind(language_category.quote)
-            category_evidence = [
-                TextEvidence(
-                    text=language_category.quote,
-                    start=start,
-                    end=start + len(language_category.quote),
-                )
-            ]
+            if start < 0:
+                start = request.query.lower().rfind(language_category.quote.lower())
+            if start >= 0:
+                quote_text = request.query[start : start + len(language_category.quote)]
+                category_evidence = [
+                    TextEvidence(
+                        text=quote_text,
+                        start=start,
+                        end=start + len(quote_text),
+                    )
+                ]
+            else:
+                category_evidence = [
+                    TextEvidence(
+                        text=request.query[: min(len(request.query), len(language_category.quote))],
+                        start=0,
+                        end=min(len(request.query), len(language_category.quote)),
+                    )
+                ]
         if scope_status == "unsupported":
             category = reported_category = None
             category_basis, category_evidence = "uncertain", []
@@ -121,7 +165,7 @@ class UnderstandingService:
             candidates=candidates,
             products=products,
             severity=severity,
-            sentiment=assess_sentiment(request.query),
+            sentiment=sentiment,
             actions=extract_actions(request.query),
             reported_facts=facts,
             requests=requests,

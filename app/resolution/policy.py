@@ -10,6 +10,13 @@ def choose_decision(response):
     """Base urgency on stated impact and keep escalation advisory until integrations exist."""
     severity = response.analysis.severity.value
     priority = {"critical": "urgent", "high": "high"}.get(severity, "normal")
+    if any(
+        f.name == "security_request" and f.value == "otp_sharing"
+        for f in response.analysis.reported_facts
+    ):
+        return SupportDecision(
+            action="escalate", priority="high", reasons=["verification_code_sharing_request"]
+        )
     if response.validation.status == "failed":
         return SupportDecision(
             action="escalate", priority=priority, reasons=["citation_validation_failed"]
@@ -65,13 +72,34 @@ def choose_decision(response):
 def questions_for(analysis):
     """Retain missing observations and explicitly surface contradictory reported facts."""
     questions = list(analysis.clarification_questions)
+    if any(
+        f.name == "security_request" and f.value == "otp_sharing" for f in analysis.reported_facts
+    ):
+        return []
     if analysis.scope_status == "unsupported":
+        return []
+    if any(request.kind == "contact_support" for request in analysis.requests):
         return []
     if {p.product for p in analysis.products} == {"landline"}:
         return []
+    if analysis.category == "number_porting":
+        known = {(f.name, f.value) for f in analysis.reported_facts}
+        if ("port_status", "rejected") in known:
+            return [] if ("port_reason", "account_mismatch") in known else [
+                "What rejection reason did the provider give? Do not share account identifiers or authorization codes."
+            ]
+        return ["Is the number transfer pending or rejected, and what status has the provider given?"]
     if analysis.severity.rule == "reported_area_outage":
         known = {f.name for f in analysis.reported_facts}
-        questions = [] if {"area", "started"} <= known else [AREA_OUTAGE_QUESTION]
+        questions = (
+            []
+            if {"area", "started"} <= known
+            else [
+                "Which area is affected? Do not delay incident review while collecting these details."
+                if "started" in known
+                else AREA_OUTAGE_QUESTION
+            ]
+        )
     if not supported_scopes(analysis):
         questions = (
             []

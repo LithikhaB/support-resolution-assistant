@@ -17,6 +17,17 @@ def applicability_issue(procedure, analysis):
         return "different_service_scope"
     known = {(fact.name, fact.value) for fact in analysis.reported_facts}
     finding = procedure.quotes["condition"].text
+    if ("port_status", "rejected") in known and re.search(
+        r"\b(?:order is accepted|no failure is recorded)\b", finding, re.I
+    ):
+        return "accepted_port_gate_for_rejected_transfer"
+    if (
+        ("optical_signal", "normal_reported") in known
+        and re.search(
+            r"\b(?:no received signal|no optical signal|no light received)\b", finding, re.I
+        )
+    ):
+        return "total_optical_loss_gate_for_intermittent_symptom"
     if ("tv_symptom", "buffering") in known and re.search(
         r"\b(?:entitlement|purchase|billing|display cable|local menu)\b", finding, re.I
     ):

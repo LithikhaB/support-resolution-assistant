@@ -1,0 +1,203 @@
+{
+  "created_at": "2026-10-04T07:45:03.769037+00:00",
+  "cases_sha256": "af6c3ea583b3a75f691713a3ce7f7d5cd866618a0c471b1f78595abb307fe3da",
+  "provenance": "AI-authored synthetic complaints based on the hiring statement and the existing fictional-provider scenarios. Expectations are development checks, not human quality ratings.",
+  "purpose": "Focused development smoke checks for the three Use Case 2 requirements; not a real-customer benchmark.",
+  "scoring": {
+    "context": "0 missed; 1 partial; 2 accurate",
+    "relevance": "0 unrelated; 1 mixed; 2 relevant",
+    "conversation": "0 repetitive; 1 partial; 2 coherent; null for single turns",
+    "grounding": "0 unsupported; 1 uncertain; 2 traceable",
+    "clarity": "0 confusing; 1 usable; 2 clear"
+  },
+  "results": [
+    {
+      "id": "S04",
+      "name": "Number transfer failure",
+      "query": "My number transfer was rejected because the details do not match the old provider's account. I'm worried.",
+      "turns": [],
+      "expected": [
+        "Recognize number porting even if a local shortlist is incorrect.",
+        "Give a cited next step and identify concern without inventing an account action."
+      ],
+      "snapshots": [
+        {
+          "after_reply": 0,
+          "response": {
+            "issues": [
+              {
+                "issue_id": 1,
+                "complaint": "My number transfer was rejected because the details do not match the old provider's account. I'm worried.",
+                "analysis_text": "My number transfer was rejected because the details do not match the old provider's account. I'm worried.",
+                "resolution": {
+                  "status": "needs_clarification",
+                  "decision": {
+                    "action": "clarify",
+                    "priority": "normal",
+                    "reasons": [
+                      "missing_customer_observations"
+                    ],
+                    "target": "support_agent",
+                    "handoff_created": false
+                  },
+                  "validation": {
+                    "status": "passed",
+                    "checked_sources": 0,
+                    "issues": [],
+                    "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+                  },
+                  "method": "local_extractive_v1",
+                  "language_summary": "You reported that your number transfer was rejected because the details did not match your old provider's account. To help us investigate this, please tell us which service is affected and what exactly happens when you try to use it.",
+                  "language_plan": {
+                    "title": "One more detail",
+                    "summary": "You reported that your number transfer was rejected because the details did not match your old provider's account. To help us investigate this, please tell us which service is affected and what exactly happens when you try to use it.",
+                    "steps": [
+                      "Note when the problem started, which services or devices are affected, and any error message you see.",
+                      "Share the checks you have already tried and their results with support so you do not have to repeat them."
+                    ],
+                    "note": "Provisional guidance while we verify details. Answering below helps select the right procedure."
+                  },
+                  "language_draft": "You reported that your number transfer was rejected because the details did not match your old provider's account. To help us investigate this, please tell us which service is affected and what exactly happens when you try to use it.\n\nNote when the problem started, which services or devices are affected, and any error message you see.\n\nShare the checks you have already tried and their results with support so you do not have to repeat them.\n\nWhich service is affected, and what exactly happens when you use it?\n\nProvisional guidance while we verify details. Answering below helps select the right procedure.",
+                  "language_status": "generated_for_review",
+                  "language_model": "gemini-2.5-flash",
+                  "language_provider": "gemini",
+                  "faithfulness_status": "model_checked",
+                  "language_error": null,
+                  "historical_cases": [],
+                  "agent_review_required": true,
+                  "draft": "Draft for agent review. A cause has not been confirmed.\n\nCustomer-reported observations: number transfer was rejected; details do not match\n\nClarify: Which service is affected, and what exactly happens when you use it?\n\nNo complete applicable procedure was selected. Obtain the missing service details or route to an agent for investigation.\n\nNext action: clarify. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+                  "analysis": {
+                    "category": null,
+                    "scope_status": "uncertain",
+                    "scope_reason": "service_not_identified",
+                    "category_status": "uncertain",
+                    "category_basis": "uncertain",
+                    "category_evidence": [],
+                    "routing_policy": "development_selected_v1",
+                    "candidates": [
+                      {
+                        "category": "number_porting",
+                        "score": 0.8517764435230745
+                      },
+                      {
+                        "category": "sim_esim_activation",
+                        "score": 0.02306259096822897
+                      },
+                      {
+                        "category": "roaming",
+                        "score": 0.021912159640628485
+                      }
+                    ],
+                    "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                    "products": [],
+                    "severity": {
+                      "value": "unknown",
+                      "rule": "insufficient_impact_evidence",
+                      "evidence": [],
+                      "method": "rules_v1"
+                    },
+                    "sentiment": {
+                      "value": "concerned",
+                      "rule": "explicit_tone",
+                      "evidence": [
+                        {
+                          "text": "worried",
+                          "start": 97,
+                          "end": 104
+                        }
+                      ],
+                      "method": "rules_v1"
+                    },
+                    "actions": [],
+                    "reported_facts": [
+                      {
+                        "text": "number transfer was rejected",
+                        "start": 3,
+                        "end": 31,
+                        "name": "port_status",
+                        "value": "rejected"
+                      },
+                      {
+                        "text": "details do not match",
+                        "start": 44,
+                        "end": 64,
+                        "name": "port_reason",
+                        "value": "account_mismatch"
+                      }
+                    ],
+                    "requests": [],
+                    "needs_clarification": true,
+                    "clarification_questions": [
+                      "Which service is affected, and what exactly happens when you use it?",
+                      "Is service completely unavailable or intermittent, and which devices or people are affected?"
+                    ],
+                    "model_version": "6d3f3a9e1435b374",
+                    "language_method": "rules_fallback",
+                    "language_provider": null,
+                    "language_model": null,
+                    "language_error": "groq:unsupported_category_proposal;gemini:provider_http_503",
+                    "elapsed_ms": 37783.412399934605
+                  },
+                  "suggestions": [],
+                  "sources": [],
+                  "clarification_questions": [
+                    "Which service is affected, and what exactly happens when you use it?"
+                  ],
+                  "acknowledged_actions": [],
+                  "contact_status": "not_requested",
+                  "customer_plan": {
+                    "title": "One more detail",
+                    "summary": "Please answer below so I can suggest the next step.",
+                    "steps": [
+                      "Note when the problem started, which services or devices are affected, and any error message you see.",
+                      "Share the checks you have already tried and their results with support so you do not have to repeat them."
+                    ],
+                    "note": "Provisional guidance while we verify details. Answering below helps select the right procedure."
+                  },
+                  "limitations": [
+                    "Extractive local drafting; no generative LLM is used.",
+                    "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                    "Exact-source validation does not confirm applicability or real-world diagnostic correctness.",
+                    "Language-generated response requires agent review; exact-source validation applies to source quotes and a model review checks generated instructions."
+                  ],
+                  "elapsed_ms": 9863.7709999457
+                }
+              }
+            ],
+            "storage": "client_replayed",
+            "limitations": [
+              "Send the same original query and full customer-turn history on each request.",
+              "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+              "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+            ]
+          }
+        }
+      ],
+      "manual_scores": {
+        "context": null,
+        "relevance": null,
+        "conversation": null,
+        "grounding": null,
+        "clarity": null
+      },
+      "review_notes": ""
+    }
+  ],
+  "run_complete": true,
+  "fingerprint": {
+    "code_sha256": "794b1ce23001ab2194a54eeb038438df7254bc50571b60052abaedc102569a87",
+    "artifacts": {
+      "classifier": "7d4fea058aba8c2ec404926c9c99b6a86c364caae38aca40eb434568121d35d8",
+      "routing": "3f3b8c13aefbe60c40ffecd135469043be2131dbd6e4d65d8611fefec1846d78",
+      "corpus": "a93a4a53ee5b02af72571b1e528fa63cba8d9fc9ff378a4de4eef19a2f0be348",
+      "chunks": "8484ba33f895cac2711b8af46e1dc039e87f5c04d6d09b95372d9d7ba32d8670"
+    },
+    "llm_enabled": true,
+    "groq_model": "openai/gpt-oss-20b",
+    "gemini_model": "gemini-2.5-flash",
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "embedding_revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+    "reranker_model": "cross-encoder/ms-marco-MiniLM-L6-v2",
+    "reranker_revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a"
+  }
+}

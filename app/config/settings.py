@@ -1,5 +1,6 @@
 from functools import lru_cache
 from pathlib import Path
+from typing import Literal
 
 from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -37,6 +38,7 @@ class Settings(BaseSettings):
     retrieval_statement_timeout_ms: int = Field(default=30000, ge=1)
     retrieval_candidate_k: int = Field(default=50, ge=1, le=100)
     retrieval_rrf_constant: int = Field(default=60, ge=1)
+    lexical_backend: Literal["bm25", "postgres"] = "bm25"
     indexing_statement_timeout_ms: int = Field(default=600000, ge=1000)
     indexing_batch_size: int = Field(default=128, ge=1, le=1024)
 
@@ -50,7 +52,6 @@ class Settings(BaseSettings):
     chunk_overlap_tokens: int = Field(default=32, ge=0)
 
     data_dir: Path = Path("data")
-    case_store_path: Path = Path("data/workflow/cases.sqlite3")
     corpus_dir: Path = Path("data/synthetic/telecom_v1")
     understanding_model_path: Path = Path("data/models/understanding/classifier.json")
     understanding_routing_path: Path = Path("data/models/understanding/routing.json")

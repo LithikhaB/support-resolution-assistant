@@ -8,6 +8,7 @@ from test_indexing_db import item, vectors
 from app.config.settings import Settings
 from app.retrieval.bm25_search import BM25Retriever
 from app.retrieval.hybrid_search import HybridRetriever
+from app.retrieval.lexical_search import PostgresLexicalRetriever
 from app.retrieval.vector_search import VectorRetriever
 
 pytestmark = pytest.mark.skipif(os.environ.get("RUN_DB_TESTS") != "1", reason="Set RUN_DB_TESTS=1")
@@ -48,6 +49,10 @@ def test_database_ranking_filters_and_evidence(repository):
     lexical = keyword.search(query, 3)
     assert len(lexical) == 1 and lexical[0].response == record.document.response
     assert keyword.search(query, 3, {"doc_type": "knowledge_base"}) == []
+    shared = PostgresLexicalRetriever(settings=settings, connection_factory=connection)
+    assert len(shared.search(query, 3)) == 1
+    assert shared.search(query, 3, {"doc_type": "knowledge_base"}) == []
+    assert shared.search(query, 3, {"queue": "x' OR 1=1 --"}) == []
     hybrid = HybridRetriever(settings=settings, embedder=embedder, connection_factory=connection)
     combined = hybrid.search(query, 3)
     assert len(combined) == 1 and combined[0].sources == ["vector", "bm25"]

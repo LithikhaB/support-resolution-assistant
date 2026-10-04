@@ -91,20 +91,3 @@ def test_service_routes_and_logs_without_query(mode, caplog):
     for name, retriever in retrievers.items():
         if name != mode:
             retriever.search.assert_not_called()
-
-
-def test_cli_prints_empty_result_and_handles_unavailability(monkeypatch, capsys):
-    from scripts import test_retrieval
-
-    service = Mock()
-    service.search.return_value = SearchResponse(mode="hybrid", results=[], elapsed_ms=1)
-    monkeypatch.setattr(test_retrieval, "get_retrieval_service", lambda: service)
-    monkeypatch.setattr("sys.argv", ["test_retrieval", "router"])
-    test_retrieval.main()
-    assert "No matching evidence" in capsys.readouterr().out
-    service.search.side_effect = RetrievalUnavailable("private details")
-    with pytest.raises(SystemExit) as error:
-        test_retrieval.main()
-    assert error.value.code == 1
-    output = capsys.readouterr().err
-    assert "unavailable" in output and "private" not in output

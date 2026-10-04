@@ -31,5 +31,6 @@ data/raw/
 data/processed/
 data/models/
 data/workflow/
+data/evolution/runs/
 data/evaluation/retrieval_report.json
 data/synthetic/telecom_v1/processed/indexing.manifest.json

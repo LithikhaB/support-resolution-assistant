@@ -7,6 +7,7 @@ from time import perf_counter
 from app.config.settings import get_settings
 from app.database.connection import get_connection
 from app.retrieval.bm25_search import BM25Retriever
+from app.retrieval.lexical_search import PostgresLexicalRetriever
 from app.retrieval.models import EvidenceResult, HybridResult, RetrievalRequest
 from app.retrieval.vector_search import VectorRetriever
 
@@ -56,7 +57,12 @@ class HybridRetriever:
         self.settings = settings or get_settings()
         self.connection_factory = connection_factory
         self.embedder = embedder
-        self.bm25 = BM25Retriever(settings=self.settings, connection_factory=connection_factory)
+        lexical = (
+            PostgresLexicalRetriever
+            if self.settings.lexical_backend == "postgres"
+            else BM25Retriever
+        )
+        self.bm25 = lexical(settings=self.settings, connection_factory=connection_factory)
 
     def search(self, query, top_k=10, filters=None, *, candidate_k=None):
         """Return bounded ranked evidence for a validated query and its filters."""
