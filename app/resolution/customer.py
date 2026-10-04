@@ -11,6 +11,22 @@ def physical_damage(analysis):
     )
 
 
+def procedure_steps(response):
+    """Separate the diagnostic check from the conditional action for easy scanning."""
+    steps = []
+    for item in response.suggestions:
+        steps.append(f"Support check: {item.required_finding} [{item.citation_id}]")
+        if item.repeated_actions:
+            steps.append(f"Already tried: share the outcome with support instead of repeating this action. [{item.citation_id}]")
+        else:
+            steps.append(f"If confirmed: {item.proposed_action} [{item.citation_id}]")
+    return steps
+
+
+def procedure_note(response):
+    return " ".join(f"{item.restriction} [{item.citation_id}]" for item in response.suggestions)
+
+
 def customer_plan(response):
     """Translate workflow state into honest next steps without exposing diagnostic speculation."""
     analysis = response.analysis
@@ -103,27 +119,19 @@ def customer_plan(response):
     if response.clarification_questions:
         title = "One more detail"
         if analysis.category:
-            title = f"Investigating {analysis.category.replace('_', ' ').title()}"
+            title = "Initial checks"
 
         summary = "Please answer below so I can suggest the next step."
         if ("charge", "late_fee") in known:
             summary = "You are asking about a late fee. Payment timing is needed to explain what billing support should check."
         elif response.acknowledged_actions:
-            summary = f"Noted that you have already tried: {'; '.join(response.acknowledged_actions)}. To confirm the exact resolution, please check the detail requested below."
+            summary = "Your previous checks are noted. Review the next step and answer below."
         elif analysis.category:
-            summary = f"Initial assessment indicates {analysis.category.replace('_', ' ')}. Please review the initial checks and answer the question below."
+            summary = "Review the initial check below. Your answer will help narrow the next step."
 
         steps = []
         if response.suggestions and response.validation.status != "failed":
-            for item in response.suggestions:
-                if item.repeated_actions:
-                    steps.append(
-                        f"[{item.citation_id}] You have already tried an action in this procedure. Share its outcome with support instead of repeating it. Next diagnostic check: {item.required_finding}"
-                    )
-                else:
-                    steps.append(
-                        f"[{item.citation_id}] Ask support to check: {item.required_finding} Only if confirmed: {item.proposed_action} {item.restriction}"
-                    )
+            steps = procedure_steps(response)
         elif analysis.category == "intermittent_broadband":
             steps = [
                 "Observe whether drops affect all connected devices or only wireless connections.",
@@ -148,24 +156,14 @@ def customer_plan(response):
             title=title,
             summary=summary,
             steps=steps,
-            note="Provisional guidance while we verify details. Answering below helps select the right procedure.",
+            note=procedure_note(response) if response.suggestions else "These are initial checks while we confirm the details.",
         )
     if response.suggestions and response.validation.status != "failed":
-        steps = []
-        for item in response.suggestions:
-            if item.repeated_actions:
-                steps.append(
-                    f"[{item.citation_id}] You have already tried an action in this procedure. Share its result with support instead of repeating it. The next check is: {item.required_finding}"
-                )
-            else:
-                steps.append(
-                    f"[{item.citation_id}] Ask support to check: {item.required_finding} If confirmed, the documented next step is: {item.proposed_action} {item.restriction}"
-                )
         return CustomerPlan(
-            title="Your next step",
-            summary="The relevant procedure needs a support check before a repair can be selected.",
-            steps=steps,
-            note="Based on the demo knowledge base. No repair has been performed.",
+            title="Recommended next steps",
+            summary="Start with the check below. Use the suggested action only after the finding is confirmed.",
+            steps=procedure_steps(response),
+            note=procedure_note(response),
         )
     return CustomerPlan(
         title="This ticket needs investigation",

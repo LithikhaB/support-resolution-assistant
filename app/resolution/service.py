@@ -6,6 +6,7 @@ from time import perf_counter
 
 from app.config.settings import get_settings
 from app.ingestion.schema import DocType
+from app.llm.client import LanguageUnavailable
 from app.llm.providers import ProviderChain, get_language_client
 from app.resolution.applicability import evidence_query
 from app.resolution.customer import physical_damage
@@ -13,6 +14,7 @@ from app.resolution.drafting import draft_resolution
 from app.resolution.evidence import supported_scopes
 from app.resolution.history import select_history
 from app.resolution.language import add_language_draft
+from app.resolution.selection import rank_fallback, select_relevant_procedure
 from app.resolution.validation import finalize_resolution
 from app.retrieval.embeddings import EmbeddingInputTooLong
 from app.retrieval.models import RetrievalFilters, SearchRequest
@@ -41,6 +43,8 @@ class ResolutionService:
             understanding = self.understanding or get_understanding_service()
             analysis = understanding.analyze(AnalyzeRequest(query=request.query))
         evidence = []
+        history = []
+        selection_error = None
         if (
             analysis.scope_status != "unsupported"
             and supported_scopes(analysis)
@@ -64,13 +68,28 @@ class ResolutionService:
                     raise
                 search = search.model_copy(update={"query": request.query})
                 evidence = retrieval.search(search).results
-        result = draft_resolution(analysis, evidence, max_sources=request.max_sources)
+            if evidence:
+                history_search = search.model_copy(update={
+                    "filters": filters.model_copy(update={"doc_type": DocType.RESOLVED_TICKET}),
+                    "rerank": False,
+                })
+                history = retrieval.search(history_search).results
+                evidence = rank_fallback(evidence)
+                if self.settings.llm_enabled:
+                    try:
+                        evidence = select_relevant_procedure(
+                            evidence, request.query, analysis, self.language
+                        )
+                    except LanguageUnavailable as exc:
+                        selection_error = str(exc)
+        # One focused procedure per issue; follow-ups can select a different one.
+        result = draft_resolution(analysis, evidence, max_sources=1)
         result = finalize_resolution(result, evidence, analysis)
-        if result.sources:
-            history_search = search.model_copy(
-                update={"filters": filters.model_copy(update={"doc_type": DocType.RESOLVED_TICKET})}
+        if selection_error:
+            result.limitations.append(
+                "Procedure selection unavailable; local ranking retained: " + selection_error
             )
-            history = retrieval.search(history_search).results
+        if result.sources:
             result.historical_cases = select_history(history, result.sources)
         result = add_language_draft(result, request.query, self.settings, self.language)
         result.elapsed_ms = (perf_counter() - started) * 1000

@@ -197,3 +197,43 @@ def test_number_transfer_remains_actionable_during_provider_outage():
     assert result.scope_status == "supported"
     assert result.language_method == "rules_fallback"
     assert questions_for(result) == []
+
+
+def test_fallback_separates_check_action_and_restriction():
+    from app.resolution.customer import procedure_note, procedure_steps
+    from app.resolution.models import ConditionalSuggestion
+
+    result = Mock(suggestions=[ConditionalSuggestion(
+        citation_id="S1", required_finding="Ledger confirms duplicate settled payments.",
+        proposed_action="Authorized billing staff reconcile the duplicate payment.",
+        restriction="Do not promise a refund deadline.", status="requires_agent_confirmation",
+    )])
+    steps = procedure_steps(result)
+    assert len(steps) == 2 and all("[S1]" in step for step in steps)
+    assert steps[0].startswith("Support check:") and steps[1].startswith("If confirmed:")
+    assert "refund deadline" in procedure_note(result)
+
+
+def test_language_selection_only_accepts_retrieved_applicable_ids_and_redacts_payload():
+    from app.llm.client import LanguageUnavailable
+    from app.resolution.selection import ProcedureChoice, select_relevant_procedure
+
+    rows = [BM25Result(
+        chunk_id=i, doc_id=f"kb{i}", chunk_index=0, title="Billing investigation",
+        doc_type="knowledge_base", response=None, resolution=None, outcome_status="reference",
+        metadata={"authority":"fictional_provider_policy", "is_synthetic":True},
+        bm25_score=1, bm25_rank=i,
+        content=f"Scope: billing; support category: billing_dispute.\nDiagnostic gate: Ledger check {i}.\nOnly if that finding is established: Authorized billing staff reconcile the ledger.\nRestriction: Do not promise a refund deadline.",
+    ) for i in (1, 2)]
+    observed = service().analyze(AnalyzeRequest(query="My bill has two payments."))
+    client = Mock()
+    client.generate.return_value = ProcedureChoice(doc_id="kb2")
+    assert select_relevant_procedure(
+        rows, "My bill has two payments; email me at customer@example.com.", observed, client
+    ) == [rows[1]]
+    assert "customer@example.com" not in str(client.generate.call_args.args[1])
+    client.generate.return_value = ProcedureChoice(doc_id="invented")
+    with pytest.raises(LanguageUnavailable, match="invalid_selected_procedure"):
+        select_relevant_procedure(rows, "My bill has two payments.", observed, client)
+    client.generate.return_value = ProcedureChoice(doc_id=None)
+    assert select_relevant_procedure(rows, "My bill has two payments.", observed, client) == []

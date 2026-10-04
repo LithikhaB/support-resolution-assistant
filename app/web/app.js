@@ -41,7 +41,7 @@ async function send(request, updatedIssue = null) {
 }
 function sourcesPanel(resolution) {
   const details = el("details", undefined, "sources");
-  const history = (resolution.historical_cases || []).filter(item => (resolution.language_summary || "").includes(`[${item.citation_id}]`));
+  const history = (resolution.historical_cases || []).slice(0, 1);
   details.append(el("summary", `Sources (${resolution.sources.length + history.length})`));
   for (const source of resolution.sources) {
     const article = el("div", undefined, "source");
@@ -51,7 +51,7 @@ function sourcesPanel(resolution) {
   }
   for (const item of history) {
     const article = el("div", undefined, "source");
-    article.append(el("strong", `[${item.citation_id}] ${item.title}`), el("p", item.resolution));
+    article.append(el("strong", `[${item.citation_id}] Related resolved example: ${item.title}`), el("p", item.resolution));
     details.append(article);
   }
   details.append(el("small", "These are synthetic support procedures for this demonstration."));
@@ -70,6 +70,7 @@ function renderIssue(issue) {
   const products = analysis.products.map(item => item.product.replaceAll("_", " ")).join(", ") || "not identified";
   response.append(el("p", `Category: ${(analysis.category || "needs more detail").replaceAll("_", " ")} · Product: ${products} · Severity: ${analysis.severity.value} · Sentiment: ${analysis.sentiment.value}`, "muted"));
   response.append(el("h2", plan.title), el("p", resolution.language_summary || plan.summary));
+  response.append(el("small", resolution.language_status === "generated_for_review" ? `LLM-assisted guidance · ${resolution.language_provider}` : "Source-based guidance", "muted"));
   if (plan.steps.length) {
     const steps = el("ol");
     for (const step of plan.steps) steps.append(el("li", step));

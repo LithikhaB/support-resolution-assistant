@@ -13,7 +13,7 @@ class TroubleshootingStep(BaseModel):
     """Bind each generated troubleshooting instruction to a supplied source."""
 
     model_config = ConfigDict(extra="forbid")
-    instruction: str = Field(min_length=1, max_length=1500)
+    instruction: str = Field(min_length=1, max_length=400)
     citation_id: str = Field(pattern=r"^S[1-5]$")
 
 
@@ -21,10 +21,10 @@ class DraftIntroduction(BaseModel):
     """Keep generative prose separate from immutable diagnostic gates and repair actions."""
 
     model_config = ConfigDict(extra="forbid")
-    summary: str = Field(min_length=1, max_length=1200)
+    summary: str = Field(min_length=1, max_length=600)
     history_citations: list[str] = Field(max_length=3)
     procedure_citations: list[str] = Field(default_factory=list, max_length=5)
-    steps: list[TroubleshootingStep] = Field(default_factory=list, max_length=8)
+    steps: list[TroubleshootingStep] = Field(default_factory=list, max_length=4)
 
 
 class FaithfulnessReview(BaseModel):
@@ -78,6 +78,11 @@ wireless-only procedures when Ethernet also fails. Return [] when service recove
 physical damage needs inspection, or no procedure is relevant.
 If similar historical records are referenced, explicitly call synthetic histories
 simulated examples in the summary. Omit history citations if they add no useful context."""
+INSTRUCTION += """\nUse at most four short steps and a two-sentence summary. Keep each step to
+one check or action. Clearly label provider-only actions as 'Support:' and customer checks
+as 'You can check:'. Give the most relevant procedure first; omit unrelated possibilities.
+Preserve the source conditions and safety restrictions. Avoid jargon when a plain-English
+equivalent is possible. Do not claim 'we will' perform repairs or account actions."""
 
 
 def add_language_draft(response, query, settings, client=None):
@@ -181,10 +186,10 @@ def add_language_draft(response, query, settings, client=None):
         if result.steps:
             steps = [f"{step.instruction} [{step.citation_id}]" for step in result.steps]
         elif result.procedure_citations:
-            by_citation = {
-                s.citation_id: step for s, step in zip(response.suggestions, steps, strict=True)
-            }
-            steps = [by_citation[citation] for citation in result.procedure_citations]
+            steps = [
+                step for citation in result.procedure_citations
+                for step in steps if f"[{citation}]" in step
+            ]
         response.language_plan = response.customer_plan.model_copy(
             update={"summary": parts[0], "steps": steps}
         )
