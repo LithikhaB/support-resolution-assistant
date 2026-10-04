@@ -9,6 +9,7 @@ from time import perf_counter
 import numpy as np
 
 from app.database.connection import get_connection
+from app.database.readiness import index_matches
 from app.evaluation.metrics import relevance, routing_metrics
 from app.evaluation.preparation import (
     fingerprint,
@@ -33,10 +34,8 @@ from app.understanding.training import classification_metrics, load_split
 def verify_index(snapshot):
     """Require the live index to match the exact local corpus and chunks being evaluated."""
     with get_connection() as conn:
-        row = conn.execute(
-            "SELECT status,source_hash,chunks_hash FROM retrieval_index_state WHERE singleton"
-        ).fetchone()
-    if not row or tuple(row) != ("ready", snapshot["corpus_sha256"], snapshot["chunks_sha256"]):
+        matches = index_matches(conn, snapshot["corpus_sha256"], snapshot["chunks_sha256"])
+    if not matches:
         raise ValueError("Live index differs from the frozen evaluation corpus")
 
 

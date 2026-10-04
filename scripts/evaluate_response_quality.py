@@ -12,6 +12,7 @@ from pydantic import ValidationError
 
 from app.api.resolution import run_request
 from app.config.settings import get_settings
+from app.evaluation.review import validate_case_pack
 from app.ingestion.artifacts import digest, file_sha256, write_json
 from app.resolution.conversation import ConversationRequest, resolve_conversation
 from app.resolution.service import get_resolution_service
@@ -119,6 +120,7 @@ def main():
     )
     parser.add_argument("--case", action="append", default=[])
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--holdout", action="store_true", help="Reject complaints already present in dataset splits or training paraphrases")
     parser.add_argument(
         "--delay-seconds",
         type=float,
@@ -136,6 +138,7 @@ def main():
         parser.error("choose a new output file; existing reports are preserved")
     try:
         pack = json.loads(args.cases.read_text(encoding="utf-8"))
+        validate_case_pack(pack, get_settings(), holdout=args.holdout)
         available = {case["id"] for case in pack["cases"]}
         if set(args.case) - available:
             parser.error("unknown case ID; available: " + ", ".join(sorted(available)))

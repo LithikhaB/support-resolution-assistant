@@ -1,35 +1,245 @@
 {
-  "provenance": "AI-authored training-only paraphrases of existing training scenario families. Not independent evaluation data or real customer records.",
+  "provenance": "AI-authored training-only paraphrases of existing training scenario families. Not independent evaluation data or real customer records. Expanded on 2026-10-04 with training-family contrastive wording; development observations inform prioritization, not copied evaluation queries.",
   "families": {
-    "BB01": ["My home internet is completely gone. There is a red light marked LOS on the fibre box, even after a restart.", "Nothing at home can get online and the optical box is flashing red. Switching it off and on made no difference."],
-    "BB02": ["The broadband is down on everything. Even the computer plugged into the router cannot connect; the screen says authentication failed.", "No internet on either Wi-Fi or cable. The fibre lights look fine but the router keeps rejecting the connection login."],
-    "BD01": ["You've taken money from me twice for one bill. Both payments have gone through, neither is pending.", "Why am I being charged twice for the same monthly invoice? I can see two completed payments."],
-    "BD02": ["There's an extra entertainment subscription on my bill that I never agreed to. I want the charge checked.", "My bill includes a TV add-on I didn't order. Can you look into this unexpected fee?"],
-    "HW01": ["My router won't turn on at all. The socket works, I tested it with a lamp, but there are no lights on the box.", "The internet box seems dead. I checked the plug and power point and still cannot get it to light up."],
-    "HW02": ["Since that update my router just keeps rebooting. It starts up then switches itself off again.", "The modem is stuck in a restart loop after the software update. I already tried switching it off once."],
-    "ID01": ["Whenever it rains my broadband cuts out and comes back. My wired PC does it too, restarting hasn't helped.", "My internet connection keeps dropping in wet weather. It happens even with a cable straight into the router."],
-    "ID02": ["My broadband keeps cutting in and out every evening. Both the wired laptop and wireless devices lose the connection.", "Every night the internet stops for a bit and then comes back. Ethernet drops too and there aren't any big downloads running."],
-    "MC01": ["I get no mobile signal in my flat but it returns when I step outside. My partner has the same problem on this network.", "My phone has hardly any bars indoors. Two phones lose reception here but both work outside the building."],
-    "MC02": ["None of us can get a mobile signal around here today. It isn't just my handset and going outside doesn't help.", "My neighbours' phones and mine all lost network coverage at the same time, indoors and outside."],
-    "MD01": ["I can call and text on the new phone but nothing loads on mobile data. Wi-Fi is fine and data is switched on.", "Since changing my handset I can't use the internet away from Wi-Fi. Calls still work, and I've restarted already."],
-    "MD02": ["The internet on my phone has become painfully slow after using up most of my data allowance. Calls are fine.", "Mobile data was fast earlier in the month and now it's crawling. My usage is close to the plan limit."],
-    "NP01": ["I tried moving my number to you but the transfer was rejected because the account details don't match.", "My number port failed. The old operator says the name on the transfer request is different from their records."],
-    "NP02": ["I'm transferring my number tomorrow. The new SIM isn't working yet but my old one still does. Is that why?", "My number hasn't switched over. The confirmed porting date is tomorrow and I'm still using the old line."],
-    "PR01": ["I've paid the overdue bill and it shows completed, but my broadband is still cut off for nonpayment.", "Can you reconnect my service? The bill is paid and settled in my account but the suspension is still there."],
-    "PR02": ["I paid to get my service back but the bank still says pending. My account says unpaid and I'm still disconnected.", "My broadband was suspended. I've made the payment, though it hasn't cleared yet, and the service hasn't come back."],
-    "RM01": ["I'm overseas with a roaming pack. Calls work but I can't use data, and my account shows data roaming disabled.", "My roaming package is active but the internet doesn't work abroad. The phone setting is on; the account setting seems off."],
-    "RM02": ["I'm travelling abroad and my phone connects to a local network but mobile internet won't work. Another partner network is listed.", "Roaming data isn't working on the foreign network I'm connected to. There is another supported operator available here."],
-    "SA01": ["The replacement SIM won't activate. The number printed on the card isn't the one in my order.", "I received a new SIM but it stays inactive. It looks like the card serial doesn't match what was registered."],
-    "SA02": ["My eSIM won't install on this phone because the QR code says already used. I scanned it on the old handset first.", "I tried moving my eSIM to another phone but the activation code has already been used. How can I activate it here?"],
-    "SM01": ["My bank login texts never arrive. Normal SMS and codes from other services come through fine.", "I can't receive the OTP from my bank, but other messages work. Please don't ask me to share the code."],
-    "SM02": ["Texts come in but none of my messages will send. I've tried different numbers and restarted the phone.", "I can receive SMS but sending always fails, even to ordinary contacts. It isn't just one recipient."],
-    "SP01": ["I upgraded my broadband to 300 but my wired speed tests still won't go above 100. Downloads are paused.", "Why am I still getting my old internet speed after the upgrade? A cable test on a capable computer tops out at 100 Mbps."],
-    "SP02": ["Broadband is really slow on one wired computer but fast on the other. The slow PC says its link is only 100 Mbps.", "Downloads crawl on my desktop over Ethernet. Another computer on the same router is much faster."],
-    "TV01": ["Live TV keeps buffering on Wi-Fi. If I plug the set-top box into Ethernet the picture plays normally.", "The television stream freezes over wireless but works over a cable to the box. Can you help with the TV connection?"],
-    "TV02": ["I paid for new TV channels but they say not authorized. The channels I already had still work.", "My new television package hasn't unlocked. Only the newly added channels show an authorization error."],
-    "VC01": ["I can't make any calls from my mobile. People can call me and data works, but every outgoing call fails.", "My phone won't dial out to anyone even though incoming calls and the internet still work."],
-    "VC02": ["Mobile calls keep disconnecting when I walk between rooms. They last longer if I stay still and data keeps working.", "I keep losing voice calls as I move around the house. The phone's internet stays connected."],
-    "WF01": ["Wi-Fi barely works upstairs but it's fine next to the router. My wired desktop has no problem.", "The wireless connection is terrible in the bedroom, though internet over a cable works normally."],
-    "WF02": ["Every evening the Wi-Fi gets really slow, but the computer plugged into Ethernet stays fast at the same time.", "Wireless internet slows right down at night in my flat. Wired internet is still quick, so it seems to be just Wi-Fi."]
+    "BB01": [
+      "My home internet is completely gone. There is a red light marked LOS on the fibre box, even after a restart.",
+      "Nothing at home can get online and the optical box is flashing red. Switching it off and on made no difference.",
+      "The fibre connection is offline and the optical alarm is red. Nothing connects.",
+      "There is a loss of signal light on my broadband terminal and no internet anywhere.",
+      "Our home broadband stopped completely; the fibre box reports an optical fault.",
+      "The ONT has a red LOS indicator and none of our devices can access the internet."
+    ],
+    "BB02": [
+      "The broadband is down on everything. Even the computer plugged into the router cannot connect; the screen says authentication failed.",
+      "No internet on either Wi-Fi or cable. The fibre lights look fine but the router keeps rejecting the connection login.",
+      "The broadband session will not authenticate, even with my computer connected by cable.",
+      "Home internet is unavailable and the router reports an incorrect broadband login.",
+      "Both Ethernet and wireless internet are down with a PPP authentication error.",
+      "The router is rejecting the broadband connection credentials; all devices are offline."
+    ],
+    "BD01": [
+      "You've taken money from me twice for one bill. Both payments have gone through, neither is pending.",
+      "Why am I being charged twice for the same monthly invoice? I can see two completed payments.",
+      "Two settled debits were taken for a single invoice. Please investigate duplicate billing.",
+      "The same bill has been collected twice and both bank entries are completed.",
+      "I need a review of two successful payments against one monthly charge.",
+      "There are two posted charges for one bill, with neither transaction marked pending."
+    ],
+    "BD02": [
+      "There's an extra entertainment subscription on my bill that I never agreed to. I want the charge checked.",
+      "My bill includes a TV add-on I didn't order. Can you look into this unexpected fee?",
+      "An extra service fee appeared on my invoice without my consent.",
+      "My monthly bill contains an unrequested paid add-on subscription.",
+      "Please check a charge for a package I never ordered on this account.",
+      "The account is charging me for an additional entertainment option I did not approve."
+    ],
+    "HW01": [
+      "My router won't turn on at all. The socket works, I tested it with a lamp, but there are no lights on the box.",
+      "The internet box seems dead. I checked the plug and power point and still cannot get it to light up.",
+      "The modem has no power lights despite a working electrical outlet.",
+      "My broadband router is completely dead even on another tested socket.",
+      "The internet equipment will not power up; the plug and socket have been checked.",
+      "The ONT is unlit although the power outlet supplies electricity normally."
+    ],
+    "HW02": [
+      "Since that update my router just keeps rebooting. It starts up then switches itself off again.",
+      "The modem is stuck in a restart loop after the software update. I already tried switching it off once.",
+      "My router crashes and starts again repeatedly since the firmware change.",
+      "The broadband hardware keeps cycling through its startup lights after an update.",
+      "A firmware installation left my modem repeatedly rebooting by itself.",
+      "The router cannot stay on after the software upgrade and continually restarts."
+    ],
+    "ID01": [
+      "Whenever it rains my broadband cuts out and comes back. My wired PC does it too, restarting hasn't helped.",
+      "My internet connection keeps dropping in wet weather. It happens even with a cable straight into the router.",
+      "Rain makes the broadband link disconnect intermittently on wired devices too.",
+      "The internet drops and recovers whenever the weather is wet, including Ethernet.",
+      "During rainfall all broadband devices briefly disconnect; rebooting has not fixed it.",
+      "Wet weather causes repeated short losses of home internet over both cable and wireless."
+    ],
+    "ID02": [
+      "My broadband keeps cutting in and out every evening. Both the wired laptop and wireless devices lose the connection.",
+      "Every night the internet stops for a bit and then comes back. Ethernet drops too and there aren't any big downloads running.",
+      "The home broadband disconnects for short periods each night on wired and wireless devices.",
+      "Every evening the internet connection disappears and reconnects even on Ethernet.",
+      "My router loses broadband periodically after dinner, affecting the wired computer as well.",
+      "The whole home internet connection repeatedly drops at night despite no heavy downloads."
+    ],
+    "MC01": [
+      "I get no mobile signal in my flat but it returns when I step outside. My partner has the same problem on this network.",
+      "My phone has hardly any bars indoors. Two phones lose reception here but both work outside the building.",
+      "Mobile network reception is weak inside this building but normal outdoors.",
+      "Cellular signal vanishes indoors on two handsets and comes back outside.",
+      "Both phones have poor mobile coverage at home although reception outside is fine.",
+      "We lose mobile network bars in the flat, while the same phones work on the street."
+    ],
+    "MC02": [
+      "None of us can get a mobile signal around here today. It isn't just my handset and going outside doesn't help.",
+      "My neighbours' phones and mine all lost network coverage at the same time, indoors and outside.",
+      "Several people nearby have no cellular coverage, even when outdoors.",
+      "The mobile network has disappeared across our neighbourhood on different phones.",
+      "Everyone in this area has lost reception today, including outside the buildings.",
+      "Multiple handsets cannot register on the mobile network anywhere around this street."
+    ],
+    "MD01": [
+      "I can call and text on the new phone but nothing loads on mobile data. Wi-Fi is fine and data is switched on.",
+      "Since changing my handset I can't use the internet away from Wi-Fi. Calls still work, and I've restarted already.",
+      "On my replacement handset mobile internet fails although calls and SMS work.",
+      "Cellular data is enabled but apps cannot connect on my new phone away from Wi-Fi.",
+      "After changing phones I have working voice calls but no mobile data connection.",
+      "The new handset connects for calls and messages but not for mobile internet."
+    ],
+    "MD02": [
+      "The internet on my phone has become painfully slow after using up most of my data allowance. Calls are fine.",
+      "Mobile data was fast earlier in the month and now it's crawling. My usage is close to the plan limit.",
+      "My cellular internet speed collapsed after nearly exhausting the monthly allowance.",
+      "Mobile browsing is extremely slow near the end of my data quota.",
+      "My phone data connection is crawling after using almost all of the plan allowance.",
+      "The mobile internet became slow this billing month when my data usage reached the limit."
+    ],
+    "NP01": [
+      "I tried moving my number to you but the transfer was rejected because the account details don't match.",
+      "My number port failed. The old operator says the name on the transfer request is different from their records.",
+      "My request to port my phone number was rejected for mismatched subscriber details.",
+      "The number transfer application failed because the registered account name differs.",
+      "Moving my existing mobile number failed due to a mismatch in the old account records.",
+      "The porting request was declined because the subscriber information does not match."
+    ],
+    "NP02": [
+      "I'm transferring my number tomorrow. The new SIM isn't working yet but my old one still does. Is that why?",
+      "My number hasn't switched over. The confirmed porting date is tomorrow and I'm still using the old line.",
+      "My mobile number transfer is scheduled for tomorrow and the new SIM is inactive today.",
+      "The porting date has not arrived yet; my old number still works on the original SIM.",
+      "I am waiting for the confirmed number migration slot, so the replacement SIM has no service.",
+      "My new SIM cannot connect before the scheduled transfer date for my existing number."
+    ],
+    "PR01": [
+      "I've paid the overdue bill and it shows completed, but my broadband is still cut off for nonpayment.",
+      "Can you reconnect my service? The bill is paid and settled in my account but the suspension is still there.",
+      "The overdue payment has settled but my service is still suspended for unpaid bills.",
+      "My account confirms the arrears are cleared yet the broadband restriction remains.",
+      "The outstanding invoice is paid successfully, but the disconnected service has not been restored.",
+      "Please restore the account that remains barred even though the overdue balance was paid."
+    ],
+    "PR02": [
+      "I paid to get my service back but the bank still says pending. My account says unpaid and I'm still disconnected.",
+      "My broadband was suspended. I've made the payment, though it hasn't cleared yet, and the service hasn't come back.",
+      "My reconnection payment is still pending at the bank and the service remains suspended.",
+      "The bank has not settled my overdue bill payment, and my internet is still barred.",
+      "I paid the arrears but the transfer is processing and the broadband account still says unpaid.",
+      "The service suspension remains while the bank payment for outstanding dues is unsettled."
+    ],
+    "RM01": [
+      "I'm overseas with a roaming pack. Calls work but I can't use data, and my account shows data roaming disabled.",
+      "My roaming package is active but the internet doesn't work abroad. The phone setting is on; the account setting seems off.",
+      "Abroad I have a roaming bundle and working calls, but account-level roaming data is disabled.",
+      "My travel mobile data fails although the handset roaming option is enabled and the pack is active.",
+      "International roaming calls work but the account shows a restriction on roaming internet.",
+      "I have an active overseas pack but cannot use data because roaming data is blocked on the account."
+    ],
+    "RM02": [
+      "I'm travelling abroad and my phone connects to a local network but mobile internet won't work. Another partner network is listed.",
+      "Roaming data isn't working on the foreign network I'm connected to. There is another supported operator available here.",
+      "My roaming data fails on the current foreign network although another approved partner is available.",
+      "Overseas mobile internet does not work on the selected local roaming operator.",
+      "The phone registered abroad on one partner network but roaming data will not connect there.",
+      "While travelling my mobile data fails on this roaming network; an alternative supported partner is listed."
+    ],
+    "SA01": [
+      "The replacement SIM won't activate. The number printed on the card isn't the one in my order.",
+      "I received a new SIM but it stays inactive. It looks like the card serial doesn't match what was registered.",
+      "The serial of my replacement SIM differs from the one registered for activation.",
+      "The physical SIM card is inactive and its identifier does not match the account order.",
+      "My new SIM cannot activate because the card number and provisioning record differ.",
+      "The replacement SIM serial is wrong in the activation order and I still have no service."
+    ],
+    "SA02": [
+      "My eSIM won't install on this phone because the QR code says already used. I scanned it on the old handset first.",
+      "I tried moving my eSIM to another phone but the activation code has already been used. How can I activate it here?",
+      "Installing my eSIM fails because its QR activation profile was already consumed.",
+      "I cannot move the eSIM to this handset using a previously used activation code.",
+      "The electronic SIM profile reports that the installation QR code has already been redeemed.",
+      "The eSIM download code is invalid on the new phone after being scanned on another device."
+    ],
+    "SM01": [
+      "My bank login texts never arrive. Normal SMS and codes from other services come through fine.",
+      "I can't receive the OTP from my bank, but other messages work. Please don't ask me to share the code.",
+      "Bank verification SMS are missing while ordinary texts and other OTP messages arrive.",
+      "Only my bank authentication text messages fail to reach my phone.",
+      "I receive regular SMS but cannot receive the bank verification code by text.",
+      "Banking login codes are absent from my inbox although SMS from other senders works."
+    ],
+    "SM02": [
+      "Texts come in but none of my messages will send. I've tried different numbers and restarted the phone.",
+      "I can receive SMS but sending always fails, even to ordinary contacts. It isn't just one recipient.",
+      "Outgoing text messages fail for all contacts although incoming SMS works.",
+      "My phone receives SMS but cannot send any text messages after restarting.",
+      "Sending an ordinary SMS fails regardless of the recipient; received messages are normal.",
+      "No outgoing SMS is delivered even to normal contacts, but incoming texts arrive."
+    ],
+    "SP01": [
+      "I upgraded my broadband to 300 but my wired speed tests still won't go above 100. Downloads are paused.",
+      "Why am I still getting my old internet speed after the upgrade? A cable test on a capable computer tops out at 100 Mbps.",
+      "The broadband upgrade did not increase wired throughput beyond my previous speed cap.",
+      "My new internet plan is faster but Ethernet speed tests still match the old tier.",
+      "A capable wired device measures only the previous broadband speed after the plan upgrade.",
+      "The upgraded broadband connection appears capped at the old speed on a wired test."
+    ],
+    "SP02": [
+      "Broadband is really slow on one wired computer but fast on the other. The slow PC says its link is only 100 Mbps.",
+      "Downloads crawl on my desktop over Ethernet. Another computer on the same router is much faster.",
+      "One Ethernet computer downloads slowly and reports a 100 Mbps link while another is fast.",
+      "Broadband speed is poor only on the desktop with a low negotiated wired link rate.",
+      "A second computer has normal internet speed but this wired PC is limited to a slower link.",
+      "The slow Ethernet machine negotiates 100 Mbps, while another wired device runs faster."
+    ],
+    "TV01": [
+      "Live TV keeps buffering on Wi-Fi. If I plug the set-top box into Ethernet the picture plays normally.",
+      "The television stream freezes over wireless but works over a cable to the box. Can you help with the TV connection?",
+      "The IPTV picture buffers on the wireless set-top box but plays normally with Ethernet.",
+      "Live television stutters when the box uses Wi-Fi and becomes smooth with a cable.",
+      "The TV stream keeps pausing over wireless although wired playback on the box works.",
+      "Connecting the set-top box by cable fixes the freezing television channels."
+    ],
+    "TV02": [
+      "I paid for new TV channels but they say not authorized. The channels I already had still work.",
+      "My new television package hasn't unlocked. Only the newly added channels show an authorization error.",
+      "Newly purchased TV channels show an entitlement error while existing channels play.",
+      "The television package upgrade has not authorized the extra channels I paid for.",
+      "Only the new subscribed channels are blocked by an authorization message.",
+      "My added TV channel pack remains locked although the original subscription still plays."
+    ],
+    "VC01": [
+      "I can't make any calls from my mobile. People can call me and data works, but every outgoing call fails.",
+      "My phone won't dial out to anyone even though incoming calls and the internet still work.",
+      "Outgoing mobile voice calls fail to every number while incoming calls work.",
+      "The phone cannot place calls although people can ring me and mobile data is working.",
+      "Dialling any number fails from my handset but receiving calls is normal.",
+      "I have working mobile internet and incoming calls but cannot make outgoing voice calls."
+    ],
+    "VC02": [
+      "Mobile calls keep disconnecting when I walk between rooms. They last longer if I stay still and data keeps working.",
+      "I keep losing voice calls as I move around the house. The phone's internet stays connected.",
+      "Voice calls disconnect as I move between rooms despite continued mobile data.",
+      "Moving around the house drops my mobile calls, while staying still keeps them connected.",
+      "The phone loses an active call when I walk indoors although its internet connection continues.",
+      "Mobile voice calls break during movement between indoor locations, but data stays available."
+    ],
+    "WF01": [
+      "Wi-Fi barely works upstairs but it's fine next to the router. My wired desktop has no problem.",
+      "The wireless connection is terrible in the bedroom, though internet over a cable works normally.",
+      "Wireless internet is poor far from the router but fast nearby, with normal wired service.",
+      "The upstairs Wi-Fi signal is weak while Ethernet internet works without trouble.",
+      "Home wireless connectivity fails in a distant room but the wired desktop stays online.",
+      "Wi-Fi performance improves beside the router, and the broadband works over Ethernet."
+    ],
+    "WF02": [
+      "Every evening the Wi-Fi gets really slow, but the computer plugged into Ethernet stays fast at the same time.",
+      "Wireless internet slows right down at night in my flat. Wired internet is still quick, so it seems to be just Wi-Fi.",
+      "Only wireless internet slows in the evenings; simultaneous wired speed remains normal.",
+      "At night the Wi-Fi connection crawls while Ethernet continues at normal speed.",
+      "Home wireless performance becomes poor after dinner but broadband over cable is still fast.",
+      "Evening internet trouble affects Wi-Fi devices only, with the wired computer unaffected."
+    ]
   }
 }

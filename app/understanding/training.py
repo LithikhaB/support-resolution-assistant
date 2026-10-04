@@ -85,7 +85,7 @@ def classification_metrics(rows: list[dict], predictions: list[str], classes: li
     }
 
 
-def train_classifier(settings: Settings, *, embedder=None) -> dict:
+def train_classifier(settings: Settings, *, embedder=None, report_path: Path | None = None) -> dict:
     """Compare fixed local feature baselines and publish one validated JSON classifier."""
     train = load_split(settings.corpus_dir, "train")
     base_examples = len(train)
@@ -199,5 +199,5 @@ def train_classifier(settings: Settings, *, embedder=None) -> dict:
             "note": "Conservative fixed heuristics, not calibrated confidence or proven OOD detection.",
         },
     }
-    write_json(settings.data_dir / "evaluation/understanding_development.json", report)
+    write_json(report_path or settings.data_dir / "evaluation/understanding_development.json", report)
     return report

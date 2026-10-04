@@ -40,5 +40,11 @@ def test_readiness_checks_schema(monkeypatch):
     client = TestClient(app)
     cursor.fetchone.return_value = (True, True, True, False)
     assert client.get("/api/v1/ready").status_code == 503
-    cursor.fetchone.return_value = (True, True, True, True)
-    assert client.get("/api/v1/ready").json() == {"status": "ready", "scope": "database_schema"}
+    for state in (None, ("building",), ("failed",)):
+        cursor.fetchone.side_effect = [(True, True, True, True), state]
+        assert client.get("/api/v1/ready").status_code == 503
+    cursor.fetchone.side_effect = [(True, True, True, True), ("ready",)]
+    assert client.get("/api/v1/ready").json() == {
+        "status": "ready",
+        "scope": "database_schema_and_index_state",
+    }

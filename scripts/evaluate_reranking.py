@@ -7,19 +7,13 @@ from statistics import mean, median
 from time import perf_counter
 
 from app.config.settings import get_settings
+from app.evaluation.metrics import relevance
 from app.evaluation.pipeline import verify_index
 from app.ingestion.artifacts import file_sha256, write_json
 from app.retrieval.models import SearchRequest
 from app.retrieval.reranking import get_reranking_service
 from app.retrieval.service import get_retrieval_service
 from app.understanding.training import load_split
-
-
-def relevance(results, relevant_ids, k):
-    """Measure ranked-chunk hit rate and reciprocal rank against authored KB document IDs."""
-    ids = [item.doc_id for item in results[:k]]
-    rank = next((index for index, doc_id in enumerate(ids, 1) if doc_id in relevant_ids), None)
-    return {"hit": int(rank is not None), "reciprocal_rank": 1 / rank if rank else 0.0}
 
 
 def main():

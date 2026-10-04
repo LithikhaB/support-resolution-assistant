@@ -1,4 +1,4 @@
-"""Build the staged synthetic corpus without changing the active HF corpus/database."""
+"""Build synthetic corpus files without changing the database."""
 
 import argparse
 import json

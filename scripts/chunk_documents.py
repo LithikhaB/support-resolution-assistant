@@ -25,7 +25,7 @@ def main() -> None:
     parser.add_argument(
         "--directory",
         type=Path,
-        help="Stage a separate processed corpus; defaults to DATA_DIR/processed",
+        help="Stage a separate processed corpus; defaults to CORPUS_DIR/processed",
     )
     args = parser.parse_args()
     if not 0 <= args.preview <= 10:
