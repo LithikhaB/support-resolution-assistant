@@ -57,7 +57,8 @@ def main() -> None:
     settings = get_settings()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--rebuild", action="store_true",
+        "--rebuild",
+        action="store_true",
         help="Re-embed tracked documents when the runtime configuration changes; preserve source rows and resume completed batches.",
     )
     args = parser.parse_args()

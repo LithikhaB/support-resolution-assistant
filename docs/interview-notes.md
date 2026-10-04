@@ -12,6 +12,8 @@ One Dockerized FastAPI microservice plus PostgreSQL/pgvector. Modules keep under
 
 Groq/Gemini receives the full taxonomy and few-shot examples in one structured call. This corrects the old bug where a weak local classifier limited the LLM to the wrong shortlist. Explicit local impact rules remain explainable; quoted LLM severity/sentiment fill gaps. MiniLM + logistic regression is the local fallback. Its scores are not guaranteed confidence, and its thresholds are selected on dev data during setup.
 
+All 30 prompt examples now come from training families; a provenance regression rejects held-out examples. Predicted category is advisory and cannot override a better-ranked applicable procedure. Extraction rules reject invented physical damage and unsupported calls-only observations. New class mappings are data-driven; local classifier support requires retraining rather than pretending the LLM taxonomy also updates model weights.
+
 ## Retrieval and grounded drafting
 
 Dense embeddings handle paraphrases. PostgreSQL full-text search handles lexical matches through a shared GIN index. RRF combines ranks, avoiding incomparable score scales. In-memory BM25 remains an exploration baseline. Optional reranking is more expensive on CPU.
@@ -35,6 +37,10 @@ Additive staging validates new records, preserves existing IDs and rejects split
 ## Production choices
 
 The image runs as non-root, the database and model cache are persistent, initialization is executable, and CI checks lint/tests and builds a downloadable API image. Timeouts, bounded concurrency, provider failover, index locks, readiness and sanitized errors protect the service. One worker limits CPU model memory; real replicas need a shared admission policy and appropriate resource limits. The supplied statement does not mandate a hosted deployment.
+
+The API stays local by default. Before exposing it publicly, add gateway authentication, per-client rate limits and centralized admission. PostgreSQL's shared lexical index avoids a separate per-worker BM25 corpus. Replicas duplicate embedding/reranker memory; scale only after measuring CPU latency and memory. Persist metrics with an external Prometheus collector because counters reset on process restart. Keep indexing separate from request-serving replicas and use the existing index lock for updates.
+
+For provider limits, pace evaluation and report quota failures explicitly. Cache repeated understanding/selection calls, keep each case to one relevant procedure, and retain a conditional local plan on failure. A model's grounding review is a quality check, not an independent guarantee. Never claim an adjustment, repair or external handoff has been performed.
 
 ## Honest limits
 

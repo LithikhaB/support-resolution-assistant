@@ -1,0 +1,2668 @@
+{
+  "provenance": "Five requested complaints; before code reconstructed from HEAD plus the pre-existing working-tree patch. Original v1 search chunks are unchanged in the v2 index. Not independent quality ratings.",
+  "baseline_patch_sha256": "798d4dd240d138f75245e19bcacec3b47cb1cc9323d756193cab29569863111f",
+  "before": [
+    {
+      "query": "My broadband drops every evening around 8 and I've already restarted the router twice, I work from home and this is costing me.",
+      "status": 200,
+      "response": {
+        "status": "needs_diagnostic_confirmation",
+        "decision": {
+          "action": "clarify",
+          "priority": "normal",
+          "reasons": [
+            "missing_customer_observations"
+          ],
+          "target": "support_agent",
+          "handoff_created": false
+        },
+        "validation": {
+          "status": "passed",
+          "checked_sources": 1,
+          "issues": [],
+          "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+        },
+        "method": "local_extractive_v1",
+        "language_summary": null,
+        "language_plan": null,
+        "language_draft": null,
+        "language_status": "disabled",
+        "language_model": null,
+        "language_provider": null,
+        "faithfulness_status": "not_run",
+        "faithfulness_issues": [],
+        "language_error": null,
+        "historical_cases": [
+          {
+            "citation_id": "T1",
+            "doc_id": "syn_ticket_BB01_06",
+            "chunk_id": 96,
+            "title": "Broadband outage support case",
+            "resolution": "Finding: Agent optical test reports no received signal; account is active. Action: Raise a fibre repair job; an authorized technician repairs the external span. Simulated follow-up: optical signal restored and wired browsing works.",
+            "outcome_status": "simulated_resolved",
+            "is_synthetic": true,
+            "relationship": "linked_procedure"
+          },
+          {
+            "citation_id": "T2",
+            "doc_id": "syn_ticket_BB02_04",
+            "chunk_id": 102,
+            "title": "Broadband outage support case",
+            "resolution": "Finding: Optical signal is healthy; the subscriber session is rejected after an account migration. Action: Authorized provisioning team corrects the subscriber session mapping and reconnects it. Simulated follow-up: session authenticates and both wired and wireless browsing work.",
+            "outcome_status": "simulated_resolved",
+            "is_synthetic": true,
+            "relationship": "similar_category"
+          }
+        ],
+        "agent_review_required": true,
+        "draft": "Draft for agent review. A cause has not been confirmed.\n\nAlready attempted, according to the customer: My broadband drops every evening around 8 and I've already restarted the router twice\n\nCustomer-reported observations: broadband drops\n\nClarify: During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?\n\nAnswer the clarification questions before choosing a repair. Retrieved procedures are attached for agent review, not recommended actions yet.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: clarify. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+        "analysis": {
+          "category": null,
+          "scope_status": "supported",
+          "scope_reason": "recognized_service_mention",
+          "category_status": "uncertain",
+          "category_basis": "uncertain",
+          "category_evidence": [],
+          "routing_policy": "development_selected_v1",
+          "candidates": [
+            {
+              "category": "intermittent_broadband",
+              "score": 0.39598139538282573
+            },
+            {
+              "category": "router_ont_hardware",
+              "score": 0.14021797986773832
+            },
+            {
+              "category": "broadband_outage",
+              "score": 0.10532237672401062
+            }
+          ],
+          "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+          "products": [
+            {
+              "text": "broadband",
+              "start": 3,
+              "end": 12,
+              "product": "broadband"
+            },
+            {
+              "text": "router",
+              "start": 73,
+              "end": 79,
+              "product": "router"
+            }
+          ],
+          "severity": {
+            "value": "medium",
+            "rule": "reported_degradation_or_work_impact",
+            "evidence": [
+              {
+                "text": "drops",
+                "start": 13,
+                "end": 18
+              }
+            ],
+            "method": "rules_v1"
+          },
+          "sentiment": {
+            "value": "unknown",
+            "rule": "no_explicit_tone",
+            "evidence": [],
+            "method": "rules_v1"
+          },
+          "actions": [
+            {
+              "text": "My broadband drops every evening around 8 and I've already restarted the router twice",
+              "start": 0,
+              "end": 85,
+              "action": "restart_device",
+              "status": "attempted"
+            }
+          ],
+          "reported_facts": [
+            {
+              "text": "broadband drops",
+              "start": 3,
+              "end": 18,
+              "name": "connection_pattern",
+              "value": "intermittent"
+            }
+          ],
+          "requests": [],
+          "needs_clarification": true,
+          "clarification_questions": [
+            "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?"
+          ],
+          "model_version": "6d3f3a9e1435b374",
+          "language_method": "rules_v1",
+          "language_provider": null,
+          "language_model": null,
+          "language_error": null,
+          "elapsed_ms": 25086.80920000188
+        },
+        "suggestions": [
+          {
+            "citation_id": "S1",
+            "required_finding": "Agent optical test reports no received signal; account is active.",
+            "proposed_action": "Raise a fibre repair job; an authorized technician repairs the external span.",
+            "restriction": "Do not factory-reset the router or tell the customer to handle exposed fibre.",
+            "status": "requires_agent_confirmation",
+            "repeated_actions": []
+          }
+        ],
+        "sources": [
+          {
+            "citation_id": "S1",
+            "doc_id": "syn_kb_BB01",
+            "chunk_id": 1,
+            "title": "External fibre break. — procedure",
+            "is_synthetic": true,
+            "authority": "fictional_provider_policy",
+            "quotes": [
+              {
+                "text": "fibre_broadband",
+                "start": 123,
+                "end": 138,
+                "field": "scope"
+              },
+              {
+                "text": "Agent optical test reports no received signal; account is active.",
+                "start": 290,
+                "end": 355,
+                "field": "condition"
+              },
+              {
+                "text": "Raise a fibre repair job; an authorized technician repairs the external span.",
+                "start": 393,
+                "end": 470,
+                "field": "action"
+              },
+              {
+                "text": "Do not factory-reset the router or tell the customer to handle exposed fibre.",
+                "start": 683,
+                "end": 760,
+                "field": "restriction"
+              }
+            ]
+          }
+        ],
+        "clarification_questions": [
+          "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?"
+        ],
+        "acknowledged_actions": [
+          "My broadband drops every evening around 8 and I've already restarted the router twice"
+        ],
+        "contact_status": "not_requested",
+        "customer_plan": {
+          "title": "One more detail",
+          "summary": "Your previous checks are noted. Review the next step and answer below.",
+          "steps": [
+            "Support check: Agent optical test reports no received signal; account is active. [S1]",
+            "If confirmed: Raise a fibre repair job; an authorized technician repairs the external span. [S1]"
+          ],
+          "note": "Do not factory-reset the router or tell the customer to handle exposed fibre. [S1]"
+        },
+        "limitations": [
+          "Extractive local drafting; no generative LLM is used.",
+          "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+          "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+        ],
+        "elapsed_ms": 33906.31889994256
+      }
+    },
+    {
+      "query": "Since the storm on Tuesday my internet cuts out for about a minute every hour or so. The router light stays green. I unplugged it for ten minutes, twice. I run a small online tailoring shop so it's costing me orders.",
+      "status": 200,
+      "response": {
+        "status": "needs_diagnostic_confirmation",
+        "decision": {
+          "action": "clarify",
+          "priority": "normal",
+          "reasons": [
+            "missing_customer_observations"
+          ],
+          "target": "support_agent",
+          "handoff_created": false
+        },
+        "validation": {
+          "status": "passed",
+          "checked_sources": 1,
+          "issues": [],
+          "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+        },
+        "method": "local_extractive_v1",
+        "language_summary": null,
+        "language_plan": null,
+        "language_draft": null,
+        "language_status": "disabled",
+        "language_model": null,
+        "language_provider": null,
+        "faithfulness_status": "not_run",
+        "faithfulness_issues": [],
+        "language_error": null,
+        "historical_cases": [
+          {
+            "citation_id": "T1",
+            "doc_id": "syn_ticket_ID02_02",
+            "chunk_id": 148,
+            "title": "Intermittent broadband support case",
+            "resolution": "Finding: Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment. Action: Network operations rebalance capacity and monitor the affected segment during peak hours. Simulated follow-up: peak-hour packet loss subsides and calls stay connected.",
+            "outcome_status": "simulated_resolved",
+            "is_synthetic": true,
+            "relationship": "linked_procedure"
+          },
+          {
+            "citation_id": "T2",
+            "doc_id": "syn_ticket_ID01_02",
+            "chunk_id": 140,
+            "title": "Intermittent broadband support case",
+            "resolution": "Finding: Optical loss events align with rain; technician finds moisture at an external joint. Action: Dispatch an authorized technician to repair and seal the damaged joint. Simulated follow-up: no optical loss events during the next wet-weather observation.",
+            "outcome_status": "simulated_resolved",
+            "is_synthetic": true,
+            "relationship": "similar_category"
+          }
+        ],
+        "agent_review_required": true,
+        "draft": "Draft for agent review. A cause has not been confirmed.\n\nAlready attempted, according to the customer: I unplugged it for ten minutes\n\nCustomer-reported observations: internet cuts out\n\nClarify: During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?\n\nAnswer the clarification questions before choosing a repair. Retrieved procedures are attached for agent review, not recommended actions yet.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: clarify. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+        "analysis": {
+          "category": null,
+          "scope_status": "supported",
+          "scope_reason": "recognized_service_mention",
+          "category_status": "uncertain",
+          "category_basis": "uncertain",
+          "category_evidence": [],
+          "routing_policy": "development_selected_v1",
+          "candidates": [
+            {
+              "category": "intermittent_broadband",
+              "score": 0.3431297916112021
+            },
+            {
+              "category": "router_ont_hardware",
+              "score": 0.2969892871896049
+            },
+            {
+              "category": "broadband_outage",
+              "score": 0.1009296944638533
+            }
+          ],
+          "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+          "products": [
+            {
+              "text": "internet",
+              "start": 30,
+              "end": 38,
+              "product": "broadband"
+            },
+            {
+              "text": "router",
+              "start": 89,
+              "end": 95,
+              "product": "router"
+            }
+          ],
+          "severity": {
+            "value": "medium",
+            "rule": "reported_degradation_or_work_impact",
+            "evidence": [
+              {
+                "text": "cuts out",
+                "start": 39,
+                "end": 47
+              }
+            ],
+            "method": "rules_v1"
+          },
+          "sentiment": {
+            "value": "unknown",
+            "rule": "no_explicit_tone",
+            "evidence": [],
+            "method": "rules_v1"
+          },
+          "actions": [
+            {
+              "text": "I unplugged it for ten minutes",
+              "start": 115,
+              "end": 145,
+              "action": "restart_device",
+              "status": "attempted"
+            }
+          ],
+          "reported_facts": [
+            {
+              "text": "internet cuts out",
+              "start": 30,
+              "end": 47,
+              "name": "connection_pattern",
+              "value": "intermittent"
+            }
+          ],
+          "requests": [],
+          "needs_clarification": true,
+          "clarification_questions": [
+            "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?"
+          ],
+          "model_version": "6d3f3a9e1435b374",
+          "language_method": "rules_v1",
+          "language_provider": null,
+          "language_model": null,
+          "language_error": null,
+          "elapsed_ms": 84.67400004155934
+        },
+        "suggestions": [
+          {
+            "citation_id": "S1",
+            "required_finding": "Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment.",
+            "proposed_action": "Network operations rebalance capacity and monitor the affected segment during peak hours.",
+            "restriction": "Do not promise that a Wi-Fi channel change will repair provider congestion.",
+            "status": "requires_agent_confirmation",
+            "repeated_actions": []
+          }
+        ],
+        "sources": [
+          {
+            "citation_id": "S1",
+            "doc_id": "syn_kb_ID02",
+            "chunk_id": 14,
+            "title": "Congested access segment. — procedure",
+            "is_synthetic": true,
+            "authority": "fictional_provider_policy",
+            "quotes": [
+              {
+                "text": "fibre_broadband",
+                "start": 127,
+                "end": 142,
+                "field": "scope"
+              },
+              {
+                "text": "Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment.",
+                "start": 300,
+                "end": 394,
+                "field": "condition"
+              },
+              {
+                "text": "Network operations rebalance capacity and monitor the affected segment during peak hours.",
+                "start": 432,
+                "end": 521,
+                "field": "action"
+              },
+              {
+                "text": "Do not promise that a Wi-Fi channel change will repair provider congestion.",
+                "start": 741,
+                "end": 816,
+                "field": "restriction"
+              }
+            ]
+          }
+        ],
+        "clarification_questions": [
+          "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?"
+        ],
+        "acknowledged_actions": [
+          "I unplugged it for ten minutes"
+        ],
+        "contact_status": "not_requested",
+        "customer_plan": {
+          "title": "One more detail",
+          "summary": "Your previous checks are noted. Review the next step and answer below.",
+          "steps": [
+            "Support check: Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment. [S1]",
+            "If confirmed: Network operations rebalance capacity and monitor the affected segment during peak hours. [S1]"
+          ],
+          "note": "Do not promise that a Wi-Fi channel change will repair provider congestion. [S1]"
+        },
+        "limitations": [
+          "Extractive local drafting; no generative LLM is used.",
+          "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+          "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+        ],
+        "elapsed_ms": 9195.726200006902
+      }
+    },
+    {
+      "query": "My bill shows two settled payments for the same invoice. I want the duplicate payment checked.",
+      "status": 200,
+      "response": {
+        "status": "needs_diagnostic_confirmation",
+        "decision": {
+          "action": "agent_review",
+          "priority": "normal",
+          "reasons": [
+            "diagnostic_confirmation_required"
+          ],
+          "target": "support_agent",
+          "handoff_created": false
+        },
+        "validation": {
+          "status": "passed",
+          "checked_sources": 1,
+          "issues": [],
+          "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+        },
+        "method": "local_extractive_v1",
+        "language_summary": null,
+        "language_plan": null,
+        "language_draft": null,
+        "language_status": "disabled",
+        "language_model": null,
+        "language_provider": null,
+        "faithfulness_status": "not_run",
+        "faithfulness_issues": [],
+        "language_error": null,
+        "historical_cases": [
+          {
+            "citation_id": "T1",
+            "doc_id": "syn_ticket_BD01_07",
+            "chunk_id": 113,
+            "title": "Billing dispute support case",
+            "resolution": "Finding: Ledger confirms duplicate settled payments against one invoice. Action: Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment. Simulated follow-up: adjustment appears in the ledger and is communicated to the customer.",
+            "outcome_status": "simulated_resolved",
+            "is_synthetic": true,
+            "relationship": "linked_procedure"
+          },
+          {
+            "citation_id": "T2",
+            "doc_id": "syn_ticket_BD02_08",
+            "chunk_id": 122,
+            "title": "Billing dispute support case",
+            "resolution": "Finding: Audit trail has no valid consent record for the add-on. Action: Billing staff investigate consent, remove the unsupported charge through policy, and document the decision. Simulated follow-up: corrected invoice excludes the unsupported add-on.",
+            "outcome_status": "simulated_resolved",
+            "is_synthetic": true,
+            "relationship": "similar_category"
+          }
+        ],
+        "agent_review_required": true,
+        "draft": "Draft for agent review. A cause has not been confirmed.\n\nCustomer-reported observations: two settled; two settled payments\n\n[S1] Ask an authorized agent to verify: Ledger confirms duplicate settled payments against one invoice. Only if confirmed, the procedure proposes: Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment.\n\n[S1] Restriction: Do not refund a pending authorization or promise a universal refund deadline.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: agent_review. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+        "analysis": {
+          "category": "billing_dispute",
+          "scope_status": "supported",
+          "scope_reason": "recognized_service_mention",
+          "category_status": "predicted",
+          "category_basis": "model",
+          "category_evidence": [],
+          "routing_policy": "development_selected_v1",
+          "candidates": [
+            {
+              "category": "billing_dispute",
+              "score": 0.9154230607394883
+            },
+            {
+              "category": "payment_restoration",
+              "score": 0.03609937900876831
+            },
+            {
+              "category": "number_porting",
+              "score": 0.0075946717311510675
+            }
+          ],
+          "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+          "products": [
+            {
+              "text": "bill",
+              "start": 3,
+              "end": 7,
+              "product": "billing"
+            }
+          ],
+          "severity": {
+            "value": "low",
+            "rule": "reported_billing_question",
+            "evidence": [
+              {
+                "text": "duplicate payment",
+                "start": 68,
+                "end": 85
+              }
+            ],
+            "method": "rules_v1"
+          },
+          "sentiment": {
+            "value": "unknown",
+            "rule": "no_explicit_tone",
+            "evidence": [],
+            "method": "rules_v1"
+          },
+          "actions": [],
+          "reported_facts": [
+            {
+              "text": "two settled",
+              "start": 14,
+              "end": 25,
+              "name": "billing_status",
+              "value": "settled"
+            },
+            {
+              "text": "two settled payments",
+              "start": 14,
+              "end": 34,
+              "name": "charge",
+              "value": "bill_payment"
+            }
+          ],
+          "requests": [],
+          "needs_clarification": false,
+          "clarification_questions": [],
+          "model_version": "6d3f3a9e1435b374",
+          "language_method": "rules_v1",
+          "language_provider": null,
+          "language_model": null,
+          "language_error": null,
+          "elapsed_ms": 46.961599960923195
+        },
+        "suggestions": [
+          {
+            "citation_id": "S1",
+            "required_finding": "Ledger confirms duplicate settled payments against one invoice.",
+            "proposed_action": "Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment.",
+            "restriction": "Do not refund a pending authorization or promise a universal refund deadline.",
+            "status": "requires_agent_confirmation",
+            "repeated_actions": []
+          }
+        ],
+        "sources": [
+          {
+            "citation_id": "S1",
+            "doc_id": "syn_kb_BD01",
+            "chunk_id": 5,
+            "title": "Duplicate settled payment. — procedure",
+            "is_synthetic": true,
+            "authority": "fictional_provider_policy",
+            "quotes": [
+              {
+                "text": "billing",
+                "start": 128,
+                "end": 135,
+                "field": "scope"
+              },
+              {
+                "text": "Ledger confirms duplicate settled payments against one invoice.",
+                "start": 286,
+                "end": 349,
+                "field": "condition"
+              },
+              {
+                "text": "Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment.",
+                "start": 387,
+                "end": 488,
+                "field": "action"
+              },
+              {
+                "text": "Do not refund a pending authorization or promise a universal refund deadline.",
+                "start": 721,
+                "end": 798,
+                "field": "restriction"
+              }
+            ]
+          }
+        ],
+        "clarification_questions": [],
+        "acknowledged_actions": [],
+        "contact_status": "not_requested",
+        "customer_plan": {
+          "title": "Recommended next steps",
+          "summary": "Start with the check below. Use the suggested action only after the finding is confirmed.",
+          "steps": [
+            "Support check: Ledger confirms duplicate settled payments against one invoice. [S1]",
+            "If confirmed: Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment. [S1]"
+          ],
+          "note": "Do not refund a pending authorization or promise a universal refund deadline. [S1]"
+        },
+        "limitations": [
+          "Extractive local drafting; no generative LLM is used.",
+          "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+          "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+        ],
+        "elapsed_ms": 8654.02439981699
+      }
+    },
+    {
+      "query": "My Wi-Fi drops on every wireless device but Ethernet stays working.",
+      "status": 200,
+      "response": {
+        "status": "needs_diagnostic_confirmation",
+        "decision": {
+          "action": "clarify",
+          "priority": "normal",
+          "reasons": [
+            "missing_customer_observations"
+          ],
+          "target": "support_agent",
+          "handoff_created": false
+        },
+        "validation": {
+          "status": "passed",
+          "checked_sources": 1,
+          "issues": [],
+          "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+        },
+        "method": "local_extractive_v1",
+        "language_summary": null,
+        "language_plan": null,
+        "language_draft": null,
+        "language_status": "disabled",
+        "language_model": null,
+        "language_provider": null,
+        "faithfulness_status": "not_run",
+        "faithfulness_issues": [],
+        "language_error": null,
+        "historical_cases": [
+          {
+            "citation_id": "T1",
+            "doc_id": "syn_ticket_WF02_01",
+            "chunk_id": 323,
+            "title": "Wifi connectivity support case",
+            "resolution": "Finding: Wireless survey shows a crowded channel; wired tests and WAN counters are normal. Action: Choose an appropriate supported channel or band after checking device compatibility. Simulated follow-up: wireless retries decrease and the evening test improves.",
+            "outcome_status": "simulated_resolved",
+            "is_synthetic": true,
+            "relationship": "linked_procedure"
+          },
+          {
+            "citation_id": "T2",
+            "doc_id": "syn_ticket_WF01_07",
+            "chunk_id": 321,
+            "title": "Wifi connectivity support case",
+            "resolution": "Finding: Coverage survey shows weak signal behind several walls; WAN is stable. Action: Reposition the access point safely; assess a supported mesh node if coverage remains inadequate. Simulated follow-up: signal and browsing improve in the previously affected room.",
+            "outcome_status": "simulated_resolved",
+            "is_synthetic": true,
+            "relationship": "similar_category"
+          }
+        ],
+        "agent_review_required": true,
+        "draft": "Draft for agent review. A cause has not been confirmed.\n\nCustomer-reported observations: Wi-Fi drops\n\nClarify: During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?\n\nAnswer the clarification questions before choosing a repair. Retrieved procedures are attached for agent review, not recommended actions yet.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: clarify. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+        "analysis": {
+          "category": null,
+          "scope_status": "supported",
+          "scope_reason": "recognized_service_mention",
+          "category_status": "uncertain",
+          "category_basis": "uncertain",
+          "category_evidence": [],
+          "routing_policy": "development_selected_v1",
+          "candidates": [
+            {
+              "category": "intermittent_broadband",
+              "score": 0.4569817627991854
+            },
+            {
+              "category": "wifi_connectivity",
+              "score": 0.30831561541425634
+            },
+            {
+              "category": "iptv",
+              "score": 0.042049665850693946
+            }
+          ],
+          "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+          "products": [
+            {
+              "text": "Wi-Fi",
+              "start": 3,
+              "end": 8,
+              "product": "home_wifi"
+            },
+            {
+              "text": "Ethernet",
+              "start": 44,
+              "end": 52,
+              "product": "broadband"
+            }
+          ],
+          "severity": {
+            "value": "medium",
+            "rule": "reported_degradation_or_work_impact",
+            "evidence": [
+              {
+                "text": "drops",
+                "start": 9,
+                "end": 14
+              }
+            ],
+            "method": "rules_v1"
+          },
+          "sentiment": {
+            "value": "unknown",
+            "rule": "no_explicit_tone",
+            "evidence": [],
+            "method": "rules_v1"
+          },
+          "actions": [],
+          "reported_facts": [
+            {
+              "text": "Wi-Fi drops",
+              "start": 3,
+              "end": 14,
+              "name": "connection_pattern",
+              "value": "intermittent"
+            }
+          ],
+          "requests": [],
+          "needs_clarification": true,
+          "clarification_questions": [
+            "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?"
+          ],
+          "model_version": "6d3f3a9e1435b374",
+          "language_method": "rules_v1",
+          "language_provider": null,
+          "language_model": null,
+          "language_error": null,
+          "elapsed_ms": 66.512499935925
+        },
+        "suggestions": [
+          {
+            "citation_id": "S1",
+            "required_finding": "Wireless survey shows a crowded channel; wired tests and WAN counters are normal.",
+            "proposed_action": "Choose an appropriate supported channel or band after checking device compatibility.",
+            "restriction": "Do not blame provider backhaul when concurrent Ethernet tests are normal.",
+            "status": "requires_agent_confirmation",
+            "repeated_actions": []
+          }
+        ],
+        "sources": [
+          {
+            "citation_id": "S1",
+            "doc_id": "syn_kb_WF02",
+            "chunk_id": 58,
+            "title": "Wireless channel contention. — procedure",
+            "is_synthetic": true,
+            "authority": "fictional_provider_policy",
+            "quotes": [
+              {
+                "text": "home_wifi",
+                "start": 130,
+                "end": 139,
+                "field": "scope"
+              },
+              {
+                "text": "Wireless survey shows a crowded channel; wired tests and WAN counters are normal.",
+                "start": 292,
+                "end": 373,
+                "field": "condition"
+              },
+              {
+                "text": "Choose an appropriate supported channel or band after checking device compatibility.",
+                "start": 411,
+                "end": 495,
+                "field": "action"
+              },
+              {
+                "text": "Do not blame provider backhaul when concurrent Ethernet tests are normal.",
+                "start": 715,
+                "end": 788,
+                "field": "restriction"
+              }
+            ]
+          }
+        ],
+        "clarification_questions": [
+          "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?"
+        ],
+        "acknowledged_actions": [],
+        "contact_status": "not_requested",
+        "customer_plan": {
+          "title": "One more detail",
+          "summary": "Please answer below so I can suggest the next step.",
+          "steps": [
+            "Support check: Wireless survey shows a crowded channel; wired tests and WAN counters are normal. [S1]",
+            "If confirmed: Choose an appropriate supported channel or band after checking device compatibility. [S1]"
+          ],
+          "note": "Do not blame provider backhaul when concurrent Ethernet tests are normal. [S1]"
+        },
+        "limitations": [
+          "Extractive local drafting; no generative LLM is used.",
+          "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+          "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+        ],
+        "elapsed_ms": 8980.22080003284
+      }
+    },
+    {
+      "query": "Our entire street lost broadband at 9am and several neighbours are offline.",
+      "status": 200,
+      "response": {
+        "status": "needs_diagnostic_confirmation",
+        "decision": {
+          "action": "escalate",
+          "priority": "urgent",
+          "reasons": [
+            "reported_area_outage"
+          ],
+          "target": "network_operations",
+          "handoff_created": false
+        },
+        "validation": {
+          "status": "passed",
+          "checked_sources": 1,
+          "issues": [],
+          "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+        },
+        "method": "local_extractive_v1",
+        "language_summary": null,
+        "language_plan": null,
+        "language_draft": null,
+        "language_status": "disabled",
+        "language_model": null,
+        "language_provider": null,
+        "faithfulness_status": "not_run",
+        "faithfulness_issues": [],
+        "language_error": null,
+        "historical_cases": [
+          {
+            "citation_id": "T1",
+            "doc_id": "syn_ticket_BB01_02",
+            "chunk_id": 92,
+            "title": "Broadband outage support case",
+            "resolution": "Finding: Agent optical test reports no received signal; account is active. Action: Raise a fibre repair job; an authorized technician repairs the external span. Simulated follow-up: optical signal restored and wired browsing works.",
+            "outcome_status": "simulated_resolved",
+            "is_synthetic": true,
+            "relationship": "similar_category"
+          },
+          {
+            "citation_id": "T2",
+            "doc_id": "syn_ticket_BB02_06",
+            "chunk_id": 104,
+            "title": "Broadband outage support case",
+            "resolution": "Finding: Optical signal is healthy; the subscriber session is rejected after an account migration. Action: Authorized provisioning team corrects the subscriber session mapping and reconnects it. Simulated follow-up: session authenticates and both wired and wireless browsing work.",
+            "outcome_status": "simulated_resolved",
+            "is_synthetic": true,
+            "relationship": "similar_category"
+          }
+        ],
+        "agent_review_required": true,
+        "draft": "Draft for agent review. A cause has not been confirmed.\n\nCustomer-reported observations: at 9am\n\nClarify: Which area is affected? Do not delay incident review while collecting these details.\n\n[S1] Ask an authorized agent to verify: Provider incident record confirms a regional aggregation outage affecting multiple buildings. Only if confirmed, the procedure proposes: Link affected lines to the major incident; network operations restore the failed equipment and provide a status update.\n\n[S1] Restriction: Do not promise a restoration time before network operations supplies one.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: escalate. Priority: urgent. Recommended reviewer: network_operations. No external handoff has been created.",
+        "analysis": {
+          "category": "broadband_outage",
+          "scope_status": "supported",
+          "scope_reason": "recognized_service_mention",
+          "category_status": "predicted",
+          "category_basis": "explicit_report",
+          "category_evidence": [
+            {
+              "text": "entire street",
+              "start": 4,
+              "end": 17
+            },
+            {
+              "text": "lost",
+              "start": 18,
+              "end": 22
+            }
+          ],
+          "routing_policy": "development_selected_v1",
+          "candidates": [
+            {
+              "category": "mobile_coverage",
+              "score": 0.27542818886504655
+            },
+            {
+              "category": "intermittent_broadband",
+              "score": 0.19153983220059073
+            },
+            {
+              "category": "broadband_outage",
+              "score": 0.1779912116357808
+            }
+          ],
+          "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+          "products": [
+            {
+              "text": "broadband",
+              "start": 23,
+              "end": 32,
+              "product": "broadband"
+            }
+          ],
+          "severity": {
+            "value": "critical",
+            "rule": "reported_area_outage",
+            "evidence": [
+              {
+                "text": "entire street",
+                "start": 4,
+                "end": 17
+              },
+              {
+                "text": "lost",
+                "start": 18,
+                "end": 22
+              }
+            ],
+            "method": "rules_v1"
+          },
+          "sentiment": {
+            "value": "unknown",
+            "rule": "no_explicit_tone",
+            "evidence": [],
+            "method": "rules_v1"
+          },
+          "actions": [],
+          "reported_facts": [
+            {
+              "text": "at 9am",
+              "start": 33,
+              "end": 39,
+              "name": "started",
+              "value": "reported"
+            }
+          ],
+          "requests": [],
+          "needs_clarification": true,
+          "clarification_questions": [
+            "Which area is affected? Do not delay incident review while collecting these details."
+          ],
+          "model_version": "6d3f3a9e1435b374",
+          "language_method": "rules_v1",
+          "language_provider": null,
+          "language_model": null,
+          "language_error": null,
+          "elapsed_ms": 41.94060014560819
+        },
+        "suggestions": [
+          {
+            "citation_id": "S1",
+            "required_finding": "Provider incident record confirms a regional aggregation outage affecting multiple buildings.",
+            "proposed_action": "Link affected lines to the major incident; network operations restore the failed equipment and provide a status update.",
+            "restriction": "Do not promise a restoration time before network operations supplies one.",
+            "status": "requires_agent_confirmation",
+            "repeated_actions": []
+          }
+        ],
+        "sources": [
+          {
+            "citation_id": "S1",
+            "doc_id": "syn_kb_BB03",
+            "chunk_id": 3,
+            "title": "Regional aggregation equipment failure. — procedure",
+            "is_synthetic": true,
+            "authority": "fictional_provider_policy",
+            "quotes": [
+              {
+                "text": "fibre_broadband",
+                "start": 141,
+                "end": 156,
+                "field": "scope"
+              },
+              {
+                "text": "Provider incident record confirms a regional aggregation outage affecting multiple buildings.",
+                "start": 308,
+                "end": 401,
+                "field": "condition"
+              },
+              {
+                "text": "Link affected lines to the major incident; network operations restore the failed equipment and provide a status update.",
+                "start": 439,
+                "end": 558,
+                "field": "action"
+              },
+              {
+                "text": "Do not promise a restoration time before network operations supplies one.",
+                "start": 773,
+                "end": 846,
+                "field": "restriction"
+              }
+            ]
+          }
+        ],
+        "clarification_questions": [
+          "Which area is affected? Do not delay incident review while collecting these details."
+        ],
+        "acknowledged_actions": [],
+        "contact_status": "not_requested",
+        "customer_plan": {
+          "title": "Report the shared outage to your provider",
+          "summary": "Several people or locations are affected. This needs a provider incident check rather than repeated device resets.",
+          "steps": [
+            "Ask your provider whether a network incident is open for your area and request an update reference."
+          ],
+          "note": "This assistant has not checked live network status or opened a provider ticket."
+        },
+        "limitations": [
+          "Extractive local drafting; no generative LLM is used.",
+          "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+          "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+        ],
+        "elapsed_ms": 8707.942999899387
+      }
+    }
+  ],
+  "after": [
+    {
+      "query": "My broadband drops every evening around 8 and I've already restarted the router twice, I work from home and this is costing me.",
+      "status": 200,
+      "response": {
+        "issues": [
+          {
+            "issue_id": 1,
+            "complaint": "My broadband drops every evening around 8 and I've already restarted the router twice, I work from home and this is costing me.",
+            "analysis_text": "My broadband drops every evening around 8 and I've already restarted the router twice, I work from home and this is costing me.",
+            "resolution": {
+              "status": "needs_diagnostic_confirmation",
+              "decision": {
+                "action": "clarify",
+                "priority": "high",
+                "reasons": [
+                  "missing_customer_observations"
+                ],
+                "target": "support_agent",
+                "handoff_created": false
+              },
+              "validation": {
+                "status": "passed",
+                "checked_sources": 2,
+                "issues": [],
+                "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+              },
+              "method": "local_extractive_v1",
+              "language_summary": null,
+              "language_plan": null,
+              "language_draft": null,
+              "language_status": "disabled",
+              "language_model": null,
+              "language_provider": null,
+              "faithfulness_status": "not_run",
+              "faithfulness_issues": [],
+              "language_error": null,
+              "historical_cases": [
+                {
+                  "citation_id": "T1",
+                  "doc_id": "syn_ticket_ID02_04",
+                  "chunk_id": 150,
+                  "title": "Intermittent broadband support case",
+                  "resolution": "Finding: Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment. Action: Network operations rebalance capacity and monitor the affected segment during peak hours. Simulated follow-up: peak-hour packet loss subsides and calls stay connected.",
+                  "outcome_status": "simulated_resolved",
+                  "is_synthetic": true,
+                  "relationship": "linked_procedure"
+                },
+                {
+                  "citation_id": "T2",
+                  "doc_id": "syn_ticket_ID01_02",
+                  "chunk_id": 140,
+                  "title": "Intermittent broadband support case",
+                  "resolution": "Finding: Optical loss events align with rain; technician finds moisture at an external joint. Action: Dispatch an authorized technician to repair and seal the damaged joint. Simulated follow-up: no optical loss events during the next wet-weather observation.",
+                  "outcome_status": "simulated_resolved",
+                  "is_synthetic": true,
+                  "relationship": "similar_category"
+                }
+              ],
+              "agent_review_required": true,
+              "draft": "Draft for agent review. A cause has not been confirmed.\n\nAlready attempted, according to the customer: I've already restarted the router twice\n\nCustomer-reported observations: broadband drops; evening\n\nClarify: During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?\n\nAnswer the clarification questions before choosing a repair. Retrieved procedures are attached for agent review, not recommended actions yet.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: clarify. Priority: high. Recommended reviewer: support_agent. No external handoff has been created.",
+              "analysis": {
+                "category": "intermittent_broadband",
+                "scope_status": "supported",
+                "scope_reason": "recognized_service_mention",
+                "category_status": "predicted",
+                "category_basis": "explicit_report",
+                "category_evidence": [
+                  {
+                    "text": "broadband drops",
+                    "start": 3,
+                    "end": 18
+                  }
+                ],
+                "routing_policy": "development_selected_v1",
+                "candidates": [
+                  {
+                    "category": "intermittent_broadband",
+                    "score": 0.39598139538282573
+                  },
+                  {
+                    "category": "router_ont_hardware",
+                    "score": 0.14021797986773832
+                  },
+                  {
+                    "category": "broadband_outage",
+                    "score": 0.10532237672401062
+                  }
+                ],
+                "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                "products": [
+                  {
+                    "text": "broadband",
+                    "start": 3,
+                    "end": 12,
+                    "product": "broadband"
+                  },
+                  {
+                    "text": "router",
+                    "start": 73,
+                    "end": 79,
+                    "product": "router"
+                  }
+                ],
+                "severity": {
+                  "value": "high",
+                  "rule": "reported_business_impact",
+                  "evidence": [
+                    {
+                      "text": "costing me",
+                      "start": 116,
+                      "end": 126
+                    }
+                  ],
+                  "method": "rules_v1"
+                },
+                "sentiment": {
+                  "value": "frustrated",
+                  "rule": "explicit_tone",
+                  "evidence": [
+                    {
+                      "text": "costing me",
+                      "start": 116,
+                      "end": 126
+                    }
+                  ],
+                  "method": "rules_v1"
+                },
+                "actions": [
+                  {
+                    "text": "I've already restarted the router twice",
+                    "start": 46,
+                    "end": 85,
+                    "action": "restart_device",
+                    "status": "attempted"
+                  }
+                ],
+                "reported_facts": [
+                  {
+                    "text": "broadband drops",
+                    "start": 3,
+                    "end": 18,
+                    "name": "connection_pattern",
+                    "value": "intermittent"
+                  },
+                  {
+                    "text": "evening",
+                    "start": 25,
+                    "end": 32,
+                    "name": "timing",
+                    "value": "peak_hours"
+                  }
+                ],
+                "requests": [],
+                "needs_clarification": true,
+                "clarification_questions": [
+                  "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?"
+                ],
+                "model_version": "6d3f3a9e1435b374",
+                "language_method": "rules_v1",
+                "language_provider": null,
+                "language_model": null,
+                "language_error": null,
+                "elapsed_ms": 35785.07800004445
+              },
+              "suggestions": [
+                {
+                  "citation_id": "S1",
+                  "required_finding": "Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment.",
+                  "proposed_action": "Network operations rebalance capacity and monitor the affected segment during peak hours.",
+                  "restriction": "Do not promise that a Wi-Fi channel change will repair provider congestion.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                },
+                {
+                  "citation_id": "S2",
+                  "required_finding": "Authorized technician reproduces voltage drops with the ONT power adapter.",
+                  "proposed_action": "Replace the adapter with the provider-approved matching unit.",
+                  "restriction": "Do not suggest opening the adapter or using an incompatible supply.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                }
+              ],
+              "sources": [
+                {
+                  "citation_id": "S1",
+                  "doc_id": "syn_kb_ID02",
+                  "chunk_id": 14,
+                  "title": "Congested access segment. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "fibre_broadband",
+                      "start": 81,
+                      "end": 96,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment.",
+                      "start": 622,
+                      "end": 716,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Network operations rebalance capacity and monitor the affected segment during peak hours.",
+                      "start": 754,
+                      "end": 843,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not promise that a Wi-Fi channel change will repair provider congestion.",
+                      "start": 1029,
+                      "end": 1104,
+                      "field": "restriction"
+                    },
+                    {
+                      "text": "Record the affected service, onset, frequency and customer impact. Review completed checks and their results.",
+                      "start": 148,
+                      "end": 257,
+                      "field": "verify"
+                    },
+                    {
+                      "text": "Ask whether a wired device is affected during the same failure. Record status lights without treating their colour as a verified line test.",
+                      "start": 275,
+                      "end": 414,
+                      "field": "customer_checks"
+                    },
+                    {
+                      "text": "Use authorized provider records or diagnostics to check every part of this gate: Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment.",
+                      "start": 429,
+                      "end": 604,
+                      "field": "agent_checks"
+                    },
+                    {
+                      "text": "If the gate is unconfirmed, contradictory or outside the agent's authority, route for specialist investigation with the observations; do not apply the remedy.",
+                      "start": 857,
+                      "end": 1015,
+                      "field": "escalate_if"
+                    },
+                    {
+                      "text": "peak-hour packet loss subsides and calls stay connected.",
+                      "start": 1117,
+                      "end": 1173,
+                      "field": "completion"
+                    }
+                  ],
+                  "quote_scope": "parent_document"
+                },
+                {
+                  "citation_id": "S2",
+                  "doc_id": "syn_kb_ID04",
+                  "chunk_id": 16,
+                  "title": "Failing ONT power adapter. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "fibre_broadband",
+                      "start": 81,
+                      "end": 96,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Authorized technician reproduces voltage drops with the ONT power adapter.",
+                      "start": 602,
+                      "end": 676,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Replace the adapter with the provider-approved matching unit.",
+                      "start": 714,
+                      "end": 775,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not suggest opening the adapter or using an incompatible supply.",
+                      "start": 961,
+                      "end": 1028,
+                      "field": "restriction"
+                    },
+                    {
+                      "text": "Record the affected service, onset, frequency and customer impact. Review completed checks and their results.",
+                      "start": 148,
+                      "end": 257,
+                      "field": "verify"
+                    },
+                    {
+                      "text": "Ask whether a wired device is affected during the same failure. Record status lights without treating their colour as a verified line test.",
+                      "start": 275,
+                      "end": 414,
+                      "field": "customer_checks"
+                    },
+                    {
+                      "text": "Use authorized provider records or diagnostics to check every part of this gate: Authorized technician reproduces voltage drops with the ONT power adapter.",
+                      "start": 429,
+                      "end": 584,
+                      "field": "agent_checks"
+                    },
+                    {
+                      "text": "If the gate is unconfirmed, contradictory or outside the agent's authority, route for specialist investigation with the observations; do not apply the remedy.",
+                      "start": 789,
+                      "end": 947,
+                      "field": "escalate_if"
+                    },
+                    {
+                      "text": "ONT power and the internet session remain stable through observation.",
+                      "start": 1041,
+                      "end": 1110,
+                      "field": "completion"
+                    }
+                  ],
+                  "quote_scope": "parent_document"
+                }
+              ],
+              "clarification_questions": [
+                "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?"
+              ],
+              "acknowledged_actions": [
+                "I've already restarted the router twice"
+              ],
+              "contact_status": "not_requested",
+              "customer_plan": {
+                "title": "Initial checks",
+                "summary": "Review completed checks and their outcomes. Record the customer's answer before authorizing a remedy.",
+                "steps": [
+                  "Do not repeat completed checks: I've already restarted the router twice. Record their outcomes.",
+                  "Record the affected service, onset, frequency and customer impact. Review completed checks and their results. [S1] [S2]",
+                  "Ask whether a wired device is affected during the same failure. Record status lights without treating their colour as a verified line test. [S1] [S2]",
+                  "Use authorized provider records or diagnostics to check every part of this gate: Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment. [S1]",
+                  "Only if support confirms the full diagnostic gate, apply the authorized remedy: Network operations rebalance capacity and monitor the affected segment during peak hours. [S1]",
+                  "After an authorized remedy, verify the simulation completion criteria: peak-hour packet loss subsides and calls stay connected. [S1]",
+                  "Use authorized provider records or diagnostics to check every part of this gate: Authorized technician reproduces voltage drops with the ONT power adapter. [S2]",
+                  "Only if support confirms the full diagnostic gate, apply the authorized remedy: Replace the adapter with the provider-approved matching unit. [S2]",
+                  "After an authorized remedy, verify the simulation completion criteria: ONT power and the internet session remain stable through observation. [S2]",
+                  "If the gate is unconfirmed, contradictory or outside the agent's authority, route for specialist investigation with the observations; do not apply the remedy. [S1] [S2]"
+                ],
+                "note": "Do not promise that a Wi-Fi channel change will repair provider congestion. [S1] Do not suggest opening the adapter or using an incompatible supply. [S2] Compare the linked simulated outcomes [T1]; they inform investigation but do not confirm this customer's cause."
+              },
+              "limitations": [
+                "Extractive local drafting; no generative LLM is used.",
+                "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+              ],
+              "elapsed_ms": 5101.194200105965
+            }
+          }
+        ],
+        "storage": "client_replayed",
+        "limitations": [
+          "Send the same original query and full customer-turn history on each request.",
+          "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+          "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+        ]
+      }
+    },
+    {
+      "query": "Since the storm on Tuesday my internet cuts out for about a minute every hour or so. The router light stays green. I unplugged it for ten minutes, twice. I run a small online tailoring shop so it's costing me orders.",
+      "status": 200,
+      "response": {
+        "issues": [
+          {
+            "issue_id": 1,
+            "complaint": "Since the storm on Tuesday my internet cuts out for about a minute every hour or so. The router light stays green. I unplugged it for ten minutes, twice. I run a small online tailoring shop so it's costing me orders.",
+            "analysis_text": "Since the storm on Tuesday my internet cuts out for about a minute every hour or so. The router light stays green. I unplugged it for ten minutes, twice. I run a small online tailoring shop so it's costing me orders.",
+            "resolution": {
+              "status": "needs_diagnostic_confirmation",
+              "decision": {
+                "action": "clarify",
+                "priority": "high",
+                "reasons": [
+                  "missing_customer_observations"
+                ],
+                "target": "support_agent",
+                "handoff_created": false
+              },
+              "validation": {
+                "status": "passed",
+                "checked_sources": 2,
+                "issues": [],
+                "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+              },
+              "method": "local_extractive_v1",
+              "language_summary": null,
+              "language_plan": null,
+              "language_draft": null,
+              "language_status": "disabled",
+              "language_model": null,
+              "language_provider": null,
+              "faithfulness_status": "not_run",
+              "faithfulness_issues": [],
+              "language_error": null,
+              "historical_cases": [
+                {
+                  "citation_id": "T1",
+                  "doc_id": "syn_ticket_ID01_02",
+                  "chunk_id": 140,
+                  "title": "Intermittent broadband support case",
+                  "resolution": "Finding: Optical loss events align with rain; technician finds moisture at an external joint. Action: Dispatch an authorized technician to repair and seal the damaged joint. Simulated follow-up: no optical loss events during the next wet-weather observation.",
+                  "outcome_status": "simulated_resolved",
+                  "is_synthetic": true,
+                  "relationship": "linked_procedure"
+                },
+                {
+                  "citation_id": "T2",
+                  "doc_id": "syn_ticket_ID02_02",
+                  "chunk_id": 148,
+                  "title": "Intermittent broadband support case",
+                  "resolution": "Finding: Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment. Action: Network operations rebalance capacity and monitor the affected segment during peak hours. Simulated follow-up: peak-hour packet loss subsides and calls stay connected.",
+                  "outcome_status": "simulated_resolved",
+                  "is_synthetic": true,
+                  "relationship": "similar_category"
+                }
+              ],
+              "agent_review_required": true,
+              "draft": "Draft for agent review. A cause has not been confirmed.\n\nAlready attempted, according to the customer: I unplugged it for ten minutes, twice\n\nCustomer-reported observations: storm; internet cuts out\n\nClarify: During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?\n\nAnswer the clarification questions before choosing a repair. Retrieved procedures are attached for agent review, not recommended actions yet.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: clarify. Priority: high. Recommended reviewer: support_agent. No external handoff has been created.",
+              "analysis": {
+                "category": "intermittent_broadband",
+                "scope_status": "supported",
+                "scope_reason": "recognized_service_mention",
+                "category_status": "predicted",
+                "category_basis": "explicit_report",
+                "category_evidence": [
+                  {
+                    "text": "internet cuts out",
+                    "start": 30,
+                    "end": 47
+                  }
+                ],
+                "routing_policy": "development_selected_v1",
+                "candidates": [
+                  {
+                    "category": "intermittent_broadband",
+                    "score": 0.3431297916112021
+                  },
+                  {
+                    "category": "router_ont_hardware",
+                    "score": 0.2969892871896049
+                  },
+                  {
+                    "category": "broadband_outage",
+                    "score": 0.1009296944638533
+                  }
+                ],
+                "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                "products": [
+                  {
+                    "text": "internet",
+                    "start": 30,
+                    "end": 38,
+                    "product": "broadband"
+                  },
+                  {
+                    "text": "router",
+                    "start": 89,
+                    "end": 95,
+                    "product": "router"
+                  }
+                ],
+                "severity": {
+                  "value": "high",
+                  "rule": "reported_business_impact",
+                  "evidence": [
+                    {
+                      "text": "costing me orders",
+                      "start": 198,
+                      "end": 215
+                    }
+                  ],
+                  "method": "rules_v1"
+                },
+                "sentiment": {
+                  "value": "frustrated",
+                  "rule": "explicit_tone",
+                  "evidence": [
+                    {
+                      "text": "costing me orders",
+                      "start": 198,
+                      "end": 215
+                    }
+                  ],
+                  "method": "rules_v1"
+                },
+                "actions": [
+                  {
+                    "text": "I unplugged it for ten minutes, twice",
+                    "start": 115,
+                    "end": 152,
+                    "action": "restart_device",
+                    "status": "attempted"
+                  }
+                ],
+                "reported_facts": [
+                  {
+                    "text": "storm",
+                    "start": 10,
+                    "end": 15,
+                    "name": "weather_context",
+                    "value": "reported"
+                  },
+                  {
+                    "text": "internet cuts out",
+                    "start": 30,
+                    "end": 47,
+                    "name": "connection_pattern",
+                    "value": "intermittent"
+                  }
+                ],
+                "requests": [],
+                "needs_clarification": true,
+                "clarification_questions": [
+                  "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?"
+                ],
+                "model_version": "6d3f3a9e1435b374",
+                "language_method": "rules_v1",
+                "language_provider": null,
+                "language_model": null,
+                "language_error": null,
+                "elapsed_ms": 159.66810006648302
+              },
+              "suggestions": [
+                {
+                  "citation_id": "S1",
+                  "required_finding": "Optical loss events align with rain; technician finds moisture at an external joint.",
+                  "proposed_action": "Dispatch an authorized technician to repair and seal the damaged joint.",
+                  "restriction": "Do not treat this as Wi-Fi interference or recommend repeated reboots.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                },
+                {
+                  "citation_id": "S2",
+                  "required_finding": "Authorized technician reproduces voltage drops with the ONT power adapter.",
+                  "proposed_action": "Replace the adapter with the provider-approved matching unit.",
+                  "restriction": "Do not suggest opening the adapter or using an incompatible supply.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                }
+              ],
+              "sources": [
+                {
+                  "citation_id": "S1",
+                  "doc_id": "syn_kb_ID01",
+                  "chunk_id": 13,
+                  "title": "Moisture-damaged external optical joint. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "fibre_broadband",
+                      "start": 81,
+                      "end": 96,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Optical loss events align with rain; technician finds moisture at an external joint.",
+                      "start": 612,
+                      "end": 696,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Dispatch an authorized technician to repair and seal the damaged joint.",
+                      "start": 734,
+                      "end": 805,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not treat this as Wi-Fi interference or recommend repeated reboots.",
+                      "start": 991,
+                      "end": 1061,
+                      "field": "restriction"
+                    },
+                    {
+                      "text": "Record the affected service, onset, frequency and customer impact. Review completed checks and their results.",
+                      "start": 148,
+                      "end": 257,
+                      "field": "verify"
+                    },
+                    {
+                      "text": "Ask whether a wired device is affected during the same failure. Record status lights without treating their colour as a verified line test.",
+                      "start": 275,
+                      "end": 414,
+                      "field": "customer_checks"
+                    },
+                    {
+                      "text": "Use authorized provider records or diagnostics to check every part of this gate: Optical loss events align with rain; technician finds moisture at an external joint.",
+                      "start": 429,
+                      "end": 594,
+                      "field": "agent_checks"
+                    },
+                    {
+                      "text": "If the gate is unconfirmed, contradictory or outside the agent's authority, route for specialist investigation with the observations; do not apply the remedy.",
+                      "start": 819,
+                      "end": 977,
+                      "field": "escalate_if"
+                    },
+                    {
+                      "text": "no optical loss events during the next wet-weather observation.",
+                      "start": 1074,
+                      "end": 1137,
+                      "field": "completion"
+                    }
+                  ],
+                  "quote_scope": "parent_document"
+                },
+                {
+                  "citation_id": "S2",
+                  "doc_id": "syn_kb_ID04",
+                  "chunk_id": 16,
+                  "title": "Failing ONT power adapter. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "fibre_broadband",
+                      "start": 81,
+                      "end": 96,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Authorized technician reproduces voltage drops with the ONT power adapter.",
+                      "start": 602,
+                      "end": 676,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Replace the adapter with the provider-approved matching unit.",
+                      "start": 714,
+                      "end": 775,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not suggest opening the adapter or using an incompatible supply.",
+                      "start": 961,
+                      "end": 1028,
+                      "field": "restriction"
+                    },
+                    {
+                      "text": "Record the affected service, onset, frequency and customer impact. Review completed checks and their results.",
+                      "start": 148,
+                      "end": 257,
+                      "field": "verify"
+                    },
+                    {
+                      "text": "Ask whether a wired device is affected during the same failure. Record status lights without treating their colour as a verified line test.",
+                      "start": 275,
+                      "end": 414,
+                      "field": "customer_checks"
+                    },
+                    {
+                      "text": "Use authorized provider records or diagnostics to check every part of this gate: Authorized technician reproduces voltage drops with the ONT power adapter.",
+                      "start": 429,
+                      "end": 584,
+                      "field": "agent_checks"
+                    },
+                    {
+                      "text": "If the gate is unconfirmed, contradictory or outside the agent's authority, route for specialist investigation with the observations; do not apply the remedy.",
+                      "start": 789,
+                      "end": 947,
+                      "field": "escalate_if"
+                    },
+                    {
+                      "text": "ONT power and the internet session remain stable through observation.",
+                      "start": 1041,
+                      "end": 1110,
+                      "field": "completion"
+                    }
+                  ],
+                  "quote_scope": "parent_document"
+                }
+              ],
+              "clarification_questions": [
+                "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?"
+              ],
+              "acknowledged_actions": [
+                "I unplugged it for ten minutes, twice"
+              ],
+              "contact_status": "not_requested",
+              "customer_plan": {
+                "title": "Initial checks",
+                "summary": "Review completed checks and their outcomes. Record the customer's answer before authorizing a remedy.",
+                "steps": [
+                  "Do not repeat completed checks: I unplugged it for ten minutes, twice. Record their outcomes.",
+                  "Record the affected service, onset, frequency and customer impact. Review completed checks and their results. [S1] [S2]",
+                  "Ask whether a wired device is affected during the same failure. Record status lights without treating their colour as a verified line test. [S1] [S2]",
+                  "Use authorized provider records or diagnostics to check every part of this gate: Optical loss events align with rain; technician finds moisture at an external joint. [S1]",
+                  "Only if support confirms the full diagnostic gate, apply the authorized remedy: Dispatch an authorized technician to repair and seal the damaged joint. [S1]",
+                  "After an authorized remedy, verify the simulation completion criteria: no optical loss events during the next wet-weather observation. [S1]",
+                  "Use authorized provider records or diagnostics to check every part of this gate: Authorized technician reproduces voltage drops with the ONT power adapter. [S2]",
+                  "Only if support confirms the full diagnostic gate, apply the authorized remedy: Replace the adapter with the provider-approved matching unit. [S2]",
+                  "After an authorized remedy, verify the simulation completion criteria: ONT power and the internet session remain stable through observation. [S2]",
+                  "If the gate is unconfirmed, contradictory or outside the agent's authority, route for specialist investigation with the observations; do not apply the remedy. [S1] [S2]"
+                ],
+                "note": "Do not treat this as Wi-Fi interference or recommend repeated reboots. [S1] Do not suggest opening the adapter or using an incompatible supply. [S2] Compare the linked simulated outcomes [T1]; they inform investigation but do not confirm this customer's cause."
+              },
+              "limitations": [
+                "Extractive local drafting; no generative LLM is used.",
+                "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+              ],
+              "elapsed_ms": 9067.495400086045
+            }
+          }
+        ],
+        "storage": "client_replayed",
+        "limitations": [
+          "Send the same original query and full customer-turn history on each request.",
+          "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+          "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+        ]
+      }
+    },
+    {
+      "query": "My bill shows two settled payments for the same invoice. I want the duplicate payment checked.",
+      "status": 200,
+      "response": {
+        "issues": [
+          {
+            "issue_id": 1,
+            "complaint": "My bill shows two settled payments for the same invoice. I want the duplicate payment checked.",
+            "analysis_text": "My bill shows two settled payments for the same invoice. I want the duplicate payment checked.",
+            "resolution": {
+              "status": "needs_diagnostic_confirmation",
+              "decision": {
+                "action": "agent_review",
+                "priority": "normal",
+                "reasons": [
+                  "diagnostic_confirmation_required"
+                ],
+                "target": "support_agent",
+                "handoff_created": false
+              },
+              "validation": {
+                "status": "passed",
+                "checked_sources": 2,
+                "issues": [],
+                "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+              },
+              "method": "local_extractive_v1",
+              "language_summary": null,
+              "language_plan": null,
+              "language_draft": null,
+              "language_status": "disabled",
+              "language_model": null,
+              "language_provider": null,
+              "faithfulness_status": "not_run",
+              "faithfulness_issues": [],
+              "language_error": null,
+              "historical_cases": [
+                {
+                  "citation_id": "T1",
+                  "doc_id": "syn_ticket_BD01_07",
+                  "chunk_id": 113,
+                  "title": "Billing dispute support case",
+                  "resolution": "Finding: Ledger confirms duplicate settled payments against one invoice. Action: Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment. Simulated follow-up: adjustment appears in the ledger and is communicated to the customer.",
+                  "outcome_status": "simulated_resolved",
+                  "is_synthetic": true,
+                  "relationship": "linked_procedure"
+                },
+                {
+                  "citation_id": "T2",
+                  "doc_id": "syn_ticket_PR01_07",
+                  "chunk_id": 209,
+                  "title": "Payment restoration support case",
+                  "resolution": "Finding: Ledger is paid; service-restoration event failed to reach provisioning. Action: Authorized staff reconcile the paid status and resend the approved restoration event. Simulated follow-up: service becomes active and normal browsing resumes.",
+                  "outcome_status": "simulated_resolved",
+                  "is_synthetic": true,
+                  "relationship": "similar_category"
+                },
+                {
+                  "citation_id": "T3",
+                  "doc_id": "syn_ticket_PR02_04",
+                  "chunk_id": 214,
+                  "title": "Payment restoration support case",
+                  "resolution": "Finding: Payment is an authorization only; provider has no settlement confirmation. Action: Explain the pending status and approved payment-support route without falsely marking the account paid. Simulated follow-up: settlement later arrives and normal restoration proceeds.",
+                  "outcome_status": "simulated_resolved",
+                  "is_synthetic": true,
+                  "relationship": "similar_category"
+                }
+              ],
+              "agent_review_required": true,
+              "draft": "Draft for agent review. A cause has not been confirmed.\n\nCustomer-reported observations: two settled; two settled payments\n\n[S1] Ask an authorized agent to verify: Ledger confirms duplicate settled payments against one invoice. Only if confirmed, the procedure proposes: Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment.\n\n[S1] Restriction: Do not refund a pending authorization or promise a universal refund deadline.\n\n[S2] Ask an authorized agent to verify: Ledger identifies a settled payment on the wrong customer-owned account. Only if confirmed, the procedure proposes: Authorized billing staff verify ownership and follow the approved reallocation procedure.\n\n[S2] Restriction: Do not move funds across unverified accounts.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: agent_review. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+              "analysis": {
+                "category": "billing_dispute",
+                "scope_status": "supported",
+                "scope_reason": "recognized_service_mention",
+                "category_status": "predicted",
+                "category_basis": "model",
+                "category_evidence": [],
+                "routing_policy": "development_selected_v1",
+                "candidates": [
+                  {
+                    "category": "billing_dispute",
+                    "score": 0.9154230607394883
+                  },
+                  {
+                    "category": "payment_restoration",
+                    "score": 0.03609937900876831
+                  },
+                  {
+                    "category": "number_porting",
+                    "score": 0.0075946717311510675
+                  }
+                ],
+                "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                "products": [
+                  {
+                    "text": "bill",
+                    "start": 3,
+                    "end": 7,
+                    "product": "billing"
+                  }
+                ],
+                "severity": {
+                  "value": "low",
+                  "rule": "reported_billing_question",
+                  "evidence": [
+                    {
+                      "text": "duplicate payment",
+                      "start": 68,
+                      "end": 85
+                    }
+                  ],
+                  "method": "rules_v1"
+                },
+                "sentiment": {
+                  "value": "unknown",
+                  "rule": "no_explicit_tone",
+                  "evidence": [],
+                  "method": "rules_v1"
+                },
+                "actions": [],
+                "reported_facts": [
+                  {
+                    "text": "two settled",
+                    "start": 14,
+                    "end": 25,
+                    "name": "billing_status",
+                    "value": "settled"
+                  },
+                  {
+                    "text": "two settled payments",
+                    "start": 14,
+                    "end": 34,
+                    "name": "charge",
+                    "value": "bill_payment"
+                  }
+                ],
+                "requests": [],
+                "needs_clarification": false,
+                "clarification_questions": [],
+                "model_version": "6d3f3a9e1435b374",
+                "language_method": "rules_v1",
+                "language_provider": null,
+                "language_model": null,
+                "language_error": null,
+                "elapsed_ms": 75.20650001242757
+              },
+              "suggestions": [
+                {
+                  "citation_id": "S1",
+                  "required_finding": "Ledger confirms duplicate settled payments against one invoice.",
+                  "proposed_action": "Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment.",
+                  "restriction": "Do not refund a pending authorization or promise a universal refund deadline.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                },
+                {
+                  "citation_id": "S2",
+                  "required_finding": "Ledger identifies a settled payment on the wrong customer-owned account.",
+                  "proposed_action": "Authorized billing staff verify ownership and follow the approved reallocation procedure.",
+                  "restriction": "Do not move funds across unverified accounts.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                }
+              ],
+              "sources": [
+                {
+                  "citation_id": "S1",
+                  "doc_id": "syn_kb_BD01",
+                  "chunk_id": 5,
+                  "title": "Duplicate settled payment. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "billing",
+                      "start": 81,
+                      "end": 88,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Ledger confirms duplicate settled payments against one invoice.",
+                      "start": 566,
+                      "end": 629,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment.",
+                      "start": 667,
+                      "end": 768,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not refund a pending authorization or promise a universal refund deadline.",
+                      "start": 954,
+                      "end": 1031,
+                      "field": "restriction"
+                    },
+                    {
+                      "text": "Record the affected service, onset, frequency and customer impact. Review completed checks and their results.",
+                      "start": 133,
+                      "end": 242,
+                      "field": "verify"
+                    },
+                    {
+                      "text": "Ask which invoice or charge is affected and whether each payment is pending or settled; collect only a non-sensitive description.",
+                      "start": 260,
+                      "end": 389,
+                      "field": "customer_checks"
+                    },
+                    {
+                      "text": "Use authorized provider records or diagnostics to check every part of this gate: Ledger confirms duplicate settled payments against one invoice.",
+                      "start": 404,
+                      "end": 548,
+                      "field": "agent_checks"
+                    },
+                    {
+                      "text": "If the gate is unconfirmed, contradictory or outside the agent's authority, route for specialist investigation with the observations; do not apply the remedy.",
+                      "start": 782,
+                      "end": 940,
+                      "field": "escalate_if"
+                    },
+                    {
+                      "text": "adjustment appears in the ledger and is communicated to the customer.",
+                      "start": 1044,
+                      "end": 1113,
+                      "field": "completion"
+                    }
+                  ],
+                  "quote_scope": "parent_document"
+                },
+                {
+                  "citation_id": "S2",
+                  "doc_id": "syn_kb_PR03",
+                  "chunk_id": 31,
+                  "title": "Payment allocated to the wrong account. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "billing",
+                      "start": 81,
+                      "end": 88,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Ledger identifies a settled payment on the wrong customer-owned account.",
+                      "start": 579,
+                      "end": 651,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Authorized billing staff verify ownership and follow the approved reallocation procedure.",
+                      "start": 689,
+                      "end": 778,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not move funds across unverified accounts.",
+                      "start": 964,
+                      "end": 1009,
+                      "field": "restriction"
+                    },
+                    {
+                      "text": "Record the affected service, onset, frequency and customer impact. Review completed checks and their results.",
+                      "start": 137,
+                      "end": 246,
+                      "field": "verify"
+                    },
+                    {
+                      "text": "Ask which invoice or charge is affected and whether each payment is pending or settled; collect only a non-sensitive description.",
+                      "start": 264,
+                      "end": 393,
+                      "field": "customer_checks"
+                    },
+                    {
+                      "text": "Use authorized provider records or diagnostics to check every part of this gate: Ledger identifies a settled payment on the wrong customer-owned account.",
+                      "start": 408,
+                      "end": 561,
+                      "field": "agent_checks"
+                    },
+                    {
+                      "text": "If the gate is unconfirmed, contradictory or outside the agent's authority, route for specialist investigation with the observations; do not apply the remedy.",
+                      "start": 792,
+                      "end": 950,
+                      "field": "escalate_if"
+                    },
+                    {
+                      "text": "payment is assigned correctly and eligible service is restored.",
+                      "start": 1022,
+                      "end": 1085,
+                      "field": "completion"
+                    }
+                  ],
+                  "quote_scope": "parent_document"
+                }
+              ],
+              "clarification_questions": [],
+              "acknowledged_actions": [],
+              "contact_status": "not_requested",
+              "customer_plan": {
+                "title": "Recommended next steps",
+                "summary": "Start with the check below. Use the suggested action only after the finding is confirmed.",
+                "steps": [
+                  "Record the affected service, onset, frequency and customer impact. Review completed checks and their results. [S1] [S2]",
+                  "Use authorized provider records or diagnostics to check every part of this gate: Ledger confirms duplicate settled payments against one invoice. [S1]",
+                  "Only if support confirms the full diagnostic gate, apply the authorized remedy: Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment. [S1]",
+                  "After an authorized remedy, verify the simulation completion criteria: adjustment appears in the ledger and is communicated to the customer. [S1]",
+                  "Use authorized provider records or diagnostics to check every part of this gate: Ledger identifies a settled payment on the wrong customer-owned account. [S2]",
+                  "Only if support confirms the full diagnostic gate, apply the authorized remedy: Authorized billing staff verify ownership and follow the approved reallocation procedure. [S2]",
+                  "After an authorized remedy, verify the simulation completion criteria: payment is assigned correctly and eligible service is restored. [S2]",
+                  "If the gate is unconfirmed, contradictory or outside the agent's authority, route for specialist investigation with the observations; do not apply the remedy. [S1] [S2]"
+                ],
+                "note": "Do not refund a pending authorization or promise a universal refund deadline. [S1] Do not move funds across unverified accounts. [S2] Compare the linked simulated outcomes [T1]; they inform investigation but do not confirm this customer's cause."
+              },
+              "limitations": [
+                "Extractive local drafting; no generative LLM is used.",
+                "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+              ],
+              "elapsed_ms": 3624.5176000520587
+            }
+          }
+        ],
+        "storage": "client_replayed",
+        "limitations": [
+          "Send the same original query and full customer-turn history on each request.",
+          "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+          "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+        ]
+      }
+    },
+    {
+      "query": "My Wi-Fi drops on every wireless device but Ethernet stays working.",
+      "status": 200,
+      "response": {
+        "issues": [
+          {
+            "issue_id": 1,
+            "complaint": "My Wi-Fi drops on every wireless device Ethernet stays working.",
+            "analysis_text": "My Wi-Fi drops on every wireless device Ethernet stays working.",
+            "resolution": {
+              "status": "needs_diagnostic_confirmation",
+              "decision": {
+                "action": "agent_review",
+                "priority": "normal",
+                "reasons": [
+                  "diagnostic_confirmation_required"
+                ],
+                "target": "support_agent",
+                "handoff_created": false
+              },
+              "validation": {
+                "status": "passed",
+                "checked_sources": 2,
+                "issues": [],
+                "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+              },
+              "method": "local_extractive_v1",
+              "language_summary": null,
+              "language_plan": null,
+              "language_draft": null,
+              "language_status": "disabled",
+              "language_model": null,
+              "language_provider": null,
+              "faithfulness_status": "not_run",
+              "faithfulness_issues": [],
+              "language_error": null,
+              "historical_cases": [
+                {
+                  "citation_id": "T1",
+                  "doc_id": "syn_ticket_WF02_01",
+                  "chunk_id": 323,
+                  "title": "Wifi connectivity support case",
+                  "resolution": "Finding: Wireless survey shows a crowded channel; wired tests and WAN counters are normal. Action: Choose an appropriate supported channel or band after checking device compatibility. Simulated follow-up: wireless retries decrease and the evening test improves.",
+                  "outcome_status": "simulated_resolved",
+                  "is_synthetic": true,
+                  "relationship": "linked_procedure"
+                },
+                {
+                  "citation_id": "T2",
+                  "doc_id": "syn_ticket_WF01_07",
+                  "chunk_id": 321,
+                  "title": "Wifi connectivity support case",
+                  "resolution": "Finding: Coverage survey shows weak signal behind several walls; WAN is stable. Action: Reposition the access point safely; assess a supported mesh node if coverage remains inadequate. Simulated follow-up: signal and browsing improve in the previously affected room.",
+                  "outcome_status": "simulated_resolved",
+                  "is_synthetic": true,
+                  "relationship": "linked_procedure"
+                }
+              ],
+              "agent_review_required": true,
+              "draft": "Draft for agent review. A cause has not been confirmed.\n\nCustomer-reported observations: Wi-Fi drops; every wireless device; Ethernet stays working\n\n[S1] Ask an authorized agent to verify: Wireless survey shows a crowded channel; wired tests and WAN counters are normal. Only if confirmed, the procedure proposes: Choose an appropriate supported channel or band after checking device compatibility.\n\n[S1] Restriction: Do not blame provider backhaul when concurrent Ethernet tests are normal.\n\n[S2] Ask an authorized agent to verify: Coverage survey shows weak signal behind several walls; WAN is stable. Only if confirmed, the procedure proposes: Reposition the access point safely; assess a supported mesh node if coverage remains inadequate.\n\n[S2] Restriction: Do not label this a broadband outage or promise coverage without checking placement.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: agent_review. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+              "analysis": {
+                "category": "wifi_connectivity",
+                "scope_status": "supported",
+                "scope_reason": "recognized_service_mention",
+                "category_status": "predicted",
+                "category_basis": "explicit_report",
+                "category_evidence": [
+                  {
+                    "text": "Wi-Fi drops",
+                    "start": 3,
+                    "end": 14
+                  }
+                ],
+                "routing_policy": "development_selected_v1",
+                "candidates": [
+                  {
+                    "category": "intermittent_broadband",
+                    "score": 0.48875682947320026
+                  },
+                  {
+                    "category": "wifi_connectivity",
+                    "score": 0.30460429117681137
+                  },
+                  {
+                    "category": "iptv",
+                    "score": 0.041453048505672885
+                  }
+                ],
+                "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                "products": [
+                  {
+                    "text": "Wi-Fi",
+                    "start": 3,
+                    "end": 8,
+                    "product": "home_wifi"
+                  },
+                  {
+                    "text": "Ethernet",
+                    "start": 40,
+                    "end": 48,
+                    "product": "broadband"
+                  }
+                ],
+                "severity": {
+                  "value": "medium",
+                  "rule": "reported_degradation_or_work_impact",
+                  "evidence": [
+                    {
+                      "text": "drops",
+                      "start": 9,
+                      "end": 14
+                    }
+                  ],
+                  "method": "rules_v1"
+                },
+                "sentiment": {
+                  "value": "unknown",
+                  "rule": "no_explicit_tone",
+                  "evidence": [],
+                  "method": "rules_v1"
+                },
+                "actions": [],
+                "reported_facts": [
+                  {
+                    "text": "Wi-Fi drops",
+                    "start": 3,
+                    "end": 14,
+                    "name": "connection_pattern",
+                    "value": "intermittent"
+                  },
+                  {
+                    "text": "every wireless device",
+                    "start": 18,
+                    "end": 39,
+                    "name": "wireless_devices",
+                    "value": "all"
+                  },
+                  {
+                    "text": "Ethernet stays working",
+                    "start": 40,
+                    "end": 62,
+                    "name": "wired_connection",
+                    "value": "working"
+                  }
+                ],
+                "requests": [],
+                "needs_clarification": false,
+                "clarification_questions": [],
+                "model_version": "6d3f3a9e1435b374",
+                "language_method": "rules_v1",
+                "language_provider": null,
+                "language_model": null,
+                "language_error": null,
+                "elapsed_ms": 64.35290002264082
+              },
+              "suggestions": [
+                {
+                  "citation_id": "S1",
+                  "required_finding": "Wireless survey shows a crowded channel; wired tests and WAN counters are normal.",
+                  "proposed_action": "Choose an appropriate supported channel or band after checking device compatibility.",
+                  "restriction": "Do not blame provider backhaul when concurrent Ethernet tests are normal.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                },
+                {
+                  "citation_id": "S2",
+                  "required_finding": "Coverage survey shows weak signal behind several walls; WAN is stable.",
+                  "proposed_action": "Reposition the access point safely; assess a supported mesh node if coverage remains inadequate.",
+                  "restriction": "Do not label this a broadband outage or promise coverage without checking placement.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                }
+              ],
+              "sources": [
+                {
+                  "citation_id": "S1",
+                  "doc_id": "syn_kb_WF02",
+                  "chunk_id": 58,
+                  "title": "Wireless channel contention. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "home_wifi",
+                      "start": 81,
+                      "end": 90,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Wireless survey shows a crowded channel; wired tests and WAN counters are normal.",
+                      "start": 598,
+                      "end": 679,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Choose an appropriate supported channel or band after checking device compatibility.",
+                      "start": 717,
+                      "end": 801,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not blame provider backhaul when concurrent Ethernet tests are normal.",
+                      "start": 987,
+                      "end": 1060,
+                      "field": "restriction"
+                    },
+                    {
+                      "text": "Record the affected service, onset, frequency and customer impact. Review completed checks and their results.",
+                      "start": 137,
+                      "end": 246,
+                      "field": "verify"
+                    },
+                    {
+                      "text": "Ask whether a wired device is affected during the same failure. Record status lights without treating their colour as a verified line test.",
+                      "start": 264,
+                      "end": 403,
+                      "field": "customer_checks"
+                    },
+                    {
+                      "text": "Use authorized provider records or diagnostics to check every part of this gate: Wireless survey shows a crowded channel; wired tests and WAN counters are normal.",
+                      "start": 418,
+                      "end": 580,
+                      "field": "agent_checks"
+                    },
+                    {
+                      "text": "If the gate is unconfirmed, contradictory or outside the agent's authority, route for specialist investigation with the observations; do not apply the remedy.",
+                      "start": 815,
+                      "end": 973,
+                      "field": "escalate_if"
+                    },
+                    {
+                      "text": "wireless retries decrease and the evening test improves.",
+                      "start": 1073,
+                      "end": 1129,
+                      "field": "completion"
+                    }
+                  ],
+                  "quote_scope": "parent_document"
+                },
+                {
+                  "citation_id": "S2",
+                  "doc_id": "syn_kb_WF01",
+                  "chunk_id": 57,
+                  "title": "Insufficient indoor wireless coverage. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "home_wifi",
+                      "start": 81,
+                      "end": 90,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Coverage survey shows weak signal behind several walls; WAN is stable.",
+                      "start": 587,
+                      "end": 657,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Reposition the access point safely; assess a supported mesh node if coverage remains inadequate.",
+                      "start": 695,
+                      "end": 791,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not label this a broadband outage or promise coverage without checking placement.",
+                      "start": 977,
+                      "end": 1061,
+                      "field": "restriction"
+                    },
+                    {
+                      "text": "Record the affected service, onset, frequency and customer impact. Review completed checks and their results.",
+                      "start": 137,
+                      "end": 246,
+                      "field": "verify"
+                    },
+                    {
+                      "text": "Ask whether a wired device is affected during the same failure. Record status lights without treating their colour as a verified line test.",
+                      "start": 264,
+                      "end": 403,
+                      "field": "customer_checks"
+                    },
+                    {
+                      "text": "Use authorized provider records or diagnostics to check every part of this gate: Coverage survey shows weak signal behind several walls; WAN is stable.",
+                      "start": 418,
+                      "end": 569,
+                      "field": "agent_checks"
+                    },
+                    {
+                      "text": "If the gate is unconfirmed, contradictory or outside the agent's authority, route for specialist investigation with the observations; do not apply the remedy.",
+                      "start": 805,
+                      "end": 963,
+                      "field": "escalate_if"
+                    },
+                    {
+                      "text": "signal and browsing improve in the previously affected room.",
+                      "start": 1074,
+                      "end": 1134,
+                      "field": "completion"
+                    }
+                  ],
+                  "quote_scope": "parent_document"
+                }
+              ],
+              "clarification_questions": [],
+              "acknowledged_actions": [],
+              "contact_status": "not_requested",
+              "customer_plan": {
+                "title": "Recommended next steps",
+                "summary": "Start with the check below. Use the suggested action only after the finding is confirmed.",
+                "steps": [
+                  "Record the affected service, onset, frequency and customer impact. Review completed checks and their results. [S1] [S2]",
+                  "Use authorized provider records or diagnostics to check every part of this gate: Wireless survey shows a crowded channel; wired tests and WAN counters are normal. [S1]",
+                  "Only if support confirms the full diagnostic gate, apply the authorized remedy: Choose an appropriate supported channel or band after checking device compatibility. [S1]",
+                  "After an authorized remedy, verify the simulation completion criteria: wireless retries decrease and the evening test improves. [S1]",
+                  "Use authorized provider records or diagnostics to check every part of this gate: Coverage survey shows weak signal behind several walls; WAN is stable. [S2]",
+                  "Only if support confirms the full diagnostic gate, apply the authorized remedy: Reposition the access point safely; assess a supported mesh node if coverage remains inadequate. [S2]",
+                  "After an authorized remedy, verify the simulation completion criteria: signal and browsing improve in the previously affected room. [S2]",
+                  "If the gate is unconfirmed, contradictory or outside the agent's authority, route for specialist investigation with the observations; do not apply the remedy. [S1] [S2]"
+                ],
+                "note": "Do not blame provider backhaul when concurrent Ethernet tests are normal. [S1] Do not label this a broadband outage or promise coverage without checking placement. [S2] Compare the linked simulated outcomes [T1] [T2]; they inform investigation but do not confirm this customer's cause."
+              },
+              "limitations": [
+                "Extractive local drafting; no generative LLM is used.",
+                "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+              ],
+              "elapsed_ms": 4100.701000075787
+            }
+          }
+        ],
+        "storage": "client_replayed",
+        "limitations": [
+          "Send the same original query and full customer-turn history on each request.",
+          "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+          "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+        ]
+      }
+    },
+    {
+      "query": "Our entire street lost broadband at 9am and several neighbours are offline.",
+      "status": 200,
+      "response": {
+        "issues": [
+          {
+            "issue_id": 1,
+            "complaint": "Our entire street lost broadband at 9am and several neighbours are offline.",
+            "analysis_text": "Our entire street lost broadband at 9am and several neighbours are offline.",
+            "resolution": {
+              "status": "needs_diagnostic_confirmation",
+              "decision": {
+                "action": "escalate",
+                "priority": "urgent",
+                "reasons": [
+                  "reported_area_outage"
+                ],
+                "target": "network_operations",
+                "handoff_created": false
+              },
+              "validation": {
+                "status": "passed",
+                "checked_sources": 1,
+                "issues": [],
+                "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+              },
+              "method": "local_extractive_v1",
+              "language_summary": null,
+              "language_plan": null,
+              "language_draft": null,
+              "language_status": "disabled",
+              "language_model": null,
+              "language_provider": null,
+              "faithfulness_status": "not_run",
+              "faithfulness_issues": [],
+              "language_error": null,
+              "historical_cases": [
+                {
+                  "citation_id": "T1",
+                  "doc_id": "syn_ticket_BB01_02",
+                  "chunk_id": 92,
+                  "title": "Broadband outage support case",
+                  "resolution": "Finding: Agent optical test reports no received signal; account is active. Action: Raise a fibre repair job; an authorized technician repairs the external span. Simulated follow-up: optical signal restored and wired browsing works.",
+                  "outcome_status": "simulated_resolved",
+                  "is_synthetic": true,
+                  "relationship": "similar_category"
+                },
+                {
+                  "citation_id": "T2",
+                  "doc_id": "syn_ticket_BB02_06",
+                  "chunk_id": 104,
+                  "title": "Broadband outage support case",
+                  "resolution": "Finding: Optical signal is healthy; the subscriber session is rejected after an account migration. Action: Authorized provisioning team corrects the subscriber session mapping and reconnects it. Simulated follow-up: session authenticates and both wired and wireless browsing work.",
+                  "outcome_status": "simulated_resolved",
+                  "is_synthetic": true,
+                  "relationship": "similar_category"
+                }
+              ],
+              "agent_review_required": true,
+              "draft": "Draft for agent review. A cause has not been confirmed.\n\nCustomer-reported observations: at 9am\n\nClarify: Which area is affected? Do not delay incident review while collecting these details.\n\n[S1] Ask an authorized agent to verify: Provider incident record confirms a regional aggregation outage affecting multiple buildings. Only if confirmed, the procedure proposes: Link affected lines to the major incident; network operations restore the failed equipment and provide a status update.\n\n[S1] Restriction: Do not promise a restoration time before network operations supplies one.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: escalate. Priority: urgent. Recommended reviewer: network_operations. No external handoff has been created.",
+              "analysis": {
+                "category": "broadband_outage",
+                "scope_status": "supported",
+                "scope_reason": "recognized_service_mention",
+                "category_status": "predicted",
+                "category_basis": "explicit_report",
+                "category_evidence": [
+                  {
+                    "text": "entire street",
+                    "start": 4,
+                    "end": 17
+                  },
+                  {
+                    "text": "lost",
+                    "start": 18,
+                    "end": 22
+                  }
+                ],
+                "routing_policy": "development_selected_v1",
+                "candidates": [
+                  {
+                    "category": "mobile_coverage",
+                    "score": 0.27542818886504655
+                  },
+                  {
+                    "category": "intermittent_broadband",
+                    "score": 0.19153983220059073
+                  },
+                  {
+                    "category": "broadband_outage",
+                    "score": 0.1779912116357808
+                  }
+                ],
+                "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                "products": [
+                  {
+                    "text": "broadband",
+                    "start": 23,
+                    "end": 32,
+                    "product": "broadband"
+                  }
+                ],
+                "severity": {
+                  "value": "critical",
+                  "rule": "reported_area_outage",
+                  "evidence": [
+                    {
+                      "text": "entire street",
+                      "start": 4,
+                      "end": 17
+                    },
+                    {
+                      "text": "lost",
+                      "start": 18,
+                      "end": 22
+                    }
+                  ],
+                  "method": "rules_v1"
+                },
+                "sentiment": {
+                  "value": "unknown",
+                  "rule": "no_explicit_tone",
+                  "evidence": [],
+                  "method": "rules_v1"
+                },
+                "actions": [],
+                "reported_facts": [
+                  {
+                    "text": "at 9am",
+                    "start": 33,
+                    "end": 39,
+                    "name": "started",
+                    "value": "reported"
+                  }
+                ],
+                "requests": [],
+                "needs_clarification": true,
+                "clarification_questions": [
+                  "Which area is affected? Do not delay incident review while collecting these details."
+                ],
+                "model_version": "6d3f3a9e1435b374",
+                "language_method": "rules_v1",
+                "language_provider": null,
+                "language_model": null,
+                "language_error": null,
+                "elapsed_ms": 66.18950003758073
+              },
+              "suggestions": [
+                {
+                  "citation_id": "S1",
+                  "required_finding": "Provider incident record confirms a regional aggregation outage affecting multiple buildings.",
+                  "proposed_action": "Link affected lines to the major incident; network operations restore the failed equipment and provide a status update.",
+                  "restriction": "Do not promise a restoration time before network operations supplies one.",
+                  "status": "requires_agent_confirmation",
+                  "repeated_actions": []
+                }
+              ],
+              "sources": [
+                {
+                  "citation_id": "S1",
+                  "doc_id": "syn_kb_BB03",
+                  "chunk_id": 3,
+                  "title": "Regional aggregation equipment failure. — procedure",
+                  "is_synthetic": true,
+                  "authority": "fictional_provider_policy",
+                  "quotes": [
+                    {
+                      "text": "fibre_broadband",
+                      "start": 81,
+                      "end": 96,
+                      "field": "scope"
+                    },
+                    {
+                      "text": "Provider incident record confirms a regional aggregation outage affecting multiple buildings.",
+                      "start": 615,
+                      "end": 708,
+                      "field": "condition"
+                    },
+                    {
+                      "text": "Link affected lines to the major incident; network operations restore the failed equipment and provide a status update.",
+                      "start": 746,
+                      "end": 865,
+                      "field": "action"
+                    },
+                    {
+                      "text": "Do not promise a restoration time before network operations supplies one.",
+                      "start": 1051,
+                      "end": 1124,
+                      "field": "restriction"
+                    },
+                    {
+                      "text": "Record the affected service, onset, frequency and customer impact. Review completed checks and their results.",
+                      "start": 142,
+                      "end": 251,
+                      "field": "verify"
+                    },
+                    {
+                      "text": "Ask whether a wired device is affected during the same failure. Record status lights without treating their colour as a verified line test.",
+                      "start": 269,
+                      "end": 408,
+                      "field": "customer_checks"
+                    },
+                    {
+                      "text": "Use authorized provider records or diagnostics to check every part of this gate: Provider incident record confirms a regional aggregation outage affecting multiple buildings.",
+                      "start": 423,
+                      "end": 597,
+                      "field": "agent_checks"
+                    },
+                    {
+                      "text": "If the gate is unconfirmed, contradictory or outside the agent's authority, route for specialist investigation with the observations; do not apply the remedy.",
+                      "start": 879,
+                      "end": 1037,
+                      "field": "escalate_if"
+                    },
+                    {
+                      "text": "incident closes after regional service checks pass.",
+                      "start": 1137,
+                      "end": 1188,
+                      "field": "completion"
+                    }
+                  ],
+                  "quote_scope": "parent_document"
+                }
+              ],
+              "clarification_questions": [
+                "Which area is affected? Do not delay incident review while collecting these details."
+              ],
+              "acknowledged_actions": [],
+              "contact_status": "not_requested",
+              "customer_plan": {
+                "title": "Review the shared outage as a provider incident",
+                "summary": "Several people or locations are affected. This needs a provider incident check rather than repeated device resets.",
+                "steps": [
+                  "Record the affected service, onset, frequency and customer impact. Review completed checks and their results. [S1]",
+                  "Use authorized provider records or diagnostics to check every part of this gate: Provider incident record confirms a regional aggregation outage affecting multiple buildings. [S1]",
+                  "Only if support confirms the full diagnostic gate, apply the authorized remedy: Link affected lines to the major incident; network operations restore the failed equipment and provide a status update. [S1]",
+                  "After an authorized remedy, verify the simulation completion criteria: incident closes after regional service checks pass. [S1]",
+                  "If the gate is unconfirmed, contradictory or outside the agent's authority, route for specialist investigation with the observations; do not apply the remedy. [S1]"
+                ],
+                "note": "This assistant has not checked live network status or opened a provider ticket."
+              },
+              "limitations": [
+                "Extractive local drafting; no generative LLM is used.",
+                "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+              ],
+              "elapsed_ms": 4004.923100117594
+            }
+          }
+        ],
+        "storage": "client_replayed",
+        "limitations": [
+          "Send the same original query and full customer-turn history on each request.",
+          "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+          "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+        ]
+      }
+    }
+  ]
+}

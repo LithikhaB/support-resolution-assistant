@@ -68,7 +68,10 @@ def validate_citations(response, evidence, analysis):
             issues.append("missing_or_duplicate_source_fields")
         for quote in source.quotes:
             expected = procedure.quotes.get(quote.field)
-            if expected != quote or record.content[quote.start : quote.end] != quote.text:
+            text = record.evidence_content or record.content
+            if source.quote_scope != ("parent_document" if record.evidence_content else "chunk"):
+                issues.append("source_quote_scope_changed")
+            if expected != quote or text[quote.start : quote.end] != quote.text:
                 issues.append("source_span_mismatch")
         procedures[source.citation_id] = procedure
     if Counter(s.citation_id for s in response.suggestions) != Counter(aliases):

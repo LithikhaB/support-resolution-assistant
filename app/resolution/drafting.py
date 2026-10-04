@@ -21,17 +21,9 @@ def draft_resolution(analysis, evidence, *, max_sources=3, elapsed_ms=0):
     suggestions = []
     seen = set()
     remedies = set()
-    # When applicable procedures exist for the accepted category, avoid filling the
-    # plan with unrelated repairs merely because they share a broad product scope.
-    matching = [
-        row for row in evidence
-        if analysis.category
-        and row.metadata.get("category", row.metadata.get("intent")) == analysis.category
-        and (procedure := parse_procedure(row)) is not None
-        and applicability_issue(procedure, analysis) is None
-    ]
-    ordered = matching or evidence
-    for result in ordered:
+    # Category is an uncertain label, not a diagnostic finding. Preserve the
+    # relevance ranking and enforce observed service/condition compatibility.
+    for result in evidence:
         procedure = parse_procedure(result)
         if (
             procedure is None
@@ -66,6 +58,7 @@ def draft_resolution(analysis, evidence, *, max_sources=3, elapsed_ms=0):
                 is_synthetic=True,
                 authority=result.metadata["authority"],
                 quotes=list(procedure.quotes.values()),
+                quote_scope="parent_document" if result.evidence_content else "chunk",
             )
         )
         if len(sources) == max_sources:

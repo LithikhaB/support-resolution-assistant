@@ -135,6 +135,8 @@ Symptom Category Guidance:
 - mobile_data: Mobile data/4G/5G not working while calls/texts work.
 - voice_call_failure: Mobile calls dropping, failing to connect, or call quality issues.
 - number_porting: Moving mobile number between providers, PAC code issues.
+  A call or SMS fault starting after a number transfer belongs to number_porting;
+  distinguish that transfer context from an unrelated voice-call failure.
 - sim_esim_activation: New SIM card or eSIM not activating.
 - sms_otp: Banking verification codes / SMS OTP not arriving.
 - roaming: Issues using phone, calls, or data abroad/overseas.
@@ -146,6 +148,8 @@ Also assess severity from service impact: critical is a reported shared area out
 high is total loss of an essential service; medium is degraded or intermittent service;
 low is a billing/information query without reported service loss. Anger alone is not severity.
 Assess customer sentiment from their wording: neutral, concerned, frustrated, angry or unknown.
+Use neutral for a factual complaint or polite request without expressed emotion. Do not
+infer concern from a request to check details. Concerned needs expressed worry or anxiety.
 Supply an exact complaint quote for both assessments. Never invent impact or emotion.
 """
     )
@@ -173,7 +177,14 @@ Supply an exact complaint quote for both assessments. Never invent impact or emo
                 or category.quote not in text
                 or not compatible_category(category.category, products, category_products)
             ):
-                raise LanguageUnavailable("unsupported_category_proposal")
+                reason = (
+                    "category_not_supported"
+                    if category.category not in category_options
+                    else "untraceable_quote"
+                    if category.quote not in text
+                    else "incompatible_product"
+                )
+                raise LanguageUnavailable("unsupported_category_proposal:" + reason)
         assessments = []
         for observation in (result.severity, result.sentiment):
             assessment = None
@@ -231,6 +242,32 @@ def validate_interpretation(text, result):
         else:
             if item.name in VALUES and item.value not in VALUES[item.name]:
                 raise LanguageUnavailable("invalid_observation_value")
+            if item.name == "mobile_services":
+                markers = {
+                    "calls": r"\b(?:calls?|calling|dial\w*|voice)\b",
+                    "texts": r"\b(?:texts?|messages?|SMS|OTP|codes?)\b",
+                    "data": r"\b(?:data|cellular browsing|4G|5G)\b",
+                }
+                mentioned = {
+                    name
+                    for name, pattern in markers.items()
+                    if re.search(pattern, item.quote, re.I)
+                }
+                # No signal/service does not identify a single failing mobile service.
+                if (item.value != "several" and item.value not in mentioned) or (
+                    item.value == "several" and len(mentioned) < 2
+                ):
+                    continue
+            if (
+                item.name == "equipment_condition"
+                and item.value == "damaged"
+                and not re.search(
+                    r"\b(?:damaged|broken|cracked|burnt|burned|melted|frayed|crushed|snapped)\b",
+                    item.quote,
+                    re.I,
+                )
+            ):
+                continue
             if (
                 item.name == "equipment_condition"
                 and item.value == "intact"

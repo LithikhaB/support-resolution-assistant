@@ -92,7 +92,9 @@ def test_user_complaint_retains_context_without_fabricating_category():
         AnalyzeRequest(query=query)
     )
 
-    assert result.category is None
+    assert result.category == "intermittent_broadband"
+    assert result.category_basis == "explicit_report"
+    assert result.category_evidence[0].text == "broadband drops"
 
     assert result.actions[0].status == "attempted"
 

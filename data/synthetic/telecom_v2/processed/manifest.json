@@ -1,0 +1,8 @@
+{
+  "dataset_version": "telecom-synthetic-2.0.0",
+  "documents": 330,
+  "output_sha256": "a44109c1c53c5908df661ae2eb5344c32c996afa0727a0b08c711acdda017223",
+  "source_sha256": "a93a4a53ee5b02af72571b1e528fa63cba8d9fc9ff378a4de4eef19a2f0be348",
+  "source": "AI-authored synthetic procedure enrichment; gates and remedies retained from v1 reference KB",
+  "expert_reviewed": false
+}

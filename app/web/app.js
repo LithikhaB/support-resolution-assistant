@@ -41,26 +41,62 @@ async function send(request, updatedIssue = null) {
 }
 function sourcesPanel(resolution) {
   const details = el("details", undefined, "sources");
-  const history = (resolution.historical_cases || []).slice(0, 1);
+  const history = (resolution.historical_cases || []).slice(0, 3);
   details.append(el("summary", `Sources (${resolution.sources.length + history.length})`));
   for (const source of resolution.sources) {
     const article = el("div", undefined, "source");
     article.append(el("strong", `[${source.citation_id}] ${source.title}`));
-    for (const quote of source.quotes.filter(quote => quote.field !== "scope")) article.append(el("p", quote.text));
+    article.append(el("small", `${source.doc_id} · AI-authored synthetic · ${source.authority}`));
+    const quotes = el("details");
+    quotes.append(el("summary", "Inspect exact source evidence"));
+    for (const quote of source.quotes) quotes.append(el("p", `${quote.field}: ${quote.text}`));
+    article.append(quotes);
     details.append(article);
   }
   for (const item of history) {
     const article = el("div", undefined, "source");
-    article.append(el("strong", `[${item.citation_id}] Related resolved example: ${item.title}`), el("p", item.resolution));
+    const relationship = item.relationship === "similar_category" ? "Category comparison (different incident)" : "Similar simulated resolved case";
+    article.append(el("strong", `[${item.citation_id}] ${relationship}: ${item.title}`), el("p", item.resolution));
     details.append(article);
   }
   details.append(el("small", "These are synthetic support procedures for this demonstration."));
   return details;
 }
+function fieldChip(label, value, evidence, fallback = "No quoted evidence; provisional model prediction.") {
+  const chip = el("details", undefined, "chip");
+  const why = evidence?.length ? evidence.map(item => `“${item.text}”`).join("; ") : fallback;
+  const summary = el("summary", `${label}: ${value}`);
+  summary.title = why;
+  chip.append(summary, el("small", `Why: ${why}`));
+  return chip;
+}
+function quickAnswers(question) {
+  if (/Ethernet|wired/i.test(question) && !/Without using Ethernet/i.test(question)) return [
+    ["Wired also drops", {wired_connection: "failing"}],
+    ["Wired stays connected", {wired_connection: "working"}],
+    ["No wired test available", {wired_connection: "unavailable"}]
+  ];
+  if (/one device|every wireless|all your Wi-Fi/i.test(question)) return [
+    ["One wireless device", {wireless_devices: "one"}], ["All wireless devices", {wireless_devices: "all"}]
+  ];
+  if (/pending or settled/i.test(question) && !/Which charge/i.test(question)) return [
+    ["Payment pending", {billing_status: "pending"}], ["Payment settled", {billing_status: "settled"}]
+  ];
+  if (/completely unavailable or intermittent/i.test(question)) return [
+    ["Complete loss", {impact: "complete_loss"}], ["Intermittent", {impact: "intermittent"}]
+  ];
+  return [];
+}
 function renderIssue(issue) {
   const resolution = issue.resolution;
   const panel = el("article", undefined, "panel");
-  panel.append(el("h2", "Your complaint"), el("p", issue.complaint, "message"));
+  const decision = resolution.decision;
+  const header = el("div", undefined, "decision");
+  header.append(el("h2", `Issue ${issue.issue_id} · ${decision.action.replaceAll("_", " ")}`),
+    el("span", `${decision.priority} priority`, `badge ${decision.priority}`),
+    el("span", `Target: ${decision.target.replaceAll("_", " ")}`, "badge"));
+  header.title = decision.reasons.join("; ");
+  panel.append(header, el("small", "Agent review required · advisory only; no handoff created"), el("h3", "Customer complaint"), el("p", issue.complaint, "message"));
   for (const turn of conversation.turns.filter(turn => turn.issue_id === issue.issue_id)) panel.append(el("p", turn.message, "reply"));
   const response = el("section", undefined, "response");
   response.id = `response-${issue.issue_id}`;
@@ -68,22 +104,36 @@ function renderIssue(issue) {
   const plan = resolution.language_plan || resolution.customer_plan;
   const analysis = resolution.analysis;
   const products = analysis.products.map(item => item.product.replaceAll("_", " ")).join(", ") || "not identified";
-  response.append(el("p", `Category: ${(analysis.category || "needs more detail").replaceAll("_", " ")} · Product: ${products} · Severity: ${analysis.severity.value} · Sentiment: ${analysis.sentiment.value}`, "muted"));
+  const fields = el("div", undefined, "fields");
+  const category = analysis.category || `Provisional: ${analysis.candidates.slice(0, 2).map(item => item.category.replaceAll("_", " ")).join(" / ") || "unclassified"}`;
+  fields.append(fieldChip("Category", category.replaceAll("_", " "), analysis.category_evidence),
+    fieldChip("Product", products, analysis.products),
+    fieldChip("Severity", analysis.severity.value, analysis.severity.evidence, analysis.severity.rule),
+    fieldChip("Sentiment", analysis.sentiment.value, analysis.sentiment.evidence, analysis.sentiment.rule));
+  for (const action of analysis.actions.filter(item => item.status === "attempted")) fields.append(fieldChip("Already tried", action.text, [action]));
+  response.append(fields);
   response.append(el("h2", plan.title), el("p", resolution.language_summary || plan.summary));
-  response.append(el("small", resolution.language_status === "generated_for_review" ? `LLM-assisted guidance · ${resolution.language_provider}` : "Source-based guidance", "muted"));
+  const trust = el("div", undefined, "trust");
+  const validation = el("span", `Citation validation: ${resolution.validation.status}`, `badge ${resolution.validation.status}`);
+  validation.title = resolution.validation.scope + " " + resolution.validation.issues.join("; ");
+  const generatedSteps = resolution.language_plan && JSON.stringify(resolution.language_plan.steps) !== JSON.stringify(resolution.customer_plan.steps);
+  const languageBadge = resolution.language_status === "generated_for_review"
+    ? `${generatedSteps ? "LLM plan" : "LLM introduction · local steps"} · ${resolution.language_provider} · ${resolution.language_model}`
+    : `Local deterministic plan · ${resolution.language_status}`;
+  trust.append(validation, el("span", languageBadge, "badge"), el("span", "AI-authored synthetic data", "badge"));
+  response.append(trust);
   if (plan.steps.length) {
     const steps = el("ol");
     for (const step of plan.steps) steps.append(el("li", step));
     response.append(steps);
   }
-  if (resolution.acknowledged_actions.length) response.append(el("p", `Already tried: ${resolution.acknowledged_actions.join("; ")}`, "muted"));
   if (plan.note) response.append(el("small", plan.note));
   panel.append(response);
   if (resolution.sources.length) panel.append(sourcesPanel(resolution));
   const form = el("form", undefined, "followup");
   const questions = resolution.clarification_questions;
   for (const question of questions) form.append(el("p", question, "question"));
-  const label = el("label", questions.length ? "Your answer" : "Add a detail or ask a follow-up");
+  const label = el("label", questions.length ? "Record the customer's answer" : "Add an observation or follow-up");
   const input = el("textarea");
   input.id = `answer-${issue.issue_id}`;
   input.required = true;
@@ -93,6 +143,15 @@ function renderIssue(issue) {
   label.htmlFor = input.id;
   const submit = el("button", "Send reply");
   submit.type = "submit";
+  for (const [answer, observations] of quickAnswers(questions[0] || "")) {
+    const button = el("button", answer, "secondary quick-answer");
+    button.type = "button";
+    button.onclick = () => {
+      if (conversation.turns.length >= 8) { input.setCustomValidity("Eight replies reached. Start a new ticket with a summary."); input.reportValidity(); return; }
+      send({...conversation, turns: [...conversation.turns, {issue_id: issue.issue_id, message: answer, observations}]}, issue.issue_id);
+    };
+    form.append(button);
+  }
   form.append(label, input, submit);
   form.onsubmit = event => {
     event.preventDefault();
@@ -117,7 +176,7 @@ function renderIssue(issue) {
 }
 byId("create-form").onsubmit = event => {
   event.preventDefault();
-  send({query: byId("complaint").value.trim(), turns: [], max_sources: 3});
+  send({query: byId("complaint").value.trim(), turns: [], max_sources: 2});
 };
 byId("new-ticket").onclick = () => {
   conversation = null;

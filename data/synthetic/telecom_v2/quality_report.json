@@ -1,0 +1,60 @@
+{
+  "checks_passed": [
+    "schema",
+    "unique_ids",
+    "split_family_disjointness",
+    "no_heldout_ticket_in_corpus",
+    "kb_references",
+    "unique_queries",
+    "severity_independent_of_tone"
+  ],
+  "counts": {
+    "tickets": 510,
+    "knowledge_base": 60,
+    "train": 240,
+    "dev": 120,
+    "test": 120,
+    "documents": 330,
+    "challenge_queries": 15
+  },
+  "families_per_split": {
+    "train": 30,
+    "dev": 15,
+    "test": 15
+  },
+  "categories": {
+    "broadband_outage": 16,
+    "billing_dispute": 16,
+    "router_ont_hardware": 16,
+    "intermittent_broadband": 16,
+    "mobile_coverage": 16,
+    "mobile_data": 16,
+    "number_porting": 16,
+    "payment_restoration": 16,
+    "roaming": 16,
+    "sim_esim_activation": 16,
+    "sms_otp": 16,
+    "slow_broadband": 16,
+    "iptv": 16,
+    "voice_call_failure": 16,
+    "wifi_connectivity": 16
+  },
+  "limitations": [
+    "AI-authored scenarios; no telecom expert review or real-world outcome verification.",
+    "Eight controlled variants per family are not independent incidents.",
+    "Reference KB covers held-out families; this is unseen-ticket evaluation, not unseen-knowledge evaluation.",
+    "Test data is visible for audit; freeze it before tuning. Independent human-authored tests remain necessary."
+  ],
+  "dataset_version": "telecom-synthetic-2.0.0",
+  "catalog_sha256": "e4e95a51ebeb96316599681c16fd444f1044b7cd66ed942dd0f15ff04c5bd864",
+  "file_sha256": {
+    "tickets.jsonl": "6ec0d8bdd6889d03696342114be851e980d74ad2691bc27e0aae253d89563632",
+    "knowledge_base.jsonl": "941814be1b018be21d4817c5ff1101a56e168c3737001556473586f3e684ddc4",
+    "train.jsonl": "db476cd8139d73170d6f50a8392e090ceb665253b285daf1bf0eb39b83309bc9",
+    "dev.jsonl": "fe5e48b90972fd715884404937ef65ba1c4f59ab55dd20fb2ea60f4f2c215e2c",
+    "test.jsonl": "6cadd53ddd8e7fbcbfa14476f546be2847672726aa653d8cf950477e65011c42",
+    "processed/documents.jsonl": "a44109c1c53c5908df661ae2eb5344c32c996afa0727a0b08c711acdda017223",
+    "challenge_queries.jsonl": "853d91c5cc2c724856c322a5993e4d8642d724025f2ce8e84740aa208f60bb79"
+  },
+  "procedure_authorship": "AI-authored synthetic; gates retained from v1 reference KB"
+}

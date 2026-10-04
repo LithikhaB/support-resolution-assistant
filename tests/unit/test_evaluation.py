@@ -1,12 +1,38 @@
 """Protect evaluation denominators, immutable reports and family-separated holdouts."""
 
 import json
+from pathlib import Path
 
 import numpy as np
 import pytest
 
 from app.evaluation.metrics import routing_metrics
 from app.evaluation.preparation import freeze_run, validate_holdout
+from scripts.evaluate_resolution_path import audit_examples, loss_stage
+
+
+def test_understanding_fewshots_are_training_families_only():
+    audit = audit_examples(Path(__file__).resolve().parents[2] / "data/synthetic/telecom_v1")
+    assert len(audit["examples"]) == 30 and audit["heldout_example_count"] == 0
+    assert not {"BB03", "SP03", "WF03", "VC03", "NP03", "SM04"}.intersection(
+        row["family"] for row in audit["examples"]
+    )
+
+
+def test_stage_trace_distinguishes_applicability_from_final_ranking_loss():
+    trace = {
+        "scope_status": "supported",
+        "supported_scopes": ["billing"],
+        "retrieved_kb_ids": ["right", "wrong"],
+        "eligibility": [{"doc_id": "right", "rejection": "conflicting_observation"}],
+        "selected_pool_ids": ["wrong"],
+        "final_source_ids": ["wrong"],
+    }
+    assert loss_stage(trace, {"right"}) == "applicability"
+    trace["eligibility"][0]["rejection"] = None
+    assert loss_stage(trace, {"right"}) == "procedure_selection"
+    trace["selected_pool_ids"].append("right")
+    assert loss_stage(trace, {"right"}) == "ranking_or_source_cap"
 
 
 def row(family, query, intent="a"):

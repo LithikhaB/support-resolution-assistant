@@ -11,8 +11,28 @@ EQUIPMENT = r"(?:modem|router|ont|equipment|cables?|landlines?|ethernet line)"
 EQUIPMENT_LINK = r"(?:\s+(?:is|are|was|were|has|have|been|got|looks?|seems?|everything|all|physically|completely|badly|casing)){0,6}\s+"
 
 FACT_PATTERNS = (
-    ("port_status", "rejected", r"\b(?:number transfer|port(?:ing)?(?: request| order)?)\s+(?:was |is |has been )?rejected\b"),
-    ("port_reason", "account_mismatch", r"\bdetails\s+(?:do not|don't|don’t)\s+match\b|\baccount\s+(?:details?\s+)?mismatch\b"),
+    (
+        "weather_context",
+        "reported",
+        r"\b(?:storm|rain|raining|wet weather|thunderstorm|lightning)\b",
+    ),
+    ("timing", "peak_hours", r"\b(?:evenings?|peak[ -]hours?|busy hours?|nightly)\b"),
+    (
+        "wired_connection",
+        "working",
+        r"\b(?:Ethernet|wired(?: connection)?)\s+(?:stays|remains)\s+(?:working|connected|stable)\b",
+    ),
+    ("wireless_devices", "all", r"\b(?:every|all)\s+wireless\s+devices?\b"),
+    (
+        "port_status",
+        "rejected",
+        r"\b(?:number transfer|port(?:ing)?(?: request| order)?)\s+(?:was |is |has been )?rejected\b",
+    ),
+    (
+        "port_reason",
+        "account_mismatch",
+        r"\bdetails\s+(?:do not|don't|don’t)\s+match\b|\baccount\s+(?:details?\s+)?mismatch\b",
+    ),
     (
         "security_request",
         "otp_sharing",
@@ -38,7 +58,7 @@ FACT_PATTERNS = (
     (
         "optical_signal",
         "loss_reported",
-        r"\b(?:red\s+LOS(?:\s+light)?|LOS\s+(?:light\s+)?(?:is\s+)?red)\b",
+        r"\b(?:red\s+LOS(?:\s+light)?|LOS\s+(?:light\s+)?(?:is\s+)?red|(?:optical box|ONT)\s+(?:has|shows)\s+(?:a\s+)?red\s+light)\b",
     ),
     (
         "wired_connection",
@@ -100,7 +120,11 @@ FACT_PATTERNS = (
         "buffering",
         r"\b(?:live channels?|TV|television|picture|set.top box)\s+(?:(?:keeps?|is|are|still)\s+)*(?:freez(?:e|es|ing)|buffers?|buffering)\b",
     ),
-    ("charge", "bill_payment", r"\b(?:two|duplicate)\s+(?:(?:completed|settled)\s+)?(?:charges|payments)\b"),
+    (
+        "charge",
+        "bill_payment",
+        r"\b(?:two|duplicate)\s+(?:(?:completed|settled)\s+)?(?:charges|payments)\b",
+    ),
     (
         "wired_connection",
         "unavailable",
@@ -111,7 +135,11 @@ FACT_PATTERNS = (
         "water_exposed",
         r"\bfloodwater\s+(?:got|came)\s+into\s+(?:my|the)\s+(?:modem|router|equipment)\b",
     ),
-    ("billing_status", "pending", r"\b(?:money|payments?|transactions?)\b(?:(?!\b(?:not|no)\b)[^.!?]){0,35}\bpending\b"),
+    (
+        "billing_status",
+        "pending",
+        r"\b(?:money|payments?|transactions?)\b(?:(?!\b(?:not|no)\b)[^.!?]){0,35}\bpending\b",
+    ),
     ("billing_status", "settled", r"\b(?:both|two)[^.!?]{0,40}\b(?:settled|completed)\b"),
     ("charge", "bill_payment", r"\b(?:paid my bill|same(?: monthly)? bill|duplicate charges?)\b"),
     (

@@ -14,7 +14,10 @@ def main():
     settings = get_settings()
     run("setup_database")
     if not (settings.processed_dir / "documents.jsonl").exists():
-        run("prepare_synthetic")
+        if settings.corpus_dir.name == "telecom_v2":
+            run("enrich_procedures", "--output", str(settings.corpus_dir))
+        else:
+            run("prepare_synthetic")
     if not (settings.processed_dir / "chunks.jsonl").exists():
         run("chunk_documents")
     # Container packages can differ from the host that created the persisted index.

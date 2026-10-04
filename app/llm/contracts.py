@@ -6,6 +6,10 @@ from typing import Protocol
 class LanguageUnavailable(RuntimeError):
     """Signal an unavailable or invalid language response without private payloads."""
 
+    def __init__(self, message, *, retry_after=None):
+        super().__init__(message)
+        self.retry_after = retry_after
+
 
 class LanguageProvider(Protocol):
     """Allow providers to change without changing understanding or resolution logic."""

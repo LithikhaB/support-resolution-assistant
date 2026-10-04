@@ -152,6 +152,10 @@ def apply_answers(analysis, text, turns, structured, *, history_start):
             if (
                 current_impact.value != "unknown"
                 and analysis.severity.rule != "reported_area_outage"
+                and not (
+                    analysis.severity.rule == "reported_business_impact"
+                    and current_impact.value != "low"
+                )
             ):
                 for evidence in current_impact.evidence:
                     evidence.start += cursor
@@ -165,7 +169,11 @@ def apply_answers(analysis, text, turns, structured, *, history_start):
     names = {f.name for f in structured}
     analysis.reported_facts = [f for f in facts if f.name not in names] + structured
     impact = next((f for f in structured if f.name == "impact"), None)
-    if impact and analysis.severity.rule != "reported_area_outage":
+    if (
+        impact
+        and analysis.severity.rule != "reported_area_outage"
+        and not (analysis.severity.rule == "reported_business_impact" and impact.value != "working")
+    ):
         analysis.severity = RuleAssessment(
             value={"complete_loss": "high", "intermittent": "medium", "working": "low"}[
                 impact.value

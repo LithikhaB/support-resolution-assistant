@@ -75,6 +75,32 @@ def test_citations_are_exact_and_diagnostic_gate_remains_unconfirmed():
     assert result.sources[0].is_synthetic
 
 
+def test_predicted_category_cannot_override_more_relevant_applicable_procedure():
+    observed = analysis("My broadband repeatedly drops while the ONT stays powered on.")
+    observed.category = "router_ont_hardware"
+    correct = kb()
+    wrong = kb().model_copy(
+        update={
+            "doc_id": "hardware",
+            "chunk_id": 2,
+            "metadata": {**correct.metadata, "category": "router_ont_hardware"},
+        }
+    )
+    result = draft_resolution(observed, [correct, wrong], max_sources=1)
+    assert result.sources[0].doc_id == correct.doc_id
+
+
+def test_provider_outage_preserves_reranked_procedure_over_embedding_similarity():
+    from app.resolution.selection import rank_fallback
+
+    correct = kb().model_copy(update={"cosine_similarity": 0.2})
+    wrong = kb().model_copy(update={"doc_id": "unrelated", "chunk_id": 2, "cosine_similarity": 0.9})
+    result = draft_resolution(
+        analysis("My broadband disconnects."), rank_fallback([correct, wrong]), max_sources=1
+    )
+    assert result.sources[0].doc_id == correct.doc_id
+
+
 def test_completed_action_is_withheld_but_negated_attempt_is_not():
     source = kb("Restart the router and observe the connection.")
     done = draft_resolution(

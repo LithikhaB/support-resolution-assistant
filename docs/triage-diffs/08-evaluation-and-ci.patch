@@ -1,0 +1,246 @@
+--- a/scripts/summarize_triage_report.py
++++ b/scripts/summarize_triage_report.py
+@@ -0,0 +1,92 @@
++"""Report per-area executable contract checks separately from unscored manual expectations."""
++
++import argparse
++import json
++from collections import Counter, defaultdict
++from pathlib import Path
++
++from app.ingestion.artifacts import file_sha256, write_json
++
++
++def summarize(report):
++    """A structural pass is not an assertion that the natural-language expectations passed."""
++    areas = defaultdict(Counter)
++    failures = []
++    providers = Counter()
++    categories_unknown = sentiments_unknown = 0
++    for case in report["results"]:
++        area = areas[case.get("area", "unspecified")]
++        area["cases"] += 1
++        case_passed = True
++        for snapshot in case["snapshots"]:
++            area["snapshots"] += 1
++            if "error" in snapshot:
++                case_passed = False
++                failures.append(
++                    {
++                        "case": case["id"],
++                        "after_reply": snapshot["after_reply"],
++                        "error": snapshot["error"],
++                    }
++                )
++                continue
++            issues = snapshot["response"]["issues"]
++            good = bool(issues)
++            for issue in issues:
++                result = issue["resolution"]
++                plan = result.get("language_plan") or result["customer_plan"]
++                good &= (
++                    result["validation"]["status"] == "passed"
++                    and result["agent_review_required"] is True
++                    and result["decision"]["handoff_created"] is False
++                    and bool(plan and plan["steps"])
++                    and bool(result["decision"]["action"])
++                )
++                providers[result["language_status"]] += 1
++                categories_unknown += result["analysis"]["category"] is None
++                sentiments_unknown += result["analysis"]["sentiment"]["value"] == "unknown"
++            area["contract_passed_snapshots"] += good
++            case_passed &= good
++            if not good:
++                failures.append(
++                    {
++                        "case": case["id"],
++                        "after_reply": snapshot["after_reply"],
++                        "error": "response_contract_failed",
++                    }
++                )
++        area["contract_passed_cases"] += case_passed
++    return {
++        "run_complete": report["run_complete"],
++        "measurement": "HTTP success, nonempty plan, passed exact-source validation, agent review required and no handoff claim; not relevance, diagnosis or manual expectation accuracy",
++        "per_area": {
++            name: {
++                **count,
++                "contract_case_pass_rate": count["contract_passed_cases"] / count["cases"],
++            }
++            for name, count in sorted(areas.items())
++        },
++        "language_statuses": dict(providers),
++        "unknown_category_issue_snapshots": categories_unknown,
++        "unknown_sentiment_issue_snapshots": sentiments_unknown,
++        "failures": failures,
++        "independent_human_ratings": 0,
++        "manual_expectation_cases_unscored": len(report["results"]),
++    }
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("report", type=Path)
++    parser.add_argument("--output", type=Path, required=True)
++    args = parser.parse_args()
++    if args.output.exists():
++        parser.error("Choose a new filename; existing reports are immutable")
++    result = summarize(json.loads(args.report.read_text(encoding="utf-8")))
++    result["report_sha256"] = file_sha256(args.report)
++    write_json(args.output, result)
++    print(json.dumps(result, indent=2))
++
++
++if __name__ == "__main__":
++    main()
+--- a/.github/workflows/ci.yml
++++ b/.github/workflows/ci.yml
+@@ -26,6 +26,11 @@
+       - run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+       - run: pip install -r requirements.txt
+       - run: python -m ruff check app scripts tests
++      - run: python -m ruff format --check app scripts tests
++      - uses: actions/setup-node@v4
++        with:
++          node-version: "20"
++      - run: node --test tests/web/agent_console.test.cjs
+       - run: python -m scripts.setup_database
+       - run: python -m pytest -q
+   container:
+--- a/tests/evaluation/test_support_behaviour.py
++++ b/tests/evaluation/test_support_behaviour.py
+@@ -190,9 +190,11 @@
+         CategoryCandidate(category="number_porting", score=0.85),
+         CategoryCandidate(category="sim_esim_activation", score=0.02),
+     ]
+-    result = understanding.analyze(AnalyzeRequest(
+-        query="My number transfer was rejected because the details do not match the old provider's account."
+-    ))
++    result = understanding.analyze(
++        AnalyzeRequest(
++            query="My number transfer was rejected because the details do not match the old provider's account."
++        )
++    )
+     assert result.category == "number_porting"
+     assert result.scope_status == "supported"
+     assert result.language_method == "rules_fallback"
+@@ -203,14 +205,25 @@
+     from app.resolution.customer import procedure_note, procedure_steps
+     from app.resolution.models import ConditionalSuggestion
+ 
+-    result = Mock(suggestions=[ConditionalSuggestion(
+-        citation_id="S1", required_finding="Ledger confirms duplicate settled payments.",
+-        proposed_action="Authorized billing staff reconcile the duplicate payment.",
+-        restriction="Do not promise a refund deadline.", status="requires_agent_confirmation",
+-    )])
++    result = Mock(
++        acknowledged_actions=[],
++        analysis=Mock(actions=[], reported_facts=[]),
++        sources=[],
++        historical_cases=[],
++        suggestions=[
++            ConditionalSuggestion(
++                citation_id="S1",
++                required_finding="Ledger confirms duplicate settled payments.",
++                proposed_action="Authorized billing staff reconcile the duplicate payment.",
++                restriction="Do not promise a refund deadline.",
++                status="requires_agent_confirmation",
++            )
++        ],
++    )
+     steps = procedure_steps(result)
+     assert len(steps) == 2 and all("[S1]" in step for step in steps)
+-    assert steps[0].startswith("Support check:") and steps[1].startswith("If confirmed:")
++    assert steps[0].startswith("Check with authorized")
++    assert steps[1].startswith("Only if support confirms")
+     assert "refund deadline" in procedure_note(result)
+ 
+ 
+@@ -218,13 +231,23 @@
+     from app.llm.client import LanguageUnavailable
+     from app.resolution.selection import ProcedureChoice, select_relevant_procedure
+ 
+-    rows = [BM25Result(
+-        chunk_id=i, doc_id=f"kb{i}", chunk_index=0, title="Billing investigation",
+-        doc_type="knowledge_base", response=None, resolution=None, outcome_status="reference",
+-        metadata={"authority":"fictional_provider_policy", "is_synthetic":True},
+-        bm25_score=1, bm25_rank=i,
+-        content=f"Scope: billing; support category: billing_dispute.\nDiagnostic gate: Ledger check {i}.\nOnly if that finding is established: Authorized billing staff reconcile the ledger.\nRestriction: Do not promise a refund deadline.",
+-    ) for i in (1, 2)]
++    rows = [
++        BM25Result(
++            chunk_id=i,
++            doc_id=f"kb{i}",
++            chunk_index=0,
++            title="Billing investigation",
++            doc_type="knowledge_base",
++            response=None,
++            resolution=None,
++            outcome_status="reference",
++            metadata={"authority": "fictional_provider_policy", "is_synthetic": True},
++            bm25_score=1,
++            bm25_rank=i,
++            content=f"Scope: billing; support category: billing_dispute.\nDiagnostic gate: Ledger check {i}.\nOnly if that finding is established: Authorized billing staff reconcile the ledger.\nRestriction: Do not promise a refund deadline.",
++        )
++        for i in (1, 2)
++    ]
+     observed = service().analyze(AnalyzeRequest(query="My bill has two payments."))
+     client = Mock()
+     client.generate.return_value = ProcedureChoice(doc_id="kb2")
+@@ -244,10 +267,13 @@
+     from app.understanding.language import validate_interpretation
+ 
+     text = "My phone has no service after I manually selected a network."
+-    products, facts = validate_interpretation(text, Interpretation(
+-        products=[{"product":"mobile", "quote":text}],
+-        facts=[{"name":"mobile_services", "value":"calls", "quote":text}],
+-    ))
++    products, facts = validate_interpretation(
++        text,
++        Interpretation(
++            products=[{"product": "mobile", "quote": text}],
++            facts=[{"name": "mobile_services", "value": "calls", "quote": text}],
++        ),
++    )
+     observed = service().analyze(AnalyzeRequest(query=text))
+     observed.products, observed.reported_facts = products, facts
+     assert not any(f.name == "mobile_services" for f in facts)
+@@ -256,25 +282,32 @@
+ 
+ def test_overheating_is_not_inferred_physical_damage():
+     from app.understanding.language import validate_interpretation
++
+     text = "The router gets hot in a closed cabinet and shuts down."
+-    _, facts = validate_interpretation(text, Interpretation(
+-        products=[{"product":"router", "quote":"router"}],
+-        facts=[{"name":"equipment_condition", "value":"damaged", "quote":text}],
+-    ))
++    _, facts = validate_interpretation(
++        text,
++        Interpretation(
++            products=[{"product": "router", "quote": "router"}],
++            facts=[{"name": "equipment_condition", "value": "damaged", "quote": text}],
++        ),
++    )
+     assert not any(f.name == "equipment_condition" for f in facts)
+ 
+ 
+ def test_porting_scope_keeps_transfer_procedures_when_only_calls_fail():
+     from app.resolution.evidence import supported_scopes
+     from app.understanding.models import ReportedFact
++
+     observed = service().analyze(AnalyzeRequest(query="After number porting, incoming calls fail."))
+     observed.category = "number_porting"
+-    observed.reported_facts = [ReportedFact(name="mobile_services", value="calls",
+-        text="calls", start=0, end=5)]
++    observed.reported_facts = [
++        ReportedFact(name="mobile_services", value="calls", text="calls", start=0, end=5)
++    ]
+     assert "mobile" in supported_scopes(observed)
+ 
+ 
+ def test_freeform_reviewed_checks_are_available_to_drafting():
+     from app.resolution.language import reported_checks
++
+     text = "My bill is higher. Already checked: Compared invoice dates with the plan-change date. Could you check this when you have the details?"
+     assert reported_checks(text) == ["Compared invoice dates with the plan-change date."]

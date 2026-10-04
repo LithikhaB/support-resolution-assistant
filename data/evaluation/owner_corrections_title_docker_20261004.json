@@ -1,0 +1,995 @@
+{
+  "created_at": "2026-10-04T15:10:57.484947+00:00",
+  "scope": "Final title-aware Docker HTTP owner-review complaints; no human ratings.",
+  "results": [
+    {
+      "id": "query_BD03_01",
+      "query": "My first invoice after changing plans is higher and contains part-month entries for both plans. Already checked: Compared invoice dates with the plan-change date. Could you check this when you have the details?",
+      "http_status": 200,
+      "response": {
+        "status": "needs_diagnostic_confirmation",
+        "decision": {
+          "action": "clarify",
+          "priority": "normal",
+          "reasons": [
+            "missing_customer_observations"
+          ],
+          "target": "support_agent",
+          "handoff_created": false
+        },
+        "validation": {
+          "status": "passed",
+          "checked_sources": 1,
+          "issues": [],
+          "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+        },
+        "method": "local_extractive_v1",
+        "language_summary": null,
+        "language_plan": null,
+        "language_draft": null,
+        "language_status": "fallback",
+        "language_model": null,
+        "language_provider": null,
+        "faithfulness_status": "not_run",
+        "faithfulness_issues": [],
+        "language_error": "groq:provider_http_429;gemini:provider_http_429",
+        "historical_cases": [
+          {
+            "citation_id": "T1",
+            "doc_id": "syn_ticket_BD01_02",
+            "chunk_id": 108,
+            "title": "Billing dispute support case",
+            "resolution": "Finding: Ledger confirms duplicate settled payments against one invoice. Action: Authorized billing staff reconcile the ledger and initiate the approved duplicate-payment adjustment. Simulated follow-up: adjustment appears in the ledger and is communicated to the customer.",
+            "outcome_status": "simulated_resolved",
+            "is_synthetic": true,
+            "relationship": "similar_category"
+          },
+          {
+            "citation_id": "T2",
+            "doc_id": "syn_ticket_BD02_06",
+            "chunk_id": 120,
+            "title": "Billing dispute support case",
+            "resolution": "Finding: Audit trail has no valid consent record for the add-on. Action: Billing staff investigate consent, remove the unsupported charge through policy, and document the decision. Simulated follow-up: corrected invoice excludes the unsupported add-on.",
+            "outcome_status": "simulated_resolved",
+            "is_synthetic": true,
+            "relationship": "similar_category"
+          }
+        ],
+        "agent_review_required": true,
+        "draft": "Draft for agent review. A cause has not been confirmed.\n\nAlready attempted, according to the customer: Already checked: Compared invoice dates with the plan-change date\n\nClarify: Which charge or payment is affected, and is it pending or settled?\n\nAnswer the clarification questions before choosing a repair. Retrieved procedures are attached for agent review, not recommended actions yet.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: clarify. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+        "analysis": {
+          "category": "billing_dispute",
+          "scope_status": "supported",
+          "scope_reason": "recognized_service_mention",
+          "category_status": "predicted",
+          "category_basis": "model",
+          "category_evidence": [],
+          "routing_policy": "development_selected_v1",
+          "candidates": [
+            {
+              "category": "billing_dispute",
+              "score": 0.7053354623276622
+            },
+            {
+              "category": "mobile_data",
+              "score": 0.06184714921154606
+            },
+            {
+              "category": "slow_broadband",
+              "score": 0.040301645712094575
+            }
+          ],
+          "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+          "products": [
+            {
+              "text": "invoice",
+              "start": 9,
+              "end": 16,
+              "product": "billing"
+            }
+          ],
+          "severity": {
+            "value": "low",
+            "rule": "reported_billing_question",
+            "evidence": [
+              {
+                "text": "invoice after changing plans is higher",
+                "start": 9,
+                "end": 47
+              }
+            ],
+            "method": "rules_v1"
+          },
+          "sentiment": {
+            "value": "unknown",
+            "rule": "no_explicit_tone",
+            "evidence": [],
+            "method": "rules_v1"
+          },
+          "actions": [
+            {
+              "text": "Already checked: Compared invoice dates with the plan-change date",
+              "start": 96,
+              "end": 161,
+              "action": "compare_devices",
+              "status": "attempted"
+            }
+          ],
+          "reported_facts": [],
+          "requests": [],
+          "needs_clarification": true,
+          "clarification_questions": [
+            "Which charge or payment is affected, and is it pending or settled?"
+          ],
+          "model_version": "000800b1c903f40a",
+          "language_method": "rules_fallback",
+          "language_provider": null,
+          "language_model": null,
+          "language_error": "groq:provider_http_429;gemini:provider_http_429",
+          "elapsed_ms": 11374.110574999577
+        },
+        "suggestions": [
+          {
+            "citation_id": "S1",
+            "required_finding": "Ledger shows correct non-overlapping prorated periods and no duplicate charge.",
+            "proposed_action": "Explain the dated line items and calculation; retain the valid charges unless new evidence shows an error.",
+            "restriction": "Do not issue a credit merely because the customer is angry.",
+            "status": "requires_agent_confirmation",
+            "repeated_actions": []
+          }
+        ],
+        "sources": [
+          {
+            "citation_id": "S1",
+            "doc_id": "syn_kb_BD03",
+            "chunk_id": 7,
+            "title": "Valid prorated billing misunderstood. — procedure",
+            "is_synthetic": true,
+            "authority": "fictional_provider_policy",
+            "quotes": [
+              {
+                "text": "billing",
+                "start": 139,
+                "end": 146,
+                "field": "scope"
+              },
+              {
+                "text": "Ledger shows correct non-overlapping prorated periods and no duplicate charge.",
+                "start": 297,
+                "end": 375,
+                "field": "condition"
+              },
+              {
+                "text": "Explain the dated line items and calculation; retain the valid charges unless new evidence shows an error.",
+                "start": 413,
+                "end": 519,
+                "field": "action"
+              },
+              {
+                "text": "Do not issue a credit merely because the customer is angry.",
+                "start": 745,
+                "end": 804,
+                "field": "restriction"
+              }
+            ]
+          }
+        ],
+        "clarification_questions": [
+          "Which charge or payment is affected, and is it pending or settled?"
+        ],
+        "acknowledged_actions": [
+          "Already checked: Compared invoice dates with the plan-change date"
+        ],
+        "contact_status": "not_requested",
+        "customer_plan": {
+          "title": "Initial checks",
+          "summary": "Your previous checks are noted. Review the next step and answer below.",
+          "steps": [
+            "Support check: Ledger shows correct non-overlapping prorated periods and no duplicate charge. [S1]",
+            "If confirmed: Explain the dated line items and calculation; retain the valid charges unless new evidence shows an error. [S1]"
+          ],
+          "note": ""
+        },
+        "limitations": [
+          "Extractive local drafting; no generative LLM is used.",
+          "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+          "Exact-source validation does not confirm applicability or real-world diagnostic correctness.",
+          "Language drafting unavailable; the original evidence-controlled draft is retained."
+        ],
+        "elapsed_ms": 15899.801175000903
+      }
+    },
+    {
+      "id": "query_ID03_01",
+      "query": "The internet disconnects for a minute at almost the same interval on Ethernet and Wi-Fi, with no change in the fibre light. Already checked: Restarted the router and recorded three disconnect times. Could you check this when you have the details?",
+      "http_status": 200,
+      "response": {
+        "status": "needs_diagnostic_confirmation",
+        "decision": {
+          "action": "clarify",
+          "priority": "normal",
+          "reasons": [
+            "missing_customer_observations"
+          ],
+          "target": "support_agent",
+          "handoff_created": false
+        },
+        "validation": {
+          "status": "passed",
+          "checked_sources": 1,
+          "issues": [],
+          "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+        },
+        "method": "local_extractive_v1",
+        "language_summary": null,
+        "language_plan": null,
+        "language_draft": null,
+        "language_status": "fallback",
+        "language_model": null,
+        "language_provider": null,
+        "faithfulness_status": "not_run",
+        "faithfulness_issues": [],
+        "language_error": "groq:circuit_open;gemini:circuit_open",
+        "historical_cases": [
+          {
+            "citation_id": "T1",
+            "doc_id": "syn_ticket_ID02_01",
+            "chunk_id": 147,
+            "title": "Intermittent broadband support case",
+            "resolution": "Finding: Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment. Action: Network operations rebalance capacity and monitor the affected segment during peak hours. Simulated follow-up: peak-hour packet loss subsides and calls stay connected.",
+            "outcome_status": "simulated_resolved",
+            "is_synthetic": true,
+            "relationship": "linked_procedure"
+          },
+          {
+            "citation_id": "T2",
+            "doc_id": "syn_ticket_ID01_05",
+            "chunk_id": 143,
+            "title": "Intermittent broadband support case",
+            "resolution": "Finding: Optical loss events align with rain; technician finds moisture at an external joint. Action: Dispatch an authorized technician to repair and seal the damaged joint. Simulated follow-up: no optical loss events during the next wet-weather observation.",
+            "outcome_status": "simulated_resolved",
+            "is_synthetic": true,
+            "relationship": "similar_category"
+          }
+        ],
+        "agent_review_required": true,
+        "draft": "Draft for agent review. A cause has not been confirmed.\n\nAlready attempted, according to the customer: Already checked: Restarted the router and recorded three disconnect times\n\nCustomer-reported observations: internet disconnects\n\nClarify: During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?\n\nAnswer the clarification questions before choosing a repair. Retrieved procedures are attached for agent review, not recommended actions yet.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: clarify. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+        "analysis": {
+          "category": "intermittent_broadband",
+          "scope_status": "supported",
+          "scope_reason": "recognized_service_mention",
+          "category_status": "predicted",
+          "category_basis": "model",
+          "category_evidence": [],
+          "routing_policy": "development_selected_v1",
+          "candidates": [
+            {
+              "category": "intermittent_broadband",
+              "score": 0.5559768167541613
+            },
+            {
+              "category": "broadband_outage",
+              "score": 0.2157771002566303
+            },
+            {
+              "category": "wifi_connectivity",
+              "score": 0.05245510378495054
+            }
+          ],
+          "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+          "products": [
+            {
+              "text": "internet",
+              "start": 4,
+              "end": 12,
+              "product": "broadband"
+            },
+            {
+              "text": "Wi-Fi",
+              "start": 82,
+              "end": 87,
+              "product": "home_wifi"
+            },
+            {
+              "text": "router",
+              "start": 155,
+              "end": 161,
+              "product": "router"
+            }
+          ],
+          "severity": {
+            "value": "medium",
+            "rule": "reported_degradation_or_work_impact",
+            "evidence": [
+              {
+                "text": "disconnects",
+                "start": 13,
+                "end": 24
+              }
+            ],
+            "method": "rules_v1"
+          },
+          "sentiment": {
+            "value": "unknown",
+            "rule": "no_explicit_tone",
+            "evidence": [],
+            "method": "rules_v1"
+          },
+          "actions": [
+            {
+              "text": "Already checked: Restarted the router and recorded three disconnect times",
+              "start": 124,
+              "end": 197,
+              "action": "restart_device",
+              "status": "attempted"
+            }
+          ],
+          "reported_facts": [
+            {
+              "text": "internet disconnects",
+              "start": 4,
+              "end": 24,
+              "name": "connection_pattern",
+              "value": "intermittent"
+            }
+          ],
+          "requests": [],
+          "needs_clarification": true,
+          "clarification_questions": [
+            "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?"
+          ],
+          "model_version": "000800b1c903f40a",
+          "language_method": "rules_fallback",
+          "language_provider": null,
+          "language_model": null,
+          "language_error": "groq:circuit_open;gemini:circuit_open",
+          "elapsed_ms": 72.39230699997279
+        },
+        "suggestions": [
+          {
+            "citation_id": "S1",
+            "required_finding": "Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment.",
+            "proposed_action": "Network operations rebalance capacity and monitor the affected segment during peak hours.",
+            "restriction": "Do not promise that a Wi-Fi channel change will repair provider congestion.",
+            "status": "requires_agent_confirmation",
+            "repeated_actions": []
+          }
+        ],
+        "sources": [
+          {
+            "citation_id": "S1",
+            "doc_id": "syn_kb_ID02",
+            "chunk_id": 14,
+            "title": "Congested access segment. — procedure",
+            "is_synthetic": true,
+            "authority": "fictional_provider_policy",
+            "quotes": [
+              {
+                "text": "fibre_broadband",
+                "start": 127,
+                "end": 142,
+                "field": "scope"
+              },
+              {
+                "text": "Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment.",
+                "start": 300,
+                "end": 394,
+                "field": "condition"
+              },
+              {
+                "text": "Network operations rebalance capacity and monitor the affected segment during peak hours.",
+                "start": 432,
+                "end": 521,
+                "field": "action"
+              },
+              {
+                "text": "Do not promise that a Wi-Fi channel change will repair provider congestion.",
+                "start": 741,
+                "end": 816,
+                "field": "restriction"
+              }
+            ]
+          }
+        ],
+        "clarification_questions": [
+          "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?"
+        ],
+        "acknowledged_actions": [
+          "Already checked: Restarted the router and recorded three disconnect times"
+        ],
+        "contact_status": "not_requested",
+        "customer_plan": {
+          "title": "Initial checks",
+          "summary": "Your previous checks are noted. Review the next step and answer below.",
+          "steps": [
+            "Support check: Line stays synchronized; provider monitoring shows peak-hour congestion on the access segment. [S1]",
+            "If confirmed: Network operations rebalance capacity and monitor the affected segment during peak hours. [S1]"
+          ],
+          "note": "Do not promise that a Wi-Fi channel change will repair provider congestion. [S1]"
+        },
+        "limitations": [
+          "Extractive local drafting; no generative LLM is used.",
+          "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+          "Exact-source validation does not confirm applicability or real-world diagnostic correctness.",
+          "Procedure selection unavailable; local ranking retained: groq:circuit_open;gemini:circuit_open",
+          "Language drafting unavailable; the original evidence-controlled draft is retained."
+        ],
+        "elapsed_ms": 2137.6003089990263
+      }
+    },
+    {
+      "id": "query_MC03_01",
+      "query": "My phone has no service after I manually selected a network on a trip. Other phones here work. Already checked: Restarted once; the manually selected network remains configured. Could you check this when you have the details?",
+      "http_status": 200,
+      "response": {
+        "status": "needs_diagnostic_confirmation",
+        "decision": {
+          "action": "clarify",
+          "priority": "normal",
+          "reasons": [
+            "missing_customer_observations"
+          ],
+          "target": "support_agent",
+          "handoff_created": false
+        },
+        "validation": {
+          "status": "passed",
+          "checked_sources": 1,
+          "issues": [],
+          "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+        },
+        "method": "local_extractive_v1",
+        "language_summary": null,
+        "language_plan": null,
+        "language_draft": null,
+        "language_status": "fallback",
+        "language_model": null,
+        "language_provider": null,
+        "faithfulness_status": "not_run",
+        "faithfulness_issues": [],
+        "language_error": "groq:circuit_open;gemini:circuit_open",
+        "historical_cases": [
+          {
+            "citation_id": "T1",
+            "doc_id": "syn_ticket_MC02_05",
+            "chunk_id": 167,
+            "title": "Mobile coverage support case",
+            "resolution": "Finding: Network incident confirms an affected serving site. Action: Associate the reports with the network incident and provide the confirmed status; operations restore the site. Simulated follow-up: test devices register after site restoration.",
+            "outcome_status": "simulated_resolved",
+            "is_synthetic": true,
+            "relationship": "similar_category"
+          },
+          {
+            "citation_id": "T2",
+            "doc_id": "syn_ticket_MC01_01",
+            "chunk_id": 155,
+            "title": "Mobile coverage support case",
+            "resolution": "Finding: No area outage; indoor attenuation is reproducible on multiple devices. Action: Assess supported Wi-Fi calling and record the location for coverage review. Simulated follow-up: supported Wi-Fi calling works indoors; outdoor coverage remains normal.",
+            "outcome_status": "simulated_resolved",
+            "is_synthetic": true,
+            "relationship": "similar_category"
+          }
+        ],
+        "agent_review_required": true,
+        "draft": "Draft for agent review. A cause has not been confirmed.\n\nAlready attempted, according to the customer: Already checked: Restarted once\n\nClarify: Are calls, texts, mobile data, or several of these affected?\n\nAnswer the clarification questions before choosing a repair. Retrieved procedures are attached for agent review, not recommended actions yet.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: clarify. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+        "analysis": {
+          "category": null,
+          "scope_status": "supported",
+          "scope_reason": "recognized_service_mention",
+          "category_status": "uncertain",
+          "category_basis": "uncertain",
+          "category_evidence": [],
+          "routing_policy": "development_selected_v1",
+          "candidates": [
+            {
+              "category": "roaming",
+              "score": 0.2853880023877037
+            },
+            {
+              "category": "broadband_outage",
+              "score": 0.17810761453584495
+            },
+            {
+              "category": "mobile_data",
+              "score": 0.15342432322493219
+            }
+          ],
+          "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+          "products": [
+            {
+              "text": "phone",
+              "start": 3,
+              "end": 8,
+              "product": "mobile"
+            }
+          ],
+          "severity": {
+            "value": "medium",
+            "rule": "reported_degradation_or_work_impact",
+            "evidence": [
+              {
+                "text": "no service",
+                "start": 13,
+                "end": 23
+              }
+            ],
+            "method": "rules_v1"
+          },
+          "sentiment": {
+            "value": "unknown",
+            "rule": "no_explicit_tone",
+            "evidence": [],
+            "method": "rules_v1"
+          },
+          "actions": [
+            {
+              "text": "Already checked: Restarted once",
+              "start": 95,
+              "end": 126,
+              "action": "restart_device",
+              "status": "attempted"
+            }
+          ],
+          "reported_facts": [],
+          "requests": [],
+          "needs_clarification": true,
+          "clarification_questions": [
+            "Are calls, texts, mobile data, or several of these affected?"
+          ],
+          "model_version": "000800b1c903f40a",
+          "language_method": "rules_fallback",
+          "language_provider": null,
+          "language_model": null,
+          "language_error": "groq:circuit_open;gemini:circuit_open",
+          "elapsed_ms": 50.92255999988993
+        },
+        "suggestions": [
+          {
+            "citation_id": "S1",
+            "required_finding": "Device is locked to an unavailable operator; account and SIM are active.",
+            "proposed_action": "Return network selection to automatic using the supported device settings.",
+            "restriction": "Do not replace an active SIM before checking operator selection.",
+            "status": "requires_agent_confirmation",
+            "repeated_actions": []
+          }
+        ],
+        "sources": [
+          {
+            "citation_id": "S1",
+            "doc_id": "syn_kb_MC03",
+            "chunk_id": 19,
+            "title": "Manual operator selection left enabled. — procedure",
+            "is_synthetic": true,
+            "authority": "fictional_provider_policy",
+            "quotes": [
+              {
+                "text": "mobile",
+                "start": 141,
+                "end": 147,
+                "field": "scope"
+              },
+              {
+                "text": "Device is locked to an unavailable operator; account and SIM are active.",
+                "start": 298,
+                "end": 370,
+                "field": "condition"
+              },
+              {
+                "text": "Return network selection to automatic using the supported device settings.",
+                "start": 408,
+                "end": 482,
+                "field": "action"
+              },
+              {
+                "text": "Do not replace an active SIM before checking operator selection.",
+                "start": 686,
+                "end": 750,
+                "field": "restriction"
+              }
+            ]
+          }
+        ],
+        "clarification_questions": [
+          "Are calls, texts, mobile data, or several of these affected?"
+        ],
+        "acknowledged_actions": [
+          "Already checked: Restarted once"
+        ],
+        "contact_status": "not_requested",
+        "customer_plan": {
+          "title": "One more detail",
+          "summary": "Your previous checks are noted. Review the next step and answer below.",
+          "steps": [
+            "Support check: Device is locked to an unavailable operator; account and SIM are active. [S1]",
+            "If confirmed: Return network selection to automatic using the supported device settings. [S1]"
+          ],
+          "note": "Do not replace an active SIM before checking operator selection. [S1]"
+        },
+        "limitations": [
+          "Extractive local drafting; no generative LLM is used.",
+          "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+          "Exact-source validation does not confirm applicability or real-world diagnostic correctness.",
+          "Procedure selection unavailable; local ranking retained: groq:circuit_open;gemini:circuit_open",
+          "Language drafting unavailable; the original evidence-controlled draft is retained."
+        ],
+        "elapsed_ms": 1927.5178249990859
+      }
+    },
+    {
+      "id": "query_SM03_01",
+      "query": "Since changing phones, messages from one contact are missing, but other people can text me. Already checked: Checked the handset's blocked and spam folders. Could you check this when you have the details?",
+      "http_status": 200,
+      "response": {
+        "status": "needs_diagnostic_confirmation",
+        "decision": {
+          "action": "clarify",
+          "priority": "normal",
+          "reasons": [
+            "missing_customer_observations"
+          ],
+          "target": "support_agent",
+          "handoff_created": false
+        },
+        "validation": {
+          "status": "passed",
+          "checked_sources": 1,
+          "issues": [],
+          "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+        },
+        "method": "local_extractive_v1",
+        "language_summary": null,
+        "language_plan": null,
+        "language_draft": null,
+        "language_status": "fallback",
+        "language_model": null,
+        "language_provider": null,
+        "faithfulness_status": "not_run",
+        "faithfulness_issues": [],
+        "language_error": "groq:circuit_open;gemini:circuit_open",
+        "historical_cases": [
+          {
+            "citation_id": "T1",
+            "doc_id": "syn_ticket_SM01_05",
+            "chunk_id": 255,
+            "title": "Sms otp support case",
+            "resolution": "Finding: Network trace shows no message submission from the affected sender; other SMS delivers. Action: Provide trace findings and refer the customer to the sender's official support channel. Simulated follow-up: sender fixes its submission and a new verification message arrives.",
+            "outcome_status": "simulated_resolved",
+            "is_synthetic": true,
+            "relationship": "similar_category"
+          },
+          {
+            "citation_id": "T2",
+            "doc_id": "syn_ticket_SM02_07",
+            "chunk_id": 265,
+            "title": "Sms otp support case",
+            "resolution": "Finding: Messaging profile contains an invalid service-center configuration. Action: Authorized support restores the provider-approved messaging configuration. Simulated follow-up: ordinary outgoing test messages deliver.",
+            "outcome_status": "simulated_resolved",
+            "is_synthetic": true,
+            "relationship": "similar_category"
+          }
+        ],
+        "agent_review_required": true,
+        "draft": "Draft for agent review. A cause has not been confirmed.\n\nClarify: Are calls, texts, mobile data, or several of these affected?\n\nClarify: Is service completely unavailable or intermittent, and which devices or people are affected?\n\nAnswer the clarification questions before choosing a repair. Retrieved procedures are attached for agent review, not recommended actions yet.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: clarify. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+        "analysis": {
+          "category": "sms_otp",
+          "scope_status": "supported",
+          "scope_reason": "recognized_service_mention",
+          "category_status": "predicted",
+          "category_basis": "model",
+          "category_evidence": [],
+          "routing_policy": "development_selected_v1",
+          "candidates": [
+            {
+              "category": "sms_otp",
+              "score": 0.6100638995427146
+            },
+            {
+              "category": "mobile_data",
+              "score": 0.18590112363933772
+            },
+            {
+              "category": "number_porting",
+              "score": 0.04714239138057877
+            }
+          ],
+          "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+          "products": [
+            {
+              "text": "phones",
+              "start": 15,
+              "end": 21,
+              "product": "mobile"
+            }
+          ],
+          "severity": {
+            "value": "unknown",
+            "rule": "insufficient_impact_evidence",
+            "evidence": [],
+            "method": "rules_v1"
+          },
+          "sentiment": {
+            "value": "unknown",
+            "rule": "no_explicit_tone",
+            "evidence": [],
+            "method": "rules_v1"
+          },
+          "actions": [],
+          "reported_facts": [],
+          "requests": [],
+          "needs_clarification": true,
+          "clarification_questions": [
+            "Are calls, texts, mobile data, or several of these affected?",
+            "Is service completely unavailable or intermittent, and which devices or people are affected?"
+          ],
+          "model_version": "000800b1c903f40a",
+          "language_method": "rules_fallback",
+          "language_provider": null,
+          "language_model": null,
+          "language_error": "groq:circuit_open;gemini:circuit_open",
+          "elapsed_ms": 49.16367700025148
+        },
+        "suggestions": [
+          {
+            "citation_id": "S1",
+            "required_finding": "The sender is blocked locally; network delivery receipts are successful.",
+            "proposed_action": "With consent, remove the unintended block or adjust the device's supported filtering setting.",
+            "restriction": "Do not disable all spam protection or expose message contents in logs.",
+            "status": "requires_agent_confirmation",
+            "repeated_actions": []
+          }
+        ],
+        "sources": [
+          {
+            "citation_id": "S1",
+            "doc_id": "syn_kb_SM03",
+            "chunk_id": 43,
+            "title": "Local message filtering. — procedure",
+            "is_synthetic": true,
+            "authority": "fictional_provider_policy",
+            "quotes": [
+              {
+                "text": "mobile_sms",
+                "start": 126,
+                "end": 136,
+                "field": "scope"
+              },
+              {
+                "text": "The sender is blocked locally; network delivery receipts are successful.",
+                "start": 279,
+                "end": 351,
+                "field": "condition"
+              },
+              {
+                "text": "With consent, remove the unintended block or adjust the device's supported filtering setting.",
+                "start": 389,
+                "end": 482,
+                "field": "action"
+              },
+              {
+                "text": "Do not disable all spam protection or expose message contents in logs.",
+                "start": 697,
+                "end": 767,
+                "field": "restriction"
+              }
+            ]
+          }
+        ],
+        "clarification_questions": [
+          "Are calls, texts, mobile data, or several of these affected?",
+          "Is service completely unavailable or intermittent, and which devices or people are affected?"
+        ],
+        "acknowledged_actions": [],
+        "contact_status": "not_requested",
+        "customer_plan": {
+          "title": "Initial checks",
+          "summary": "Review the initial check below. Your answer will help narrow the next step.",
+          "steps": [
+            "Support check: The sender is blocked locally; network delivery receipts are successful. [S1]",
+            "If confirmed: With consent, remove the unintended block or adjust the device's supported filtering setting. [S1]"
+          ],
+          "note": "Do not disable all spam protection or expose message contents in logs. [S1]"
+        },
+        "limitations": [
+          "Extractive local drafting; no generative LLM is used.",
+          "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+          "Exact-source validation does not confirm applicability or real-world diagnostic correctness.",
+          "Procedure selection unavailable; local ranking retained: groq:circuit_open;gemini:circuit_open",
+          "Language drafting unavailable; the original evidence-controlled draft is retained."
+        ],
+        "elapsed_ms": 1846.4087219999783
+      }
+    },
+    {
+      "id": "query_VC03_01",
+      "query": "My new compatible phone has fast data but calls fail immediately. The same SIM could call in my old phone. Already checked: Confirmed device compatibility and restarted once. Could you check this when you have the details?",
+      "http_status": 200,
+      "response": {
+        "status": "needs_diagnostic_confirmation",
+        "decision": {
+          "action": "clarify",
+          "priority": "high",
+          "reasons": [
+            "missing_customer_observations"
+          ],
+          "target": "support_agent",
+          "handoff_created": false
+        },
+        "validation": {
+          "status": "passed",
+          "checked_sources": 1,
+          "issues": [],
+          "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+        },
+        "method": "local_extractive_v1",
+        "language_summary": null,
+        "language_plan": null,
+        "language_draft": null,
+        "language_status": "fallback",
+        "language_model": null,
+        "language_provider": null,
+        "faithfulness_status": "not_run",
+        "faithfulness_issues": [],
+        "language_error": "groq:circuit_open;gemini:circuit_open",
+        "historical_cases": [
+          {
+            "citation_id": "T1",
+            "doc_id": "syn_ticket_MC01_07",
+            "chunk_id": 161,
+            "title": "Mobile coverage support case",
+            "resolution": "Finding: No area outage; indoor attenuation is reproducible on multiple devices. Action: Assess supported Wi-Fi calling and record the location for coverage review. Simulated follow-up: supported Wi-Fi calling works indoors; outdoor coverage remains normal.",
+            "outcome_status": "simulated_resolved",
+            "is_synthetic": true,
+            "relationship": "similar_category"
+          }
+        ],
+        "agent_review_required": true,
+        "draft": "Draft for agent review. A cause has not been confirmed.\n\nAlready attempted, according to the customer: Already checked: Confirmed device compatibility and restarted once\n\nClarify: Are calls, texts, mobile data, or several of these affected?\n\nAnswer the clarification questions before choosing a repair. Retrieved procedures are attached for agent review, not recommended actions yet.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: clarify. Priority: high. Recommended reviewer: support_agent. No external handoff has been created.",
+        "analysis": {
+          "category": null,
+          "scope_status": "supported",
+          "scope_reason": "recognized_service_mention",
+          "category_status": "uncertain",
+          "category_basis": "uncertain",
+          "category_evidence": [],
+          "routing_policy": "development_selected_v1",
+          "candidates": [
+            {
+              "category": "mobile_data",
+              "score": 0.39892256086854827
+            },
+            {
+              "category": "voice_call_failure",
+              "score": 0.1407970976438655
+            },
+            {
+              "category": "number_porting",
+              "score": 0.09891908828853625
+            }
+          ],
+          "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+          "products": [
+            {
+              "text": "phone",
+              "start": 18,
+              "end": 23,
+              "product": "mobile"
+            }
+          ],
+          "severity": {
+            "value": "high",
+            "rule": "reported_complete_loss",
+            "evidence": [
+              {
+                "text": "calls fail immediately",
+                "start": 42,
+                "end": 64
+              }
+            ],
+            "method": "rules_v1"
+          },
+          "sentiment": {
+            "value": "unknown",
+            "rule": "no_explicit_tone",
+            "evidence": [],
+            "method": "rules_v1"
+          },
+          "actions": [
+            {
+              "text": "Already checked: Confirmed device compatibility and restarted once",
+              "start": 107,
+              "end": 173,
+              "action": "restart_device",
+              "status": "attempted"
+            }
+          ],
+          "reported_facts": [],
+          "requests": [],
+          "needs_clarification": true,
+          "clarification_questions": [
+            "Are calls, texts, mobile data, or several of these affected?"
+          ],
+          "model_version": "000800b1c903f40a",
+          "language_method": "rules_fallback",
+          "language_provider": null,
+          "language_model": null,
+          "language_error": "groq:circuit_open;gemini:circuit_open",
+          "elapsed_ms": 56.90018000132113
+        },
+        "suggestions": [
+          {
+            "citation_id": "S1",
+            "required_finding": "Known-good SIM also fails in the original handset; local network checks pass.",
+            "proposed_action": "Refer the customer to authorized device support after preserving the cross-test findings.",
+            "restriction": "Do not claim a telecom network repair will fix confirmed handset hardware.",
+            "status": "requires_agent_confirmation",
+            "repeated_actions": []
+          }
+        ],
+        "sources": [
+          {
+            "citation_id": "S1",
+            "doc_id": "syn_kb_MC04",
+            "chunk_id": 20,
+            "title": "Handset radio fault. — procedure",
+            "is_synthetic": true,
+            "authority": "fictional_provider_policy",
+            "quotes": [
+              {
+                "text": "mobile",
+                "start": 122,
+                "end": 128,
+                "field": "scope"
+              },
+              {
+                "text": "Known-good SIM also fails in the original handset; local network checks pass.",
+                "start": 279,
+                "end": 356,
+                "field": "condition"
+              },
+              {
+                "text": "Refer the customer to authorized device support after preserving the cross-test findings.",
+                "start": 394,
+                "end": 483,
+                "field": "action"
+              },
+              {
+                "text": "Do not claim a telecom network repair will fix confirmed handset hardware.",
+                "start": 683,
+                "end": 757,
+                "field": "restriction"
+              }
+            ]
+          }
+        ],
+        "clarification_questions": [
+          "Are calls, texts, mobile data, or several of these affected?"
+        ],
+        "acknowledged_actions": [
+          "Already checked: Confirmed device compatibility and restarted once"
+        ],
+        "contact_status": "not_requested",
+        "customer_plan": {
+          "title": "One more detail",
+          "summary": "Your previous checks are noted. Review the next step and answer below.",
+          "steps": [
+            "Support check: Known-good SIM also fails in the original handset; local network checks pass. [S1]",
+            "If confirmed: Refer the customer to authorized device support after preserving the cross-test findings. [S1]"
+          ],
+          "note": "Do not claim a telecom network repair will fix confirmed handset hardware. [S1]"
+        },
+        "limitations": [
+          "Extractive local drafting; no generative LLM is used.",
+          "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+          "Exact-source validation does not confirm applicability or real-world diagnostic correctness.",
+          "Procedure selection unavailable; local ranking retained: groq:circuit_open;gemini:circuit_open",
+          "Language drafting unavailable; the original evidence-controlled draft is retained."
+        ],
+        "elapsed_ms": 2047.69866100105
+      }
+    }
+  ],
+  "readiness": {
+    "status": "ready",
+    "scope": "database_schema_and_index_state"
+  }
+}

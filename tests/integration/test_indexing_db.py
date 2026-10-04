@@ -124,5 +124,8 @@ def test_configuration_rebuild_preserves_evidence_and_resumes(repository):
     assert repo.unchanged([record], "container") == {"test"}
     repo.finish(1, 1)
     assert repo.conn.execute("SELECT chunk_id FROM chunks").fetchone()[0] == chunk_id
-    assert repo.conn.execute("SELECT response FROM documents").fetchone()[0] == record.document.response
+    assert (
+        repo.conn.execute("SELECT response FROM documents").fetchone()[0]
+        == record.document.response
+    )
     assert repo.conn.execute("SELECT status FROM retrieval_index_state").fetchone()[0] == "ready"

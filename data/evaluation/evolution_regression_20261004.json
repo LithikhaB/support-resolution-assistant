@@ -1,0 +1,236 @@
+{
+  "provenance": "AI-authored fictional knowledge-evolution demonstration. Separate from the active corpus and response-quality holdout.",
+  "database": "support_evolution_225d2ed51254",
+  "run_directory": "data/evolution/runs/225d2ed51254",
+  "staging": {
+    "version": "additive_update_v1",
+    "documents": 331,
+    "added": 1,
+    "updated": 0,
+    "parent_sha256": "a93a4a53ee5b02af72571b1e528fa63cba8d9fc9ff378a4de4eef19a2f0be348",
+    "incoming_sha256": "59da7b47f7a4a2cd94dffe3d288b0629bfd178684ec9ccc931c550da85edd0bb",
+    "output_sha256": "5c71c79af50cd47fced4f11de2ddf9202dc3dd58f22c82f42b0e73f01c0c3628",
+    "categories": [
+      "billing_dispute",
+      "broadband_dns",
+      "broadband_outage",
+      "intermittent_broadband",
+      "iptv",
+      "mobile_coverage",
+      "mobile_data",
+      "number_porting",
+      "payment_restoration",
+      "roaming",
+      "router_ont_hardware",
+      "sim_esim_activation",
+      "slow_broadband",
+      "sms_otp",
+      "voice_call_failure",
+      "wifi_connectivity"
+    ],
+    "activation": "Run chunk_documents for this directory, then index_documents with CORPUS_DIR set to its parent. Retrain and evaluate the classifier separately for new categories."
+  },
+  "checks": {
+    "new_class_registered": true,
+    "new_class_predicted": true,
+    "new_article_cited": true,
+    "citation_contract_passed": true,
+    "index_ready": true,
+    "old_classes_preserved": true,
+    "old_development_accuracy_within_five_points": true
+  },
+  "passed": true,
+  "inspection": {
+    "new_category": "broadband_dns",
+    "class_registered": true,
+    "top_category": "broadband_dns",
+    "new_article_cited": true,
+    "citation_status": "passed",
+    "index": {
+      "status": "ready",
+      "documents_indexed": 331,
+      "chunks": 331,
+      "embeddings": 331,
+      "invalid_embeddings": 0,
+      "cosine_hnsw_valid": true
+    },
+    "response": {
+      "status": "needs_diagnostic_confirmation",
+      "decision": {
+        "action": "clarify",
+        "priority": "normal",
+        "reasons": [
+          "missing_customer_observations"
+        ],
+        "target": "support_agent",
+        "handoff_created": false
+      },
+      "validation": {
+        "status": "passed",
+        "checked_sources": 1,
+        "issues": [],
+        "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+      },
+      "method": "local_extractive_v1",
+      "language_summary": null,
+      "language_plan": null,
+      "language_draft": null,
+      "language_status": "disabled",
+      "language_model": null,
+      "language_provider": null,
+      "faithfulness_status": "not_run",
+      "faithfulness_issues": [],
+      "language_error": null,
+      "historical_cases": [],
+      "agent_review_required": true,
+      "draft": "Draft for agent review. A cause has not been confirmed.\n\nClarify: During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?\n\nClarify: Is service completely unavailable or intermittent, and which devices or people are affected?\n\nAnswer the clarification questions before choosing a repair. Retrieved procedures are attached for agent review, not recommended actions yet.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: clarify. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+      "analysis": {
+        "category": "broadband_dns",
+        "scope_status": "supported",
+        "scope_reason": "recognized_service_mention",
+        "category_status": "predicted",
+        "category_basis": "model",
+        "category_evidence": [],
+        "routing_policy": "development_selected_v1",
+        "candidates": [
+          {
+            "category": "broadband_dns",
+            "score": 0.9179398483024256
+          },
+          {
+            "category": "broadband_outage",
+            "score": 0.019300398542485855
+          },
+          {
+            "category": "intermittent_broadband",
+            "score": 0.011729119573492531
+          }
+        ],
+        "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+        "products": [
+          {
+            "text": "broadband",
+            "start": 3,
+            "end": 12,
+            "product": "broadband"
+          },
+          {
+            "text": "router",
+            "start": 72,
+            "end": 78,
+            "product": "router"
+          }
+        ],
+        "severity": {
+          "value": "unknown",
+          "rule": "insufficient_impact_evidence",
+          "evidence": [],
+          "method": "rules_v1"
+        },
+        "sentiment": {
+          "value": "unknown",
+          "rule": "no_explicit_tone",
+          "evidence": [],
+          "method": "rules_v1"
+        },
+        "actions": [],
+        "reported_facts": [],
+        "requests": [],
+        "needs_clarification": true,
+        "clarification_questions": [
+          "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?",
+          "Is service completely unavailable or intermittent, and which devices or people are affected?"
+        ],
+        "model_version": "5d7cd31d32bbb0d6",
+        "language_method": "rules_v1",
+        "language_provider": null,
+        "language_model": null,
+        "language_error": null,
+        "elapsed_ms": 86.43715499965765
+      },
+      "suggestions": [
+        {
+          "citation_id": "S1",
+          "required_finding": "A support agent confirms that the broadband link is connected but the configured DNS resolver fails domain-name lookups.",
+          "proposed_action": "Restore the validated DNS resolver configuration on the broadband router, then verify domain-name resolution and website access.",
+          "restriction": "Do not factory-reset the router, change billing settings or claim a repair before DNS lookup verification succeeds.",
+          "status": "requires_agent_confirmation",
+          "repeated_actions": []
+        }
+      ],
+      "sources": [
+        {
+          "citation_id": "S1",
+          "doc_id": "demo_kb_dns_failure",
+          "chunk_id": 1,
+          "title": "Broadband DNS lookup failure investigation",
+          "is_synthetic": true,
+          "authority": "fictional_provider_policy",
+          "quotes": [
+            {
+              "text": "fibre_broadband",
+              "start": 51,
+              "end": 66,
+              "field": "scope"
+            },
+            {
+              "text": "A support agent confirms that the broadband link is connected but the configured DNS resolver fails domain-name lookups.",
+              "start": 117,
+              "end": 237,
+              "field": "condition"
+            },
+            {
+              "text": "Restore the validated DNS resolver configuration on the broadband router, then verify domain-name resolution and website access.",
+              "start": 275,
+              "end": 403,
+              "field": "action"
+            },
+            {
+              "text": "Do not factory-reset the router, change billing settings or claim a repair before DNS lookup verification succeeds.",
+              "start": 417,
+              "end": 532,
+              "field": "restriction"
+            }
+          ]
+        }
+      ],
+      "clarification_questions": [
+        "During a drop, does a device connected by Ethernet also lose internet, or is only Wi-Fi affected?",
+        "Is service completely unavailable or intermittent, and which devices or people are affected?"
+      ],
+      "acknowledged_actions": [],
+      "contact_status": "not_requested",
+      "customer_plan": {
+        "title": "Initial checks",
+        "summary": "Review the initial check below. Your answer will help narrow the next step.",
+        "steps": [
+          "Support check: A support agent confirms that the broadband link is connected but the configured DNS resolver fails domain-name lookups. [S1]",
+          "If confirmed: Restore the validated DNS resolver configuration on the broadband router, then verify domain-name resolution and website access. [S1]"
+        ],
+        "note": "Do not factory-reset the router, change billing settings or claim a repair before DNS lookup verification succeeds. [S1]"
+      },
+      "limitations": [
+        "Extractive local drafting; no generative LLM is used.",
+        "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+        "Exact-source validation does not confirm applicability or real-world diagnostic correctness."
+      ],
+      "elapsed_ms": 4697.666066000238
+    },
+    "old_category_regression": {
+      "queries": 120,
+      "categories": 15,
+      "correct": 92,
+      "accuracy": 0.7666666666666667,
+      "all_old_classes_registered": true
+    }
+  },
+  "old_category_baseline": {
+    "queries": 120,
+    "categories": 15,
+    "correct": 92,
+    "accuracy": 0.7666666666666667,
+    "all_old_classes_registered": true
+  },
+  "active_artifacts_unchanged": true,
+  "scope": "Scripted synthetic extension demo, not independent quality evidence. The separate database is retained for inspection."
+}

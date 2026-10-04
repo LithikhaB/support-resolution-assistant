@@ -112,6 +112,7 @@ def response_fixture():
         ),
         clarification_questions=["Which device is affected?"],
         historical_cases=[],
+        sources=[],
         suggestions=[],
         limitations=[],
         language_draft=None,

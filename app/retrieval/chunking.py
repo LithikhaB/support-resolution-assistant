@@ -41,7 +41,10 @@ class DocumentChunker:
     @staticmethod
     def retrieval_text(document: SupportDocument) -> str:
         """Use complaint or KB text for retrieval without leaking ticket resolutions."""
-        return f"{document.title.strip()}\n\n{document.body.strip()}"
+        body = document.body
+        if document.metadata.get("procedure_version") == 2:
+            body = document.metadata.get("retrieval_body", body)
+        return f"{document.title.strip()}\n\n{body.strip()}"
 
     def chunk_document(self, document: SupportDocument) -> list[Chunk]:
         """Chunk searchable text while keeping response evidence on its parent document."""

@@ -33,6 +33,7 @@ class ProviderChain:
         self.clock = clock
         self.lock = Lock()
         self.circuits = {}
+        self.rate_failures = {}
         self.cache = OrderedDict()
 
     def generate(self, instruction, payload, schema, *, validator=None):
@@ -82,6 +83,7 @@ class ProviderChain:
                 }
                 with self.lock:
                     self.circuits.pop(provider.name, None)
+                    self.rate_failures.pop(provider.name, None)
                     if self.settings.llm_cache_seconds:
                         protected = result.model_dump(mode="json")
                         for placeholder, original in mapping.items():
@@ -101,9 +103,13 @@ class ProviderChain:
                 failures.append(provider.name + ":" + str(exc))
                 if str(exc).startswith("provider_http_") or str(exc) == "provider_or_schema_error":
                     with self.lock:
-                        self.circuits[provider.name] = (
-                            self.clock() + self.settings.llm_circuit_seconds
-                        )
+                        delay = self.settings.llm_circuit_seconds
+                        if str(exc) == "provider_http_429":
+                            failures_count = min(6, self.rate_failures.get(provider.name, 0) + 1)
+                            self.rate_failures[provider.name] = failures_count
+                            delay = min(300, max(1, delay) * 2 ** (failures_count - 1))
+                            delay = max(delay, exc.retry_after or 0)
+                        self.circuits[provider.name] = self.clock() + delay
         event("extractive_fallbacks")
         raise LanguageUnavailable(";".join(failures) or "no_provider_configured")
 

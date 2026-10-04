@@ -41,6 +41,7 @@ def inspect_runtime(query, category, article):
     from app.understanding.service import get_understanding_service
 
     classifier = get_understanding_service().classifier
+    regression = old_category_regression(classifier, get_settings(), category)
     result = get_resolution_service().resolve(ResolutionRequest(query=query))
     with get_connection(statement_timeout_ms=60000) as conn:
         index = check_index(conn)
@@ -52,6 +53,32 @@ def inspect_runtime(query, category, article):
         "citation_status": result.validation.status,
         "index": index,
         "response": result.model_dump(mode="json"),
+        "old_category_regression": regression,
+    }
+
+
+def old_category_regression(classifier, settings, new_category):
+    """Measure the original development categories separately from the added class."""
+    from app.understanding.training import load_split
+
+    rows = [
+        row
+        for row in load_split(settings.corpus_dir, "dev")
+        if row["labels"]["intent"] != new_category
+    ]
+    values = classifier.probabilities([row["query"] for row in rows])
+    predictions = [classifier.artifact.classes[int(value.argmax())] for value in values]
+    correct = sum(
+        prediction == row["labels"]["intent"]
+        for row, prediction in zip(rows, predictions, strict=True)
+    )
+    categories = {row["labels"]["intent"] for row in rows}
+    return {
+        "queries": len(rows),
+        "categories": len(categories),
+        "correct": correct,
+        "accuracy": correct / len(rows),
+        "all_old_classes_registered": categories <= set(classifier.artifact.classes),
     }
 
 
@@ -74,6 +101,13 @@ def main():
         )
         return
     settings = get_settings()
+    from app.understanding.classifier import CategoryClassifier
+
+    baseline = old_category_regression(
+        CategoryClassifier.load(settings.understanding_model_path, settings=settings),
+        settings,
+        fixture["category"],
+    )
     before = active_fingerprint(settings)
     run_id = uuid4().hex[:12]
     root = Path("data/evolution/runs") / run_id
@@ -128,6 +162,13 @@ def main():
             "new_article_cited": result["new_article_cited"],
             "citation_contract_passed": result["citation_status"] == "passed",
             "index_ready": result["index"]["status"] == "ready",
+            "old_classes_preserved": result["old_category_regression"][
+                "all_old_classes_registered"
+            ],
+            "old_development_accuracy_within_five_points": result["old_category_regression"][
+                "accuracy"
+            ]
+            >= baseline["accuracy"] - 0.05,
         }
         write_json(
             args.output,
@@ -139,6 +180,7 @@ def main():
                 "checks": checks,
                 "passed": all(checks.values()),
                 "inspection": result,
+                "old_category_baseline": baseline,
                 "active_artifacts_unchanged": active_fingerprint(settings) == before,
                 "scope": "Scripted synthetic extension demo, not independent quality evidence. The separate database is retained for inspection.",
             },

@@ -18,7 +18,7 @@ class ProcedureChoice(BaseModel):
     doc_id: str | None
 
 
-def select_relevant_procedure(evidence, query, analysis, client):
+def select_relevant_procedure(evidence, query, analysis, client, *, retain_alternatives=False):
     """Choose one investigation using only redacted context and validated procedures."""
     candidates = []
     for row in evidence:
@@ -26,20 +26,25 @@ def select_relevant_procedure(evidence, query, analysis, client):
         if procedure is None or applicability_issue(procedure, analysis) is not None:
             continue
         if row.doc_id not in {item["doc_id"] for item in candidates}:
-            candidates.append({
-                "doc_id": row.doc_id, "title": row.title,
-                "category": row.metadata.get("category"),
-                "condition": procedure.quotes["condition"].text,
-                "action": procedure.quotes["action"].text,
-                "restriction": procedure.quotes["restriction"].text,
-            })
+            candidates.append(
+                {
+                    "doc_id": row.doc_id,
+                    "title": row.title,
+                    "category": row.metadata.get("category"),
+                    "condition": procedure.quotes["condition"].text,
+                    "action": procedure.quotes["action"].text,
+                    "restriction": procedure.quotes["restriction"].text,
+                }
+            )
     if len(candidates) <= 1:
         return evidence
-    masked_payload, _ = redact({
-        "customer_text": query,
-        "observations": [f.model_dump() for f in analysis.reported_facts],
-        "procedures": candidates,
-    })
+    masked_payload, _ = redact(
+        {
+            "customer_text": query,
+            "observations": [f.model_dump() for f in analysis.reported_facts],
+            "procedures": candidates,
+        }
+    )
     choice = client.generate(
         "Select the ONE most relevant investigation for the customer's actual complaint "
         "and latest observations from the supplied procedures. Return its doc_id, or null "
@@ -51,10 +56,16 @@ def select_relevant_procedure(evidence, query, analysis, client):
         ProcedureChoice,
     )
     if choice.doc_id is None:
+        if retain_alternatives:
+            raise LanguageUnavailable("no_relevant_procedure_selected")
         return []
     if choice.doc_id not in {item["doc_id"] for item in candidates}:
         raise LanguageUnavailable("invalid_selected_procedure")
-    return [row for row in evidence if row.doc_id == choice.doc_id]
+    chosen = [row for row in evidence if row.doc_id == choice.doc_id]
+    if retain_alternatives:
+        allowed = {item["doc_id"] for item in candidates}
+        chosen += [row for row in evidence if row.doc_id != choice.doc_id and row.doc_id in allowed]
+    return chosen
 
 
 def action_key(procedure):
@@ -73,6 +84,27 @@ def action_key(procedure):
     return procedure.scope, normalized
 
 
-def rank_fallback(evidence):
-    """Prefer semantic similarity without letting older cases override unseen procedures."""
-    return sorted(evidence, key=lambda row: -(getattr(row, "cosine_similarity", None) or 0))
+def rank_fallback(evidence, analysis=None):
+    """Keep reranked order except for explicit reported timing or symptom compatibility."""
+    # Re-sorting by the original embedding score discards the cross-encoder's
+    # complaint-to-procedure relevance and can restore unrelated procedures.
+    if analysis is None:
+        return list(evidence)
+    known = {(f.name, f.value) for f in analysis.reported_facts}
+    explicit = analysis.category_basis == "explicit_report"
+
+    def relevance(row):
+        procedure = parse_procedure(row)
+        if procedure is None or applicability_issue(procedure, analysis):
+            return (1, 1, 1)
+        gate = procedure.quotes["condition"].text
+        symptom = 0 if explicit and row.metadata.get("category") == analysis.category else 1
+        context = 1
+        if ("weather_context", "reported") in known:
+            context = 0 if re.search(r"\b(?:rain|moisture|wet|weather)\b", gate, re.I) else 1
+        elif ("timing", "peak_hours") in known:
+            context = 0 if re.search(r"\b(?:peak|congestion)\b", gate, re.I) else 1
+        return (0, symptom, context)
+
+    # A stable sort preserves cross-encoder ranking within each observed-context tier.
+    return sorted(evidence, key=relevance)

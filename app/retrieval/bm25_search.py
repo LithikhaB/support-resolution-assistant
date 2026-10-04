@@ -98,7 +98,7 @@ class BM25Retriever:
             if self._index is None or signature != self._signature:
                 rows = conn.execute("""SELECT c.chunk_id,c.doc_id,c.chunk_index,c.content,
                     d.title,d.doc_type,d.response,d.resolution,d.outcome_status,d.metadata,
-                    d.intent,d.severity,d.ticket_type,d.product
+                    d.intent,d.severity,d.ticket_type,d.product,d.body
                     FROM chunks c JOIN documents d ON d.doc_id=c.doc_id
                     WHERE c.embedding IS NOT NULL ORDER BY c.chunk_id""").fetchall()
                 fields = (
@@ -116,6 +116,7 @@ class BM25Retriever:
                     "severity",
                     "ticket_type",
                     "product",
+                    "evidence_content",
                 )
                 self._index = BM25Index([dict(zip(fields, row)) for row in rows])
                 self._signature = signature

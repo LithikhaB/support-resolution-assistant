@@ -1,0 +1,34 @@
+{
+  "scope": "Three authored demo cases; semantic regression checks, not independent human ratings or held-out accuracy.",
+  "independent_human_ratings": 0,
+  "source_report": "data\\evaluation\\quality_review\\plan_quality_live_20261004T180623Z.json",
+  "checks": {
+    "evening": {
+      "expected_demo_sources": true,
+      "full_gates_present": true,
+      "remedies_conditional": true,
+      "completion_present": true,
+      "prior_actions_acknowledged": true,
+      "restrictions_preserved": true,
+      "step_count_proxy": true
+    },
+    "storm": {
+      "expected_demo_sources": true,
+      "full_gates_present": true,
+      "remedies_conditional": true,
+      "completion_present": true,
+      "prior_actions_acknowledged": true,
+      "restrictions_preserved": true,
+      "step_count_proxy": true
+    },
+    "optical": {
+      "expected_demo_sources": true,
+      "full_gates_present": true,
+      "remedies_conditional": true,
+      "completion_present": true,
+      "prior_actions_acknowledged": true,
+      "restrictions_preserved": true,
+      "step_count_proxy": true
+    }
+  }
+}

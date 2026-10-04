@@ -35,7 +35,7 @@ def build_search_sql(filters: RetrievalFilters, vector: str, top_k: int):
     filtered = any(value is not None for value in filters.model_dump().values())
     query = """SELECT c.chunk_id,c.doc_id,c.chunk_index,c.content,d.title,d.doc_type,
         d.response,d.resolution,d.outcome_status,d.metadata,
-        c.embedding <=> %s::vector AS distance
+        c.embedding <=> %s::vector AS distance,d.body
         FROM chunks c JOIN documents d ON d.doc_id=c.doc_id WHERE """ + " AND ".join(clauses)
     if filtered:
         query = (
@@ -46,7 +46,7 @@ def build_search_sql(filters: RetrievalFilters, vector: str, top_k: int):
             + """
             ), winners AS (SELECT * FROM eligible ORDER BY distance,chunk_id LIMIT %s)
             SELECT c.chunk_id,c.doc_id,c.chunk_index,c.content,d.title,d.doc_type,
-                d.response,d.resolution,d.outcome_status,d.metadata,w.distance
+                d.response,d.resolution,d.outcome_status,d.metadata,w.distance,d.body
             FROM winners w JOIN chunks c ON c.chunk_id=w.chunk_id
             JOIN documents d ON d.doc_id=c.doc_id ORDER BY w.distance,c.chunk_id"""
         )
@@ -119,6 +119,7 @@ class VectorRetriever:
                 resolution=r[7],
                 outcome_status=r[8],
                 metadata=r[9],
+                evidence_content=r[11] if len(r) > 11 else None,
                 cosine_distance=r[10],
                 cosine_similarity=1 - r[10],
                 vector_rank=i,

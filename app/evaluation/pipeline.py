@@ -18,13 +18,12 @@ from app.evaluation.preparation import (
     validate_holdout,
 )
 from app.ingestion.artifacts import digest, file_sha256, write_json
-from app.resolution.drafting import draft_resolution
-from app.resolution.validation import finalize_resolution
+from app.resolution.models import ResolutionRequest
+from app.resolution.service import ResolutionService
 from app.retrieval.diversity import diverse_results
 from app.retrieval.models import SearchRequest
 from app.retrieval.reranking import get_reranking_service
 from app.retrieval.service import get_retrieval_service
-from app.understanding.models import AnalyzeRequest
 from app.understanding.routing import compatible_category, load_policy
 from app.understanding.service import UnderstandingService
 from app.understanding.signals import extract_products
@@ -41,16 +40,18 @@ def verify_index(snapshot):
 
 def compose_case(query, understanding, retrieval):
     """Evaluate the same draft components used by the API with an explicit KB evidence pool."""
-    analysis = understanding.analyze(AnalyzeRequest(query=query))
+    response = ResolutionService(
+        understanding=understanding, retrieval=retrieval, settings=understanding.settings
+    ).resolve(ResolutionRequest(query=query))
     evidence = retrieval.search(
         SearchRequest(query=query, top_k=20, diversify=True, filters={"doc_type": "knowledge_base"})
     ).results
-    response = finalize_resolution(draft_resolution(analysis, evidence), evidence, analysis)
     return response, evidence
 
 
 def evaluate_pipeline(settings, *, split, output, progress=print):
     """Freeze configuration, run comparisons, and publish all outcomes without retuning."""
+    settings = settings.model_copy(update={"llm_enabled": False})
     snapshot = fingerprint(settings, split)
     freeze_path = freeze_run(output, snapshot)
     selected, vectorizer, lexical, train, dev = prepare_classifiers(settings)
@@ -199,6 +200,8 @@ def evaluate_pipeline(settings, *, split, output, progress=print):
     report = {
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "split": split,
+        "language_path": "local_fallback_only",
+        "lexical_backend": settings.lexical_backend,
         "freeze_file": str(freeze_path),
         "queries": len(rows),
         "families": len({r["scenario_family"] for r in rows}),

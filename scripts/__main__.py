@@ -17,6 +17,7 @@ COMMANDS = {
     "resolve": "resolve_complaint",
     "converse": "converse",
     "evaluate": "evaluate_pipeline",
+    "audit": "evaluate_resolution_path",
     "quality": "evaluate_response_quality",
     "review": "review_quality_report",
     "ratings": "score_response_quality",

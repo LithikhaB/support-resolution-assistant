@@ -117,3 +117,28 @@ def test_history_requires_resolved_outcome_and_applicable_kb(outcome, synthetic,
         metadata={"is_synthetic": synthetic, "kb_refs": refs, "outcome_evidence": "Followup"},
     )
     assert len(select_history([row], [SimpleNamespace(doc_id="kb1")])) == expected
+
+
+def test_unseen_procedure_can_use_labelled_category_comparison_not_diagnostic_proof():
+    row = SimpleNamespace(
+        doc_type="resolved_ticket",
+        resolution="Prior simulated repair",
+        doc_id="t1",
+        chunk_id=1,
+        title="Another incident",
+        outcome_status="simulated_resolved",
+        metadata={
+            "is_synthetic": True,
+            "kb_refs": ["older_kb"],
+            "category": "billing_dispute",
+            "outcome_evidence": "Simulated follow-up",
+        },
+    )
+    cases = select_history(
+        [row], [SimpleNamespace(doc_id="new_kb")], related_categories={"billing_dispute"}
+    )
+    assert len(cases) == 1 and cases[0].relationship == "similar_category"
+    row.outcome_status = "unknown"
+    assert not select_history(
+        [row], [SimpleNamespace(doc_id="new_kb")], related_categories={"billing_dispute"}
+    )

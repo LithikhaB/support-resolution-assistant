@@ -190,9 +190,11 @@ def test_number_transfer_remains_actionable_during_provider_outage():
         CategoryCandidate(category="number_porting", score=0.85),
         CategoryCandidate(category="sim_esim_activation", score=0.02),
     ]
-    result = understanding.analyze(AnalyzeRequest(
-        query="My number transfer was rejected because the details do not match the old provider's account."
-    ))
+    result = understanding.analyze(
+        AnalyzeRequest(
+            query="My number transfer was rejected because the details do not match the old provider's account."
+        )
+    )
     assert result.category == "number_porting"
     assert result.scope_status == "supported"
     assert result.language_method == "rules_fallback"
@@ -203,14 +205,25 @@ def test_fallback_separates_check_action_and_restriction():
     from app.resolution.customer import procedure_note, procedure_steps
     from app.resolution.models import ConditionalSuggestion
 
-    result = Mock(suggestions=[ConditionalSuggestion(
-        citation_id="S1", required_finding="Ledger confirms duplicate settled payments.",
-        proposed_action="Authorized billing staff reconcile the duplicate payment.",
-        restriction="Do not promise a refund deadline.", status="requires_agent_confirmation",
-    )])
+    result = Mock(
+        acknowledged_actions=[],
+        analysis=Mock(actions=[], reported_facts=[]),
+        sources=[],
+        historical_cases=[],
+        suggestions=[
+            ConditionalSuggestion(
+                citation_id="S1",
+                required_finding="Ledger confirms duplicate settled payments.",
+                proposed_action="Authorized billing staff reconcile the duplicate payment.",
+                restriction="Do not promise a refund deadline.",
+                status="requires_agent_confirmation",
+            )
+        ],
+    )
     steps = procedure_steps(result)
     assert len(steps) == 2 and all("[S1]" in step for step in steps)
-    assert steps[0].startswith("Support check:") and steps[1].startswith("If confirmed:")
+    assert steps[0].startswith("Check with authorized")
+    assert steps[1].startswith("Only if support confirms")
     assert "refund deadline" in procedure_note(result)
 
 
@@ -218,13 +231,23 @@ def test_language_selection_only_accepts_retrieved_applicable_ids_and_redacts_pa
     from app.llm.client import LanguageUnavailable
     from app.resolution.selection import ProcedureChoice, select_relevant_procedure
 
-    rows = [BM25Result(
-        chunk_id=i, doc_id=f"kb{i}", chunk_index=0, title="Billing investigation",
-        doc_type="knowledge_base", response=None, resolution=None, outcome_status="reference",
-        metadata={"authority":"fictional_provider_policy", "is_synthetic":True},
-        bm25_score=1, bm25_rank=i,
-        content=f"Scope: billing; support category: billing_dispute.\nDiagnostic gate: Ledger check {i}.\nOnly if that finding is established: Authorized billing staff reconcile the ledger.\nRestriction: Do not promise a refund deadline.",
-    ) for i in (1, 2)]
+    rows = [
+        BM25Result(
+            chunk_id=i,
+            doc_id=f"kb{i}",
+            chunk_index=0,
+            title="Billing investigation",
+            doc_type="knowledge_base",
+            response=None,
+            resolution=None,
+            outcome_status="reference",
+            metadata={"authority": "fictional_provider_policy", "is_synthetic": True},
+            bm25_score=1,
+            bm25_rank=i,
+            content=f"Scope: billing; support category: billing_dispute.\nDiagnostic gate: Ledger check {i}.\nOnly if that finding is established: Authorized billing staff reconcile the ledger.\nRestriction: Do not promise a refund deadline.",
+        )
+        for i in (1, 2)
+    ]
     observed = service().analyze(AnalyzeRequest(query="My bill has two payments."))
     client = Mock()
     client.generate.return_value = ProcedureChoice(doc_id="kb2")
@@ -237,3 +260,54 @@ def test_language_selection_only_accepts_retrieved_applicable_ids_and_redacts_pa
         select_relevant_procedure(rows, "My bill has two payments.", observed, client)
     client.generate.return_value = ProcedureChoice(doc_id=None)
     assert select_relevant_procedure(rows, "My bill has two payments.", observed, client) == []
+
+
+def test_no_mobile_service_does_not_become_an_invented_calls_only_scope():
+    from app.resolution.evidence import supported_scopes
+    from app.understanding.language import validate_interpretation
+
+    text = "My phone has no service after I manually selected a network."
+    products, facts = validate_interpretation(
+        text,
+        Interpretation(
+            products=[{"product": "mobile", "quote": text}],
+            facts=[{"name": "mobile_services", "value": "calls", "quote": text}],
+        ),
+    )
+    observed = service().analyze(AnalyzeRequest(query=text))
+    observed.products, observed.reported_facts = products, facts
+    assert not any(f.name == "mobile_services" for f in facts)
+    assert "mobile" in supported_scopes(observed)
+
+
+def test_overheating_is_not_inferred_physical_damage():
+    from app.understanding.language import validate_interpretation
+
+    text = "The router gets hot in a closed cabinet and shuts down."
+    _, facts = validate_interpretation(
+        text,
+        Interpretation(
+            products=[{"product": "router", "quote": "router"}],
+            facts=[{"name": "equipment_condition", "value": "damaged", "quote": text}],
+        ),
+    )
+    assert not any(f.name == "equipment_condition" for f in facts)
+
+
+def test_porting_scope_keeps_transfer_procedures_when_only_calls_fail():
+    from app.resolution.evidence import supported_scopes
+    from app.understanding.models import ReportedFact
+
+    observed = service().analyze(AnalyzeRequest(query="After number porting, incoming calls fail."))
+    observed.category = "number_porting"
+    observed.reported_facts = [
+        ReportedFact(name="mobile_services", value="calls", text="calls", start=0, end=5)
+    ]
+    assert "mobile" in supported_scopes(observed)
+
+
+def test_freeform_reviewed_checks_are_available_to_drafting():
+    from app.resolution.language import reported_checks
+
+    text = "My bill is higher. Already checked: Compared invoice dates with the plan-change date. Could you check this when you have the details?"
+    assert reported_checks(text) == ["Compared invoice dates with the plan-change date."]

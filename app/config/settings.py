@@ -52,7 +52,7 @@ class Settings(BaseSettings):
     chunk_overlap_tokens: int = Field(default=32, ge=0)
 
     data_dir: Path = Path("data")
-    corpus_dir: Path = Path("data/synthetic/telecom_v1")
+    corpus_dir: Path = Path("data/synthetic/telecom_v2")
     understanding_model_path: Path = Path("data/models/understanding/classifier.json")
     understanding_routing_path: Path = Path("data/models/understanding/routing.json")
     understanding_min_score: float = Field(default=0.45, ge=0, le=1)

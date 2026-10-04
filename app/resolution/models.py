@@ -25,9 +25,19 @@ class ResolutionRequest(AnalyzeRequest):
 
 
 class SourceQuote(TextEvidence):
-    """Trace a copied procedure field to its exact retrieved chunk offsets."""
+    """Trace copied fields to exact offsets in the declared chunk or parent document."""
 
-    field: Literal["scope", "condition", "action", "restriction"]
+    field: Literal[
+        "scope",
+        "condition",
+        "action",
+        "restriction",
+        "verify",
+        "customer_checks",
+        "agent_checks",
+        "escalate_if",
+        "completion",
+    ]
 
 
 class DraftSource(BaseModel):
@@ -40,6 +50,7 @@ class DraftSource(BaseModel):
     is_synthetic: bool
     authority: str
     quotes: list[SourceQuote]
+    quote_scope: Literal["chunk", "parent_document"] = "chunk"
 
 
 class ConditionalSuggestion(BaseModel):
@@ -100,6 +111,7 @@ class ResolutionResponse(BaseModel):
     language_model: str | None = None
     language_provider: str | None = None
     faithfulness_status: Literal["not_run", "model_checked", "rejected"] = "not_run"
+    faithfulness_issues: list[str] = Field(default_factory=list, max_length=10)
     language_error: str | None = None
     historical_cases: list[HistoricalCase] = Field(default_factory=list)
     agent_review_required: Literal[True] = True

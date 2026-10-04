@@ -1,0 +1,46 @@
+{
+  "created_at": "2026-10-04T15:01:40.764446+00:00",
+  "scope": "Actual final Docker HTTP owner-review cases after preserving reranker order; no human ratings.",
+  "results": [
+    {
+      "id": "query_BD03_01",
+      "query": "My first invoice after changing plans is higher and contains part-month entries for both plans. Already checked: Compared invoice dates with the plan-change date. Could you check this when you have the details?",
+      "http_status": 503,
+      "response": {
+        "detail": "Resolution service unavailable; check the trained classifier, model cache and database index."
+      }
+    },
+    {
+      "id": "query_ID03_01",
+      "query": "The internet disconnects for a minute at almost the same interval on Ethernet and Wi-Fi, with no change in the fibre light. Already checked: Restarted the router and recorded three disconnect times. Could you check this when you have the details?",
+      "http_status": 503,
+      "response": {
+        "detail": "Resolution service unavailable; check the trained classifier, model cache and database index."
+      }
+    },
+    {
+      "id": "query_MC03_01",
+      "query": "My phone has no service after I manually selected a network on a trip. Other phones here work. Already checked: Restarted once; the manually selected network remains configured. Could you check this when you have the details?",
+      "http_status": 503,
+      "response": {
+        "detail": "Resolution service unavailable; check the trained classifier, model cache and database index."
+      }
+    },
+    {
+      "id": "query_SM03_01",
+      "query": "Since changing phones, messages from one contact are missing, but other people can text me. Already checked: Checked the handset's blocked and spam folders. Could you check this when you have the details?",
+      "http_status": 503,
+      "response": {
+        "detail": "Resolution service unavailable; check the trained classifier, model cache and database index."
+      }
+    },
+    {
+      "id": "query_VC03_01",
+      "query": "My new compatible phone has fast data but calls fail immediately. The same SIM could call in my old phone. Already checked: Confirmed device compatibility and restarted once. Could you check this when you have the details?",
+      "http_status": 503,
+      "response": {
+        "detail": "Resolution service unavailable; check the trained classifier, model cache and database index."
+      }
+    }
+  ]
+}

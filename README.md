@@ -6,17 +6,35 @@ The scope comes from the supplied hiring-challenge documents. See [requirements 
 
 See [the latest verified Docker and test results](docs/verification.md) for the measured submission status.
 
+The agent triage console displays the decision, priority and target, quoted field evidence, prior actions including durations and counts, a numbered cited plan, validation and provider badges, collapsible sources and up to three simulated resolved cases. Quick answers send structured observations attached to the selected issue. An answered wired check is removed from subsequent guidance.
+
+The new `telecom_v2` corpus contains AI-authored synthetic procedures with ordered verification, customer checks, agent checks, conditional fixes, escalation criteria, restrictions and completion criteria. `telecom_v1` remains unchanged. Search uses the original diagnostic text so generic checklist additions do not change embeddings; exact-source quotes are validated against the enriched parent article, with `quote_scope=parent_document` disclosed in the response. Diagnostic gates remain unconfirmed and agent review is always required.
+
+The five requested complaints and the full before/after responses are recorded in [the change checkpoints](docs/triage-changes.md). Local verification passed 493 Python tests including PostgreSQL integration tests, three console tests, Ruff lint and formatting. The 53-case run returned usable responses with passing contract checks for 52 cases; the long H25 complaint exceeded the token budget. These contract checks are **not** semantic-quality or customer-resolution accuracy. A small network-enabled Groq/Gemini run returned four local fallbacks after actual HTTP 429 responses; it produced no LLM-generated plans. Current measured retrieval results and limits are in [verification](docs/verification.md). Older reports are retained as historical evidence.
+
+Reproduce maintained comparisons and stage traces with unique output names:
+
+```powershell
+docker compose exec -e LLM_ENABLED=false api python -m scripts evaluate --split dev --output data/evaluation/postgres_dev_repeat.json
+docker compose exec -e LLM_ENABLED=false api python -m scripts audit --split dev --output data/evaluation/stages_dev_repeat.json
+docker compose exec -e LLM_ENABLED=false api python -m scripts audit --split test --output data/evaluation/stages_test_repeat.json
+docker compose exec api python -m scripts audit --live --split dev --limit 30 --delay-seconds 60 --minimum-generated 20 --output data/evaluation/live_dev_repeat.json
+```
+
+The audit records generated and fallback answers separately and exits unsuccessfully when its generated-answer target is unmet. Earlier reports remain historical evidence. PostgreSQL scores under the compatibility `bm25` label are full-text ranks, not BM25.
+
 ## How it works
 
 ```mermaid
 flowchart LR
-    UI[Agent complaint form] --> API[FastAPI microservice]
+    UI[Agent triage console + structured observations] --> API[FastAPI microservice]
     API --> U[Groq / Gemini understanding]
     U --> R[Semantic + lexical retrieval]
     DB[(PostgreSQL + pgvector)] --> R
-    R --> D[LLM troubleshooting steps]
+    R --> P[Full parent procedures + exact quotes]
+    P --> D[Conditional local plan + optional LLM wording]
     D --> V[Check citations and grounding]
-    V --> OUT[Plan + sources + missing details]
+    V --> OUT[Decision + priority + evidence + cited plan]
     U -. provider unavailable .-> LOCAL[Local classifier and rules]
     D -. provider unavailable or invalid .-> FALLBACK[Cited local plan]
     NEW[Validated data / new classes] --> DB
@@ -39,11 +57,13 @@ Prerequisite: Docker Engine or Docker Desktop with Compose.
 
 ```powershell
 if (-not (Test-Path .env)) { Copy-Item .env.example .env }
+# Existing .env files: set CORPUS_DIR=data/synthetic/telecom_v2.
+# Set LLM_ENABLED=false for the fully local demo.
 # Put your Groq and/or Gemini API key in .env and keep LLM_ENABLED=true.
 docker compose --profile app up --build
 ```
 
-Open [the complaint form](http://127.0.0.1:8000), [API documentation](http://127.0.0.1:8000/docs), or [readiness](http://127.0.0.1:8000/api/v1/ready).
+Open [the agent console](http://127.0.0.1:8000), [API documentation](http://127.0.0.1:8000/docs), or [readiness](http://127.0.0.1:8000/api/v1/ready).
 
 The API image runs as a non-root user. On first startup it initializes the schema, indexes the supplied corpus, trains missing local fallback artifacts, calibrates their routing and caches the reranker. Initial model downloads take longer than subsequent starts. PostgreSQL data, prepared artifacts and the model cache use persistent volumes. No live LLM call is needed for initialization.
 
@@ -127,7 +147,7 @@ $env:LLM_ENABLED="false"
 python -m scripts evaluate --split dev --output data/evaluation/my_pipeline_dev.json
 
 # Varied input load measurement against a running local API.
-python -m scripts load --queries data/synthetic/telecom_v1/dev.jsonl --requests 30 --concurrency 2 --output data/evaluation/my_load.json
+python -m scripts load --queries data/synthetic/telecom_v2/dev.jsonl --requests 30 --concurrency 2 --output data/evaluation/my_load.json
 ```
 
 Offline tests cover complaint parsing, follow-ups, citations, unsupported instructions, provider fallback, retrieval/filtering, indexing, split separation and data evolution. Parameterized cases are individual checks, not separate scripts. Obsolete check/evaluation CLIs and saved-case workflow tests were removed. The necessary end-to-end behavior checkpoints are in `tests/evaluation/`.

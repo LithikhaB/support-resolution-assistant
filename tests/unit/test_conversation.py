@@ -187,7 +187,7 @@ def test_unpaid_bill_answer_ends_the_payment_status_loop(service, reply):
     assert any("due date" in question for question in initial.clarification_questions)
     result = run(service, query=query, turns=[{"issue_id": 1, "message": reply}]).resolution
     assert not result.clarification_questions
-    assert result.customer_plan.title == "Your bill is still unpaid"
+    assert result.customer_plan.title == "Customer reports an unpaid bill"
     assert "account" in result.customer_plan.note
     assert not any(
         f.name == "billing_status" and f.value == "pending" for f in result.analysis.reported_facts

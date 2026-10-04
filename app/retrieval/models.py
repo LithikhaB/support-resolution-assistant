@@ -35,6 +35,7 @@ class EvidenceResult(BaseModel):
     doc_id: str
     chunk_index: int
     content: str
+    evidence_content: str | None = None
     title: str
     doc_type: DocType
     response: str | None

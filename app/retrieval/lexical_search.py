@@ -30,7 +30,7 @@ def build_lexical_sql(request):
     sql = f"""WITH q AS (SELECT {query} AS query)
         SELECT c.chunk_id,c.doc_id,c.chunk_index,c.content,d.title,d.doc_type,
             d.response,d.resolution,d.outcome_status,d.metadata,
-            ts_rank_cd(c.search_vector,q.query) AS score
+            ts_rank_cd(c.search_vector,q.query) AS score,d.body
         FROM chunks c JOIN documents d ON d.doc_id=c.doc_id CROSS JOIN q
         WHERE {" AND ".join(clauses)} ORDER BY score DESC,c.chunk_id LIMIT %s"""
     return sql, parameters
@@ -72,6 +72,7 @@ class PostgresLexicalRetriever:
                 resolution=row[7],
                 outcome_status=row[8],
                 metadata=row[9],
+                evidence_content=row[11] if len(row) > 11 else None,
                 bm25_score=row[10],
                 bm25_rank=rank,
             )

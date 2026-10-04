@@ -1,6 +1,7 @@
 """Present a clear ticket resolution plan independently of internal diagnostic details."""
 
 from app.resolution.models import CustomerPlan
+from app.understanding.signals import extract_actions
 
 
 def physical_damage(analysis):
@@ -12,19 +13,100 @@ def physical_damage(analysis):
 
 
 def procedure_steps(response):
-    """Separate the diagnostic check from the conditional action for easy scanning."""
+    """Render ordered source checks and keep all remedies conditional on the full gate."""
     steps = []
+    if response.acknowledged_actions:
+        steps.append(
+            "Do not repeat completed checks: " + "; ".join(response.acknowledged_actions) + "."
+        )
+    attempted = {a.action for a in response.analysis.actions if a.status == "attempted"}
+    known = {f.name for f in response.analysis.reported_facts}
+    optical_alarm = any(
+        f.name == "optical_signal" and f.value == "loss_reported"
+        for f in response.analysis.reported_facts
+    )
+    # Coalesce identical checks across alternative procedures, retaining every citation.
+    shared = {}
+    completion = {}
     for item in response.suggestions:
-        steps.append(f"Support check: {item.required_finding} [{item.citation_id}]")
+        source = next((s for s in response.sources if s.citation_id == item.citation_id), None)
+        fields = {q.field: q.text for q in source.quotes} if source else {}
+        for field in ("customer_checks",):
+            text = fields.get(field)
+            if not text or (
+                field == "customer_checks"
+                and (
+                    (("wired_connection" in known or optical_alarm) and "wired device" in text)
+                    or response.analysis.severity.rule == "reported_area_outage"
+                    or ("billing_status" in known and "pending or settled" in text)
+                )
+            ):
+                continue
+            if attempted & {a.action for a in extract_actions(text)}:
+                continue
+            shared.setdefault(text, []).append(item.citation_id)
+        if "agent_checks" in fields:
+            steps.append(
+                f"Check provider diagnostics: {item.required_finding} [{item.citation_id}]"
+            )
+        if "agent_checks" not in fields:
+            steps.append(
+                f"Check with authorized provider diagnostics whether all of the following are established: {item.required_finding} [{item.citation_id}]"
+            )
         if item.repeated_actions:
-            steps.append(f"Already tried: share the outcome with support instead of repeating this action. [{item.citation_id}]")
+            steps.append(
+                f"Withhold the previously attempted remedy and review its outcome. [{item.citation_id}]"
+            )
         else:
-            steps.append(f"If confirmed: {item.proposed_action} [{item.citation_id}]")
-    return steps
+            steps.append(
+                f"Only if support confirms the full diagnostic gate: {item.proposed_action} [{item.citation_id}]"
+            )
+        if "completion" in fields:
+            completion.setdefault(fields["completion"], []).append(item.citation_id)
+    common = [
+        f"{text} " + " ".join(f"[{c}]" for c in citations) for text, citations in shared.items()
+    ]
+    ending = []
+    if completion:
+        ending.insert(
+            0,
+            "After any authorized repair, verify the relevant result: "
+            + "; ".join(
+                f"{text} " + " ".join(f"[{c}]" for c in citations)
+                for text, citations in completion.items()
+            ),
+        )
+    prefix = steps[:1] if response.acknowledged_actions else []
+    return prefix + common + steps[len(prefix) :] + ending
 
 
 def procedure_note(response):
-    return " ".join(f"{item.restriction} [{item.citation_id}]" for item in response.suggestions)
+    restrictions = " ".join(
+        f"{item.restriction} [{item.citation_id}]"
+        for item in response.suggestions
+        if "customer is angry" not in item.restriction.lower()
+        or response.analysis.sentiment.value == "angry"
+    )
+    escalation = {}
+    for source in response.sources:
+        for quote in source.quotes:
+            if quote.field == "escalate_if":
+                escalation.setdefault(quote.text, []).append(source.citation_id)
+    for text, citations in escalation.items():
+        if text == (
+            "If the gate is unconfirmed, contradictory or outside the agent's authority, "
+            "route for specialist investigation with the observations; do not apply the remedy."
+        ):
+            text = "If a required finding is unconfirmed, contradictory or outside your authority, refer for specialist review; do not apply the remedy."
+        restrictions += " " + text + " " + " ".join(f"[{c}]" for c in citations)
+    linked = [h for h in response.historical_cases if h.relationship == "linked_procedure"]
+    if linked:
+        restrictions += (
+            " Compare the linked simulated outcomes "
+            + " ".join(f"[{h.citation_id}]" for h in linked)
+            + "; they inform investigation but do not confirm this customer's cause."
+        )
+    return restrictions
 
 
 def customer_plan(response):
@@ -63,8 +145,8 @@ def customer_plan(response):
                 "Do not use or power on wet equipment. Keep clear of wet electrical connections and have a qualified professional inspect them before use.",
             )
         return CustomerPlan(
-            title="Your damaged equipment needs an inspection",
-            summary="You reported physical damage to your telecom equipment. Even if service in the area has recovered, that does not establish that your equipment is safe or usable.",
+            title="Reported equipment damage requires inspection",
+            summary="The customer reported physical damage. Area service recovery does not establish that this equipment is safe or usable.",
             steps=steps,
             note="A replacement has not been booked. Your provider must confirm eligibility, charges and timing.",
         )
@@ -82,24 +164,26 @@ def customer_plan(response):
         for f in analysis.reported_facts
     ):
         return CustomerPlan(
-            title="You reported that service is working again",
+            title="Customer reports service recovered",
             summary="No further repair is recommended from the information provided.",
             steps=["Monitor the connection and record when the issue returns, if it does."],
             note="An agent can review the outcome before closing the case.",
         )
     if analysis.severity.rule == "reported_area_outage":
         return CustomerPlan(
-            title="Report the shared outage to your provider",
+            title="Review the shared outage as a provider incident",
             summary="Several people or locations are affected. This needs a provider incident check rather than repeated device resets.",
-            steps=[
-                "Ask your provider whether a network incident is open for your area and request an update reference."
+            steps=procedure_steps(response)
+            if response.suggestions
+            else [
+                "Check authorized provider incident monitoring for the affected area and record an update reference."
             ],
             note="This assistant has not checked live network status or opened a provider ticket.",
         )
     if response.contact_status == "unverified":
         return CustomerPlan(
-            title="Speak with human support",
-            summary="You would like to speak with a person about this issue.",
+            title="Route to human support",
+            summary="The customer requested human support for this issue.",
             steps=[
                 "Use the customer-care contact shown on your bill or in your service app. Share this complaint and the steps you have already tried."
             ],
@@ -108,8 +192,8 @@ def customer_plan(response):
     known = {(fact.name, fact.value) for fact in analysis.reported_facts}
     if ("bill_status", "unpaid") in known:
         return CustomerPlan(
-            title="Your bill is still unpaid",
-            summary="You said you plan to pay the bill. This is different from a payment already sent but still processing.",
+            title="Customer reports an unpaid bill",
+            summary="The customer plans to pay the bill. Verify the account record before treating this as a sent payment awaiting settlement.",
             steps=[
                 "Check the due date and amount in your bill or service app before paying.",
                 "If you dispute the late fee, ask billing support to explain it against the due date and account payment record.",
@@ -121,11 +205,11 @@ def customer_plan(response):
         if analysis.category:
             title = "Initial checks"
 
-        summary = "Please answer below so I can suggest the next step."
+        summary = "Record the customer's answer to the focused question below, then review the conditional investigation."
         if ("charge", "late_fee") in known:
             summary = "You are asking about a late fee. Payment timing is needed to explain what billing support should check."
         elif response.acknowledged_actions:
-            summary = "Your previous checks are noted. Review the next step and answer below."
+            summary = "Review completed checks and their outcomes. Record the customer's answer before authorizing a remedy."
         elif analysis.category:
             summary = "Review the initial check below. Your answer will help narrow the next step."
 
@@ -156,7 +240,9 @@ def customer_plan(response):
             title=title,
             summary=summary,
             steps=steps,
-            note=procedure_note(response) if response.suggestions else "These are initial checks while we confirm the details.",
+            note=procedure_note(response)
+            if response.suggestions
+            else "These are initial checks while we confirm the details.",
         )
     if response.suggestions and response.validation.status != "failed":
         return CustomerPlan(

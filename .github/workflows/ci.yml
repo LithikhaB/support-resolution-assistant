@@ -26,6 +26,11 @@ jobs:
       - run: pip install torch --index-url https://download.pytorch.org/whl/cpu
       - run: pip install -r requirements.txt
       - run: python -m ruff check app scripts tests
+      - run: python -m ruff format --check app scripts tests
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: node --test tests/web/agent_console.test.cjs
       - run: python -m scripts.setup_database
       - run: python -m pytest -q
   container:

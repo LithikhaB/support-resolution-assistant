@@ -116,8 +116,25 @@ class UnderstandingService:
                         ],
                     )
         reported_category = explicit_category(products, severity)
+        intermittent = [f for f in facts if f.name == "connection_pattern"]
+        wired = {f.value for f in facts if f.name == "wired_connection"}
+        if (
+            not reported_category
+            and intermittent
+            and wired != {"working"}
+            and any(p.product == "broadband" for p in products)
+        ):
+            reported_category = "intermittent_broadband"
+        if wired == {"working"} and any(p.product == "home_wifi" for p in products):
+            reported_category = "wifi_connectivity"
         category = reported_category or (candidates[0].category if accepted else None)
-        category_evidence = severity.evidence if reported_category else []
+        category_evidence = (
+            [TextEvidence(**f.model_dump(include={"text", "start", "end"})) for f in intermittent]
+            if reported_category in {"intermittent_broadband", "wifi_connectivity"}
+            else severity.evidence
+            if reported_category
+            else []
+        )
         category_basis = (
             "explicit_report" if reported_category else ("model" if category else "uncertain")
         )

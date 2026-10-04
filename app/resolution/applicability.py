@@ -17,15 +17,26 @@ def applicability_issue(procedure, analysis):
         return "different_service_scope"
     known = {(fact.name, fact.value) for fact in analysis.reported_facts}
     finding = procedure.quotes["condition"].text
+    if ("optical_signal", "loss_reported") in known and not re.search(
+        r"\b(?:no received signal|no optical signal|no light received)\b", finding, re.I
+    ):
+        return "defer_other_procedures_until_reported_optical_alarm_checked"
+    if ("billing_status", "settled") in known and re.search(
+        r"\b(?:authorization only|no settlement confirmation)\b", finding, re.I
+    ):
+        return "pending_payment_gate_for_reported_settlement"
+    if (
+        ("weather_context", "reported") in known
+        and ("timing", "peak_hours") not in known
+        and re.search(r"\b(?:peak|evening|capacity|congestion)\b", finding, re.I)
+    ):
+        return "peak_hour_gate_without_peak_timing_in_weather_report"
     if ("port_status", "rejected") in known and re.search(
         r"\b(?:order is accepted|no failure is recorded)\b", finding, re.I
     ):
         return "accepted_port_gate_for_rejected_transfer"
-    if (
-        ("optical_signal", "normal_reported") in known
-        and re.search(
-            r"\b(?:no received signal|no optical signal|no light received)\b", finding, re.I
-        )
+    if ("optical_signal", "normal_reported") in known and re.search(
+        r"\b(?:no received signal|no optical signal|no light received)\b", finding, re.I
     ):
         return "total_optical_loss_gate_for_intermittent_symptom"
     if ("tv_symptom", "buffering") in known and re.search(
@@ -67,5 +78,10 @@ def evidence_query(query, analysis):
     if analysis.severity.rule == "reported_area_outage":
         return (
             query + " Regional outage affecting multiple buildings; check provider major incident."
+        )
+    if any(f.name == "weather_context" for f in analysis.reported_facts):
+        return (
+            query
+            + " Weather-related intermittent service: investigate line quality and physical faults; cause unconfirmed."
         )
     return query

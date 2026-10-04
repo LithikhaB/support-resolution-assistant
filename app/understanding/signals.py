@@ -18,19 +18,21 @@ PRODUCT_PATTERNS = {
     "iptv": r"\b(?:IPTV|TV|television|set.top box|live channels?)\b",
     "billing": r"\b(?:bills?|invoices?|payments?|charges?|refunds?|paid|account.*suspended)\b",
 }
+BUSINESS_IMPACT = r"\b(?:costing me(?: orders| money| business)?|losing (?:orders|income|customers)|lost (?:orders|income)|cannot work|can[’\x27]t work|affecting my (?:work|business))\b"
+
 TONE_PATTERNS = {
     "angry": r"\b(?:angry|furious|unacceptable|outraged)\b",
-    "frustrated": r"\b(?:frustrated|fed up|tiresome|frustrating)\b",
+    "frustrated": r"\b(?:frustrated|fed up|tiresome|frustrating|costing me(?: orders| money| business)?|losing (?:orders|income|customers))\b",
     "concerned": r"\b(?:worried|worries|anxious|uneasy|concerned)\b",
     "neutral": r"\b(?:calmly|please explain|please advise|reporting the observations)\b",
 }
 ACTION_PATTERNS = {
     "restart_device": r"\b(?:restart(?:ed|ing)?|reboot(?:ed|ing)?|power[ -]cycl(?:e|ed|ing)|unplugged\s+(?:it|(?:my|the)\s+(?:router|modem|ONT))\s+for\s+(?:\w+\s+){0,2}(?:minutes?|seconds?))\b",
     "test_wired_connection": r"\b(?:test(?:ed|ing)?|tried|check(?:ed|ing)?)\s+(?:(?:a|the|my)\s+)?(?:wired|Ethernet)\b",
-    "check_cables": r"\b(?:check(?:ed|ing)?|reseat(?:ed|ing)?|swapp(?:ed|ing))\s+(?:(?:the|my|a)\s+)?(?:cables?|connectors?)\b",
+    "check_cables": r"\b(?:check(?:ed|ing)?|reseat(?:ed|ing)?|swapp(?:ed|ing))\s+(?:(?:the|my|a|every|all)\s+)?(?:cables?|connectors?)\b",
     "compare_devices": r"\b(?:compar(?:ed|ing)|cross[ -]test(?:ed|ing)?)\b",
     "move_router": r"\b(?:mov(?:ed|ing)|reposition(?:ed|ing)?)\s+(?:(?:the|my|a)\s+)?router\b",
-    "reset_settings": r"\breset\s+(?:(?:the|my)\s+)?(?:network|router|device|settings)\b",
+    "reset_settings": r"\b(?:reset\s+(?:(?:the|my)\s+)?(?:network|router|device|settings)|reset\s+(?:it\s+)?to\s+factory\s+settings|factory[ -]reset(?:\s+(?:it|the router))?)\b",
 }
 
 
@@ -133,6 +135,7 @@ def assess_severity(text: str) -> RuleAssessment:
                 evidence=[span(text, area, clause.start()), span(text, loss, clause.start())],
             )
     rules = [
+        ("high", "reported_business_impact", BUSINESS_IMPACT),
         (
             "high",
             "reported_complete_loss",
@@ -215,7 +218,14 @@ def extract_actions(text: str) -> list[ActionObservation]:
                 } and not re.search(r"\b(?:did|already|tried)\b", prefix, re.I):
                     status = "suggested"
                 start = clause.start() + len(fragment) - len(fragment.lstrip())
+                conjunctions = list(re.finditer(r"\b(?:and|but|so)\s+", prefix, re.I))
+                if conjunctions:
+                    start = clause.start() + conjunctions[-1].end()
                 end = clause.start() + len(fragment.rstrip())
+                # A comma can separate duration from repetition, e.g. ten minutes, twice.
+                repeat = re.match(r",\s*(?:twice|once|\d+ times|three times)\b", text[end:], re.I)
+                if repeat:
+                    end += repeat.end()
                 results.append(
                     ActionObservation(
                         action=action, status=status, text=text[start:end], start=start, end=end

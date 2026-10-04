@@ -32,4 +32,13 @@ summary { cursor: pointer; color: #126954; padding: 8px 0; }
 small, footer { font-size: 13px; line-height: 1.6; }
 footer { padding: 16px 0; }
 [hidden] { display: none !important; }
+.decision, .fields, .trust { display: flex; gap: 8px; flex-wrap: wrap; align-items: baseline; margin-bottom: 16px; }
+.decision h2 { flex: 1 1 240px; }
+.badge, .chip { border: 1px solid #bdd2c9; border-radius: 8px; padding: 6px 10px; font-size: 13px; background: white; }
+.badge.high { background: #fff1d6; color: #725013; }
+.badge.urgent, .badge.failed { background: #fce9e6; color: #832c21; }
+.badge.passed { background: #dcf3e6; }
+.chip summary { padding: 0; }
+.chip small { display: block; max-width: 380px; padding-top: 8px; }
+.quick-answer { margin: 0 8px 16px 0; padding: 10px; }
 @media (max-width: 540px) { main { width: min(100% - 24px, 800px); margin-top: 20px; } .panel { padding: 18px; } header { margin-bottom: 28px; } }

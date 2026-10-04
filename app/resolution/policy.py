@@ -85,10 +85,16 @@ def questions_for(analysis):
     if analysis.category == "number_porting":
         known = {(f.name, f.value) for f in analysis.reported_facts}
         if ("port_status", "rejected") in known:
-            return [] if ("port_reason", "account_mismatch") in known else [
-                "What rejection reason did the provider give? Do not share account identifiers or authorization codes."
-            ]
-        return ["Is the number transfer pending or rejected, and what status has the provider given?"]
+            return (
+                []
+                if ("port_reason", "account_mismatch") in known
+                else [
+                    "What rejection reason did the provider give? Do not share account identifiers or authorization codes."
+                ]
+            )
+        return [
+            "Is the number transfer pending or rejected, and what status has the provider given?"
+        ]
     if analysis.severity.rule == "reported_area_outage":
         known = {f.name for f in analysis.reported_facts}
         questions = (
@@ -118,4 +124,6 @@ def questions_for(analysis):
             )
     if physical_damage(analysis):
         questions = [q for q in questions if q.startswith("You reported conflicting")]
+    elif values.get("optical_signal") == {"loss_reported"}:
+        questions = ["Is the red indicator labelled LOS, and when did service stop working?"]
     return list(dict.fromkeys(questions))

@@ -60,7 +60,15 @@ class JSONProvider:
                 return schema.model_validate(restore(json.loads(text), mapping))
         except httpx.HTTPStatusError as exc:
             error = f"provider_http_{exc.response.status_code}"
-            raise LanguageUnavailable(error) from None
+            retry_after = None
+            if exc.response.status_code == 429:
+                try:
+                    retry_after = min(
+                        300, max(0, float(exc.response.headers.get("retry-after", "0")))
+                    )
+                except ValueError:
+                    pass
+            raise LanguageUnavailable(error, retry_after=retry_after) from None
         except LanguageUnavailable as exc:
             error = str(exc)
             raise
