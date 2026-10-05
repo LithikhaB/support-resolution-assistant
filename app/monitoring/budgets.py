@@ -65,6 +65,59 @@ class RequestBudgets:
                 self.items.popitem(last=False)
             return ceil(retry)
 
+    def take_many(self, limits, *, backend="memory"):
+        """Consume every API budget or none; lock DB rows in a consistent order."""
+        limits = sorted(limits)
+        if backend == "postgres":
+            with self.connection() as conn:
+                for key, _, burst in limits:
+                    conn.execute(
+                        "INSERT INTO support_request_budgets(bucket_key,tokens) VALUES (%s,%s) ON CONFLICT DO NOTHING",
+                        (key, burst),
+                    )
+                rows = conn.execute(
+                    "SELECT bucket_key,tokens,greatest(0,extract(epoch FROM (clock_timestamp()-updated_at))),"
+                    "CASE WHEN blocked_until<=clock_timestamp() THEN 0 ELSE extract(epoch FROM (blocked_until-clock_timestamp())) END "
+                    "FROM support_request_budgets WHERE bucket_key=ANY(%s) ORDER BY bucket_key FOR UPDATE",
+                    ([key for key, _, _ in limits],),
+                ).fetchall()
+                states = {
+                    key: (float(tokens), float(elapsed), float(blocked))
+                    for key, tokens, elapsed, blocked in rows
+                }
+                available, retry = {}, 0
+                for key, rate, burst in limits:
+                    tokens, elapsed, blocked = states[key]
+                    available[key] = min(burst, tokens + elapsed * rate / 60)
+                    retry = max(retry, blocked, (1 - available[key]) * 60 / rate)
+                if retry > 0:
+                    return ceil(retry)
+                for key, _, _ in limits:
+                    conn.execute(
+                        "UPDATE support_request_budgets SET tokens=%s,updated_at=clock_timestamp() WHERE bucket_key=%s",
+                        (available[key] - 1, key),
+                    )
+                with self.lock:
+                    self.operations += 1
+                    cleanup = self.operations % 100 == 0
+                if cleanup:
+                    conn.execute(
+                        "DELETE FROM support_request_budgets WHERE updated_at<clock_timestamp()-interval '1 day' AND blocked_until<=clock_timestamp()"
+                    )
+                return 0
+        with self.lock:
+            now, available, retry = self.clock(), {}, 0
+            for key, rate, burst in limits:
+                tokens, last, blocked = self.items.get(key, (float(burst), now, 0))
+                available[key] = (min(burst, tokens + max(0, now - last) * rate / 60), blocked)
+                retry = max(retry, blocked - now, (1 - available[key][0]) * 60 / rate)
+            for key, (tokens, blocked) in available.items():
+                self.items[key] = (tokens - int(retry <= 0), now, blocked)
+                self.items.move_to_end(key)
+            while len(self.items) > 4096:
+                self.items.popitem(last=False)
+            return ceil(retry)
+
     def block(self, key, seconds, *, backend="memory"):
         seconds = min(86400, max(1, seconds))
         if backend == "postgres":
@@ -123,11 +176,14 @@ def reserve_generation(provider, cost):
 
 def api_budget(client):
     settings = get_settings()
-    for key, rate, burst in (
-        ("api:global", settings.api_global_requests_per_minute, settings.api_global_request_burst),
-        ("api:client:" + client, settings.api_requests_per_minute, settings.api_request_burst),
-    ):
-        retry = budgets.take(key, rate, burst, backend=settings.rate_limit_backend)
-        if retry:
-            return retry
-    return 0
+    return budgets.take_many(
+        [
+            (
+                "api:global",
+                settings.api_global_requests_per_minute,
+                settings.api_global_request_burst,
+            ),
+            ("api:client:" + client, settings.api_requests_per_minute, settings.api_request_burst),
+        ],
+        backend=settings.rate_limit_backend,
+    )

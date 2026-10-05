@@ -5,6 +5,9 @@ services:
     profiles: ["app"]
     env_file: .env
     environment:
+      RERANKER_INSTANCES: "2"
+      OMP_NUM_THREADS: "4"
+      MKL_NUM_THREADS: "4"
       POSTGRES_HOST: db
       POSTGRES_PORT: 5432
       LEXICAL_BACKEND: postgres

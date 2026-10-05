@@ -14,6 +14,7 @@ from starlette.concurrency import run_in_threadpool
 from app.config.settings import get_settings
 from app.database.connection import pool_stats
 from app.llm.telemetry import snapshot as language_metrics
+from app.monitoring.admission import current_admission
 from app.monitoring.budgets import api_budget
 
 router = APIRouter(prefix="/api/v1")
@@ -28,6 +29,7 @@ _counts = {
     "capacity_rejected": 0,
 }
 _resolution_active = 0
+_resolution_queued = 0
 _buckets = (0.1, 0.5, 1, 2.5, 5, 10, 30, 60, 120)
 _histogram = [0] * len(_buckets)
 _duration_sum = 0.0
@@ -113,7 +115,7 @@ async def measure_request(request, call_next):
     """Track completion and failures even when request handling raises an exception."""
     if request.url.path in {"/api/v1/metrics", "/metrics"}:
         return await call_next(request)
-    global _resolution_active, _duration_sum
+    global _resolution_active, _resolution_queued, _duration_sum
     expensive = request.method == "POST" and request.url.path.startswith(
         (
             "/api/v1/resolve",
@@ -123,13 +125,39 @@ async def measure_request(request, call_next):
         )
     )
     admitted = False
+    admission = current_admission() if expensive else None
     start, status = perf_counter(), 500
     with _lock:
         _counts["in_flight"] += 1
-        if expensive and _resolution_active < get_settings().max_resolution_requests:
-            _resolution_active += 1
-            admitted = True
+
     try:
+        if expensive:
+            settings = get_settings()
+            queued = admission.active >= settings.max_resolution_requests or bool(admission.waiters)
+            if queued:
+                with _lock:
+                    _resolution_queued += 1
+            try:
+                admitted = await admission.acquire(
+                    settings.max_resolution_requests,
+                    getattr(settings, "resolution_queue_size", 0),
+                    getattr(settings, "resolution_queue_timeout_seconds", 30),
+                )
+            finally:
+                if queued:
+                    with _lock:
+                        _resolution_queued -= 1
+            if not admitted:
+                status = 503
+                with _lock:
+                    _counts["capacity_rejected"] += 1
+                return JSONResponse(
+                    status_code=status,
+                    content={"detail": "Resolution capacity is busy; retry shortly."},
+                    headers={"Retry-After": "2"},
+                )
+            with _lock:
+                _resolution_active += 1
         if expensive and hasattr(request, "client"):
             # Never trust spoofable forwarding headers without a configured trusted proxy.
             identity = sha256(
@@ -153,19 +181,12 @@ async def measure_request(request, call_next):
                     content={"detail": "Too many requests. Please wait before trying again."},
                     headers={"Retry-After": str(retry)},
                 )
-        if expensive and not admitted:
-            status = 503
-            with _lock:
-                _counts["capacity_rejected"] += 1
-            return JSONResponse(
-                status_code=status,
-                content={"detail": "Resolution capacity is busy; retry shortly."},
-                headers={"Retry-After": "2"},
-            )
         response = await call_next(request)
         status = response.status_code
         return response
     finally:
+        if admitted:
+            admission.release()
         with _lock:
             if admitted:
                 _resolution_active -= 1
@@ -192,6 +213,10 @@ def prometheus_metrics():
             f"support_throttled_total {_counts['throttled']}",
             "# TYPE support_capacity_rejected_total counter",
             f"support_capacity_rejected_total {_counts['capacity_rejected']}",
+            "# TYPE support_resolution_active gauge",
+            f"support_resolution_active {_resolution_active}",
+            "# TYPE support_resolution_queued gauge",
+            f"support_resolution_queued {_resolution_queued}",
             "# TYPE support_in_flight gauge",
             f"support_in_flight {_counts['in_flight']}",
             "# TYPE support_request_duration_seconds histogram",

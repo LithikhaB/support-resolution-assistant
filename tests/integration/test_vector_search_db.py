@@ -80,3 +80,31 @@ def test_database_ranking_filters_and_evidence(repository):
     assert len(combined) == 1 and combined[0].sources == ["vector", "bm25"]
     assert combined[0].rrf_score == pytest.approx(2 / 61)
     assert hybrid.search(query, 3, {"queue": "x' OR 1=1 --"}) == []
+
+
+def test_atomic_shared_api_budget_rejections_do_not_drain_global(repository):
+    from contextlib import contextmanager
+    from pathlib import Path
+
+    from app.monitoring.budgets import RequestBudgets
+
+    repository.conn.execute(
+        Path("db/migrations/007_request_budgets.sql").read_text(encoding="utf-8")
+    )
+
+    @contextmanager
+    def connection():
+        yield repository.conn
+
+    first, second = RequestBudgets(connection=connection), RequestBudgets(connection=connection)
+    limits = [("atomic-global", 1, 10), ("atomic-client", 1, 1)]
+    assert first.take_many(limits, backend="postgres") == 0
+    assert second.take_many(limits, backend="postgres") > 0
+    tokens = repository.conn.execute(
+        "SELECT tokens FROM support_request_budgets WHERE bucket_key='atomic-global'"
+    ).fetchone()[0]
+    assert tokens == 9
+    assert (
+        second.take_many([("atomic-global", 1, 10), ("different-client", 1, 1)], backend="postgres")
+        == 0
+    )

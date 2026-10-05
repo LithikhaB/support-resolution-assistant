@@ -199,3 +199,35 @@ def test_rank_ties_and_evidence_preserved_without_mutation():
     version.side_effect = RetrievalUnavailable("index_update_in_progress")
     with pytest.raises(RetrievalUnavailable):
         search.search(request)
+
+
+def test_reranker_pool_runs_independent_instances_and_returns_them_after_errors():
+    from concurrent.futures import ThreadPoolExecutor
+    from threading import Barrier
+    from types import SimpleNamespace
+
+    from app.retrieval.reranking import RerankerPool
+
+    barrier = Barrier(2)
+
+    def rank(query, candidates, limit):
+        barrier.wait(timeout=2)
+        return query
+
+    models = [SimpleNamespace(settings=None, model=None, rerank=rank) for _ in range(2)]
+    pool = RerankerPool(models)
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        assert set(executor.map(lambda query: pool.rerank(query, [], 1), ("first", "second"))) == {
+            "first",
+            "second",
+        }
+    assert pool.available.qsize() == 2
+
+    def fail(*args):
+        raise RuntimeError("model failed")
+
+    for model in models:
+        model.rerank = fail
+    with pytest.raises(RuntimeError, match="model failed"):
+        pool.rerank("query", [], 1)
+    assert pool.available.qsize() == 2

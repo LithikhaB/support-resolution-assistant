@@ -1,6 +1,7 @@
 """Bounded local pairwise reranking that preserves original evidence and source ranks."""
 
 from functools import lru_cache
+from queue import Queue
 from threading import Lock
 
 import numpy as np
@@ -87,9 +88,30 @@ class RerankingService:
         ]
 
 
+class RerankerPool:
+    """Two independent model/tokenizer instances avoid serializing independent requests."""
+
+    def __init__(self, models):
+        self.models = models
+        self.settings = models[0].settings
+        self.model = models[0].model
+        self.available = Queue(maxsize=len(models))
+        for model in models:
+            self.available.put(model)
+
+    def rerank(self, query, candidates, top_k):
+        model = self.available.get()
+        try:
+            return model.rerank(query, candidates, top_k)
+        finally:
+            self.available.put(model)
+
+
 @lru_cache(maxsize=1)
 def _cached_reranker():
-    return RerankingService()
+    settings = get_settings()
+    models = [RerankingService(settings=settings) for _ in range(settings.reranker_instances)]
+    return models[0] if len(models) == 1 else RerankerPool(models)
 
 
 def get_reranking_service():

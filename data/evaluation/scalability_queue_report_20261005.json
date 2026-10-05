@@ -1,0 +1,128 @@
+{
+  "created_at_utc": "2026-10-05T16:01:49.953491+00:00",
+  "mode": "offline_extractive",
+  "dataset": "telecom_v3_1, 332 synthetic documents",
+  "baseline_report": "load_test_report.json",
+  "baseline_error_rates": {
+    "1": 0.4,
+    "5": 0.85,
+    "20": 0.9
+  },
+  "profile": {
+    "active_requests": 2,
+    "waiting_room": 32,
+    "queue_timeout_seconds": 30,
+    "client_rate_per_minute": 120,
+    "client_burst": 60,
+    "global_rate_per_minute": 600,
+    "global_burst": 120,
+    "budget_backend": "postgres",
+    "reranker_instances": 2,
+    "reranker_batch_size": 16,
+    "cpu_threads_per_operation": 4,
+    "provider_quotas_changed": false,
+    "reranking_checkpoint": "cross-encoder/ms-marco-MiniLM-L6-v2@233902d25c440f23af6f7d6e94d2946bac0bee0a",
+    "reranking_candidate_policy": "unchanged, 20 KB candidates, max pair length 512, float32 inference"
+  },
+  "repeated_query_runs": [
+    {
+      "concurrency": 1,
+      "p50_ms": 96.25529998447746,
+      "p95_ms": 115.38049997761846,
+      "p99_ms": 122.43460002355278,
+      "successful_rps": 10.198804791255979,
+      "error_rate": 0.0,
+      "requests": 20,
+      "status_counts": {
+        "200": 20
+      },
+      "pre_run_sample": {
+        "status": 200,
+        "ms": 462.9332998301834,
+        "language_status": "disabled",
+        "provider": null,
+        "citation_status": "passed"
+      }
+    },
+    {
+      "concurrency": 5,
+      "p50_ms": 285.049149999395,
+      "p95_ms": 407.14209992438555,
+      "p99_ms": 456.2503998167813,
+      "successful_rps": 15.104502387449541,
+      "error_rate": 0.0,
+      "requests": 20,
+      "status_counts": {
+        "200": 20
+      },
+      "pre_run_sample": {
+        "status": 200,
+        "ms": 203.00900004804134,
+        "language_status": "disabled",
+        "provider": null,
+        "citation_status": "passed"
+      }
+    },
+    {
+      "concurrency": 20,
+      "p50_ms": 780.2323999349028,
+      "p95_ms": 1256.3386999536306,
+      "p99_ms": 1299.0977000445127,
+      "successful_rps": 14.84562773798753,
+      "error_rate": 0.0,
+      "requests": 20,
+      "status_counts": {
+        "200": 20
+      },
+      "pre_run_sample": {
+        "status": 200,
+        "ms": 215.0538000278175,
+        "language_status": "disabled",
+        "provider": null,
+        "citation_status": "passed"
+      }
+    }
+  ],
+  "varied_query_run": {
+    "concurrency": 20,
+    "distinct_queries": 20,
+    "requests": 20,
+    "p50_ms": 14963.115999940783,
+    "p95_ms": 26247.44540010579,
+    "p99_ms": 27869.66109997593,
+    "successful_rps": 0.715975218911115,
+    "error_rate": 0.0,
+    "status_counts": {
+      "200": 20
+    },
+    "pre_run_sample": {
+      "status": 200,
+      "ms": 2731.004500063136,
+      "language_status": "disabled",
+      "provider": null,
+      "citation_status": "passed"
+    }
+  },
+  "attempts": {
+    "queue_only_varied": {
+      "successes": 14,
+      "errors": 6,
+      "report": ".work/queue_varied_c20_20261005.json"
+    },
+    "two_instances_two_threads_batch8": {
+      "successes": 19,
+      "errors": 1,
+      "report": ".work/pool_varied_c20_20261005.json"
+    }
+  },
+  "limits": "Local CPU benchmark, 20 requests per run. Repeated cases use warm caches; varied cases contain seven complaint types with 20 unique authored strings (the pre-run sample warms one of them). Full default reranking is enabled. No live LLM throughput or large-corpus SLA is established. Queue saturation, deadline expiry and genuine quota exhaustion still return 503/429.",
+  "regression_gate": {
+    "passed": true,
+    "category_accuracy": 0.7666666666666667,
+    "kb_hit_at_5": 0.9,
+    "reranked_kb_hit_at_5": 0.9333333333333333,
+    "citation_validity_rate": 1,
+    "frozen_dev_sha256": "fe5e48b90972fd715884404937ef65ba1c4f59ab55dd20fb2ea60f4f2c215e2c",
+    "full_report": ".work/scalability_dev_gate_20261005.json"
+  }
+}

@@ -7,9 +7,11 @@ def main():
     """Cache model assets and perform one local inference without touching the database."""
     try:
         service = get_reranking_service()
-        service.model.predict(
-            [("Broadband drops", "Intermittent broadband troubleshooting")], show_progress_bar=False
-        )
+        for instance in getattr(service, "models", [service]):
+            instance.model.predict(
+                [("Broadband drops", "Intermittent broadband troubleshooting")],
+                show_progress_bar=False,
+            )
     except RerankerUnavailable as exc:
         raise SystemExit(
             "Reranker unavailable; check network access or the local model cache."

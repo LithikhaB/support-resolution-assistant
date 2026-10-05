@@ -28,11 +28,13 @@ class Settings(BaseSettings):
     llm_requests_per_minute: int = Field(default=12, ge=1, le=1000)
     llm_request_burst: int = Field(default=4, ge=1, le=100)
     rate_limit_backend: Literal["memory", "postgres"] = "memory"
-    api_requests_per_minute: int = Field(default=60, ge=1, le=10000)
-    api_request_burst: int = Field(default=10, ge=1, le=1000)
-    api_global_requests_per_minute: int = Field(default=120, ge=1, le=10000)
-    api_global_request_burst: int = Field(default=20, ge=1, le=1000)
+    api_requests_per_minute: int = Field(default=120, ge=1, le=10000)
+    api_request_burst: int = Field(default=60, ge=1, le=1000)
+    api_global_requests_per_minute: int = Field(default=600, ge=1, le=10000)
+    api_global_request_burst: int = Field(default=120, ge=1, le=1000)
     max_resolution_requests: int = Field(default=2, ge=1, le=16)
+    resolution_queue_size: int = Field(default=32, ge=0, le=256)
+    resolution_queue_timeout_seconds: float = Field(default=30, ge=0.01, le=60)
     computation_cache_seconds: float = Field(default=120, ge=0, le=600)
     semantic_reuse_threshold: float = Field(default=0.98, ge=0.95, le=1)
     conversation_storage_enabled: bool = False
@@ -79,6 +81,7 @@ class Settings(BaseSettings):
     reranker_model: str = "cross-encoder/ms-marco-MiniLM-L6-v2"
     reranker_revision: str = "233902d25c440f23af6f7d6e94d2946bac0bee0a"
     reranker_local_files_only: bool = False
+    reranker_instances: int = Field(default=1, ge=1, le=2)
     reranker_batch_size: int = Field(default=8, ge=1, le=32)
 
     @property

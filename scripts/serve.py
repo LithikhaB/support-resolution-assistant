@@ -51,7 +51,15 @@ def main():
         run("train_understanding")
     if not settings.understanding_routing_path.exists():
         run("calibrate_routing")
-    run("prepare_reranker")
+    from scripts.prepare_reranker import main as warm_reranker
+
+    warm_reranker()
+    # Make readiness meaningful: load CPU inference dependencies before serving traffic.
+    from app.retrieval.embeddings import get_embedding_service
+    from app.understanding.service import get_understanding_service
+
+    get_embedding_service().embed_query("Support connectivity readiness check")
+    get_understanding_service()
     import uvicorn
 
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, workers=1)

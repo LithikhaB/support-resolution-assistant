@@ -65,3 +65,38 @@ def test_overload_returns_retry_hint_and_releases_capacity(monkeypatch):
         assert metrics._resolution_active == 0
 
     asyncio.run(throttled())
+
+
+def test_middleware_queues_burst_and_checks_budget_only_after_admission(monkeypatch):
+    from app.monitoring import metrics
+
+    settings = SimpleNamespace(
+        max_resolution_requests=2, resolution_queue_size=20, resolution_queue_timeout_seconds=1
+    )
+    monkeypatch.setattr(metrics, "get_settings", lambda: settings)
+    budgets = []
+    monkeypatch.setattr(metrics, "api_budget", lambda identity: budgets.append(identity) or 0)
+
+    async def scenario():
+        request = SimpleNamespace(
+            method="POST",
+            url=SimpleNamespace(path="/api/v1/resolve"),
+            client=SimpleNamespace(host="127.0.0.1"),
+        )
+        active, peak = 0, 0
+
+        async def operation(_):
+            nonlocal active, peak
+            active += 1
+            peak = max(peak, active)
+            try:
+                await asyncio.sleep(0.005)
+                return JSONResponse({"status": "ok"})
+            finally:
+                active -= 1
+
+        results = await asyncio.gather(*(measure_request(request, operation) for _ in range(20)))
+        assert all(result.status_code == 200 for result in results)
+        assert peak == 2 and metrics._resolution_active == 0 and len(budgets) == 20
+
+    asyncio.run(scenario())
