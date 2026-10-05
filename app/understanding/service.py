@@ -33,6 +33,91 @@ logger = logging.getLogger(__name__)
 _factory_lock = Lock()
 
 
+def category_severity(category, facts):
+    """Estimate triage priority only for an accepted category; never invent a quote."""
+    if category is None:
+        return RuleAssessment(value="unknown", rule="insufficient_impact_evidence")
+    known = {(fact.name, fact.value) for fact in facts}
+    evidence = []
+    hazards = [
+        f
+        for f in facts
+        if f.name == "equipment_condition"
+        and f.value == "overheating"
+        and any(word in f.text.lower() for word in ("smoking", "burning smell"))
+    ]
+    business = [
+        f
+        for f in facts
+        if (f.name == "business_impact" and f.value in {"reported", "cannot_work", "income_loss"})
+        or (f.name == "impact" and f.value in {"business_impact", "cannot_work", "income_loss"})
+    ]
+    if hazards:
+        value, evidence = "critical", hazards
+    elif ("impact", "complete_loss") in known or business:
+        value = "high"
+        evidence = business or [
+            f for f in facts if f.name == "impact" and f.value == "complete_loss"
+        ]
+    elif category != "billing_dispute" and ("service_recovery", "working") in known:
+        value, evidence = (
+            "low",
+            [f for f in facts if f.name == "service_recovery" and f.value == "working"],
+        )
+    elif (
+        category == "wifi_connectivity"
+        and ("wireless_devices", "one") in known
+        or category == "sms_otp"
+        and ("sms_scope", "one_sender") in known
+    ):
+        value = "low"
+        evidence = [
+            f
+            for f in facts
+            if (f.name, f.value) in {("wireless_devices", "one"), ("sms_scope", "one_sender")}
+        ]
+    elif ("connection_pattern", "intermittent") in known and (
+        "wired_connection",
+        "failing",
+    ) in known:
+        value = "high"
+        evidence = [f for f in facts if f.name in {"connection_pattern", "wired_connection"}]
+    elif any(f.name == "connection_pattern" and f.value in {"slow", "intermittent"} for f in facts):
+        value = "medium"
+        evidence = [f for f in facts if f.name == "connection_pattern"]
+    elif category in {"billing_dispute", "sms_otp"}:
+        # A limited billing/message issue is low priority unless broader impact is reported.
+        evidence = [
+            f
+            for f in facts
+            if (
+                category == "billing_dispute"
+                and f.name in {"charge", "payment_scope", "billing_status"}
+            )
+            or (category == "sms_otp" and f.name == "mobile_services" and f.value == "texts")
+        ]
+        value = "medium" if evidence else "low"
+    else:
+        value = (
+            "high"
+            if category
+            in {
+                "broadband_outage",
+                "router_ont_hardware",
+                "payment_restoration",
+                "voice_call_failure",
+            }
+            else "medium"
+        )
+    return RuleAssessment(
+        value=value,
+        rule="category_default",
+        evidence=[
+            TextEvidence(**fact.model_dump(include={"text", "start", "end"})) for fact in evidence
+        ],
+    )
+
+
 class UnderstandingService:
     """Analyze complaints without treating predicted categories as confirmed diagnoses."""
 
@@ -202,6 +287,8 @@ class UnderstandingService:
             category = reported_category = None
             category_basis, category_evidence = "uncertain", []
         accepted = category is not None
+        if severity.value == "unknown" and accepted:
+            severity = category_severity(category, facts)
         requests = extract_requests(request.query)
         questions = clarification_questions(
             accepted=accepted, products=products, severity=severity, facts=facts, requests=requests

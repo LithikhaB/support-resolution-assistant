@@ -179,3 +179,89 @@ def test_uncertain_classifier_requests_clarification_without_logging_text(caplog
             assert result.actions[0].status == "attempted"
         for quote in [*result.actions, *result.sentiment.evidence]:
             assert text[quote.start : quote.end] == quote.text
+
+
+def test_category_defaults_are_estimates_without_fabricated_quotes():
+    from app.understanding.service import category_severity
+
+    for category, expected in (
+        ("broadband_outage", "high"),
+        ("router_ont_hardware", "high"),
+        ("payment_restoration", "high"),
+        ("voice_call_failure", "high"),
+        ("billing_dispute", "low"),
+        ("sms_otp", "low"),
+        ("mobile_data", "medium"),
+        ("sim_esim_activation", "medium"),
+        ("wifi_connectivity", "medium"),
+        ("intermittent_broadband", "medium"),
+        ("broadband_dns", "medium"),
+    ):
+        result = category_severity(category, [])
+        assert result.value == expected and result.rule == "category_default"
+        assert result.evidence == []
+    assert category_severity(None, []).value == "unknown"
+    from app.understanding.context import extract_facts
+
+    charges = "Both payments show settled."
+    assert category_severity("billing_dispute", extract_facts(charges)).value == "medium"
+
+
+def test_category_default_uses_real_fact_spans_for_scope_and_impact():
+    from app.understanding.context import extract_facts
+    from app.understanding.models import ReportedFact
+    from app.understanding.service import category_severity
+
+    for text, category, expected in (
+        ("My broadband keeps dropping. Ethernet also drops.", "intermittent_broadband", "high"),
+        ("Everything is working again.", "broadband_outage", "low"),
+        ("Only one wireless device is affected.", "wifi_connectivity", "low"),
+        ("The smoking router needs support.", "router_ont_hardware", "critical"),
+        ("My broadband is very slow.", "slow_broadband", "medium"),
+    ):
+        result = category_severity(category, extract_facts(text))
+        assert result.value == expected and result.evidence
+        assert all(text[q.start : q.end] == q.text for q in result.evidence)
+    text = "Orders cannot be processed."
+    fact = ReportedFact(name="business_impact", value="reported", text=text, start=0, end=len(text))
+    result = category_severity("intermittent_broadband", [fact])
+    assert result.value == "high" and result.evidence[0].text == text
+    assert (
+        category_severity("billing_dispute", extract_facts("Everything is working again.")).value
+        == "low"
+    )
+
+
+def test_final_severity_fallback_preserves_existing_rules_and_abstention(monkeypatch):
+    classifier = Mock()
+    classifier.artifact = artifact()
+    classifier.predict.return_value = [
+        CategoryCandidate(category="router_ont_hardware", score=0.9),
+        CategoryCandidate(category="slow_broadband", score=0.05),
+    ]
+    service = UnderstandingService(classifier, settings=Settings(_env_file=None, llm_enabled=False))
+    result = service.analyze(AnalyzeRequest(query="My router needs investigation."))
+    assert result.category == "router_ont_hardware"
+    assert result.severity.value == "high" and result.severity.rule == "category_default"
+    assert result.severity.evidence == []
+    text = "My broadband drops every evening around 8 and I've already restarted the router twice, I work from home and this is costing me."
+    result = service.analyze(AnalyzeRequest(query=text))
+    assert result.severity.value == "high" and result.severity.rule == "reported_business_impact"
+    assert all(text[q.start : q.end] == q.text for q in result.severity.evidence)
+    from app.understanding.models import ReportedFact, RuleAssessment
+
+    text = "Service is completely lost."
+    fact = ReportedFact(
+        name="impact",
+        value="complete_loss",
+        text=text,
+        start=len("My router: "),
+        end=len("My router: ") + len(text),
+    )
+    monkeypatch.setattr("app.understanding.service.extract_facts", lambda query: [fact])
+    monkeypatch.setattr(
+        "app.understanding.service.assess_severity",
+        lambda query: RuleAssessment(value="unknown", rule="insufficient_impact_evidence"),
+    )
+    result = service.analyze(AnalyzeRequest(query="My router: " + text))
+    assert result.severity.rule == "quoted_service_impact" and result.severity.value == "high"
