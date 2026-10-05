@@ -1,0 +1,17 @@
+{
+  "retrieval_variant": "kb_focused",
+  "baseline_report": "v31_postgres_dev_release_20261005.json",
+  "margin_percentage_points": 2,
+  "baseline": {
+    "category_accuracy": 0.7666666666666667,
+    "expected_kb_hit_at_5": 0.9,
+    "citation_validity_rate": 1
+  },
+  "dev_sha256": "fe5e48b90972fd715884404937ef65ba1c4f59ab55dd20fb2ea60f4f2c215e2c",
+  "thresholds": {
+    "category_accuracy": 0.7466666666666667,
+    "expected_kb_hit_at_5": 0.88,
+    "citation_validity_rate": 0.98
+  },
+  "scope": "Published classifier top-1 accuracy; KB-only hybrid hit@5 before optional rerank; citation contract, not semantic correctness."
+}

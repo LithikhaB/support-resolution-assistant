@@ -12,6 +12,11 @@ def record(
     provider, model, *, elapsed_ms=0, error=None, input_tokens=0, output_tokens=0, cost=None
 ):
     """Track bounded provider counters and explicitly configured cost estimates."""
+    from app.monitoring.metrics import provider_outcome
+
+    provider_outcome(
+        provider, "throttled" if error == "provider_http_429" else "error" if error else "success"
+    )
     with _lock:
         key = f"{provider}:{model}"
         if key not in _providers and len(_providers) >= 16:

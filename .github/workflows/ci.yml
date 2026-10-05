@@ -17,6 +17,7 @@ jobs:
     env:
       LLM_ENABLED: "false"
       RUN_DB_TESTS: "1"
+      LEXICAL_BACKEND: postgres
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -33,6 +34,19 @@ jobs:
       - run: node --test tests/web/agent_console.test.cjs
       - run: python -m scripts.setup_database
       - run: python -m pytest -q
+      - name: Prepare frozen dev evaluation artifacts
+        run: |
+          python -m scripts.index_documents
+          python -m scripts.train_understanding
+          python -m scripts.calibrate_routing
+      - name: Frozen development evaluation gate
+        run: python -m scripts.eval_gate --output .work/ci_dev_gate.json
+      - name: Preserve evaluation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-evaluation-gate
+          path: .work/ci_dev_gate*.json
   container:
     runs-on: ubuntu-latest
     steps:

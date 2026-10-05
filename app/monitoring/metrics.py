@@ -1,6 +1,7 @@
 """Collect bounded process-local request health without storing customer content."""
 
-from collections import deque
+from collections import Counter, deque
+from contextlib import contextmanager
 from hashlib import sha256
 from threading import Lock
 from time import perf_counter
@@ -30,6 +31,82 @@ _resolution_active = 0
 _buckets = (0.1, 0.5, 1, 2.5, 5, 10, 30, 60, 120)
 _histogram = [0] * len(_buckets)
 _duration_sum = 0.0
+
+
+_provider_counts = Counter()
+_citation_counts = Counter()
+_cache_counts = Counter()
+_fallback_count = 0
+_stage_histograms = {
+    stage: {"buckets": [0] * len(_buckets), "sum": 0.0, "count": 0}
+    for stage in ("understand", "retrieve", "draft", "validate")
+}
+
+
+def provider_outcome(provider, outcome):
+    """Count provider attempts with bounded labels; exclude prompts and error strings."""
+    provider = provider if provider in {"groq", "gemini", "local"} else "other"
+    outcome = (
+        outcome
+        if outcome
+        in {
+            "success",
+            "error",
+            "throttled",
+            "missing_key",
+            "cache_hit",
+            "circuit_open",
+            "extractive",
+        }
+        else "error"
+    )
+    with _lock:
+        _provider_counts[provider, outcome] += 1
+
+
+def solution_cache(hit):
+    """Count an enabled persistent evidence-cache lookup, not downstream model caches."""
+    with _lock:
+        _cache_counts["hit" if hit else "miss"] += 1
+
+
+def citation_validation(status):
+    """Count each citation validator invocation, including repeated final validation."""
+    status = status if status in {"passed", "failed", "not_run"} else "other"
+    with _lock:
+        _citation_counts[status] += 1
+
+
+def resolution_fallback():
+    """Count a resolution using fallback after attempted language drafting fails."""
+    global _fallback_count
+    with _lock:
+        _fallback_count += 1
+
+
+@contextmanager
+def stage_duration(stage):
+    """Observe stage operations, including failures; a request can invoke a stage twice."""
+    started = perf_counter()
+    try:
+        yield
+    finally:
+        seconds = perf_counter() - started
+        with _lock:
+            histogram = _stage_histograms[stage]
+            histogram["count"] += 1
+            histogram["sum"] += seconds
+            for index, boundary in enumerate(_buckets):
+                histogram["buckets"][index] += int(seconds <= boundary)
+
+
+def timed_stage(stage, operation, *args, **kwargs):
+    """Preserve the operation's return value and exception unchanged."""
+    with stage_duration(stage):
+        result = operation(*args, **kwargs)
+    if stage == "validate":
+        citation_validation(result.validation.status)
+    return result
 
 
 async def measure_request(request, call_next):
@@ -128,6 +205,36 @@ def prometheus_metrics():
             f"support_request_duration_seconds_sum {_duration_sum}",
             f"support_request_duration_seconds_count {_counts['requests']}",
         ]
+        lines += ["# TYPE resolve_provider_total counter"]
+        lines += [
+            f'resolve_provider_total{{provider="{provider}",outcome="{outcome}"}} {count}'
+            for (provider, outcome), count in sorted(_provider_counts.items())
+        ]
+        lines += [
+            "# TYPE resolve_fallback_total counter",
+            f"resolve_fallback_total {_fallback_count}",
+            "# TYPE citation_validation_total counter",
+        ]
+        lines += [
+            f'citation_validation_total{{status="{status}"}} {count}'
+            for status, count in sorted(_citation_counts.items())
+        ]
+        lines += ["# TYPE solution_cache_total counter"]
+        lines += [
+            f'solution_cache_total{{outcome="{outcome}"}} {_cache_counts[outcome]}'
+            for outcome in ("hit", "miss")
+        ]
+        lines += ["# TYPE stage_duration_seconds histogram"]
+        for stage, histogram in _stage_histograms.items():
+            lines += [
+                f'stage_duration_seconds_bucket{{stage="{stage}",le="{boundary}"}} {count}'
+                for boundary, count in zip(_buckets, histogram["buckets"], strict=True)
+            ]
+            lines += [
+                f'stage_duration_seconds_bucket{{stage="{stage}",le="+Inf"}} {histogram["count"]}',
+                f'stage_duration_seconds_sum{{stage="{stage}"}} {histogram["sum"]}',
+                f'stage_duration_seconds_count{{stage="{stage}"}} {histogram["count"]}',
+            ]
     return PlainTextResponse("\n".join(lines) + "\n", media_type="text/plain; version=0.0.4")
 
 

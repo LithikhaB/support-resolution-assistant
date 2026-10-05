@@ -126,7 +126,7 @@ def response_fixture():
     )
 
 
-def test_both_providers_down_preserve_extractive_draft():
+def test_both_providers_down_preserve_extractive_draft(monkeypatch):
     chain = ProviderChain(
         Settings(_env_file=None),
         providers=[
@@ -140,6 +140,18 @@ def test_both_providers_down_preserve_extractive_draft():
     assert result.language_status == "fallback"
     assert result.language_draft is None and result.draft == "Original cited draft"
     assert result.validation.status == "passed"
+    monkeypatch.delenv("LLM_ENABLED", raising=False)
+    for split in (True, False):
+        settings = Settings(
+            _env_file=".env.example", groq_api_key="", gemini_api_key="", llm_split_review=split
+        )
+        assert settings.llm_enabled
+        missing = add_language_draft(
+            response_fixture(), "Complaint", settings, ProviderChain(settings)
+        )
+        assert missing.language_status == "fallback"
+        assert "missing_api_key" in missing.language_error
+        assert missing.draft == "Original cited draft" and missing.validation.status == "passed"
 
 
 def test_faithfulness_rejection_falls_through_to_supported_gemini_draft():

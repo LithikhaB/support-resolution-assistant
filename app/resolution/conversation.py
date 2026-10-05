@@ -5,6 +5,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
+from app.monitoring.metrics import timed_stage
 from app.resolution.models import ResolutionRequest, ResolutionResponse
 from app.understanding.context import clarification_questions, extract_facts
 from app.understanding.models import AnalyzeRequest, ReportedFact, RuleAssessment, TextEvidence
@@ -219,7 +220,7 @@ def resolve_conversation(request, service):
     for issue_id, complaint in enumerate(complaints, 1):
         turns = route_turns(complaints, request.turns, issue_id)
         text, structured = prepare_context(complaint, turns)
-        analysis = understanding.analyze(AnalyzeRequest(query=text))
+        analysis = timed_stage("understand", understanding.analyze, AnalyzeRequest(query=text))
         analysis = apply_answers(analysis, text, turns, structured, history_start=len(complaint))
         resolution = service.resolve(
             ResolutionRequest(

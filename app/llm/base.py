@@ -39,13 +39,17 @@ class JSONProvider:
     def generate(self, instruction, payload, schema):
         """Mask identifiers remotely and restore quoted observations locally."""
         key = getattr(self.settings, f"{self.name}_api_key").get_secret_value()
+        from app.monitoring.metrics import provider_outcome
+
         if not key:
+            provider_outcome(self.name, "missing_key")
             raise LanguageUnavailable("missing_api_key")
         try:
             budget_key, retry = provider_budget(self)
         except (psycopg.Error, OSError):
             raise LanguageUnavailable("provider_budget_unavailable") from None
         if retry:
+            provider_outcome(self.name, "throttled")
             event("provider_throttles")
             raise LanguageUnavailable("provider_throttled", retry_after=retry)
         masked, mapping = redact(payload)

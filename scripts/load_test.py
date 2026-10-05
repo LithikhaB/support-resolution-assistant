@@ -58,8 +58,8 @@ def main():
         or url.fragment
     ):
         parser.error("use a plain local http URL")
-    if not 1 <= args.requests <= 50 or not 1 <= args.concurrency <= 4 or args.output.exists():
-        parser.error("use 1-50 requests, 1-4 workers and a new output file")
+    if not 1 <= args.requests <= 50 or not 1 <= args.concurrency <= 20 or args.output.exists():
+        parser.error("use 1-50 requests, 1-20 workers and a new output file")
     queries = [SMOKE_QUERY]
     if args.queries:
         queries = [
@@ -85,6 +85,11 @@ def main():
         "warm": warm,
         "concurrency": args.concurrency,
         "warm_median_ms": median(durations),
+        "warm_p50_ms": median(durations),
+        "warm_p99_ms": durations[ceil(len(durations) * 0.99) - 1],
+        "elapsed_seconds": elapsed,
+        "error_rate": sum(row["status"] != 200 for row in warm) / args.requests,
+        "successful_requests_per_second": sum(row["status"] == 200 for row in warm) / elapsed,
         "warm_p95_ms": durations[ceil(len(durations) * 0.95) - 1],
         "successful_p95_ms": (
             lambda values: values[ceil(len(values) * 0.95) - 1] if values else None

@@ -11,6 +11,12 @@ from app.ingestion.schema import DocType
 from app.llm.client import LanguageUnavailable
 from app.llm.disk_cache import DiskCache
 from app.llm.providers import ProviderChain, get_language_client
+from app.monitoring.metrics import (
+    provider_outcome,
+    resolution_fallback,
+    solution_cache,
+    timed_stage,
+)
 from app.resolution.applicability import applicability_issue, evidence_query
 from app.resolution.customer import customer_plan, physical_damage
 from app.resolution.drafting import draft_resolution
@@ -48,7 +54,9 @@ class ResolutionService:
         started = perf_counter()
         if analysis is None:
             understanding = self.understanding or get_understanding_service()
-            analysis = understanding.analyze(AnalyzeRequest(query=request.query))
+            analysis = timed_stage(
+                "understand", understanding.analyze, AnalyzeRequest(query=request.query)
+            )
         evidence = []
         history = []
         selection_error = None
@@ -101,6 +109,7 @@ class ResolutionService:
                         ]
                     )
                     stored = disk.get(cache_key)
+                    solution_cache(bool(stored))
                     if stored:
                         evidence = [EvidenceResult.model_validate(row) for row in stored]
                         reused = True
@@ -115,7 +124,7 @@ class ResolutionService:
                         memory[0], request.query, None, memory[2], get_embedding_service()
                     )
                     ids = {ref for row in recent for ref in row.metadata.get("kb_refs", [])}
-                    candidates = retrieval.by_ids(ids) if ids else []
+                    candidates = timed_stage("retrieve", retrieval.by_ids, ids) if ids else []
                     # An old repair is never a diagnosis: retain only currently applicable sources.
                     evidence = [
                         row
@@ -137,7 +146,7 @@ class ResolutionService:
                         if cached is not None:
                             evidence, reused = cached, True
                 if not reused:
-                    evidence = retrieval.search(search).results
+                    evidence = timed_stage("retrieve", retrieval.search, search).results
             except EmbeddingInputTooLong:
                 if search.rerank:
                     # Optional pairwise reranking has a smaller query budget.
@@ -148,7 +157,7 @@ class ResolutionService:
                     search = search.model_copy(update={"query": request.query})
                 else:
                     raise
-                evidence = retrieval.search(search).results
+                evidence = timed_stage("retrieve", retrieval.search, search).results
             stages["retrieved_kb_ids"] = list(dict.fromkeys(row.doc_id for row in evidence))
             stages["eligibility"] = [
                 {
@@ -166,7 +175,9 @@ class ResolutionService:
                         "rerank": False,
                     }
                 )
-                history = history or retrieval.search(history_search).results
+                history = (
+                    history or timed_stage("retrieve", retrieval.search, history_search).results
+                )
                 evidence = rank_fallback(evidence, analysis)
                 if self.settings.llm_enabled and self.settings.llm_selection_enabled and not reused:
                     try:
@@ -182,8 +193,10 @@ class ResolutionService:
                         selection_error = str(exc)
         stages["selection_error"] = selection_error
         stages["selected_pool_ids"] = list(dict.fromkeys(row.doc_id for row in evidence))
-        result = draft_resolution(analysis, evidence, max_sources=request.max_sources)
-        result = finalize_resolution(result, evidence, analysis)
+        result = timed_stage(
+            "draft", draft_resolution, analysis, evidence, max_sources=request.max_sources
+        )
+        result = timed_stage("validate", finalize_resolution, result, evidence, analysis)
         stages["rerank_disabled_for_long_query"] = rerank_disabled
         if rerank_disabled:
             result.limitations.append(
@@ -219,13 +232,26 @@ class ResolutionService:
                 history, result.sources, related_categories=categories - {None}
             )
             result.customer_plan = customer_plan(result)
-            result = finalize_resolution(result, evidence, analysis, historical_evidence=history)
+            result = timed_stage(
+                "validate",
+                finalize_resolution,
+                result,
+                evidence,
+                analysis,
+                historical_evidence=history,
+            )
         if result.validation.status == "passed" and result.sources and signature:
             self.reuse.put(signature, vector, evidence)
         if cache_key and result.validation.status == "passed" and result.sources:
             # Persist only public KB evidence, never private conversation text or inferred diagnoses.
             disk.put(cache_key, [row.model_dump(mode="json") for row in evidence])
-        result = add_language_draft(result, request.query, self.settings, self.language)
+        result = timed_stage(
+            "draft", add_language_draft, result, request.query, self.settings, self.language
+        )
+        if result.language_status == "fallback":
+            resolution_fallback()
+        if result.language_status in {"fallback", "disabled"}:
+            provider_outcome("local", "extractive")
         stages["final_source_ids"] = [source.doc_id for source in result.sources]
         stages["historical_case_ids"] = [row.doc_id for row in result.historical_cases]
         logger.info("Resolution stage trace %s", json.dumps(stages, sort_keys=True))

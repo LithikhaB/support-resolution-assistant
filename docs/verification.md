@@ -23,10 +23,12 @@ Latest full local run: 50 Python tests passed with DB tests enabled; five consol
 - `v31_postgres_dev_release_20261005.json` and `v31_postgres_test_release_20261005.json`: frozen PostgreSQL lexical retrieval ablations, with accompanying freeze manifests. Reranked KB hit rates: 0.9333 / 1.0; expected final KB retention: 0.825 / 0.80. These precede the latest narrow context fixes and are not rerun/tuned test results. The compatibility label `bm25` means PostgreSQL full-text rank for these runs.
 - New HTTP runs use `cache_roles_*_http_20261005.json`. The first was issued during startup and records transport failures; the next exposed an unrelated payment procedure. Neither failed report is overwritten.
 
+The subsequent `rubric_live_audit_20261005.json` run passed all eight authored HTTP checks. All seven supported complaints used local fallback after output-validation or quota failures; the irrelevant case bypassed generation. Successful generation under the final split remains unverified.
+
 ## Limits and deployment status
 
 All content is AI-authored synthetic. Simulated outcomes stay `simulated_resolved`. Exact citation checks and model critique do not establish real-world correctness. General paraphrases, sarcasm and multilingual input are not fully covered. An agent must review the proposed plan and verify diagnostic gates.
 
 The cache is a bounded local JSON implementation suitable for the single application container. Rate limits/cooldowns use shared PostgreSQL budgets, DB connections are pooled, and expensive request concurrency is bounded. Multi-host cache sharing, authenticated agent/customer identity and production load/SLA verification remain deployment work. Browser ownership is a capability cookie, not an identity system.
 
-These working-tree changes have not been pushed; remote CI has not verified this revision. Local checks must not be described as a successful GitHub Actions run.
+Local HEAD and origin/main now both point to e95ad63. The public Actions API returned 404 during this audit, so current remote CI could not be confirmed. Local checks must not be described as a successful GitHub Actions run.

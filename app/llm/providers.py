@@ -20,6 +20,7 @@ from app.llm.gemini import GeminiClient
 from app.llm.privacy import redact, restore
 from app.llm.telemetry import event
 from app.monitoring.budgets import reserve_generation
+from app.monitoring.metrics import provider_outcome
 
 last_provider = ContextVar("last_language_provider", default=None)
 
@@ -105,6 +106,7 @@ class ProviderChain:
                     validator(result, provider)
                 last_provider.set({**cached[2], "cached": True})
                 event("cache_hits")
+                provider_outcome(provider.name, "cache_hit")
                 return result
             except LanguageUnavailable:
                 with self.lock:
@@ -116,6 +118,7 @@ class ProviderChain:
             if unavailable:
                 failures.append(provider.name + ":circuit_open")
                 event("circuit_skips")
+                provider_outcome(provider.name, "circuit_open")
                 continue
             try:
                 reservation = nullcontext()

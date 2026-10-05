@@ -1,0 +1,97 @@
+{
+  "created_at_utc": "2026-10-05T14:37:23.934095+00:00",
+  "mode": "offline_extractive",
+  "llm_enabled": false,
+  "url": "http://127.0.0.1:8012",
+  "command": "python -m scripts.load_test --url http://127.0.0.1:8012 --requests 20 --concurrency <1|5|20> --output <new_file>",
+  "admission": {
+    "max_resolution_requests": 2,
+    "client_requests_per_minute": 60,
+    "client_burst": 10,
+    "global_requests_per_minute": 120,
+    "global_burst": 20,
+    "backend": "postgres",
+    "overridden_for_benchmark": false
+  },
+  "runs": [
+    {
+      "concurrency": 1,
+      "requests": 20,
+      "p50_ms": 145.25530009996146,
+      "p95_ms": 182.13999993167818,
+      "p99_ms": 189.28599986247718,
+      "rps": 7.678366142112867,
+      "successful_rps": 4.60701968526772,
+      "error_rate": 0.4,
+      "cold": {
+        "status": 200,
+        "ms": 19676.36639997363,
+        "language_status": "disabled",
+        "provider": null,
+        "citation_status": "passed"
+      },
+      "elapsed_seconds": 2.604720799950883,
+      "distinct_queries": 1,
+      "status_counts": {
+        "200": 12,
+        "429": 8
+      },
+      "successful_requests": 12,
+      "successful_p95_ms": 189.28599986247718
+    },
+    {
+      "concurrency": 5,
+      "requests": 20,
+      "p50_ms": 132.6333499746397,
+      "p95_ms": 292.05740010365844,
+      "p99_ms": 380.90220000594854,
+      "rps": 29.527774116082472,
+      "successful_rps": 4.429166117412371,
+      "error_rate": 0.85,
+      "cold": {
+        "status": 200,
+        "ms": 266.5822999551892,
+        "language_status": "disabled",
+        "provider": null,
+        "citation_status": "passed"
+      },
+      "elapsed_seconds": 0.6773284000810236,
+      "distinct_queries": 1,
+      "status_counts": {
+        "200": 3,
+        "429": 11,
+        "503": 6
+      },
+      "successful_requests": 3,
+      "successful_p95_ms": 380.90220000594854
+    },
+    {
+      "concurrency": 20,
+      "requests": 20,
+      "p50_ms": 479.5799999265,
+      "p95_ms": 526.6021999996156,
+      "p99_ms": 532.4105999898165,
+      "rps": 30.40310258018238,
+      "successful_rps": 3.040310258018238,
+      "error_rate": 0.9,
+      "cold": {
+        "status": 200,
+        "ms": 230.56100006215274,
+        "language_status": "disabled",
+        "provider": null,
+        "citation_status": "passed"
+      },
+      "elapsed_seconds": 0.6578275999054313,
+      "distinct_queries": 1,
+      "status_counts": {
+        "200": 2,
+        "429": 11,
+        "503": 7
+      },
+      "successful_requests": 2,
+      "successful_p95_ms": 506.4707000274211
+    }
+  ],
+  "provider_calls_during_measurement": {},
+  "scope": "Local repeated synthetic query with warm caches, 20 measured requests per run, no retries. Error rate includes 429/503 admission rejection. RPS includes rejections; successful_rps reports accepted requests. Cold is one pre-run sample, excluded from warm percentiles; only the first pre-run sample initializes the model. Shared budgets are retained across runs. Not a production capacity guarantee."
+}
