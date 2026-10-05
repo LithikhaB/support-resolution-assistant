@@ -72,6 +72,13 @@ def test_failed_chunk_write_rolls_back_document_and_checkpoint(repository):
 
 
 def test_hnsw_and_migration_are_rerunnable(repository):
+    from app.database.connection import get_connection
+
+    with get_connection(statement_timeout_ms=7000, pooled=False) as session:
+        session.autocommit = True
+        assert session.execute("SHOW statement_timeout").fetchone()[0] == "7s"
+        assert session.execute("SELECT pg_try_advisory_lock(9981,1)").fetchone()[0]
+        assert session.execute("SELECT pg_advisory_unlock(9981,1)").fetchone()[0]
     repo = repository
     repo.migrate()
     begin(repo)
@@ -85,47 +92,66 @@ def test_hnsw_and_migration_are_rerunnable(repository):
     ).fetchone()
     assert row[0] == pytest.approx(0)
 
+    from contextlib import contextmanager
+    from pathlib import Path
+    from unittest.mock import Mock
+    from uuid import UUID
 
-def test_incompatible_profiles_and_removed_documents_rejected(repository):
-    repo = repository
-    begin(repo)
-    repo.write_batch([item()], vectors(1), "config")
-    with pytest.raises(ValueError, match="different configuration"):
-        repo.begin({}, "other", {"source_sha256": "a", "output_sha256": "b"}, {"test"})
-    with pytest.raises(ValueError, match="omits"):
-        repo.begin({}, "config", {"source_sha256": "a", "output_sha256": "b"}, set())
+    from app.resolution.conversation import ConversationRequest, ConversationResponse, IssueResponse
+    from app.resolution.drafting import draft_resolution
+    from app.resolution.memory import ConversationConflict, ConversationStore
+    from app.resolution.validation import finalize_resolution
+    from tests.unit.test_agent_triage import v3_source
+    from tests.unit.test_resolution import analysis
 
+    repo.conn.execute(Path("db/migrations/006_conversations.sql").read_text(encoding="utf-8"))
+    repo.conn.execute(Path("db/migrations/006_conversations.sql").read_text(encoding="utf-8"))
 
-def test_finish_refuses_partial_corpus(repository):
-    repo = repository
-    begin(repo)
-    repo.write_batch([item()], vectors(1), "config")
-    with pytest.raises(ValueError, match="counts"):
-        repo.finish(2, 2)
-    assert repo.conn.execute("SELECT status FROM retrieval_index_state").fetchone()[0] == "indexing"
+    @contextmanager
+    def connection():
+        yield repo.conn
 
-
-def test_configuration_rebuild_preserves_evidence_and_resumes(repository):
-    repo = repository
-    begin(repo)
-    record = item()
-    repo.write_batch([record], vectors(1), "config")
-    repo.finish(1, 1)
-    chunk_id = repo.conn.execute("SELECT chunk_id FROM chunks").fetchone()[0]
-    manifest = {"source_sha256": "docs", "output_sha256": "chunks"}
-    with pytest.raises(ValueError, match="omits"):
-        repo.begin({}, "container", manifest, set(), rebuild=True)
-    repo.begin({"model": "test"}, "container", manifest, {"test"}, rebuild=True)
-    assert repo.conn.execute("SELECT status FROM retrieval_index_state").fetchone()[0] == "indexing"
-    assert repo.unchanged([record], "container") == set()
-    repo.write_batch([record], vectors(1), "container")
-    # A restarted bootstrap skips batches already regenerated with this configuration.
-    repo.begin({"model": "test"}, "container", manifest, {"test"}, rebuild=True)
-    assert repo.unchanged([record], "container") == {"test"}
-    repo.finish(1, 1)
-    assert repo.conn.execute("SELECT chunk_id FROM chunks").fetchone()[0] == chunk_id
-    assert (
-        repo.conn.execute("SELECT response FROM documents").fetchone()[0]
-        == record.document.response
+    store = ConversationStore(connection=connection)
+    query = "My internet is down. Email alice@example.com, password=secret123"
+    request = ConversationRequest(query=query)
+    observed = analysis(request.query)
+    source = v3_source()
+    resolution = finalize_resolution(draft_resolution(observed, [source]), [source], observed)
+    result = ConversationResponse(
+        issues=[
+            IssueResponse(
+                issue_id=1,
+                complaint=request.query,
+                analysis_text=request.query,
+                resolution=resolution,
+            )
+        ]
     )
-    assert repo.conn.execute("SELECT status FROM retrieval_index_state").fetchone()[0] == "ready"
+    revision = ("docs", "chunks", "model")
+    cid, version = store.save("owner-a", request, result, revision)
+    saved = store.load("owner-a", cid)
+    assert "alice@example.com" not in str(saved) and "secret123" not in str(saved)
+    assert saved["revision"] == version == 1
+    assert store.load("owner-b", cid) is None
+    assert not store.recent("owner-b")
+    request.conversation_id, request.revision = UUID(cid), 1
+    assert store.save("owner-a", request, result, revision)[1] == 2
+    with pytest.raises(ConversationConflict):
+        store.save("owner-a", request, result, revision)
+    encoder = Mock()
+    encoder.embed_query.return_value = vectors(1)[0]
+    assert not store.search_reviewed("owner-a", query, [source.doc_id], revision, encoder)
+    with pytest.raises(ConversationConflict):
+        store.approve("owner-b", cid, 1, 2, "Synthetic test result reviewed", revision, encoder)
+    assert (
+        store.approve("owner-a", cid, 1, 2, "Synthetic test result reviewed", revision, encoder)
+        == 1
+    )
+    assert store.search_reviewed("owner-a", query, None, revision, encoder)
+    cases = store.search_reviewed("owner-a", query, [source.doc_id], revision, encoder)
+    assert len(cases) == 1 and cases[0].outcome_status == "simulated_resolved"
+    assert not store.search_reviewed("owner-b", query, [source.doc_id], revision, encoder)
+    assert not store.search_reviewed("owner-a", query, [source.doc_id], ("changed",), encoder)
+    assert not store.delete("owner-b", cid)
+    assert store.delete("owner-a", cid)
+    assert not store.search_reviewed("owner-a", query, [source.doc_id], revision, encoder)

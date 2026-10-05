@@ -1,0 +1,47 @@
+{
+  "dataset_version": "telecom-synthetic-3.1.0",
+  "documents": 332,
+  "source_sha256": "38e73b381a6038a3764c6b8ff6fa27034f2805be69ee577600bbd7ca8c35545c",
+  "output_sha256": "0367b21eedb2b19e8f321ba00ff6922d081f2781cfcd28a4b2e5ace7b76ef8a5",
+  "expert_reviewed": false,
+  "source": "AI-authored synthetic baseline investigations added to unchanged v3 source procedures",
+  "knowledge_base_articles": 62,
+  "simulated_training_tickets": 240,
+  "heldout_tickets_in_index": 0,
+  "baseline_authoring": {
+    "GENERAL_OUTAGE": {
+      "category": "broadband_outage",
+      "template": "syn_kb_BB01",
+      "title": "Broadband unavailable: establish the fault before choosing a repair",
+      "customer_checks": [
+        "Ask whether all devices lack internet or only one, and whether a wired device is also affected; record when service stopped.",
+        "Record the router and fibre-box light labels and check whether nearby customers are affected; do not repeat completed restarts or disconnect optical cabling."
+      ],
+      "agent_checks": "Check provider incident monitoring and account status, then ask authorised support to test the line and subscriber session using the recorded symptoms. Record the actual fault finding before selecting a repair.",
+      "diagnostic_gate": "authorised diagnostics establish a specific line or subscriber-session fault and identify the corresponding approved repair procedure",
+      "action": "route the recorded findings to the authorised team for that confirmed fault and follow its approved procedure; do not promise a repair time",
+      "completion": "the affected wired and wireless devices can browse again and no repeat loss is reported during the agreed observation period"
+    },
+    "GENERAL_SLOW": {
+      "category": "slow_broadband",
+      "template": "syn_kb_SP04",
+      "title": "Persistent broadband slowness: establish a controlled baseline",
+      "customer_checks": [
+        "Ask whether one device or all devices are slow. Compare a wired speed test with Wi-Fi if available, and record the subscribed speed and test time.",
+        "Ask about active downloads, uploads, cameras or backups. With consent, briefly pause an identified nonessential transfer and repeat the same test; do not disable security services."
+      ],
+      "agent_checks": "If controlled tests remain slow, check provider incident monitoring, line/session status and the subscribed speed profile. Record whether a transfer, wireless-only problem or provider fault explains the measured result; do not assume evening congestion.",
+      "diagnostic_gate": "the controlled test remains slow after nonessential transfers are paused and authorised provider diagnostics establish a specific line or provisioning fault",
+      "action": "have the authorised provider team apply the approved correction for the confirmed fault and repeat the same controlled test; do not book a physical repair without line-fault evidence",
+      "completion": "repeat measurements are consistent with the subscribed service under the test conditions and the customer's affected applications work normally"
+    }
+  },
+  "file_sha256": {
+    "challenge_queries.jsonl": "853d91c5cc2c724856c322a5993e4d8642d724025f2ce8e84740aa208f60bb79",
+    "dev.jsonl": "fe5e48b90972fd715884404937ef65ba1c4f59ab55dd20fb2ea60f4f2c215e2c",
+    "knowledge_base.jsonl": "48438117b9679250623d4a4654750f6407b229312205e7d30b7c4be60aa73c18",
+    "test.jsonl": "6cadd53ddd8e7fbcbfa14476f546be2847672726aa653d8cf950477e65011c42",
+    "tickets.jsonl": "b1f34aaab384c3560c48cb1361f876ada1b790110314661f3dd65555c75d126a",
+    "train.jsonl": "db476cd8139d73170d6f50a8392e090ceb665253b285daf1bf0eb39b83309bc9"
+  }
+}

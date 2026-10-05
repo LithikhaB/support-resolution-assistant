@@ -6,6 +6,9 @@
 .ruff_cache
 data/workflow
 data/models
-data/evaluation
+data/evaluation/*
+!data/evaluation/customer_challenge_cases_v1.json
+data/evolution/runs
+.work
 .codex
 .agents

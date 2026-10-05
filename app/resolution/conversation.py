@@ -1,6 +1,7 @@
 """Replay bounded customer turns without trusting client-supplied analysis or diagnoses."""
 
 from typing import Literal
+from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -56,6 +57,8 @@ class ConversationRequest(ResolutionRequest):
     """Replay up to eight replies across at most four deterministically separated issues."""
 
     turns: list[CustomerTurn] = Field(default_factory=list, max_length=8)
+    conversation_id: UUID | None = None
+    revision: int | None = Field(default=None, ge=1)
 
     @model_validator(mode="after")
     def validate_history(self):
@@ -109,7 +112,9 @@ class ConversationResponse(BaseModel):
     """Return reviewable per-issue drafts without persisting private conversation history."""
 
     issues: list[IssueResponse]
-    storage: Literal["client_replayed"] = "client_replayed"
+    storage: Literal["client_replayed", "postgres_redacted"] = "client_replayed"
+    conversation_id: UUID | None = None
+    revision: int | None = None
     limitations: list[str] = Field(
         default_factory=lambda: [
             "Send the same original query and full customer-turn history on each request.",

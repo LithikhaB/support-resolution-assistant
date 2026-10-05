@@ -1,0 +1,8 @@
+{
+  "dataset_version": "telecom-synthetic-3.1.0",
+  "documents": 332,
+  "source_sha256": "38e73b381a6038a3764c6b8ff6fa27034f2805be69ee577600bbd7ca8c35545c",
+  "output_sha256": "0367b21eedb2b19e8f321ba00ff6922d081f2781cfcd28a4b2e5ace7b76ef8a5",
+  "expert_reviewed": false,
+  "source": "AI-authored synthetic baseline investigations added to unchanged v3 source procedures"
+}

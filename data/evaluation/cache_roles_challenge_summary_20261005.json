@@ -1,0 +1,31 @@
+{
+  "source": "submission_challenge_release_20261005.json",
+  "scope": "Contract validation and agent review flag only, not semantic quality",
+  "areas": {
+    "follow_up_understanding": [
+      10,
+      10
+    ],
+    "working_vs_failing": [
+      9,
+      9
+    ],
+    "safety_grounding": [
+      11,
+      11
+    ],
+    "natural_wording": [
+      9,
+      9
+    ],
+    "scope_escalation": [
+      11,
+      11
+    ],
+    "retrieval_contrast": [
+      3,
+      3
+    ]
+  },
+  "snapshots": 66
+}

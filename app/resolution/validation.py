@@ -11,9 +11,24 @@ from app.resolution.rendering import render_draft
 from app.understanding.signals import extract_actions
 
 
-def validate_citations(response, evidence, analysis):
+def validate_citations(response, evidence, analysis, *, historical_evidence=None):
     """Check provenance, exact field support, action conditions and rendered output integrity."""
     issues = []
+    if response.historical_cases:
+        from app.resolution.history import select_history
+
+        if historical_evidence is None:
+            issues.append("historical_evidence_not_provided")
+        else:
+            categories = {
+                r.metadata.get("category")
+                for r in evidence
+                if r.doc_id in {s.doc_id for s in response.sources}
+            }
+            if response.historical_cases != select_history(
+                historical_evidence, response.sources, related_categories=categories - {None}
+            ):
+                issues.append("historical_evidence_changed")
     records = {(r.doc_id, r.chunk_id): r for r in evidence}
     if len(records) != len(evidence):
         issues.append("ambiguous_retrieved_source")
@@ -64,10 +79,14 @@ def validate_citations(response, evidence, analysis):
             or source.is_synthetic is not record.metadata.get("is_synthetic")
         ):
             issues.append("source_provenance_changed")
-        if Counter(q.field for q in source.quotes) != Counter(procedure.quotes.keys()):
+        if Counter((q.field, q.step_id) for q in source.quotes) != Counter(
+            (q.field, q.step_id) for q in procedure.quotes.values()
+        ):
             issues.append("missing_or_duplicate_source_fields")
         for quote in source.quotes:
-            expected = procedure.quotes.get(quote.field)
+            expected = procedure.quotes.get(
+                f"step_{quote.step_id}" if quote.field == "plan_step" else quote.field
+            )
             text = record.evidence_content or record.content
             if source.quote_scope != ("parent_document" if record.evidence_content else "chunk"):
                 issues.append("source_quote_scope_changed")
@@ -107,11 +126,13 @@ def validate_citations(response, evidence, analysis):
     )
 
 
-def finalize_resolution(response, evidence, analysis):
+def finalize_resolution(response, evidence, analysis, *, historical_evidence=None):
     """Withhold all proposed actions when any citation or action-support check fails."""
     from app.resolution.drafting import draft_resolution
 
-    validation = validate_citations(response, evidence, analysis)
+    validation = validate_citations(
+        response, evidence, analysis, historical_evidence=historical_evidence
+    )
     if validation.status == "failed":
         response = draft_resolution(analysis, [])
     response.validation = validation

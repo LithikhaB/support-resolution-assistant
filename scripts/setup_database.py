@@ -38,6 +38,8 @@ def main() -> None:
             "003_retrieval_indexing.sql",
             "004_synthetic_outcomes.sql",
             "005_shared_lexical.sql",
+            "006_conversations.sql",
+            "007_request_budgets.sql",
         ):
             conn.execute((root / "db/migrations" / name).read_text(encoding="utf-8"))
     print(f"Database {settings.postgres_db} initialized; existing rows preserved.")

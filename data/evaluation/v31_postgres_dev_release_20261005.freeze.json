@@ -1,0 +1,29 @@
+{
+  "created_at_utc": "2026-10-05T05:56:23.643154+00:00",
+  "fingerprint": {
+    "split": "dev",
+    "code_sha256": "d47a5c74b70fb04d3d2d74ff44337975040d08db65ece5023d04178c16a74fd5",
+    "routing_profile_sha256": "6b4bf4e394433dd562e681f889df8f0c163d652e2e51a8c870bc05dbe3a1a47e",
+    "classifier_sha256": "438c5ca6acd6eb81f06d56c085dccaa645919aa084842bc06452f64fcab21050",
+    "development_report_sha256": "594b325b6affd4a6af77e2225b9dfac7152436dfdfd366fdd3d1a9ab4dcca8a2",
+    "corpus_sha256": "0367b21eedb2b19e8f321ba00ff6922d081f2781cfcd28a4b2e5ace7b76ef8a5",
+    "chunks_sha256": "322bda7bf324775d11b7e6ff99df2ab4988063058074d91277bc74cab816afdb",
+    "declared_query_sha256": "fe5e48b90972fd715884404937ef65ba1c4f59ab55dd20fb2ea60f4f2c215e2c",
+    "train_sha256": "db476cd8139d73170d6f50a8392e090ceb665253b285daf1bf0eb39b83309bc9",
+    "augmentation_sha256": "85b7de6e69c7a3688d64e50a7b530959e7b2d6a150ec68e9892c7f99e6a43f7e",
+    "dev_sha256": "fe5e48b90972fd715884404937ef65ba1c4f59ab55dd20fb2ea60f4f2c215e2c",
+    "challenge_sha256": "853d91c5cc2c724856c322a5993e4d8642d724025f2ce8e84740aa208f60bb79",
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "embedding_revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+    "reranker_model": "cross-encoder/ms-marco-MiniLM-L6-v2",
+    "reranker_revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+    "min_score": 0.45,
+    "min_margin": 0.1,
+    "top_k": 5,
+    "candidate_k": 50,
+    "rrf_constant": 60,
+    "rerank_k": 20,
+    "max_draft_sources": 3
+  },
+  "note": "Fixed before loading evaluation queries. Do not tune against test results."
+}

@@ -42,7 +42,7 @@ class DocumentChunker:
     def retrieval_text(document: SupportDocument) -> str:
         """Use complaint or KB text for retrieval without leaking ticket resolutions."""
         body = document.body
-        if document.metadata.get("procedure_version") == 2:
+        if document.metadata.get("procedure_version") in {2, 3}:
             body = document.metadata.get("retrieval_body", body)
         return f"{document.title.strip()}\n\n{body.strip()}"
 

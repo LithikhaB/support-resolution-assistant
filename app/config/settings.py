@@ -20,13 +20,29 @@ class Settings(BaseSettings):
     gemini_model: str = "gemini-2.5-flash"
     llm_circuit_seconds: float = Field(default=60, ge=0, le=300)
     llm_cache_seconds: float = Field(default=120, ge=0, le=600)
+    solution_cache_enabled: bool = False
+    solution_cache_seconds: int = Field(default=86400, ge=0, le=86400)
+    llm_split_review: bool = False
+    llm_extraction_enabled: bool = False
+    llm_selection_enabled: bool = False
+    llm_requests_per_minute: int = Field(default=12, ge=1, le=1000)
+    llm_request_burst: int = Field(default=4, ge=1, le=100)
+    rate_limit_backend: Literal["memory", "postgres"] = "memory"
+    api_requests_per_minute: int = Field(default=60, ge=1, le=10000)
+    api_request_burst: int = Field(default=10, ge=1, le=1000)
+    api_global_requests_per_minute: int = Field(default=120, ge=1, le=10000)
+    api_global_request_burst: int = Field(default=20, ge=1, le=1000)
     max_resolution_requests: int = Field(default=2, ge=1, le=16)
+    computation_cache_seconds: float = Field(default=120, ge=0, le=600)
+    semantic_reuse_threshold: float = Field(default=0.98, ge=0.95, le=1)
+    conversation_storage_enabled: bool = False
+    conversation_retention_days: int = Field(default=7, ge=1, le=90)
     category_products_path: Path = Path("data/category_products.json")
     groq_input_cost_per_million: float | None = Field(default=None, ge=0)
     groq_output_cost_per_million: float | None = Field(default=None, ge=0)
     gemini_input_cost_per_million: float | None = Field(default=None, ge=0)
     gemini_output_cost_per_million: float | None = Field(default=None, ge=0)
-    llm_timeout_seconds: float = Field(default=25, ge=1, le=90)
+    llm_timeout_seconds: float = Field(default=12, ge=1, le=90)
 
     postgres_user: str = "support"
     postgres_password: str = "support_pass"
@@ -34,6 +50,8 @@ class Settings(BaseSettings):
     postgres_host: str = "localhost"
     postgres_port: int = 5432
     postgres_connect_timeout: int = 3
+    postgres_pool_size: int = Field(default=8, ge=2, le=64)
+    postgres_pool_timeout_seconds: float = Field(default=3, ge=0.1, le=30)
     postgres_statement_timeout_ms: int = Field(default=3000, ge=1)
     retrieval_statement_timeout_ms: int = Field(default=30000, ge=1)
     retrieval_candidate_k: int = Field(default=50, ge=1, le=100)
@@ -52,7 +70,7 @@ class Settings(BaseSettings):
     chunk_overlap_tokens: int = Field(default=32, ge=0)
 
     data_dir: Path = Path("data")
-    corpus_dir: Path = Path("data/synthetic/telecom_v2")
+    corpus_dir: Path = Path("data/synthetic/telecom_v3_1")
     understanding_model_path: Path = Path("data/models/understanding/classifier.json")
     understanding_routing_path: Path = Path("data/models/understanding/routing.json")
     understanding_min_score: float = Field(default=0.45, ge=0, le=1)

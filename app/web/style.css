@@ -41,4 +41,6 @@ footer { padding: 16px 0; }
 .chip summary { padding: 0; }
 .chip small { display: block; max-width: 380px; padding-top: 8px; }
 .quick-answer { margin: 0 8px 16px 0; padding: 10px; }
+.citation { color: #087b66; font-weight: 650; text-decoration: underline; }
+.source { scroll-margin-top: 20px; }
 @media (max-width: 540px) { main { width: min(100% - 24px, 800px); margin-top: 20px; } .panel { padding: 18px; } header { margin-bottom: 28px; } }

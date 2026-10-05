@@ -37,6 +37,7 @@ def event(name):
         "provider_fallbacks",
         "extractive_fallbacks",
         "faithfulness_rejections",
+        "provider_throttles",
     }:
         raise ValueError("unknown language metric")
     with _lock:

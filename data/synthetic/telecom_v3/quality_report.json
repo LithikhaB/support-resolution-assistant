@@ -1,0 +1,28 @@
+{
+  "dataset_version": "telecom-synthetic-3.0.0",
+  "documents": 330,
+  "source_sha256": "a44109c1c53c5908df661ae2eb5344c32c996afa0727a0b08c711acdda017223",
+  "output_sha256": "38e73b381a6038a3764c6b8ff6fa27034f2805be69ee577600bbd7ca8c35545c",
+  "authoring_sha256": "d1249d76a129aa11508dbd7f2cfd0a89ce77e315b0c7a8350d91bab1a4e811d7",
+  "expert_reviewed": false,
+  "source": "AI-authored synthetic procedures and matching simulated training-ticket resolutions",
+  "document_types": {
+    "knowledge_base": 60,
+    "historical_response": 30,
+    "resolved_ticket": 240
+  },
+  "heldout_tickets_in_index": 0,
+  "reference_urls": [
+    "https://www.bt.com/help/broadband/fix-a-problem/broadband-and-wi-fi/fibre-to-the-home--check-your-wiring-and-set-up",
+    "https://www.bt.com/help/broadband/manage-service/lights-on-the-openreach-modem",
+    "https://www.att.com/support/article/internet/KM1010340/"
+  ],
+  "file_sha256": {
+    "challenge_queries.jsonl": "853d91c5cc2c724856c322a5993e4d8642d724025f2ce8e84740aa208f60bb79",
+    "dev.jsonl": "fe5e48b90972fd715884404937ef65ba1c4f59ab55dd20fb2ea60f4f2c215e2c",
+    "knowledge_base.jsonl": "793212c1c7ba75a30aa74a5be4217c676ca55c6d524175ff9667f2881b861b73",
+    "test.jsonl": "6cadd53ddd8e7fbcbfa14476f546be2847672726aa653d8cf950477e65011c42",
+    "tickets.jsonl": "d111f86293b394280b7583418df7042772f8203d697b6a20a0dbf1af6a74b505",
+    "train.jsonl": "db476cd8139d73170d6f50a8392e090ceb665253b285daf1bf0eb39b83309bc9"
+  }
+}

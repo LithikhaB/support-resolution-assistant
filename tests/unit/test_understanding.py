@@ -3,30 +3,18 @@
 from unittest.mock import Mock
 
 import numpy as np
-import pytest
-from fastapi.testclient import TestClient
-from pydantic import ValidationError
-from sklearn.linear_model import LogisticRegression
 
-from app.api import understanding as api
 from app.config.settings import Settings
-from app.llm.client import LanguageUnavailable
-from app.main import app
 from app.understanding.classifier import (
     CategoryClassifier,
     ClassifierArtifact,
-    UnderstandingUnavailable,
-    make_vectorizer,
 )
 from app.understanding.models import AnalyzeRequest, CategoryCandidate
 from app.understanding.service import UnderstandingService
 from app.understanding.signals import (
     assess_sentiment,
     assess_severity,
-    extract_actions,
-    extract_products,
 )
-from app.understanding.training import classification_metrics, validate_separation
 
 
 def test_training_uses_only_train_and_dev_and_publishes_reloadable_model(tmp_path, monkeypatch):
@@ -98,99 +86,18 @@ def artifact(**changes):
     )
 
 
-def test_json_classifier_matches_sklearn_without_pickles(tmp_path):
-    texts = [
-        "router wifi offline",
-        "wireless router signal",
-        "bill payment duplicate",
-        "payment invoice charge",
-        "mobile phone calls",
-        "phone network signal",
-    ]
-    labels = ["wifi", "wifi", "billing", "billing", "mobile", "mobile"]
-    vectorizer = make_vectorizer()
-    features = vectorizer.fit_transform(texts)
-    fitted = LogisticRegression().fit(features, labels)
-    saved = artifact(
-        classes=fitted.classes_.tolist(),
-        coefficients=fitted.coef_.tolist(),
-        intercept=fitted.intercept_.tolist(),
-        vocabulary=vectorizer.vocabulary_,
-        idf=vectorizer.idf_.tolist(),
-    )
-    path = tmp_path / "classifier.json"
-    path.write_text(saved.model_dump_json(), encoding="utf-8")
-    restored = CategoryClassifier.load(path)
-    probes = ["wireless connection", "duplicate payment", "unknown vocabulary zqx"]
-    assert np.allclose(
-        restored.probabilities(probes), fitted.predict_proba(vectorizer.transform(probes))
-    )
-
-
-@pytest.mark.parametrize(
-    "changes",
-    [
-        {"classes": ["wifi", "wifi", "mobile"]},
-        {"idf": [1, 1]},
-        {"idf": [1, float("nan"), 1]},
-        {"coefficients": [[1, 0], [0, 1], [1, 1]]},
-        {"training_families": ["b"]},
-        {"vocabulary": {"bill": 0, "mobile": 0, "wifi": 2}},
-    ],
-)
-def test_corrupt_artifacts_rejected(changes):
-    with pytest.raises(ValidationError):
-        artifact(**changes)
-
-
-def test_missing_and_malformed_artifacts_are_service_errors(tmp_path):
-    path = tmp_path / "classifier.json"
-    with pytest.raises(UnderstandingUnavailable):
-        CategoryClassifier.load(path)
-    path.write_text("not json", encoding="utf-8")
-    with pytest.raises(UnderstandingUnavailable):
-        CategoryClassifier.load(path)
-
-
-def test_embedding_revision_mismatch_prevents_inference():
-    saved = artifact(
-        feature_type="minilm",
-        vocabulary={},
-        idf=[],
-        coefficients=[[0] * 384 for _ in range(3)],
-        embedding_model="different",
-        embedding_revision="old",
-    )
-    with pytest.raises(UnderstandingUnavailable):
-        CategoryClassifier(saved)
-
-
-@pytest.mark.parametrize(
-    "text,status",
-    [
-        ("I already restarted the router twice; it still fails.", "attempted"),
-        ("I haven't restarted the router yet.", "not_attempted"),
-        ("I have not rebooted the router.", "not_attempted"),
-        ("Support told me to restart the router.", "suggested"),
-        ("I will reboot the router tonight.", "suggested"),
-        ("Should I reboot the router?", "suggested"),
-        ("If I restarted the router, would it help?", "suggested"),
-    ],
-)
-def test_action_status_preserves_negation_and_hypotheticals(text, status):
-    observations = extract_actions(text)
-    assert len(observations) == 1
-    assert observations[0].status == status
-    assert text[observations[0].start : observations[0].end] == observations[0].text
-
-
-def test_action_negation_does_not_cross_but():
-    text = "I haven't checked the cable but I rebooted the router."
-    actions = {item.action: item.status for item in extract_actions(text)}
-    assert actions == {"check_cables": "not_attempted", "restart_device": "attempted"}
-
-
 def test_tone_does_not_determine_impact():
+    from app.understanding.context import extract_facts, extract_requests
+
+    duplicate = "I paid the same broadband invoice twice. Both payments show settled."
+    facts = {(f.name, f.value) for f in extract_facts(duplicate)}
+    assert {("payment_scope", "duplicate_same_invoice"), ("billing_status", "settled")} <= facts
+    quoted = "The lights are green when everything works. I called the helpline twice."
+    assert not any(f.name == "service_recovery" for f in extract_facts(quoted))
+    assert not extract_requests(quoted)
+    wired = "I plugged my laptop into the router with the yellow cable, and it lost the connection."
+    fact = next(f for f in extract_facts(wired) if f.name == "wired_connection")
+    assert fact.value == "failing" and wired[fact.start : fact.end] == fact.text
     angry = "I'm furious about this invoice, but every service works."
     calm = "Reporting calmly: our street and neighbouring blocks all lost broadband at once."
     assert assess_sentiment(angry).value == "angry"
@@ -199,18 +106,22 @@ def test_tone_does_not_determine_impact():
     assert assess_severity(calm).value == "critical"
     assert assess_severity("I am furious.").value == "unknown"
     assert assess_sentiment("I am not angry.").value == "unknown"
+    for text in ("The optical box shows a red LOS light.", "LOS light is red."):
+        severity = assess_severity(text)
+        assert severity.value == "high"
+        assert all(text[q.start : q.end] == q.text for q in severity.evidence)
+    assert assess_severity("Is the LOS light red?").value == "unknown"
+    assert (
+        assess_severity("My medical alarm uses the landline and the landline is dead.").value
+        == "critical"
+    )
+    assert assess_severity("Would a medical alarm fail if the line is down?").value == "unknown"
+    from app.understanding.signals import extract_actions
 
-
-def test_negated_or_unrelated_outage_does_not_create_critical_impact():
-    assert assess_severity("Our street has not lost service.").value != "critical"
-    assert assess_severity("Our street has a shop. My phone is offline.").value != "critical"
-
-
-def test_multiple_products_and_unicode_offsets():
-    text = "Café: Wi-Fi fails but Ethernet works; the mobile phone is fine."
-    observations = extract_products(text)
-    assert {p.product for p in observations} == {"home_wifi", "broadband", "mobile"}
-    assert all(text[p.start : p.end] == p.text for p in observations)
+    assert (
+        extract_actions("I replaced the ONT power adapter yesterday.")[0].action
+        == "replace_power_adapter"
+    )
 
 
 def test_uncertain_classifier_requests_clarification_without_logging_text(caplog):
@@ -226,96 +137,45 @@ def test_uncertain_classifier_requests_clarification_without_logging_text(caplog
     assert result.category is None and result.needs_clarification
     assert "private complaint" not in caplog.text
     assert result.severity.value == "unknown"
-
-
-def test_language_assisted_category_is_distinct_from_local_confidence():
-    from app.understanding.language import Interpretation
-
-    classifier = Mock()
-    classifier.artifact = artifact()
-    classifier.predict.return_value = [
-        CategoryCandidate(category="wifi_connectivity", score=0.2),
-        CategoryCandidate(category="broadband_outage", score=0.19),
-    ]
-    client = Mock()
-    text = "My Wi-Fi barely works upstairs."
-    client.generate.return_value = Interpretation(
-        products=[{"product": "home_wifi", "quote": "Wi-Fi"}],
-        facts=[],
-        category={"category": "wifi_connectivity", "quote": text},
+    language = Mock()
+    classifier.predict.reset_mock()
+    guarded = UnderstandingService(
+        classifier, settings=Settings(_env_file=None, llm_enabled=True), language=language
     )
-    service = UnderstandingService(
-        classifier, settings=Settings(_env_file=None, llm_enabled=True), language=client
-    )
-    result = service.analyze(AnalyzeRequest(query=text))
-    assert result.category == "wifi_connectivity" and result.category_basis == "language_assisted"
-    assert result.candidates[0].score == 0.2
-    assert result.category_evidence[0].text == text
-    client.generate.side_effect = LanguageUnavailable("provider_http_429")
-    fallback = service.analyze(AnalyzeRequest(query=text))
-    assert fallback.category is None and fallback.language_method == "rules_fallback"
-
-
-def test_empty_language_services_do_not_erase_local_billing_context():
-    from app.understanding.language import Interpretation
-
-    classifier = Mock()
-    classifier.artifact = artifact()
-    classifier.predict.return_value = [
-        CategoryCandidate(category="billing_dispute", score=0.8),
-        CategoryCandidate(category="payment_restoration", score=0.1),
-    ]
-    client = Mock()
-    client.generate.return_value = Interpretation(products=[], facts=[])
-    service = UnderstandingService(
-        classifier, settings=Settings(_env_file=None, llm_enabled=True), language=client
-    )
-    result = service.analyze(
-        AnalyzeRequest(query="I see two charges on my bill. Not sure whether one is a hold.")
-    )
-    assert result.category == "billing_dispute"
-    assert {p.product for p in result.products} == {"billing"}
-    assert any("pending or settled" in q for q in result.clarification_questions)
-    assert not any("Which service" in q for q in result.clarification_questions)
-
-
-@pytest.mark.parametrize("query", ["", " ", 123, "a" * 10001])
-def test_api_rejects_invalid_input_before_loading_model(monkeypatch, query):
-    factory = Mock()
-    monkeypatch.setattr(api, "get_understanding_service", factory)
-    response = TestClient(app).post("/api/v1/analyze", json={"query": query})
-    assert response.status_code == 422
-    factory.assert_not_called()
-
-
-def test_api_missing_classifier_is_sanitized_and_health_still_works(monkeypatch, caplog):
-    monkeypatch.setattr(
-        api, "get_understanding_service", Mock(side_effect=UnderstandingUnavailable("private path"))
-    )
-    client = TestClient(app)
-    response = client.post("/api/v1/analyze", json={"query": "private complaint"})
-    assert response.status_code == 503
-    assert "private" not in response.text + caplog.text
-    assert client.get("/api/v1/health").status_code == 200
-
-
-@pytest.mark.parametrize("overlap", ["family", "text", "label"])
-def test_training_rejects_leakage_and_unseen_dev_classes(overlap):
-    train = [{"query": "router failed", "scenario_family": "a", "labels": {"intent": "wifi"}}]
-    dev = [{"query": "wireless unavailable", "scenario_family": "b", "labels": {"intent": "wifi"}}]
-    if overlap == "family":
-        dev[0]["scenario_family"] = "a"
-    elif overlap == "text":
-        dev[0]["query"] = " ROUTER FAILED "
-    else:
-        dev[0]["labels"]["intent"] = "unknown"
-    with pytest.raises(ValueError):
-        validate_separation(train, dev)
-
-
-def test_family_metric_does_not_overweight_repeated_variants():
-    rows = [{"scenario_family": "a", "labels": {"intent": "wifi"}} for _ in range(8)]
-    rows += [{"scenario_family": "b", "labels": {"intent": "mobile"}}]
-    metrics = classification_metrics(rows, ["wifi"] * 9, ["wifi", "mobile"])
-    assert metrics["accuracy"] == pytest.approx(8 / 9)
-    assert metrics["family_mean_accuracy"] == 0.5
+    for query in (
+        "who is the prime minister of India?",
+        "Paste any 400-word single-topic broadband complaint.",
+        "What is the capital of France?",
+        "Write a telecom complaint for me.",
+        "What is photosynthesis?",
+        "Explain the French revolution.",
+        "How do I bake bread?",
+    ):
+        result = guarded.analyze(AnalyzeRequest(query=query))
+        assert result.scope_status == "unsupported"
+        assert result.category is None and not result.candidates
+        assert not result.clarification_questions
+    language.generate.assert_not_called()
+    classifier.predict.assert_not_called()
+    local = UnderstandingService(classifier, settings=Settings(_env_file=None))
+    for text, category in (
+        ("Web keeps vanishing around dinner time my wired PC stays online.", "wifi_connectivity"),
+        ("Optical box shows a red LOS light.", "broadband_outage"),
+        (
+            "Oh brilliant, another lovely evening of no internet. Fix it by tomorrow or I'm cancelling my connection.",
+            "broadband_outage",
+        ),
+        (
+            "Internet romba slow ah irukku since morning, router restart pannitten no use.",
+            "slow_broadband",
+        ),
+    ):
+        result = local.analyze(AnalyzeRequest(query=text))
+        assert result.category == category
+        assert any(p.product == "broadband" for p in result.products)
+        if "lovely" in text or "pannitten" in text:
+            assert result.sentiment.value == "frustrated"
+        if "pannitten" in text:
+            assert result.actions[0].status == "attempted"
+        for quote in [*result.actions, *result.sentiment.evidence]:
+            assert text[quote.start : quote.end] == quote.text

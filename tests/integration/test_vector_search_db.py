@@ -15,6 +15,28 @@ pytestmark = pytest.mark.skipif(os.environ.get("RUN_DB_TESTS") != "1", reason="S
 
 
 def test_database_ranking_filters_and_evidence(repository):
+    from pathlib import Path
+
+    from app.monitoring.budgets import RequestBudgets
+
+    repository.conn.execute(
+        (Path(__file__).resolve().parents[2] / "db/migrations/007_request_budgets.sql").read_text()
+    )
+
+    @contextmanager
+    def budget_connection():
+        yield repository.conn
+
+    first_worker = RequestBudgets(connection=budget_connection)
+    second_worker = RequestBudgets(connection=budget_connection)
+    assert first_worker.take("shared", 1, 1, backend="postgres") == 0
+    assert second_worker.take("shared", 1, 1, backend="postgres") > 0
+    first_worker.block("shared", 90, backend="postgres")
+    assert second_worker.take("shared", 1, 1, backend="postgres") >= 89
+    repository.conn.execute(
+        "UPDATE support_request_budgets SET updated_at=clock_timestamp()-interval '2 minutes',blocked_until='-infinity' WHERE bucket_key='shared'"
+    )
+    assert second_worker.take("shared", 1, 1, backend="postgres") == 0
     settings = Settings(_env_file=None)
     config = {
         "model": settings.embedding_model,

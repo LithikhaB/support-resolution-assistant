@@ -36,3 +36,8 @@ data/evolution/runs/
 data/evaluation/retrieval_report.json
 data/synthetic/telecom_v1/processed/indexing.manifest.json
 data/synthetic/telecom_v2/processed/indexing.manifest.json
+data/synthetic/telecom_v3/processed/indexing.manifest.json
+data/synthetic/telecom_v3_1/processed/indexing.manifest.json
+
+# Private expiring runtime caches
+data/cache/

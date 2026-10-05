@@ -3,6 +3,7 @@ uvicorn[standard]==0.32.*
 pydantic>=2.9
 pydantic-settings>=2.6
 psycopg[binary]>=3.2
+psycopg-pool==3.3.3
 httpx>=0.27
 huggingface-hub>=0.25
 tokenizers>=0.22,<0.24

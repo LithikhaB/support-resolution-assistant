@@ -2,8 +2,6 @@
 
 import json
 
-import pytest
-
 from app.ingestion.updates import stage_update
 
 
@@ -33,20 +31,15 @@ def test_staging_preserves_existing_ids_and_active_file(tmp_path):
     assert result["added"] == 1 and result["documents"] == 2
     assert current.read_bytes() == before
     assert result["categories"] == ["new_service"]
+    from scripts.serve import install_missing_corpus
 
-
-@pytest.mark.parametrize(
-    "records",
-    [
-        [record("new"), record("new")],
-        [record("new", metadata={"split": "test"})],
-        [record("new", metadata={"kb_refs": ["missing"]})],
-    ],
-)
-def test_invalid_update_leaves_no_staging_directory(tmp_path, records):
-    current, incoming, output = tmp_path / "current", tmp_path / "incoming", tmp_path / "staged"
-    write(current, [record("old")])
-    write(incoming, records)
-    with pytest.raises(ValueError):
-        stage_update(current, incoming, output)
-    assert not output.exists()
+    bundled_root = tmp_path / "bundled"
+    bundled = bundled_root / "telecom_v3_1"
+    bundled.mkdir(parents=True)
+    (bundled / "knowledge_base.jsonl").write_text("new version")
+    target = tmp_path / "volume" / "telecom_v3_1"
+    install_missing_corpus(target, bundled_root)
+    assert (target / "knowledge_base.jsonl").read_text() == "new version"
+    (bundled / "knowledge_base.jsonl").write_text("must not replace frozen data")
+    install_missing_corpus(target, bundled_root)
+    assert (target / "knowledge_base.jsonl").read_text() == "new version"

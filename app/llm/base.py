@@ -1,15 +1,19 @@
 """Share remote privacy, timeouts, schema validation and token telemetry."""
 
 import json
+from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
 from time import perf_counter
 
 import httpx
+import psycopg
 from pydantic import ValidationError
 
 from app.config.settings import get_settings
 from app.llm.contracts import LanguageUnavailable
 from app.llm.privacy import redact, restore
-from app.llm.telemetry import record
+from app.llm.telemetry import event, record
+from app.monitoring.budgets import budgets, provider_budget
 
 
 class JSONProvider:
@@ -37,6 +41,13 @@ class JSONProvider:
         key = getattr(self.settings, f"{self.name}_api_key").get_secret_value()
         if not key:
             raise LanguageUnavailable("missing_api_key")
+        try:
+            budget_key, retry = provider_budget(self)
+        except (psycopg.Error, OSError):
+            raise LanguageUnavailable("provider_budget_unavailable") from None
+        if retry:
+            event("provider_throttles")
+            raise LanguageUnavailable("provider_throttled", retry_after=retry)
         masked, mapping = redact(payload)
         started = perf_counter()
         error, input_tokens, output_tokens, cost = None, 0, 0, None
@@ -63,10 +74,25 @@ class JSONProvider:
             retry_after = None
             if exc.response.status_code == 429:
                 try:
-                    retry_after = min(
-                        300, max(0, float(exc.response.headers.get("retry-after", "0")))
+                    raw = exc.response.headers.get(
+                        "retry-after", str(self.settings.llm_circuit_seconds or 60)
                     )
-                except ValueError:
+                    try:
+                        retry_after = float(raw)
+                    except ValueError:
+                        retry_after = (
+                            parsedate_to_datetime(raw) - datetime.now(timezone.utc)
+                        ).total_seconds()
+                    retry_after = min(86400, max(1, retry_after))
+                except (ValueError, TypeError, OverflowError):
+                    retry_after = self.settings.llm_circuit_seconds or 60
+                try:
+                    budgets.block(
+                        budget_key,
+                        retry_after,
+                        backend=self.settings.rate_limit_backend,
+                    )
+                except (psycopg.Error, OSError):
                     pass
             raise LanguageUnavailable(error, retry_after=retry_after) from None
         except LanguageUnavailable as exc:

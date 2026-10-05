@@ -12,7 +12,7 @@ from app.understanding.models import AnalysisResponse, AnalyzeRequest, TextEvide
 class ResolutionRequest(AnalyzeRequest):
     """Request a local agent draft with optional explicit metadata constraints."""
 
-    max_sources: int = Field(default=3, ge=1, le=5, strict=True)
+    max_sources: int = Field(default=2, ge=1, le=5, strict=True)
     rerank: bool = Field(default=True, strict=True)
     filters: RetrievalFilters = Field(default_factory=RetrievalFilters)
 
@@ -37,7 +37,11 @@ class SourceQuote(TextEvidence):
         "agent_checks",
         "escalate_if",
         "completion",
+        "plan_step",
     ]
+    step_id: int | None = Field(default=None, ge=1, le=10)
+    phase: Literal["customer_check", "agent_check", "conditional_fix", "completion"] | None = None
+    skip_if_fact: str | None = None
 
 
 class DraftSource(BaseModel):
@@ -104,6 +108,12 @@ class ResolutionResponse(BaseModel):
     decision: SupportDecision = Field(default_factory=SupportDecision)
     validation: CitationValidation = Field(default_factory=CitationValidation)
     method: Literal["local_extractive_v1"] = "local_extractive_v1"
+    evidence_reuse: Literal[
+        "not_used",
+        "semantic_hit_revalidated",
+        "exact_cache_revalidated",
+        "reviewed_history_revalidated",
+    ] = "not_used"
     language_summary: str | None = None
     language_plan: CustomerPlan | None = None
     language_draft: str | None = None

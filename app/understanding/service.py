@@ -2,6 +2,7 @@
 
 import logging
 from functools import lru_cache
+from hashlib import sha256
 from threading import Lock
 from time import perf_counter
 
@@ -9,6 +10,7 @@ from app.config.settings import get_settings
 from app.ingestion.artifacts import digest
 from app.llm.client import LanguageUnavailable
 from app.llm.providers import ProviderChain, get_language_client, last_provider
+from app.retrieval.cache import TTLCache
 from app.understanding.classifier import CategoryClassifier, UnderstandingUnavailable
 from app.understanding.context import clarification_questions, extract_facts, extract_requests
 from app.understanding.language import interpret_complaint
@@ -41,6 +43,7 @@ class UnderstandingService:
             ProviderChain(self.settings) if settings is not None else get_language_client()
         )
         self.model_version = digest(classifier.artifact.model_dump(mode="json"))[:16]
+        self.cache = TTLCache(seconds=self.settings.computation_cache_seconds)
         self.routing = load_policy(self.settings, self.model_version)
         try:
             self.category_products = load_category_products(self.settings.category_products_path)
@@ -50,19 +53,30 @@ class UnderstandingService:
     def analyze(self, request: AnalyzeRequest) -> AnalysisResponse:
         """Keep category uncertainty, observed products, impact and prior actions distinct."""
         started = perf_counter()
+        cacheable = not (self.settings.llm_enabled and self.settings.llm_extraction_enabled)
+        key = sha256(request.query.encode()).hexdigest()
+        if cacheable and (cached := self.cache.get(key)) is not None:
+            cached.elapsed_ms = (perf_counter() - started) * 1000
+            return cached
         scope_status, scope_reason = scope_assessment(request.query)
-        candidates = self.classifier.predict(request.query)
-        accepted = candidates[0].score >= (
-            self.routing.min_score if self.routing else self.settings.understanding_min_score
-        ) and candidates[0].score - candidates[1].score >= (
-            self.routing.min_margin if self.routing else self.settings.understanding_min_margin
+        candidates = [] if scope_status == "unsupported" else self.classifier.predict(request.query)
+        accepted = (
+            bool(candidates)
+            and candidates[0].score
+            >= (self.routing.min_score if self.routing else self.settings.understanding_min_score)
+            and candidates[0].score - candidates[1].score
+            >= (self.routing.min_margin if self.routing else self.settings.understanding_min_margin)
         )
         products = extract_products(request.query)
         facts = extract_facts(request.query)
         language_method, language_error = "rules_v1", None
         language_category = None
         language_severity = language_sentiment = None
-        if self.settings.llm_enabled:
+        if (
+            self.settings.llm_enabled
+            and self.settings.llm_extraction_enabled
+            and scope_status != "unsupported"
+        ):
             try:
                 (
                     interpreted_products,
@@ -127,14 +141,37 @@ class UnderstandingService:
             reported_category = "intermittent_broadband"
         if wired == {"working"} and any(p.product == "home_wifi" for p in products):
             reported_category = "wifi_connectivity"
+        if (
+            any(f.value == "intermittent" for f in intermittent)
+            and any(p.product == "home_wifi" for p in products)
+            and wired != {"failing"}
+        ):
+            reported_category = "wifi_connectivity"
+        if wired == {"working"} and any(p.product == "broadband" for p in products):
+            reported_category = "wifi_connectivity"
+        if any(f.name == "optical_signal" and f.value == "loss_reported" for f in facts):
+            reported_category = "broadband_outage"
+        elif severity.rule == "reported_complete_loss" and any(
+            p.product == "broadband" for p in products
+        ):
+            reported_category = "broadband_outage"
+        elif any(f.name == "connection_pattern" and f.value == "slow" for f in facts):
+            reported_category = "slow_broadband"
         category = reported_category or (candidates[0].category if accepted else None)
         category_evidence = (
-            [TextEvidence(**f.model_dump(include={"text", "start", "end"})) for f in intermittent]
-            if reported_category in {"intermittent_broadband", "wifi_connectivity"}
+            [
+                TextEvidence(**f.model_dump(include={"text", "start", "end"}))
+                for f in facts
+                if f.name in {"connection_pattern", "wired_connection", "optical_signal"}
+            ]
+            if reported_category
+            in {"intermittent_broadband", "wifi_connectivity", "slow_broadband", "broadband_outage"}
             else severity.evidence
             if reported_category
             else []
         )
+        if reported_category and not category_evidence:
+            category_evidence = severity.evidence
         category_basis = (
             "explicit_report" if reported_category else ("model" if category else "uncertain")
         )
@@ -204,6 +241,8 @@ class UnderstandingService:
             len(result.actions),
             result.elapsed_ms,
         )
+        if cacheable:
+            self.cache.put(key, result)
         return result
 
 

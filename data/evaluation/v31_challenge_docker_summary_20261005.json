@@ -1,0 +1,63 @@
+{
+  "run_complete": true,
+  "measurement": "HTTP success, nonempty plan, passed exact-source validation, agent review required and no handoff claim; not relevance, diagnosis or manual expectation accuracy",
+  "per_area": {
+    "follow_up_understanding": {
+      "cases": 10,
+      "snapshots": 22,
+      "contract_passed_snapshots": 22,
+      "contract_passed_cases": 10,
+      "contract_case_pass_rate": 1.0
+    },
+    "natural_wording": {
+      "cases": 9,
+      "snapshots": 9,
+      "contract_passed_snapshots": 8,
+      "contract_passed_cases": 8,
+      "contract_case_pass_rate": 0.8888888888888888
+    },
+    "retrieval_contrast": {
+      "cases": 3,
+      "snapshots": 3,
+      "contract_passed_snapshots": 3,
+      "contract_passed_cases": 3,
+      "contract_case_pass_rate": 1.0
+    },
+    "safety_grounding": {
+      "cases": 11,
+      "snapshots": 11,
+      "contract_passed_snapshots": 11,
+      "contract_passed_cases": 11,
+      "contract_case_pass_rate": 1.0
+    },
+    "scope_escalation": {
+      "cases": 11,
+      "snapshots": 12,
+      "contract_passed_snapshots": 12,
+      "contract_passed_cases": 11,
+      "contract_case_pass_rate": 1.0
+    },
+    "working_vs_failing": {
+      "cases": 9,
+      "snapshots": 9,
+      "contract_passed_snapshots": 9,
+      "contract_passed_cases": 9,
+      "contract_case_pass_rate": 1.0
+    }
+  },
+  "language_statuses": {
+    "disabled": 71
+  },
+  "unknown_category_issue_snapshots": 25,
+  "unknown_sentiment_issue_snapshots": 65,
+  "failures": [
+    {
+      "case": "H25",
+      "after_reply": 0,
+      "error": "Complaint exceeds the local token budget; shorten it."
+    }
+  ],
+  "independent_human_ratings": 0,
+  "manual_expectation_cases_unscored": 53,
+  "report_sha256": "895d7ca8ce35fcc8d70ff159a3f05cb2ff714022424ea36ab5f7c51226b2236a"
+}

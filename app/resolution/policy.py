@@ -41,8 +41,10 @@ def choose_decision(response):
         return SupportDecision(
             action="escalate",
             priority="urgent",
-            target="network_operations",
-            reasons=["reported_area_outage"],
+            target="network_operations"
+            if response.analysis.severity.rule == "reported_area_outage"
+            else "support_agent",
+            reasons=[response.analysis.severity.rule],
         )
     if response.contact_status == "unverified":
         return SupportDecision(
@@ -125,5 +127,16 @@ def questions_for(analysis):
     if physical_damage(analysis):
         questions = [q for q in questions if q.startswith("You reported conflicting")]
     elif values.get("optical_signal") == {"loss_reported"}:
-        questions = ["Is the red indicator labelled LOS, and when did service stop working?"]
+        explicitly_los = any(
+            "los" in f.text.casefold()
+            for f in analysis.reported_facts
+            if f.name == "optical_signal"
+        )
+        questions = [
+            "When did service stop working, and are nearby customers also affected?"
+            if explicitly_los
+            else "Is the red indicator labelled LOS, and when did service stop working?"
+        ]
+    elif analysis.category == "slow_broadband" and "wired_connection" not in values:
+        questions = ["Are all devices slow, and is a wired device also slow or only Wi-Fi?"]
     return list(dict.fromkeys(questions))

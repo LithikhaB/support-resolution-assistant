@@ -10,12 +10,26 @@ UNSUPPORTED = re.compile(
     re.I,
 )
 
+NON_COMPLAINT_REQUEST = re.compile(
+    r"^\s*(?:please\s+)?(?:paste|write|generate|create)\s+"
+    r"(?:(?:me|a|an|any|the)\s+)*(?:\d+[ -]word\s+)?"
+    r"(?:single[ -]topic\s+)?(?:(?:telecom|broadband|mobile|billing|customer)\s+)?"
+    r"complaint\b",
+    re.I,
+)
+GENERAL_KNOWLEDGE = re.compile(
+    r"\b(?:who\s+(?:is|was|are)\s+(?:the\s+)?(?:current\s+)?"
+    r"(?:prime minister|president)|what\s+is\s+the\s+capital\s+of)\b",
+    re.I,
+)
+
 
 def explicitly_unsupported(text):
     """Require a direct unrelated request and exclude locally negated requests."""
-    return any(
+    return bool(NON_COMPLAINT_REQUEST.search(text)) or any(
         not negated(re.split(r"[.!?;]", text[: match.start()])[-1])
-        for match in UNSUPPORTED.finditer(text)
+        for pattern in (UNSUPPORTED, GENERAL_KNOWLEDGE)
+        for match in pattern.finditer(text)
     )
 
 
@@ -25,6 +39,14 @@ def scope_assessment(text):
         return "unsupported", "explicit_unrelated_request"
     if extract_products(text):
         return "supported", "recognized_service_mention"
+    if re.search(
+        r"^\s*(?:who|what|where|when|why|how|explain|tell me)\b", text, re.I
+    ) and not re.search(
+        r"\b(?:disconnect\w*|drops?|connection|signal|service|charge[ds]?|payment|invoice|offline|outage|buffer\w*|activate|speed|coverage|reconnect\w*)\b",
+        text,
+        re.I,
+    ):
+        return "unsupported", "question_without_telecom_issue"
     return "uncertain", "service_not_identified"
 
 

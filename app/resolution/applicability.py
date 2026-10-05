@@ -7,16 +7,87 @@ from app.resolution.evidence import supported_scopes
 from app.understanding.signals import negated
 
 
+def needs_baseline(analysis):
+    known = {(f.name, f.value) for f in analysis.reported_facts}
+    return (
+        analysis.category_basis == "explicit_report"
+        and analysis.category in {"broadband_outage", "slow_broadband"}
+        and not any(
+            f.name in {"account_change", "optical_signal", "weather_context", "wired_connection"}
+            for f in analysis.reported_facts
+        )
+        and not (analysis.category == "slow_broadband" and ("timing", "peak_hours") in known)
+        and analysis.severity.rule != "reported_area_outage"
+    )
+
+
 def applicability_issue(procedure, analysis):
     """Apply narrow contextual exclusions without claiming general diagnostic entailment."""
     if analysis.scope_status == "unsupported":
         return "unsupported_request"
     if physical_damage(analysis):
         return "physical_damage_requires_inspection"
-    if procedure.scope not in supported_scopes(analysis):
+    baseline_scope = (
+        procedure.baseline_for is not None
+        and procedure.scope == "broadband"
+        and bool(supported_scopes(analysis) & {"fibre_broadband", "home_wifi", "router"})
+    )
+    if procedure.scope not in supported_scopes(analysis) and not baseline_scope:
         return "different_service_scope"
     known = {(fact.name, fact.value) for fact in analysis.reported_facts}
     finding = procedure.quotes["condition"].text
+    if (
+        re.search(r"\b(?:overheats?|overheating|hot|heat)\b", finding, re.I)
+        and ("equipment_condition", "overheating") not in known
+    ):
+        return "overheating_gate_without_reported_heat_context"
+    if ("charge", "late_fee") in known and not re.search(
+        r"\b(?:late fee|due date|late payment)\b", finding, re.I
+    ):
+        return "unrelated_procedure_for_reported_late_fee"
+    if (
+        analysis.category == "billing_dispute"
+        and analysis.severity.rule not in {"reported_complete_loss", "reported_area_outage"}
+        and re.search(
+            r"\b(?:restoration|provisioning|service is restored|restriction|reallocation)\b",
+            finding + " " + procedure.quotes["action"].text,
+            re.I,
+        )
+    ):
+        return "restoration_procedure_without_reported_service_loss"
+    if (
+        analysis.category in {"intermittent_broadband", "slow_broadband", "wifi_connectivity"}
+        and ("weather_context", "reported") not in known
+        and re.search(r"\b(?:moisture|rain|wet.weather)\b", finding, re.I)
+    ):
+        return "weather_gate_without_reported_weather_context"
+    if (
+        ("connection_pattern", "intermittent") in known
+        and analysis.category in {"wifi_connectivity", "intermittent_broadband", None}
+        and re.search(
+            r"\b(?:saved wireless profile|other clients authenticate|band the appliance does not support)\b",
+            finding,
+            re.I,
+        )
+    ):
+        return "authentication_gate_for_reported_wireless_drops"
+    if procedure.baseline_for and procedure.baseline_for != analysis.category:
+        return "different_baseline_category"
+    if needs_baseline(analysis) and procedure.baseline_for != analysis.category:
+        return "specific_procedure_without_reported_context_use_baseline"
+    if (
+        ("timing", "persistent_daytime") in known
+        and ("timing", "peak_hours") not in known
+        and re.search(r"\b(?:peak|evening|congestion)\b", finding, re.I)
+    ):
+        return "peak_timing_gate_for_persistent_daytime_slowness"
+    if {
+        ("payment_scope", "duplicate_same_invoice"),
+        ("billing_status", "settled"),
+    } <= known and not re.search(
+        r"\b(?:duplicate settled|two settled)\s+payments\b", finding, re.I
+    ):
+        return "different_payment_issue_for_reported_duplicate_settlement"
     if ("optical_signal", "loss_reported") in known and not re.search(
         r"\b(?:no received signal|no optical signal|no light received)\b", finding, re.I
     ):
@@ -73,6 +144,13 @@ def applicability_issue(procedure, analysis):
 
 def evidence_query(query, analysis):
     """Add observed incident scope to retrieval without asserting an underlying diagnosis."""
+    if needs_baseline(analysis):
+        baseline = (
+            "Broadband unavailable: establish the fault before choosing a repair"
+            if analysis.category == "broadband_outage"
+            else "Persistent broadband slowness: establish a controlled baseline"
+        )
+        return query + " " + baseline
     if supported_scopes(analysis) == {"home_wifi"}:
         return query + " Ethernet is working; investigate wireless Wi-Fi connectivity only."
     if analysis.severity.rule == "reported_area_outage":

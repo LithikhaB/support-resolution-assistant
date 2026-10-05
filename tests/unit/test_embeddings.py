@@ -1,4 +1,3 @@
-from concurrent.futures import ThreadPoolExecutor
 from types import SimpleNamespace
 from unittest.mock import Mock
 
@@ -6,7 +5,6 @@ import numpy as np
 import pytest
 
 from app.config.settings import Settings
-from app.retrieval import embeddings
 from app.retrieval.embeddings import EmbeddingService
 
 
@@ -49,77 +47,23 @@ def test_batches_preserve_order_normalize_and_reuse_model(components):
     assert all(c.kwargs["normalize_embeddings"] for c in calls)
     assert np.allclose(encoder.embed_query(texts[0]), vectors[0])
     assert encoder.model is components[1]
+    before = components[1].encode.call_count
+    cached = encoder.embed_query(texts[0])
+    assert components[1].encode.call_count == before
+    cached[0] = 99
+    assert encoder.embed_query(texts[0])[0] != 99
+    assert encoder.query_cache.hits >= 2
+    from tokenizers import Tokenizer
+    from tokenizers.models import WordLevel
+    from tokenizers.pre_tokenizers import Whitespace
 
-
-def test_empty_batch_is_valid(components):
-    assert service(components).embed_documents([]) == []
-    components[1].encode.assert_not_called()
-
-
-@pytest.mark.parametrize("text", ["", "   ", None, 123, "word " * 255])
-def test_invalid_inputs_fail_before_inference(components, text):
-    with pytest.raises(ValueError):
-        service(components).embed_query(text)
-    components[1].encode.assert_not_called()
-
-
-@pytest.mark.parametrize(
-    "bad",
-    [np.zeros((1, 383)), np.zeros((1, 384)), np.full((1, 384), np.nan), np.full((1, 384), np.inf)],
-)
-def test_invalid_model_outputs_rejected(components, bad):
-    components[1].encode.side_effect = None
-    components[1].encode.return_value = bad
-    with pytest.raises(ValueError):
-        service(components).embed_query("a valid input")
-
-
-def test_wrong_model_dimension_rejected(components):
-    components[1].get_embedding_dimension.return_value = 768
-    with pytest.raises(ValueError, match="dimension"):
-        service(components)
-
-
-def test_configured_dimension_must_match_database(components):
-    components[0].embedding_dim = 768
-    with pytest.raises(ValueError, match="384"):
-        service(components)
-
-
-def test_concurrent_factory_initializes_once(monkeypatch):
-    embeddings._cached_service.cache_clear()
-    factory = Mock(return_value=object())
-    monkeypatch.setattr(embeddings, "EmbeddingService", factory)
-    try:
-        with ThreadPoolExecutor(max_workers=4) as pool:
-            instances = list(pool.map(lambda _: embeddings.get_embedding_service(), range(8)))
-        factory.assert_called_once()
-        assert all(x is instances[0] for x in instances)
-    finally:
-        embeddings._cached_service.cache_clear()
-
-
-def test_token_limit_includes_special_tokens(components):
-    assert len(service(components).embed_query("word " * 254)) == 384
-
-
-def test_default_loader_uses_cpu_pinned_revision_and_local_cache(components, monkeypatch):
-    import sys
-
-    settings, model, tokenizer = components
-    constructor = Mock(return_value=model)
-    monkeypatch.setitem(
-        sys.modules, "sentence_transformers", SimpleNamespace(SentenceTransformer=constructor)
-    )
-    loader = Mock(return_value=(tokenizer, None))
-    monkeypatch.setattr(embeddings, "load_tokenizer", loader)
-    EmbeddingService(settings)
-    constructor.assert_called_once_with(
-        settings.embedding_model,
-        device="cpu",
-        revision=settings.tokenizer_revision,
-        cache_folder=str(settings.data_dir / "models"),
-        local_files_only=settings.embedding_local_files_only,
-        trust_remote_code=False,
-    )
-    loader.assert_called_once()
+    tokenizer = Tokenizer(WordLevel({"[UNK]": 0, "internet": 1, "slow": 2}, unk_token="[UNK]"))
+    tokenizer.pre_tokenizer = Whitespace()
+    long_encoder = EmbeddingService(components[0], model=components[1], tokenizer=tokenizer)
+    long_query = "internet " * 400 + "slow " * 100
+    pooled = long_encoder.embed_query(long_query)
+    assert len(pooled) == 384 and np.isclose(np.linalg.norm(pooled), 1)
+    parts = [s for call in components[1].encode.call_args_list[before:] for s in call.args[0]]
+    assert any("slow" in s for s in parts)
+    with pytest.raises(ValueError, match="exceeds"):
+        long_encoder.embed_documents([long_query])

@@ -8,9 +8,9 @@ See [the latest verified Docker and test results](docs/verification.md) for the 
 
 The agent triage console displays the decision, priority and target, quoted field evidence, prior actions including durations and counts, a numbered cited plan, validation and provider badges, collapsible sources and up to three simulated resolved cases. Quick answers send structured observations attached to the selected issue. An answered wired check is removed from subsequent guidance.
 
-The new `telecom_v2` corpus contains AI-authored synthetic procedures with ordered verification, customer checks, agent checks, conditional fixes, escalation criteria, restrictions and completion criteria. `telecom_v1` remains unchanged. Search uses the original diagnostic text so generic checklist additions do not change embeddings; exact-source quotes are validated against the enriched parent article, with `quote_scope=parent_document` disclosed in the response. Diagnostic gates remain unconfirmed and agent review is always required.
+The active `telecom_v3_1` corpus contains **62 AI-authored synthetic KB procedures, 240 simulated resolved training tickets, and 30 historical responses**. Procedures contain ordered customer checks, provider checks, conditional remedies, restrictions and completion criteria. Earlier corpora and frozen evaluation reports remain unchanged. Diagnostic gates remain unconfirmed and agent review is required.
 
-The five requested complaints and the full before/after responses are recorded in [the change checkpoints](docs/triage-changes.md). Local verification passed 493 Python tests including PostgreSQL integration tests, three console tests, Ruff lint and formatting. The 53-case run returned usable responses with passing contract checks for 52 cases; the long H25 complaint exceeded the token budget. These contract checks are **not** semantic-quality or customer-resolution accuracy. A small network-enabled Groq/Gemini run returned four local fallbacks after actual HTTP 429 responses; it produced no LLM-generated plans. Current measured retrieval results and limits are in [verification](docs/verification.md). Older reports are retained as historical evidence.
+The maintained suite has 50 Python tests (including PostgreSQL integration) and five UI tests. The latest 53-case local challenge report passes citation-validation and agent-review contract checks across all cases; this does **not** measure semantic correctness. See [verification](docs/verification.md) for evidence and remaining limitations. Human review of generated wording remains necessary.
 
 Reproduce maintained comparisons and stage traces with unique output names:
 
@@ -27,27 +27,31 @@ The audit records generated and fallback answers separately and exits unsuccessf
 
 ```mermaid
 flowchart LR
-    UI[Agent triage console + structured observations] --> API[FastAPI microservice]
-    API --> U[Groq / Gemini understanding]
-    U --> R[Semantic + lexical retrieval]
-    DB[(PostgreSQL + pgvector)] --> R
-    R --> P[Full parent procedures + exact quotes]
-    P --> D[Conditional local plan + optional LLM wording]
-    D --> V[Check citations and grounding]
-    V --> OUT[Decision + priority + evidence + cited plan]
-    U -. provider unavailable .-> LOCAL[Local classifier and rules]
-    D -. provider unavailable or invalid .-> FALLBACK[Cited local plan]
-    NEW[Validated data / new classes] --> DB
+    UI[Agent console and observations] --> API[FastAPI admission limits]
+    API --> U[Local classifier and quoted context rules]
+    U --> C[24-hour exact evidence cache]
+    C -->|miss| H[Browser-owned reviewed recent cases]
+    H -->|no applicable match| R[MiniLM + PostgreSQL FTS + RRF]
+    DB[(PostgreSQL + pgvector)] --> H
+    DB --> R
+    C --> V[Applicability + exact-source validation]
+    H --> V
+    R --> V
+    V --> L[Cited local conditional plan]
+    L --> G[Groq wording]
+    G --> M[Gemini critique + deterministic checks]
+    M --> OUT[Agent review, sources and provider badge]
+    L -->|quota or validation failure| OUT
+    NEW[Stage new immutable KB version / evaluate new classes] --> DB
 ```
-
-![Architecture](architecture.svg)
 
 There is one application microservice and a separate database container. Understanding, retrieval and drafting stay as modules inside the API, keeping the deployment simple.
 
-1. **Understand:** one structured provider call considers the entire supported category taxonomy and few-shot examples. Local rules retain explicit impact and prior actions; the LLM supplies quoted category, product, severity and sentiment interpretations. MiniLM + logistic regression and rules handle provider outages.
-2. **Retrieve:** pgvector searches complaint/KB meaning; PostgreSQL full-text search supplies shared lexical ranks. Reciprocal Rank Fusion combines ranks. A pinned local cross-encoder can rerank. Procedures are retrieved from KB; similar resolved histories are retrieved separately and linked to those procedures.
-3. **Recommend:** the LLM drafts understandable checks and next steps from the retrieved evidence, with source IDs on every generated step. It must preserve conditions, restrictions and previous attempts. Citation checks and a grounding review reject unsupported output. Groq → Gemini → a cited local plan is the fallback chain.
-4. **Clarify when useful:** missing details do not produce an empty response. The application gives available preliminary guidance and asks focused questions. Follow-ups update observations without repeating answered Ethernet questions. A reported shared outage receives incident guidance.
+1. **Understand:** MiniLM classifier plus quoted context rules extract category, product, severity, sentiment, attempted actions and observations. Uncertain categories remain provisional. Out-of-scope input is rejected. Optional LLM extraction is disabled by default to preserve quota.
+2. **Reuse safely:** check a bounded one-day JSON cache of public KB evidence. On a miss, search this browser's reviewed recent outcomes; load their current KB references and recheck applicability. Unresolved conversations never become repair evidence. Otherwise run semantic/lexical search and optional reranking.
+3. **Draft:** build the ordered local plan, skip completed checks, preserve conditional remedies, cite KB and linked simulated tickets. Groq drafts wording; Gemini critiques it. Exact citations, original ordering and protected repair steps must pass. Any failure returns the local plan with an honest badge.
+4. **Cache wording:** masked successful generated responses and supported critiques expire after 24 hours. Keys include the supplied evidence/observations and model configuration. JSON writes are atomic and each cache is bounded to 256 entries. Changes to the corpus revision invalidate evidence lookup. Similar complaints only reuse source selection with matching facts, not an old diagnosis.
+5. **Evolve:** `python -m scripts stage incoming.jsonl --output data/updates/new_version/processed` validates additive updates without editing the active corpus. Chunk and index the new corpus with `CORPUS_DIR` pointing to its parent. `python -m scripts evolve --output data/evaluation/evolution_new_run.json` demonstrates a new category, training, calibration, indexing and regression checks in an isolated database. Activate a new category only with its matching classifier, routing and category mapping artifacts.
 
 The output is assistance for a support agent. A cited historical outcome is not proof of the current fault; provider account actions and repairs remain for authorized support.
 
@@ -57,9 +61,9 @@ Prerequisite: Docker Engine or Docker Desktop with Compose.
 
 ```powershell
 if (-not (Test-Path .env)) { Copy-Item .env.example .env }
-# Existing .env files: set CORPUS_DIR=data/synthetic/telecom_v2.
+# Existing .env files: set CORPUS_DIR=data/synthetic/telecom_v3_1.
 # Set LLM_ENABLED=false for the fully local demo.
-# Put your Groq and/or Gemini API key in .env and keep LLM_ENABLED=true.
+# For split roles, put both API keys in .env and set LLM_ENABLED=true.
 docker compose --profile app up --build
 ```
 
@@ -123,7 +127,7 @@ Either key may be omitted. `LLM_ENABLED=false` runs the local fallback. `LEXICAL
 {"query":"My broadband drops every evening around 8. Ethernet also drops. I already restarted the router twice. I work from home and this is costing me."}
 ```
 
-POST this to `/api/v1/resolve`. The response includes `analysis`, `customer_plan`, optional LLM `language_plan`, exact source quotes, relevant `historical_cases`, citation validation and provider/fallback status. The UI shows the generated plan when available, otherwise the local plan. `/workspace` is an alias for the same simple complaint form.
+POST this to `/api/v1/resolve`. The response includes `analysis`, `customer_plan`, optional LLM `language_plan`, exact source quotes, relevant `historical_cases`, citation validation and provider/fallback status. The UI uses optional generated introductory wording; v3 steps remain deterministic and this is labelled explicitly. `/workspace` is an alias for the same simple complaint form.
 
 ## Data and evaluation
 

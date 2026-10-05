@@ -54,6 +54,9 @@ class EmbeddingService:
         self.tokenizer = tokenizer
         self.max_tokens = min(256, model.max_seq_length)
         self._encode_lock = Lock()
+        from app.retrieval.cache import TTLCache
+
+        self.query_cache = TTLCache(seconds=settings.computation_cache_seconds)
 
     def embed_documents(self, texts: list[str]) -> list[list[float]]:
         """Validate token budgets and produce normalized CPU vectors in bounded batches."""
@@ -103,7 +106,28 @@ class EmbeddingService:
 
     def embed_query(self, text: str) -> list[float]:
         """Embed one query using the same contract as indexed documents."""
-        return self.embed_documents([text])[0]
+        from app.ingestion.artifacts import digest
+
+        key = digest([self.settings.embedding_model, self.settings.tokenizer_revision, text])
+        cached = self.query_cache.get(key)
+        if cached is not None:
+            return cached
+        try:
+            vector = self.embed_documents([text])[0]
+        except EmbeddingInputTooLong:
+            from app.retrieval.chunking import DocumentChunker
+
+            chunks = DocumentChunker(
+                self.tokenizer, max_tokens=self.max_tokens, overlap_tokens=0
+            ).chunk_text("query", text)
+            vectors = np.asarray(self.embed_documents([c.content for c in chunks]))
+            pooled = np.average(vectors, axis=0, weights=[c.token_count for c in chunks])
+            norm = np.linalg.norm(pooled)
+            if norm <= 1e-12:
+                raise ValueError("Query pooling produced a zero vector") from None
+            vector = (pooled / norm).tolist()
+        self.query_cache.put(key, vector)
+        return vector
 
 
 @lru_cache(maxsize=1)

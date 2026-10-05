@@ -1,0 +1,825 @@
+{
+  "created_at": "2026-10-05T05:50:30.363811+00:00",
+  "cases_sha256": "161ca695b2244a01edd390e4ad33bdff10ebc957ac76bdbc71fbb822986081e0",
+  "provenance": "AI-authored by Claude in conversation with the repository owner; none are human-written. H01-H05 were already used in earlier checks, so they are regression cases (evaluation_use=regression), not a fresh independent benchmark. All other cases are unrun when written and become development data once results guide fixes. Expected behaviours judge whether the system recognises its limits and gives an appropriate next step; they do not require a confident diagnosis. Deliberately invalid requests are kept out of this pack because the runner validates the whole pack first.",
+  "purpose": "Customer challenge cases for manual review of distinct situations, follow-ups and safety behaviour. Not a frozen benchmark.",
+  "scoring": {
+    "context": "0 missed/misread; 1 partial; 2 accurate",
+    "relevance": "0 unrelated; 1 mixed; 2 relevant",
+    "conversation": "0 repeats an answered/unavailable question or loses corrections; 1 partial; 2 coherent; leave null for single-turn cases",
+    "grounding": "0 invented cause/action/citation; 1 uncertain support; 2 traceable and appropriately conditional",
+    "clarity": "0 confusing; 1 usable with effort; 2 clear and actionable"
+  },
+  "results": [
+    {
+      "id": "H25",
+      "name": "Long natural broadband complaint (about 400 words)",
+      "area": "natural_wording",
+      "evaluation_use": "fresh_candidate",
+      "source": "AI-authored (Claude); not human-written",
+      "query": "Hello, I am writing because this has been going on for far too long and I would like someone to look at it properly. About three weeks ago we moved house and the provider connected the fibre on the same day. At first everything was fine. Then on the second Sunday the internet started dropping in the evening, usually between eight and eleven, for a few minutes at a time. My husband works from home and I study online, so we both notice straight away. We restarted the router several times, and once we left it unplugged overnight. We moved the router away from the microwave and the cordless handset, and we replaced the power adapter with the spare one from the box. Nothing changed. I called the helpline twice and both times I was asked to restart the router, which we had already done. A technician visited last Thursday and said the line looked fine, but the problem came back the same night. I have checked the cable at the wall and it is firmly seated. The lights on the box are steady green when everything works. When the internet drops, the internet light blinks for a while and then returns. Our neighbour on the first floor says his connection is fine, so I do not think it is the whole building. Last night it dropped four times between nine and ten, and each time it came back by itself after about two or three minutes. During one of those drops I plugged my laptop into the router with the yellow cable that came in the box, and it lost the connection at the same moment as the wireless devices. I did not change any settings on the router and I have not installed anything new in the house except a second television. We pay for the three hundred megabit plan, and when it works the speed is close to that, so it is not a slow speed problem. I would like to know what else can be tried, and whether the line can be examined again, because we are paying for a service that we cannot rely on in the evenings. Please do not simply ask me to restart the router again, because that has already been done many times. Thank you for your help.",
+      "turns": [],
+      "expected": [
+        "Recognise one intermittent-broadband issue, not several.",
+        "Keep the previous restarts, router move, adapter swap, cable check and technician visit as attempted.",
+        "Recognise that the wired laptop also dropped, and do not ask the wired-versus-wireless question again.",
+        "Do not repeat the router restart; do not claim a confirmed fault."
+      ],
+      "snapshots": [
+        {
+          "after_reply": 0,
+          "response": {
+            "issues": [
+              {
+                "issue_id": 1,
+                "complaint": "Hello, I am writing because this has been going on for far too long and I would like someone to look at it properly. About three weeks ago we moved house the provider connected the fibre on the same day. At first everything was fine. Then on the second Sunday the internet started dropping in the evening, usually between eight and eleven, for a few minutes at a time. My husband works from home and I study online, so we both notice straight away. We restarted the router several times, and once we left it unplugged overnight. We moved the router away from the microwave the cordless handset, and we replaced the power adapter with the spare one from the box. Nothing changed. I called the helpline twice and both times I was asked to restart the router, which we had already done. A technician visited last Thursday and said the line looked fine, the problem came back the same night. I have checked the cable at the wall and it is firmly seated. The lights on the box are steady green when everything works. When the internet drops, the internet light blinks for a while and then returns. Our neighbour on the first floor says his connection is fine, so I do not think it is the whole building. Last night it dropped four times between nine and ten, and each time it came back by itself after about two or three minutes. During one of those drops I plugged my laptop into the router with the yellow cable that came in the box, and it lost the connection at the same moment as the wireless devices. I did not change any settings on the router and I have not installed anything new in the house except a second television. We pay for the three hundred megabit plan, and when it works the speed is close to that, so it is not a slow speed problem. I would like to know what else can be tried, and whether the line can be examined again, because we are paying for a service that we cannot rely on in the evenings. Please do not simply ask me to restart the router again, because that has already been done many times. Thank you for your help.",
+                "analysis_text": "Hello, I am writing because this has been going on for far too long and I would like someone to look at it properly. About three weeks ago we moved house the provider connected the fibre on the same day. At first everything was fine. Then on the second Sunday the internet started dropping in the evening, usually between eight and eleven, for a few minutes at a time. My husband works from home and I study online, so we both notice straight away. We restarted the router several times, and once we left it unplugged overnight. We moved the router away from the microwave the cordless handset, and we replaced the power adapter with the spare one from the box. Nothing changed. I called the helpline twice and both times I was asked to restart the router, which we had already done. A technician visited last Thursday and said the line looked fine, the problem came back the same night. I have checked the cable at the wall and it is firmly seated. The lights on the box are steady green when everything works. When the internet drops, the internet light blinks for a while and then returns. Our neighbour on the first floor says his connection is fine, so I do not think it is the whole building. Last night it dropped four times between nine and ten, and each time it came back by itself after about two or three minutes. During one of those drops I plugged my laptop into the router with the yellow cable that came in the box, and it lost the connection at the same moment as the wireless devices. I did not change any settings on the router and I have not installed anything new in the house except a second television. We pay for the three hundred megabit plan, and when it works the speed is close to that, so it is not a slow speed problem. I would like to know what else can be tried, and whether the line can be examined again, because we are paying for a service that we cannot rely on in the evenings. Please do not simply ask me to restart the router again, because that has already been done many times. Thank you for your help.",
+                "resolution": {
+                  "status": "needs_diagnostic_confirmation",
+                  "decision": {
+                    "action": "escalate",
+                    "priority": "normal",
+                    "reasons": [
+                      "customer_requested_support_contact"
+                    ],
+                    "target": "support_agent",
+                    "handoff_created": false
+                  },
+                  "validation": {
+                    "status": "passed",
+                    "checked_sources": 3,
+                    "issues": [],
+                    "scope": "Exact source spans, claim fields, conditional actions, reported-area scope checks and deterministic rendering; not real-world diagnosis or arbitrary-text entailment."
+                  },
+                  "method": "local_extractive_v1",
+                  "evidence_reuse": "not_used",
+                  "language_summary": null,
+                  "language_plan": null,
+                  "language_draft": null,
+                  "language_status": "disabled",
+                  "language_model": null,
+                  "language_provider": null,
+                  "faithfulness_status": "not_run",
+                  "faithfulness_issues": [],
+                  "language_error": null,
+                  "historical_cases": [
+                    {
+                      "citation_id": "T1",
+                      "doc_id": "syn_ticket_ID01_02",
+                      "chunk_id": 140,
+                      "title": "Intermittent broadband support case",
+                      "resolution": "Ticket syn_ticket_ID01_02; AI-authored synthetic; outcome: simulated_resolved.\nSimulated finding: optical loss events align with rain and a technician finds moisture at an external joint\nStep 1: Record the start and end of each interruption and whether it coincides with wet weather.\nStep 2: Ask whether a wired device also loses internet during the same interruption; record the fibre-box light labels.\nStep 3: Ask line support to compare optical-loss logs with the reported interruption times. If line loss is present, request a technician to inspect external joints for moisture.\nStep 4: Only if support confirms that optical loss events align with rain and a technician finds moisture at an external joint: have an authorised technician repair and seal the confirmed damaged joint.\nStep 5: After the authorised remedy, verify that line monitoring shows no optical-loss events during a later wet-weather check and the customer reports no repeat drop.\nSimulated completion: line monitoring shows no optical-loss events during a later wet-weather check and the customer reports no repeat drop",
+                      "outcome_status": "simulated_resolved",
+                      "is_synthetic": true,
+                      "relationship": "linked_procedure",
+                      "kb_refs": [
+                        "syn_kb_ID01"
+                      ],
+                      "resolution_steps": [
+                        {
+                          "text": "Record the start and end of each interruption and whether it coincides with wet weather.",
+                          "start": 195,
+                          "end": 283,
+                          "step_id": 1
+                        },
+                        {
+                          "text": "Ask whether a wired device also loses internet during the same interruption; record the fibre-box light labels.",
+                          "start": 292,
+                          "end": 403,
+                          "step_id": 2
+                        },
+                        {
+                          "text": "Ask line support to compare optical-loss logs with the reported interruption times. If line loss is present, request a technician to inspect external joints for moisture.",
+                          "start": 412,
+                          "end": 582,
+                          "step_id": 3
+                        },
+                        {
+                          "text": "Only if support confirms that optical loss events align with rain and a technician finds moisture at an external joint: have an authorised technician repair and seal the confirmed damaged joint.",
+                          "start": 591,
+                          "end": 785,
+                          "step_id": 4
+                        },
+                        {
+                          "text": "After the authorised remedy, verify that line monitoring shows no optical-loss events during a later wet-weather check and the customer reports no repeat drop.",
+                          "start": 794,
+                          "end": 953,
+                          "step_id": 5
+                        }
+                      ]
+                    },
+                    {
+                      "citation_id": "T2",
+                      "doc_id": "syn_ticket_ID02_02",
+                      "chunk_id": 148,
+                      "title": "Intermittent broadband support case",
+                      "resolution": "Ticket syn_ticket_ID02_02; AI-authored synthetic; outcome: simulated_resolved.\nSimulated finding: the line stays synchronized and provider monitoring shows peak-hour congestion on the access segment\nStep 1: Record when the evening drops start, how long they last, and whether the connection drops or only slows.\nStep 2: Ask whether a wired device also loses internet during the evening problem; do not repeat a completed wired test.\nStep 3: Ask network support whether the line stays connected during the evening problem and whether monitoring shows congestion on the local access segment.\nStep 4: Only if support confirms that the line stays synchronized and provider monitoring shows peak-hour congestion on the access segment: ask network operations to rebalance the affected capacity and monitor the next busy period.\nStep 5: After the authorised remedy, verify that the next evening wired check shows no repeat packet loss or dropped calls.\nSimulated completion: the next evening wired check shows no repeat packet loss or dropped calls",
+                      "outcome_status": "simulated_resolved",
+                      "is_synthetic": true,
+                      "relationship": "linked_procedure",
+                      "kb_refs": [
+                        "syn_kb_ID02"
+                      ],
+                      "resolution_steps": [
+                        {
+                          "text": "Record when the evening drops start, how long they last, and whether the connection drops or only slows.",
+                          "start": 207,
+                          "end": 311,
+                          "step_id": 1
+                        },
+                        {
+                          "text": "Ask whether a wired device also loses internet during the evening problem; do not repeat a completed wired test.",
+                          "start": 320,
+                          "end": 432,
+                          "step_id": 2
+                        },
+                        {
+                          "text": "Ask network support whether the line stays connected during the evening problem and whether monitoring shows congestion on the local access segment.",
+                          "start": 441,
+                          "end": 589,
+                          "step_id": 3
+                        },
+                        {
+                          "text": "Only if support confirms that the line stays synchronized and provider monitoring shows peak-hour congestion on the access segment: ask network operations to rebalance the affected capacity and monitor the next busy period.",
+                          "start": 598,
+                          "end": 821,
+                          "step_id": 4
+                        },
+                        {
+                          "text": "After the authorised remedy, verify that the next evening wired check shows no repeat packet loss or dropped calls.",
+                          "start": 830,
+                          "end": 945,
+                          "step_id": 5
+                        }
+                      ]
+                    }
+                  ],
+                  "agent_review_required": true,
+                  "draft": "Draft for agent review. A cause has not been confirmed.\n\nAlready attempted, according to the customer: We restarted the router several times; We moved the router away from the microwave the cordless handset; I have checked the cable at the wall and it is firmly seated\n\nCustomer-reported observations: moved house; evening; everything works; internet drops; evenings\n\n[S1] Ask an authorized agent to verify: the line stays synchronized and provider monitoring shows peak-hour congestion on the access segment Only if confirmed, the procedure proposes: ask network operations to rebalance the affected capacity and monitor the next busy period\n\n[S1] Restriction: Do not promise that a Wi-Fi channel change will repair provider congestion.\n\n[S2] Ask an authorized agent to verify: an authorised technician reproduces voltage drops with the ONT power adapter Only if confirmed, the procedure proposes: have the technician replace it with the provider-approved matching adapter\n\n[S2] Restriction: Do not suggest opening the adapter or using an incompatible supply.\n\n[S3] Ask an authorized agent to verify: optical loss events align with rain and a technician finds moisture at an external joint Only if confirmed, the procedure proposes: have an authorised technician repair and seal the confirmed damaged joint\n\n[S3] Restriction: Do not treat this as Wi-Fi interference or recommend repeated reboots.\n\nThe customer requested human support. Arrange a follow-up through the support desk; this demonstration has no telephone directory.\n\nThe cited procedures are fictional-provider examples and require review before use with a real provider.\n\nNext action: escalate. Priority: normal. Recommended reviewer: support_agent. No external handoff has been created.",
+                  "analysis": {
+                    "category": "intermittent_broadband",
+                    "scope_status": "supported",
+                    "scope_reason": "recognized_service_mention",
+                    "category_status": "predicted",
+                    "category_basis": "explicit_report",
+                    "category_evidence": [
+                      {
+                        "text": "internet drops",
+                        "start": 1021,
+                        "end": 1035
+                      }
+                    ],
+                    "routing_policy": "development_selected_v1",
+                    "candidates": [
+                      {
+                        "category": "broadband_outage",
+                        "score": 0.24899152860766352
+                      },
+                      {
+                        "category": "intermittent_broadband",
+                        "score": 0.23956181480088365
+                      },
+                      {
+                        "category": "router_ont_hardware",
+                        "score": 0.15580245494722758
+                      }
+                    ],
+                    "score_note": "Uncalibrated classifier scores; thresholds do not guarantee out-of-scope detection.",
+                    "products": [
+                      {
+                        "text": "fibre",
+                        "start": 181,
+                        "end": 186,
+                        "product": "broadband"
+                      },
+                      {
+                        "text": "router",
+                        "start": 466,
+                        "end": 472,
+                        "product": "router"
+                      },
+                      {
+                        "text": "handset",
+                        "start": 586,
+                        "end": 593,
+                        "product": "mobile"
+                      },
+                      {
+                        "text": "television",
+                        "start": 1613,
+                        "end": 1623,
+                        "product": "iptv"
+                      }
+                    ],
+                    "severity": {
+                      "value": "medium",
+                      "rule": "reported_degradation_or_work_impact",
+                      "evidence": [
+                        {
+                          "text": "drops",
+                          "start": 1030,
+                          "end": 1035
+                        }
+                      ],
+                      "method": "rules_v1"
+                    },
+                    "sentiment": {
+                      "value": "unknown",
+                      "rule": "no_explicit_tone",
+                      "evidence": [],
+                      "method": "rules_v1"
+                    },
+                    "actions": [
+                      {
+                        "text": "We restarted the router several times",
+                        "start": 449,
+                        "end": 486,
+                        "action": "restart_device",
+                        "status": "attempted"
+                      },
+                      {
+                        "text": "We moved the router away from the microwave the cordless handset",
+                        "start": 529,
+                        "end": 593,
+                        "action": "move_router",
+                        "status": "attempted"
+                      },
+                      {
+                        "text": "both times I was asked to restart the router",
+                        "start": 711,
+                        "end": 755,
+                        "action": "restart_device",
+                        "status": "suggested"
+                      },
+                      {
+                        "text": "I have checked the cable at the wall and it is firmly seated",
+                        "start": 888,
+                        "end": 948,
+                        "action": "check_cables",
+                        "status": "attempted"
+                      },
+                      {
+                        "text": "Please do not simply ask me to restart the router again",
+                        "start": 1914,
+                        "end": 1969,
+                        "action": "restart_device",
+                        "status": "suggested"
+                      }
+                    ],
+                    "reported_facts": [
+                      {
+                        "text": "moved house",
+                        "start": 142,
+                        "end": 153,
+                        "name": "account_change",
+                        "value": "relocation"
+                      },
+                      {
+                        "text": "evening",
+                        "start": 297,
+                        "end": 304,
+                        "name": "timing",
+                        "value": "peak_hours"
+                      },
+                      {
+                        "text": "everything works",
+                        "start": 994,
+                        "end": 1010,
+                        "name": "service_recovery",
+                        "value": "working"
+                      },
+                      {
+                        "text": "internet drops",
+                        "start": 1021,
+                        "end": 1035,
+                        "name": "connection_pattern",
+                        "value": "intermittent"
+                      },
+                      {
+                        "text": "evenings",
+                        "start": 1904,
+                        "end": 1912,
+                        "name": "timing",
+                        "value": "peak_hours"
+                      }
+                    ],
+                    "requests": [
+                      {
+                        "text": "helpline",
+                        "start": 692,
+                        "end": 700,
+                        "kind": "contact_support"
+                      }
+                    ],
+                    "needs_clarification": false,
+                    "clarification_questions": [],
+                    "model_version": "000800b1c903f40a",
+                    "language_method": "rules_v1",
+                    "language_provider": null,
+                    "language_model": null,
+                    "language_error": null,
+                    "elapsed_ms": 24763.30265800061
+                  },
+                  "suggestions": [
+                    {
+                      "citation_id": "S1",
+                      "required_finding": "the line stays synchronized and provider monitoring shows peak-hour congestion on the access segment",
+                      "proposed_action": "ask network operations to rebalance the affected capacity and monitor the next busy period",
+                      "restriction": "Do not promise that a Wi-Fi channel change will repair provider congestion.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S2",
+                      "required_finding": "an authorised technician reproduces voltage drops with the ONT power adapter",
+                      "proposed_action": "have the technician replace it with the provider-approved matching adapter",
+                      "restriction": "Do not suggest opening the adapter or using an incompatible supply.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    },
+                    {
+                      "citation_id": "S3",
+                      "required_finding": "optical loss events align with rain and a technician finds moisture at an external joint",
+                      "proposed_action": "have an authorised technician repair and seal the confirmed damaged joint",
+                      "restriction": "Do not treat this as Wi-Fi interference or recommend repeated reboots.",
+                      "status": "requires_agent_confirmation",
+                      "repeated_actions": []
+                    }
+                  ],
+                  "sources": [
+                    {
+                      "citation_id": "S1",
+                      "doc_id": "syn_kb_ID02",
+                      "chunk_id": 14,
+                      "title": "Evening connection drops: check access-network congestion",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "fibre_broadband",
+                          "start": 89,
+                          "end": 104,
+                          "field": "scope",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "the line stays synchronized and provider monitoring shows peak-hour congestion on the access segment",
+                          "start": 676,
+                          "end": 776,
+                          "field": "condition",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "ask network operations to rebalance the affected capacity and monitor the next busy period",
+                          "start": 814,
+                          "end": 904,
+                          "field": "action",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "Do not promise that a Wi-Fi channel change will repair provider congestion.",
+                          "start": 1101,
+                          "end": 1176,
+                          "field": "restriction",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "Record when the evening drops start, how long they last, and whether the connection drops or only slows.",
+                          "start": 156,
+                          "end": 260,
+                          "field": "verify",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "Record when the evening drops start, how long they last, and whether the connection drops or only slows. Ask whether a wired device also loses internet during the evening problem; do not repeat a completed wired test.",
+                          "start": 278,
+                          "end": 495,
+                          "field": "customer_checks",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "Ask network support whether the line stays connected during the evening problem and whether monitoring shows congestion on the local access segment.",
+                          "start": 510,
+                          "end": 658,
+                          "field": "agent_checks",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "If the required findings are not established or service still fails after the authorised remedy, refer the recorded results to specialist support; do not guess a repair.",
+                          "start": 918,
+                          "end": 1087,
+                          "field": "escalate_if",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "the next evening wired check shows no repeat packet loss or dropped calls",
+                          "start": 1189,
+                          "end": 1262,
+                          "field": "completion",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "Record when the evening drops start, how long they last, and whether the connection drops or only slows.",
+                          "start": 1271,
+                          "end": 1375,
+                          "field": "plan_step",
+                          "step_id": 1,
+                          "phase": "customer_check",
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "Ask whether a wired device also loses internet during the evening problem; do not repeat a completed wired test.",
+                          "start": 1384,
+                          "end": 1496,
+                          "field": "plan_step",
+                          "step_id": 2,
+                          "phase": "customer_check",
+                          "skip_if_fact": "wired_connection"
+                        },
+                        {
+                          "text": "Ask network support whether the line stays connected during the evening problem and whether monitoring shows congestion on the local access segment.",
+                          "start": 1505,
+                          "end": 1653,
+                          "field": "plan_step",
+                          "step_id": 3,
+                          "phase": "agent_check",
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "Only if support confirms that the line stays synchronized and provider monitoring shows peak-hour congestion on the access segment: ask network operations to rebalance the affected capacity and monitor the next busy period.",
+                          "start": 1662,
+                          "end": 1885,
+                          "field": "plan_step",
+                          "step_id": 4,
+                          "phase": "conditional_fix",
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "After the authorised remedy, verify that the next evening wired check shows no repeat packet loss or dropped calls.",
+                          "start": 1894,
+                          "end": 2009,
+                          "field": "plan_step",
+                          "step_id": 5,
+                          "phase": "completion",
+                          "skip_if_fact": null
+                        }
+                      ],
+                      "quote_scope": "parent_document"
+                    },
+                    {
+                      "citation_id": "S2",
+                      "doc_id": "syn_kb_ID04",
+                      "chunk_id": 16,
+                      "title": "Fibre-box power interruptions: check the approved adapter",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "fibre_broadband",
+                          "start": 89,
+                          "end": 104,
+                          "field": "scope",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "an authorised technician reproduces voltage drops with the ONT power adapter",
+                          "start": 755,
+                          "end": 831,
+                          "field": "condition",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "have the technician replace it with the provider-approved matching adapter",
+                          "start": 869,
+                          "end": 943,
+                          "field": "action",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "Do not suggest opening the adapter or using an incompatible supply.",
+                          "start": 1140,
+                          "end": 1207,
+                          "field": "restriction",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "Ask whether the fibre box loses power or restarts during the interruption; a green router light does not prove the fibre box is healthy.",
+                          "start": 156,
+                          "end": 292,
+                          "field": "verify",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "Ask whether the fibre box loses power or restarts during the interruption; a green router light does not prove the fibre box is healthy. Record the adapter label and any power-light changes without opening the adapter or trying a different voltage supply.",
+                          "start": 310,
+                          "end": 565,
+                          "field": "customer_checks",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "Ask an authorised technician to test the fibre-box power adapter under load; the customer should not open the adapter or measure live electrical connections.",
+                          "start": 580,
+                          "end": 737,
+                          "field": "agent_checks",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "If the required findings are not established or service still fails after the authorised remedy, refer the recorded results to specialist support; do not guess a repair.",
+                          "start": 957,
+                          "end": 1126,
+                          "field": "escalate_if",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "the fibre box stays powered and the internet session remains stable during observation",
+                          "start": 1220,
+                          "end": 1306,
+                          "field": "completion",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "Ask whether the fibre box loses power or restarts during the interruption; a green router light does not prove the fibre box is healthy.",
+                          "start": 1315,
+                          "end": 1451,
+                          "field": "plan_step",
+                          "step_id": 1,
+                          "phase": "customer_check",
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "Record the adapter label and any power-light changes without opening the adapter or trying a different voltage supply.",
+                          "start": 1460,
+                          "end": 1578,
+                          "field": "plan_step",
+                          "step_id": 2,
+                          "phase": "customer_check",
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "Ask an authorised technician to test the fibre-box power adapter under load; the customer should not open the adapter or measure live electrical connections.",
+                          "start": 1587,
+                          "end": 1744,
+                          "field": "plan_step",
+                          "step_id": 3,
+                          "phase": "agent_check",
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "Only if support confirms that an authorised technician reproduces voltage drops with the ONT power adapter: have the technician replace it with the provider-approved matching adapter.",
+                          "start": 1753,
+                          "end": 1936,
+                          "field": "plan_step",
+                          "step_id": 4,
+                          "phase": "conditional_fix",
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "After the authorised remedy, verify that the fibre box stays powered and the internet session remains stable during observation.",
+                          "start": 1945,
+                          "end": 2073,
+                          "field": "plan_step",
+                          "step_id": 5,
+                          "phase": "completion",
+                          "skip_if_fact": null
+                        }
+                      ],
+                      "quote_scope": "parent_document"
+                    },
+                    {
+                      "citation_id": "S3",
+                      "doc_id": "syn_kb_ID01",
+                      "chunk_id": 13,
+                      "title": "Intermittent line loss after wet weather",
+                      "is_synthetic": true,
+                      "authority": "fictional_provider_policy",
+                      "quotes": [
+                        {
+                          "text": "fibre_broadband",
+                          "start": 89,
+                          "end": 104,
+                          "field": "scope",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "optical loss events align with rain and a technician finds moisture at an external joint",
+                          "start": 665,
+                          "end": 753,
+                          "field": "condition",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "have an authorised technician repair and seal the confirmed damaged joint",
+                          "start": 791,
+                          "end": 864,
+                          "field": "action",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "Do not treat this as Wi-Fi interference or recommend repeated reboots.",
+                          "start": 1061,
+                          "end": 1131,
+                          "field": "restriction",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "Record the start and end of each interruption and whether it coincides with wet weather.",
+                          "start": 156,
+                          "end": 244,
+                          "field": "verify",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "Record the start and end of each interruption and whether it coincides with wet weather. Ask whether a wired device also loses internet during the same interruption; record the fibre-box light labels.",
+                          "start": 262,
+                          "end": 462,
+                          "field": "customer_checks",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "Ask line support to compare optical-loss logs with the reported interruption times. If line loss is present, request a technician to inspect external joints for moisture.",
+                          "start": 477,
+                          "end": 647,
+                          "field": "agent_checks",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "If the required findings are not established or service still fails after the authorised remedy, refer the recorded results to specialist support; do not guess a repair.",
+                          "start": 878,
+                          "end": 1047,
+                          "field": "escalate_if",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "line monitoring shows no optical-loss events during a later wet-weather check and the customer reports no repeat drop",
+                          "start": 1144,
+                          "end": 1261,
+                          "field": "completion",
+                          "step_id": null,
+                          "phase": null,
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "Record the start and end of each interruption and whether it coincides with wet weather.",
+                          "start": 1270,
+                          "end": 1358,
+                          "field": "plan_step",
+                          "step_id": 1,
+                          "phase": "customer_check",
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "Ask whether a wired device also loses internet during the same interruption; record the fibre-box light labels.",
+                          "start": 1367,
+                          "end": 1478,
+                          "field": "plan_step",
+                          "step_id": 2,
+                          "phase": "customer_check",
+                          "skip_if_fact": "wired_connection"
+                        },
+                        {
+                          "text": "Ask line support to compare optical-loss logs with the reported interruption times. If line loss is present, request a technician to inspect external joints for moisture.",
+                          "start": 1487,
+                          "end": 1657,
+                          "field": "plan_step",
+                          "step_id": 3,
+                          "phase": "agent_check",
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "Only if support confirms that optical loss events align with rain and a technician finds moisture at an external joint: have an authorised technician repair and seal the confirmed damaged joint.",
+                          "start": 1666,
+                          "end": 1860,
+                          "field": "plan_step",
+                          "step_id": 4,
+                          "phase": "conditional_fix",
+                          "skip_if_fact": null
+                        },
+                        {
+                          "text": "After the authorised remedy, verify that line monitoring shows no optical-loss events during a later wet-weather check and the customer reports no repeat drop.",
+                          "start": 1869,
+                          "end": 2028,
+                          "field": "plan_step",
+                          "step_id": 5,
+                          "phase": "completion",
+                          "skip_if_fact": null
+                        }
+                      ],
+                      "quote_scope": "parent_document"
+                    }
+                  ],
+                  "clarification_questions": [],
+                  "acknowledged_actions": [
+                    "We restarted the router several times",
+                    "We moved the router away from the microwave the cordless handset",
+                    "I have checked the cable at the wall and it is firmly seated"
+                  ],
+                  "contact_status": "unverified",
+                  "customer_plan": {
+                    "title": "Customer reports service recovered",
+                    "summary": "No further repair is recommended from the information provided.",
+                    "steps": [
+                      "Monitor the connection and record when the issue returns, if it does."
+                    ],
+                    "note": "An agent can review the outcome before closing the case."
+                  },
+                  "limitations": [
+                    "Extractive local drafting; no generative LLM is used.",
+                    "Only complete authored fictional-provider KB procedures are supported by this draft version.",
+                    "Exact-source validation does not confirm applicability or real-world diagnostic correctness.",
+                    "Optional cross-encoder reranking skipped for the long complaint; hybrid retrieval used pooled embeddings of all query segments."
+                  ],
+                  "elapsed_ms": 1512.0591890008654
+                }
+              }
+            ],
+            "storage": "client_replayed",
+            "conversation_id": null,
+            "revision": null,
+            "limitations": [
+              "Send the same original query and full customer-turn history on each request.",
+              "Issue separation uses explicit service changes and does not recognize every compound complaint.",
+              "Observations are customer reports, not verified diagnostic findings; no repairs or handoffs are executed."
+            ]
+          }
+        }
+      ],
+      "manual_scores": {
+        "context": null,
+        "relevance": null,
+        "conversation": null,
+        "grounding": null,
+        "clarity": null
+      },
+      "review_notes": ""
+    }
+  ],
+  "run_complete": true,
+  "fingerprint": {
+    "code_sha256": "aaee9b2b5d15d9efd44cdab31b32302f67ce742e123f038fb16af4a4784dab14",
+    "artifacts": {
+      "classifier": "438c5ca6acd6eb81f06d56c085dccaa645919aa084842bc06452f64fcab21050",
+      "routing": "6b4bf4e394433dd562e681f889df8f0c163d652e2e51a8c870bc05dbe3a1a47e",
+      "corpus": "0367b21eedb2b19e8f321ba00ff6922d081f2781cfcd28a4b2e5ace7b76ef8a5",
+      "chunks": "322bda7bf324775d11b7e6ff99df2ab4988063058074d91277bc74cab816afdb"
+    },
+    "llm_enabled": false,
+    "groq_model": "openai/gpt-oss-20b",
+    "gemini_model": "gemini-2.5-flash",
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "embedding_revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+    "reranker_model": "cross-encoder/ms-marco-MiniLM-L6-v2",
+    "reranker_revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a"
+  }
+}

@@ -7,6 +7,8 @@ import sys
 COMMANDS = {
     "setup": "setup_database",
     "prepare": "prepare_synthetic",
+    "publish-v3": "publish_telecom_v3",
+    "publish-baselines": "publish_baseline_update",
     "chunk": "chunk_documents",
     "index": "index_documents",
     "check": "check_index",
@@ -22,6 +24,7 @@ COMMANDS = {
     "review": "review_quality_report",
     "ratings": "score_response_quality",
     "load": "load_test",
+    "demo": "verify_demo",
     "stage": "stage_corpus_update",
     "evolve": "demonstrate_evolution",
 }

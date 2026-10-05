@@ -1,0 +1,408 @@
+{
+  "authorship": "AI-authored synthetic; no telecom expert review",
+  "reference_urls": [
+    "https://www.bt.com/help/broadband/fix-a-problem/broadband-and-wi-fi/fibre-to-the-home--check-your-wiring-and-set-up",
+    "https://www.bt.com/help/broadband/manage-service/lights-on-the-openreach-modem",
+    "https://www.att.com/support/article/internet/KM1010340/"
+  ],
+  "procedures": {
+    "BB01": {
+      "customer_checks": [
+        "Ask which light on the fibre box is red: LOS, PON or Power. Record whether the power light stays on.",
+        "Ask whether nearby customers also lost service; do not disconnect, bend or look into the fibre cable."
+      ],
+      "title": "Red LOS light or optical signal loss",
+      "diagnostic_gate": "an optical test finds no received signal, the account is active, and a technician confirms an external-line fault",
+      "agent_checks": "Ask provider support to check account and area-outage status, test the optical signal, and identify whether the external line or fibre box needs repair.",
+      "action": "request an authorised technician to inspect and repair the confirmed external-line fault",
+      "completion": "the fibre box shows the normal connection indicators for its model and a connected device can browse again"
+    },
+    "BB02": {
+      "customer_checks": [
+        "Record when the account or plan migration completed and whether service ever worked afterwards.",
+        "Record the fibre-box light labels and whether both wired and wireless devices lack internet."
+      ]
+    },
+    "BB03": {
+      "customer_checks": [
+        "Record the affected street or building and when customers first lost service.",
+        "Collect reports from other affected locations; do not ask each customer to reset equipment."
+      ],
+      "title": "Shared broadband outage across a street or building",
+      "agent_checks": "Ask network support to match the affected locations to an active provider incident and record the confirmed update reference.",
+      "completion": "the provider records incident recovery and affected customers confirm browsing works again"
+    },
+    "BB04": {
+      "customer_checks": [
+        "Record the move date and whether internet has worked at the new address.",
+        "Ask support to match the installed fibre box to the new-address order using its secure account workflow."
+      ]
+    },
+    "BD01": {
+      "customer_checks": [
+        "Record the invoice, payment dates and approximate amounts; do not collect card numbers or banking passwords.",
+        "Ask whether both payments are settled or one is still pending; a pending hold is not a confirmed duplicate payment."
+      ],
+      "title": "Two settled payments for one invoice",
+      "agent_checks": "Ask billing support to match both settled payment entries to the same invoice and rule out a pending bank hold or a different invoice.",
+      "diagnostic_gate": "the ledger confirms two settled payments against the same invoice",
+      "action": "ask authorised billing staff to reconcile the duplicate and initiate the approved adjustment",
+      "completion": "one valid invoice payment remains and billing records the duplicate adjustment with a reference"
+    },
+    "BD02": {
+      "customer_checks": [
+        "Record the add-on name, charge period and when the customer first noticed it.",
+        "Ask whether the customer recalls accepting the add-on and through which channel; do not treat recollection as proof of consent."
+      ]
+    },
+    "BD03": {
+      "customer_checks": [
+        "Record the old plan, new plan and effective change date shown on the bill.",
+        "Compare the start and end dates of each billed period before treating two line items as duplicate charges."
+      ]
+    },
+    "BD04": {
+      "customer_checks": [
+        "Record the cancellation confirmation date and the effective end date shown in the notice.",
+        "Identify the billed period after cancellation; keep any genuinely used service period separate."
+      ]
+    },
+    "HW01": {
+      "customer_checks": [
+        "Ask whether the router power light is off, intermittent or steady, and whether the socket powers another safe appliance.",
+        "Record the power-adapter label without opening it or substituting an unapproved supply."
+      ]
+    },
+    "HW02": {
+      "customer_checks": [
+        "Record the router model, update time and light pattern after the failed update.",
+        "Keep the device powered as directed by its approved support guide; do not install an image downloaded from an unverified site."
+      ]
+    },
+    "HW03": {
+      "customer_checks": [
+        "Ask whether the router is in an enclosed space or has blocked ventilation, and whether it feels unusually hot.",
+        "Keep it in a safe ventilated position; stop using it if there is smoke, a burning smell or visible damage."
+      ]
+    },
+    "HW04": {
+      "customer_checks": [
+        "Record which Ethernet port and device are affected and whether Wi-Fi or another port still works.",
+        "If safe and not already tried, compare using a known-good Ethernet cable and another available port."
+      ]
+    },
+    "ID01": {
+      "customer_checks": [
+        "Record the start and end of each interruption and whether it coincides with wet weather.",
+        "Ask whether a wired device also loses internet during the same interruption; record the fibre-box light labels."
+      ],
+      "title": "Intermittent line loss after wet weather",
+      "agent_checks": "Ask line support to compare optical-loss logs with the reported interruption times. If line loss is present, request a technician to inspect external joints for moisture.",
+      "diagnostic_gate": "optical loss events align with rain and a technician finds moisture at an external joint",
+      "action": "have an authorised technician repair and seal the confirmed damaged joint",
+      "completion": "line monitoring shows no optical-loss events during a later wet-weather check and the customer reports no repeat drop"
+    },
+    "ID02": {
+      "customer_checks": [
+        "Record when the evening drops start, how long they last, and whether the connection drops or only slows.",
+        "Ask whether a wired device also loses internet during the evening problem; do not repeat a completed wired test."
+      ],
+      "title": "Evening connection drops: check access-network congestion",
+      "agent_checks": "Ask network support whether the line stays connected during the evening problem and whether monitoring shows congestion on the local access segment.",
+      "diagnostic_gate": "the line stays synchronized and provider monitoring shows peak-hour congestion on the access segment",
+      "action": "ask network operations to rebalance the affected capacity and monitor the next busy period",
+      "completion": "the next evening wired check shows no repeat packet loss or dropped calls"
+    },
+    "ID03": {
+      "customer_checks": [
+        "Record the interval between interruptions and whether the router stays powered.",
+        "Ask whether wired and wireless devices stop at the same time; record any session error shown by the router."
+      ]
+    },
+    "ID04": {
+      "customer_checks": [
+        "Ask whether the fibre box loses power or restarts during the interruption; a green router light does not prove the fibre box is healthy.",
+        "Record the adapter label and any power-light changes without opening the adapter or trying a different voltage supply."
+      ],
+      "title": "Fibre-box power interruptions: check the approved adapter",
+      "agent_checks": "Ask an authorised technician to test the fibre-box power adapter under load; the customer should not open the adapter or measure live electrical connections.",
+      "diagnostic_gate": "an authorised technician reproduces voltage drops with the ONT power adapter",
+      "action": "have the technician replace it with the provider-approved matching adapter",
+      "completion": "the fibre box stays powered and the internet session remains stable during observation"
+    },
+    "MC01": {
+      "customer_checks": [
+        "Record whether calls or data fail indoors, outdoors or in both locations.",
+        "If possible, compare another compatible device at the same location; do not interpret one weak-signal report as a network outage."
+      ]
+    },
+    "MC02": {
+      "customer_checks": [
+        "Record the affected location, start time and whether other nearby subscribers are affected.",
+        "Ask whether calls, SMS and data are all affected; retain any working services in the report."
+      ]
+    },
+    "MC03": {
+      "customer_checks": [
+        "Record the operator name shown in network-selection settings and the location of the failure.",
+        "Ask whether the customer recently selected an operator manually; do not change settings without consent."
+      ]
+    },
+    "MC04": {
+      "customer_checks": [
+        "Record the handset model, location and whether the problem follows the phone to other locations.",
+        "If the customer can safely do so, record a compatible known-good SIM cross-test; do not request SIM security codes in chat."
+      ]
+    },
+    "MD01": {
+      "customer_checks": [
+        "Record the device model, data error and whether calls or SMS still work.",
+        "Ask support to compare the APN with the provider's current authenticated device guide; do not invent APN values."
+      ]
+    },
+    "MD02": {
+      "customer_checks": [
+        "Record the plan and the usage shown in the provider app for the current billing period.",
+        "Check whether the slowdown began after the displayed allowance was used; retain the customer's observed speeds."
+      ]
+    },
+    "MD03": {
+      "customer_checks": [
+        "Ask whether the phone uses one SIM or two and which subscription is selected for mobile data.",
+        "Confirm which subscription has active data service before changing its preference with consent."
+      ]
+    },
+    "MD04": {
+      "customer_checks": [
+        "Record the purchased plan, change date and when data stopped working.",
+        "Ask support to check the purchased data entitlement and verify that the device APN is correct."
+      ]
+    },
+    "NP01": {
+      "customer_checks": [
+        "Record the rejected transfer status and the reason given by the provider.",
+        "Use a secure support channel to verify the donor account details; do not ask for identity documents in this chat."
+      ]
+    },
+    "NP02": {
+      "customer_checks": [
+        "Record the accepted transfer status and scheduled date shown by the provider.",
+        "Confirm whether the old service still works and whether the recorded transfer window has elapsed."
+      ]
+    },
+    "NP03": {
+      "customer_checks": [
+        "Record which originating networks can and cannot reach the transferred number.",
+        "Collect approximate failed-call times for a routing trace; do not claim a particular operator is at fault without a trace."
+      ]
+    },
+    "NP04": {
+      "customer_checks": [
+        "Record the transfer order status and authorization-expiry message.",
+        "Guide the customer to the provider's authenticated authorization workflow; never collect the authorization code in this chat."
+      ]
+    },
+    "PR01": {
+      "customer_checks": [
+        "Record the bill payment date and the current service restriction shown by the provider.",
+        "Ask whether the payment is settled; a receipt alone does not establish that restoration reached the network."
+      ]
+    },
+    "PR02": {
+      "customer_checks": [
+        "Record the payment status shown by the bank and provider without collecting account or card credentials.",
+        "Separate a pending authorization from a settled payment before advising another payment."
+      ]
+    },
+    "PR03": {
+      "customer_checks": [
+        "Record which customer-owned account should have received the payment.",
+        "Ask billing support to trace the payment through its secure ownership-verification workflow."
+      ]
+    },
+    "PR04": {
+      "customer_checks": [
+        "Record the restriction message and whether the provider confirms the invoice is paid.",
+        "Ask which review team owns the restriction; do not assume another payment will clear a non-billing hold."
+      ]
+    },
+    "RM01": {
+      "customer_checks": [
+        "Record the visited country, purchased roaming pack and whether calls or SMS work.",
+        "Ask support to verify that roaming data is enabled on the account; device roaming alone does not establish account eligibility."
+      ]
+    },
+    "RM02": {
+      "customer_checks": [
+        "Record the visited country and selected local operator.",
+        "Ask support to check the current partner list for the customer's plan; do not invent a supported operator name."
+      ]
+    },
+    "RM03": {
+      "customer_checks": [
+        "Record the purchased pack's start date, end date and the customer's travel dates.",
+        "Check whether the current date is within the displayed validity period before changing or buying a pack."
+      ]
+    },
+    "RM04": {
+      "customer_checks": [
+        "Record the pack's displayed remaining data and validity period.",
+        "Check whether an additional entitlement is already active before suggesting a paid top-up."
+      ]
+    },
+    "SA01": {
+      "customer_checks": [
+        "Record the activation order status and whether the physical SIM has ever worked.",
+        "Ask activation support to compare the order and SIM identifier through its authenticated workflow."
+      ]
+    },
+    "SA02": {
+      "customer_checks": [
+        "Record the eSIM activation error and whether the profile was already downloaded to another device.",
+        "Use the authenticated transfer workflow; do not share or repeatedly scan a private activation QR code in this chat."
+      ]
+    },
+    "SA03": {
+      "customer_checks": [
+        "Record the activation status and the outstanding verification task shown by the provider.",
+        "Direct the customer to the secure verification workflow; do not collect identity documents here."
+      ]
+    },
+    "SA04": {
+      "customer_checks": [
+        "Record the exact device variant and the eSIM error.",
+        "Check the provider's current supported-device list before recommending another profile download."
+      ]
+    },
+    "SM01": {
+      "customer_checks": [
+        "Record which sender's messages are missing, approximate request times and whether ordinary SMS arrives.",
+        "Ask the customer to check the sender's official status or support route; never ask them to reveal an OTP."
+      ]
+    },
+    "SM02": {
+      "customer_checks": [
+        "Record whether incoming SMS, outgoing SMS or both fail.",
+        "Ask messaging support to verify the service-center profile; do not invent a number for the customer to enter."
+      ]
+    },
+    "SM03": {
+      "customer_checks": [
+        "Ask whether the affected sender appears in the device's blocked or filtered messages.",
+        "Record whether other messages arrive and use only the device's supported filtering controls with consent."
+      ]
+    },
+    "SM04": {
+      "customer_checks": [
+        "Record the port-completion date and whether voice calls now work.",
+        "Collect failed SMS times and sender networks for a routing trace; do not treat working calls as proof SMS routing is complete."
+      ]
+    },
+    "SP01": {
+      "customer_checks": [
+        "Record the purchased speed, upgrade date and a wired speed measurement if available.",
+        "Ask support to compare the purchased tier with the provisioned speed profile; Wi-Fi speed alone cannot verify the line tier."
+      ]
+    },
+    "SP02": {
+      "customer_checks": [
+        "Record the affected wired device and its negotiated link speed, if displayed.",
+        "If not already tried, compare a compatible known-good Ethernet cable; retain the before-and-after link readings."
+      ]
+    },
+    "SP03": {
+      "customer_checks": [
+        "Record wired speeds at a quiet time and during the recurring busy period.",
+        "Record whether the physical line remains connected and whether other customers report the same timing."
+      ]
+    },
+    "SP04": {
+      "customer_checks": [
+        "Ask whether backups, uploads or cameras are active when calls or browsing slow down.",
+        "With consent, briefly pause the identified upload and compare the connection; do not disable security services indiscriminately."
+      ]
+    },
+    "TV01": {
+      "customer_checks": [
+        "Record whether all IPTV channels buffer and whether the set-top box uses Wi-Fi or Ethernet.",
+        "Compare other streaming services during the same failure and record whether they remain usable."
+      ]
+    },
+    "TV02": {
+      "customer_checks": [
+        "Record the missing channel or package and whether the provider bill shows the purchase.",
+        "Ask whether free channels or the local box menu work; a missing entitlement is different from a blank display."
+      ]
+    },
+    "TV03": {
+      "customer_checks": [
+        "Ask whether the TV shows the set-top box's local menu and confirm the selected TV input.",
+        "If safe and not already tried, compare a compatible known-good HDMI cable; record whether the local menu returns."
+      ]
+    },
+    "TV04": {
+      "customer_checks": [
+        "Record the affected channel, time and whether other channels work.",
+        "Check the provider's confirmed content-incident status rather than repeatedly resetting the box."
+      ]
+    },
+    "VC01": {
+      "customer_checks": [
+        "Record the outgoing-call error and whether incoming calls or data still work.",
+        "Ask support to check account restrictions through authentication; do not change barring codes from an unverified guide."
+      ]
+    },
+    "VC02": {
+      "customer_checks": [
+        "Record failed-call times, locations and whether the calls fail while moving.",
+        "Ask network support to compare the failures with handover traces; signal bars alone do not identify the fault."
+      ]
+    },
+    "VC03": {
+      "customer_checks": [
+        "Record the handset model and whether data works while voice calls fail.",
+        "Ask support to verify device compatibility and the line's voice-registration profile."
+      ]
+    },
+    "VC04": {
+      "customer_checks": [
+        "Record which calls are diverted and whether the customer recognises the forwarding destination.",
+        "Review forwarding settings through authenticated support with consent; do not publish destination numbers in chat."
+      ]
+    },
+    "WF01": {
+      "customer_checks": [
+        "Record the rooms where Wi-Fi fails and whether it improves near the router.",
+        "Ask whether Ethernet stays connected during the same problem; do not label a Wi-Fi coverage issue as a line outage."
+      ],
+      "title": "Wi-Fi weak in some rooms while the line works",
+      "agent_checks": "Ask wireless support to compare signal readings in affected rooms with a location near the router and verify that the wired connection stays stable.",
+      "completion": "wireless signal and browsing improve in the previously affected rooms",
+      "diagnostic_gate": "a wireless survey confirms weak signal in the affected rooms while the wired connection remains stable",
+      "action": "agree an approved router position or compatible coverage extender with wireless support"
+    },
+    "WF02": {
+      "customer_checks": [
+        "Record whether all wireless devices fail and whether Ethernet stays connected at the same time.",
+        "Compare a wireless device near the router with the affected room and record where drops occur; keep the wired result for comparison."
+      ],
+      "title": "Wi-Fi drops on multiple devices while Ethernet works",
+      "agent_checks": "Ask wireless support to measure channel interference and confirm that simultaneous wired tests and the router internet connection remain normal.",
+      "completion": "wireless retries decrease and the affected devices remain connected during the original problem period",
+      "diagnostic_gate": "a wireless survey confirms channel interference while simultaneous wired tests and the router internet connection remain normal",
+      "action": "have wireless support select an approved channel and recheck device compatibility"
+    },
+    "WF03": {
+      "customer_checks": [
+        "Record the appliance model and which Wi-Fi bands it supports.",
+        "Check whether the router advertises a compatible band and security mode; do not weaken security merely to force a connection."
+      ]
+    },
+    "WF04": {
+      "customer_checks": [
+        "Record the affected laptop and the exact connection error; confirm other devices still connect.",
+        "Ask whether the Wi-Fi name or password recently changed; credentials should be entered locally, not shared in chat."
+      ]
+    }
+  }
+}

@@ -14,6 +14,10 @@ def physical_damage(analysis):
 
 def procedure_steps(response):
     """Render ordered source checks and keep all remedies conditional on the full gate."""
+    if response.sources and all(
+        any(q.field == "plan_step" for q in source.quotes) for source in response.sources
+    ):
+        return ordered_procedure_steps(response)
     steps = []
     if response.acknowledged_actions:
         steps.append(
@@ -80,6 +84,67 @@ def procedure_steps(response):
     return prefix + common + steps[len(prefix) :] + ending
 
 
+def ordered_procedure_steps(response):
+    """Use exact v3 step spans; attach a ticket citation only to an exact shared step."""
+    steps = []
+    if response.acknowledged_actions:
+        steps.append(
+            "Do not repeat completed checks: " + "; ".join(response.acknowledged_actions) + "."
+        )
+    known = {f.name for f in response.analysis.reported_facts}
+    attempted = {a.action for a in response.analysis.actions if a.status == "attempted"}
+    completion = []
+    seen = {}
+    for index, source in enumerate(response.sources):
+        suggestion = next(s for s in response.suggestions if s.citation_id == source.citation_id)
+        for quote in sorted(
+            (q for q in source.quotes if q.field == "plan_step"), key=lambda q: q.step_id
+        ):
+            if quote.phase == "conditional_fix" and suggestion.repeated_actions:
+                continue
+            if quote.skip_if_fact in known:
+                continue
+            if quote.phase == "customer_check" and attempted & {
+                a.action for a in extract_actions(quote.text)
+            }:
+                continue
+            # The primary procedure provides the investigation sequence. Alternatives
+            # contribute a fully gated remedy, rather than another complete checklist.
+            if index and quote.phase not in {"conditional_fix", "completion"}:
+                continue
+            citations = [source.citation_id]
+            for case in response.historical_cases:
+                if (
+                    case.relationship == "linked_procedure"
+                    and source.doc_id in case.kb_refs
+                    and any(
+                        h.text == quote.text and case.resolution[h.start : h.end] == h.text
+                        for h in case.resolution_steps
+                    )
+                ):
+                    citations.append(case.citation_id)
+                    break
+            displayed = quote.text
+            if (
+                quote.phase == "customer_check"
+                and displayed.startswith("Ask which light on the fibre box is red:")
+                and any(
+                    f.name == "optical_signal" and "los" in f.text.lower()
+                    for f in response.analysis.reported_facts
+                )
+            ):
+                displayed = displayed[displayed.index("Record whether") :]
+            text = displayed + " " + " ".join(f"[{c}]" for c in citations)
+            if quote.phase == "completion":
+                completion.append(text)
+            elif quote.text not in seen:
+                seen[quote.text] = len(steps)
+                steps.append(text)
+    if completion:
+        steps.append(" ".join(completion))
+    return steps
+
+
 def procedure_note(response):
     restrictions = " ".join(
         f"{item.restriction} [{item.citation_id}]"
@@ -126,9 +191,10 @@ def customer_plan(response):
         )
     if analysis.scope_status == "unsupported":
         return CustomerPlan(
-            title="This needs another support service",
-            summary="This assistant handles telecom complaints. We cannot recommend a repair for this request.",
-            steps=["Contact the organization responsible for the affected service."],
+            title="This request is irrelevant here",
+            summary="This assistant handles telecom service and billing complaints. Please paste the customer's actual complaint, including the affected service and symptoms.",
+            steps=[],
+            note="General-knowledge questions and requests to generate a complaint are outside this assistant's scope.",
         )
     if physical_damage(analysis):
         water = any(

@@ -1,8 +1,17 @@
 """Expose resolved case evidence without promoting historical outcomes to current diagnoses."""
 
+import re
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
+from app.understanding.models import TextEvidence
+
+
+class HistoricalStep(TextEvidence):
+    """Keep the exact span of a step in a simulated ticket resolution."""
+
+    step_id: int = Field(ge=1, le=10)
 
 
 class HistoricalCase(BaseModel):
@@ -16,6 +25,8 @@ class HistoricalCase(BaseModel):
     outcome_status: str
     is_synthetic: bool
     relationship: Literal["linked_procedure", "similar_category"] = "linked_procedure"
+    kb_refs: list[str] = Field(default_factory=list)
+    resolution_steps: list[HistoricalStep] = Field(default_factory=list)
 
 
 def select_history(results, sources, limit=3, *, related_categories=()):
@@ -66,6 +77,13 @@ def select_history(results, sources, limit=3, *, related_categories=()):
                 relationship="linked_procedure"
                 if allowed.intersection(refs)
                 else "similar_category",
+                kb_refs=refs,
+                resolution_steps=[
+                    HistoricalStep(
+                        step_id=int(m.group(1)), text=m.group(2), start=m.start(2), end=m.end(2)
+                    )
+                    for m in re.finditer(r"^Step ([1-9]): ([^\r\n]+)$", row.resolution, re.M)
+                ],
             )
         )
         if len(selected) == limit:

@@ -77,7 +77,9 @@ def main() -> None:
         "embeddings_generated": 0,
         "batches_written": 0,
     }
-    with get_connection(statement_timeout_ms=settings.indexing_statement_timeout_ms) as conn:
+    with get_connection(
+        statement_timeout_ms=settings.indexing_statement_timeout_ms, pooled=False
+    ) as conn:
         conn.autocommit = True
         if not conn.execute("SELECT pg_try_advisory_lock(8041, 2)").fetchone()[0]:
             raise RuntimeError("Another indexing process is running")

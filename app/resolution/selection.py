@@ -100,7 +100,9 @@ def rank_fallback(evidence, analysis=None):
         gate = procedure.quotes["condition"].text
         symptom = 0 if explicit and row.metadata.get("category") == analysis.category else 1
         context = 1
-        if ("weather_context", "reported") in known:
+        if ("connection_pattern", "slow") in known and ("timing", "peak_hours") not in known:
+            context = 0 if re.search(r"\b(?:upload|backup|uplink)\b", gate, re.I) else 1
+        elif ("weather_context", "reported") in known:
             context = 0 if re.search(r"\b(?:rain|moisture|wet|weather)\b", gate, re.I) else 1
         elif ("timing", "peak_hours") in known:
             context = 0 if re.search(r"\b(?:peak|congestion)\b", gate, re.I) else 1

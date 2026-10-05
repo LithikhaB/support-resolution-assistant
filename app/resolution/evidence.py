@@ -30,6 +30,7 @@ class Procedure:
 
     scope: str
     quotes: dict[str, SourceQuote]
+    baseline_for: str | None = None
 
 
 def parse_procedure(result):
@@ -48,7 +49,8 @@ def parse_procedure(result):
         "action": r"^Only if that finding is established: ([^\r\n]+)$",
         "restriction": r"^Restriction: ([^\r\n]+)$",
     }
-    if result.metadata.get("procedure_version") == 2:
+    version = result.metadata.get("procedure_version")
+    if version in {2, 3}:
         patterns.update(
             {
                 "verify": r"^Verify: ([^\r\n]+)$",
@@ -67,7 +69,50 @@ def parse_procedure(result):
         quotes[name] = SourceQuote(
             field=name, text=match.group(1), start=match.start(1), end=match.end(1)
         )
-    return Procedure(scope=quotes["scope"].text, quotes=quotes)
+    if version == 3:
+        steps = result.metadata.get("procedure", {}).get("steps")
+        if not isinstance(steps, list) or len(steps) != 5:
+            return None
+        phases = [
+            "customer_check",
+            "customer_check",
+            "agent_check",
+            "conditional_fix",
+            "completion",
+        ]
+        matches = list(re.finditer(r"^Step ([1-5]): ([^\r\n]+)$", text, re.M))
+        if len(matches) != 5:
+            return None
+        for index, (step, match, phase) in enumerate(zip(steps, matches, phases, strict=True), 1):
+            if (
+                not isinstance(step, dict)
+                or step.get("id") != index
+                or step.get("phase") != phase
+                or step.get("text") != match.group(2)
+                or match.group(1) != str(index)
+                or step.get("skip_if_fact") not in {None, "wired_connection", "billing_status"}
+            ):
+                return None
+            if phase == "conditional_fix" and not (
+                step["text"].startswith("Only if support confirms")
+                and quotes["condition"].text in step["text"]
+                and quotes["action"].text in step["text"]
+            ):
+                return None
+            if phase == "completion" and quotes["completion"].text not in step["text"]:
+                return None
+            quotes[f"step_{index}"] = SourceQuote(
+                field="plan_step",
+                step_id=index,
+                phase=phase,
+                skip_if_fact=step.get("skip_if_fact"),
+                text=match.group(2),
+                start=match.start(2),
+                end=match.end(2),
+            )
+    return Procedure(
+        scope=quotes["scope"].text, quotes=quotes, baseline_for=result.metadata.get("baseline_for")
+    )
 
 
 def supported_scopes(analysis):

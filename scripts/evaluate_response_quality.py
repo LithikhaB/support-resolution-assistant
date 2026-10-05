@@ -116,7 +116,7 @@ def main():
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--cases", type=Path, default=Path("data/evaluation/response_quality_cases.json")
+        "--cases", type=Path, default=Path("data/evaluation/customer_challenge_cases_v1.json")
     )
     parser.add_argument("--case", action="append", default=[])
     parser.add_argument("--output", type=Path)

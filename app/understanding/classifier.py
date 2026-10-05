@@ -9,7 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 from app.config.settings import Settings, get_settings
-from app.retrieval.embeddings import get_embedding_service
+from app.retrieval.embeddings import EmbeddingInputTooLong, get_embedding_service
 from app.understanding.models import CategoryCandidate
 
 
@@ -98,7 +98,11 @@ class CategoryClassifier:
             features = self.vectorizer.transform(texts)
         else:
             encoder = self.embedder or get_embedding_service()
-            features = np.asarray(encoder.embed_documents(texts))
+            try:
+                features = np.asarray(encoder.embed_documents(texts))
+            except EmbeddingInputTooLong:
+                # Keep every segment of long complaints; do not silently truncate.
+                features = np.asarray([encoder.embed_query(text) for text in texts])
         logits = np.asarray(features @ self.coefficients.T) + self.intercept
         logits -= logits.max(axis=1, keepdims=True)
         weights = np.exp(logits)

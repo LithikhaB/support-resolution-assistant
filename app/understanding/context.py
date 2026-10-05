@@ -12,11 +12,29 @@ EQUIPMENT_LINK = r"(?:\s+(?:is|are|was|were|has|have|been|got|looks?|seems?|ever
 
 FACT_PATTERNS = (
     (
+        "equipment_condition",
+        "overheating",
+        r"\b(?:overheat(?:s|ing)?|too hot|burning smell|smoking router)\b",
+    ),
+    ("account_change", "migration", r"\b(?:account|plan)\s+migration\b"),
+    ("account_change", "relocation", r"\b(?:moved house|new address|relocat(?:ed|ion))\b"),
+    (
+        "account_change",
+        "speed_upgrade",
+        r"\b(?:speed|plan)\s+upgrade\b|\bupgraded\s+(?:my\s+)?(?:plan|speed)\b",
+    ),
+    ("timing", "persistent_daytime", r"\b(?:since (?:this )?morning|all day|throughout the day)\b"),
+    (
+        "connection_pattern",
+        "slow",
+        r"\b(?:internet|broadband|web)\s+(?:romba\s+|very\s+|is\s+|has been\s+)*slow\b",
+    ),
+    (
         "weather_context",
         "reported",
         r"\b(?:storm|rain|raining|wet weather|thunderstorm|lightning)\b",
     ),
-    ("timing", "peak_hours", r"\b(?:evenings?|peak[ -]hours?|busy hours?|nightly)\b"),
+    ("timing", "peak_hours", r"\b(?:evenings?|dinner time|peak[ -]hours?|busy hours?|nightly)\b"),
     (
         "wired_connection",
         "working",
@@ -141,6 +159,11 @@ FACT_PATTERNS = (
         r"\b(?:money|payments?|transactions?)\b(?:(?!\b(?:not|no)\b)[^.!?]){0,35}\bpending\b",
     ),
     ("billing_status", "settled", r"\b(?:both|two)[^.!?]{0,40}\b(?:settled|completed)\b"),
+    (
+        "payment_scope",
+        "duplicate_same_invoice",
+        r"(?:\b(?:two|duplicate)\s+(?:settled\s+)?payments?\s+(?:for|against)\s+(?:the\s+)?(?:same|one|single)\s+(?:invoice|bill)\b|\bpaid\s+(?:the\s+)?same\s+(?:broadband\s+)?(?:invoice|bill)\s+twice\b)",
+    ),
     ("charge", "bill_payment", r"\b(?:paid my bill|same(?: monthly)? bill|duplicate charges?)\b"),
     (
         "mobile_services",
@@ -220,7 +243,7 @@ FACT_PATTERNS = (
     (
         "connection_pattern",
         "intermittent",
-        r"\b(?:broadband|internet|connection|wi[ -]?fi)\s+(?:keeps?\s+)?(?:dropping|drops|disconnects|disconnecting|cuts out)\b",
+        r"\b(?:broadband|internet|web|connection|wi[ -]?fi)\s+(?:keeps?\s+)?(?:dropping|drops|disconnects|disconnecting|cuts out|vanishing|vanishes)\b",
     ),
 )
 
@@ -237,6 +260,12 @@ def extract_facts(text: str) -> list[ReportedFact]:
         for name, value, pattern in FACT_PATTERNS:
             for match in re.finditer(pattern, fragment, re.I):
                 if negated(fragment[: match.start()]):
+                    continue
+                if name == "service_recovery" and re.search(
+                    r"\b(?:when|whenever|used to|at first|previously)\b",
+                    fragment[: match.start()],
+                    re.I,
+                ):
                     continue
                 if (
                     name == "equipment_condition"
@@ -263,6 +292,14 @@ def extract_facts(text: str) -> list[ReportedFact]:
                         value=fact_value,
                     )
                 )
+    for match in re.finditer(
+        r"\b(?:I|we) plugged (?:my|the|our) (?:laptop|PC|computer) into (?:the |my |our )?router\b[^.!?]{0,180}\bcable\b[^.!?]{0,180}\b(?:lost (?:the )?connection|disconnected)\b",
+        text,
+        re.I,
+    ):
+        facts.append(
+            ReportedFact(**span(text, match).model_dump(), name="wired_connection", value="failing")
+        )
     return sorted(facts, key=lambda item: (item.start, item.name))
 
 
@@ -270,7 +307,7 @@ def extract_requests(text: str) -> list[CustomerRequest]:
     """Recognize requests for contact details and further help using explicit wording."""
     requests = []
     patterns = {
-        "contact_support": r"\b(?:helpline(?: number)?|toll[ -]?free(?: number)?|customer care(?: number)?|support (?:phone |contact )?number|contact (?:support|an agent|a human)|speak to (?:an agent|a human)|call (?:support|an agent|a human|my provider))\b",
+        "contact_support": r"\b(?:helpline number|toll[ -]?free(?: number)?|customer care(?: number)?|support (?:phone |contact )?number|contact (?:support|an agent|a human)|speak to (?:an agent|a human)|call (?:support|an agent|a human|my provider))\b",
         "next_steps": r"\b(?:what (?:should I do|to do)(?: now| next)?|next steps?|what can I (?:do|try))\b",
         "replacement": r"\b(?:request|need|want|arrange)(?:\s+\w+){0,4}\s+replacement\b|\breplace (?:my|the) (?:modem|router|equipment|cable)\b",
     }

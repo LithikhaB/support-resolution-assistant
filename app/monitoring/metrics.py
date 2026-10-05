@@ -1,19 +1,31 @@
 """Collect bounded process-local request health without storing customer content."""
 
 from collections import deque
+from hashlib import sha256
 from threading import Lock
 from time import perf_counter
 
+import psycopg
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse, PlainTextResponse
+from starlette.concurrency import run_in_threadpool
 
 from app.config.settings import get_settings
+from app.database.connection import pool_stats
 from app.llm.telemetry import snapshot as language_metrics
+from app.monitoring.budgets import api_budget
 
 router = APIRouter(prefix="/api/v1")
 _lock = Lock()
 _durations = deque(maxlen=1000)
-_counts = {"requests": 0, "server_errors": 0, "client_errors": 0, "in_flight": 0}
+_counts = {
+    "requests": 0,
+    "server_errors": 0,
+    "client_errors": 0,
+    "in_flight": 0,
+    "throttled": 0,
+    "capacity_rejected": 0,
+}
 _resolution_active = 0
 _buckets = (0.1, 0.5, 1, 2.5, 5, 10, 30, 60, 120)
 _histogram = [0] * len(_buckets)
@@ -41,8 +53,33 @@ async def measure_request(request, call_next):
             _resolution_active += 1
             admitted = True
     try:
+        if expensive and hasattr(request, "client"):
+            # Never trust spoofable forwarding headers without a configured trusted proxy.
+            identity = sha256(
+                (request.client.host if request.client else "unknown").encode()
+            ).hexdigest()
+            try:
+                retry = await run_in_threadpool(api_budget, identity)
+            except (psycopg.Error, OSError):
+                status = 503
+                return JSONResponse(
+                    status_code=status,
+                    content={"detail": "Request admission unavailable; retry shortly."},
+                    headers={"Retry-After": "2"},
+                )
+            if retry:
+                status = 429
+                with _lock:
+                    _counts["throttled"] += 1
+                return JSONResponse(
+                    status_code=status,
+                    content={"detail": "Too many requests. Please wait before trying again."},
+                    headers={"Retry-After": str(retry)},
+                )
         if expensive and not admitted:
             status = 503
+            with _lock:
+                _counts["capacity_rejected"] += 1
             return JSONResponse(
                 status_code=status,
                 content={"detail": "Resolution capacity is busy; retry shortly."},
@@ -74,6 +111,10 @@ def prometheus_metrics():
             f"support_requests_total {_counts['requests']}",
             "# TYPE support_server_errors_total counter",
             f"support_server_errors_total {_counts['server_errors']}",
+            "# TYPE support_throttled_total counter",
+            f"support_throttled_total {_counts['throttled']}",
+            "# TYPE support_capacity_rejected_total counter",
+            f"support_capacity_rejected_total {_counts['capacity_rejected']}",
             "# TYPE support_in_flight gauge",
             f"support_in_flight {_counts['in_flight']}",
             "# TYPE support_request_duration_seconds histogram",
@@ -103,4 +144,6 @@ def metrics():
             else None,
             "scope": "process_local_last_1000_requests",
             "language": language_metrics(),
+            "database_pool": pool_stats(),
+            "admission_backend": get_settings().rate_limit_backend,
         }

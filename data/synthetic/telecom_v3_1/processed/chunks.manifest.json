@@ -1,0 +1,19 @@
+{
+  "documents": 332,
+  "chunks": 332,
+  "split_documents": 0,
+  "chunking_version": "1.0.0",
+  "model": "sentence-transformers/all-MiniLM-L6-v2",
+  "tokenizer_requested_revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+  "tokenizer_sha256": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037",
+  "max_tokens_including_special": 256,
+  "overlap_content_tokens": 32,
+  "source_sha256": "0367b21eedb2b19e8f321ba00ff6922d081f2781cfcd28a4b2e5ace7b76ef8a5",
+  "output_sha256": "322bda7bf324775d11b7e6ff99df2ab4988063058074d91277bc74cab816afdb",
+  "document_tokens": {
+    "median": 47,
+    "p95": 154,
+    "max": 165
+  },
+  "evidence": "Join doc_id to documents.jsonl for response, resolution and outcome status"
+}

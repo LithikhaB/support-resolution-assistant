@@ -2,18 +2,24 @@
 
 import json
 from collections import OrderedDict
+from contextlib import nullcontext
 from contextvars import ContextVar
 from functools import lru_cache
 from hashlib import sha256
 from threading import Lock
 from time import monotonic
 
+import psycopg
+
 from app.config.settings import get_settings
+from app.llm.base import JSONProvider
 from app.llm.client import GroqClient, LanguageUnavailable
 from app.llm.contracts import LanguageProvider
+from app.llm.disk_cache import DiskCache
 from app.llm.gemini import GeminiClient
 from app.llm.privacy import redact, restore
 from app.llm.telemetry import event
+from app.monitoring.budgets import reserve_generation
 
 last_provider = ContextVar("last_language_provider", default=None)
 
@@ -28,15 +34,41 @@ class ProviderChain:
         self.providers = (
             providers
             if providers is not None
-            else [GroqClient(self.settings), GeminiClient(self.settings)]
+            else (
+                [GroqClient(self.settings)]
+                if self.settings.llm_split_review
+                else [GroqClient(self.settings), GeminiClient(self.settings)]
+            )
         )
         self.clock = clock
         self.lock = Lock()
         self.circuits = {}
         self.rate_failures = {}
         self.cache = OrderedDict()
+        self.in_flight = set()
+        self.disk = DiskCache(
+            self.settings.data_dir / "cache" / "wording",
+            self.settings.solution_cache_seconds if self.settings.solution_cache_enabled else 0,
+        )
 
     def generate(self, instruction, payload, schema, *, validator=None):
+        # Collapse concurrent identical generations without a waiting queue.
+        # The caller immediately receives its evidence-controlled local fallback.
+        masked, _ = redact(payload)
+        key = sha256(
+            json.dumps([instruction, masked, schema.model_json_schema()], sort_keys=True).encode()
+        ).hexdigest()
+        with self.lock:
+            if key in self.in_flight:
+                raise LanguageUnavailable("duplicate_generation_in_flight")
+            self.in_flight.add(key)
+        try:
+            return self._generate(instruction, payload, schema, validator=validator)
+        finally:
+            with self.lock:
+                self.in_flight.discard(key)
+
+    def _generate(self, instruction, payload, schema, *, validator=None):
         """Try each provider once and reject schema or application-level failures equally."""
         last_provider.set(None)
         masked, mapping = redact(payload)
@@ -44,6 +76,16 @@ class ProviderChain:
             json.dumps([instruction, masked, schema.model_json_schema()], sort_keys=True).encode()
         ).hexdigest()
         now = self.clock()
+        disk_key = sha256(
+            json.dumps(
+                [
+                    key,
+                    [(p.name, str(p.model)) for p in self.providers],
+                    self.settings.llm_split_review,
+                    "wording-v2",
+                ]
+            ).encode()
+        ).hexdigest()
         with self.lock:
             cached = self.cache.get(key)
             if cached and cached[0] > now:
@@ -51,6 +93,10 @@ class ProviderChain:
             elif cached:
                 del self.cache[key]
                 cached = None
+        if not cached and self.settings.solution_cache_enabled:
+            stored = self.disk.get(disk_key)
+            if stored:
+                cached = (now + self.settings.llm_cache_seconds, stored[0], stored[1])
         if cached:
             result = schema.model_validate(restore(cached[1], mapping))
             provider = next(p for p in self.providers if p.name == cached[2]["provider"])
@@ -72,9 +118,21 @@ class ProviderChain:
                 event("circuit_skips")
                 continue
             try:
-                result = provider.generate(instruction, payload, schema)
-                if validator:
-                    validator(result, provider)
+                reservation = nullcontext()
+                if (
+                    isinstance(provider, JSONProvider)
+                    and getattr(provider.settings, f"{provider.name}_api_key").get_secret_value()
+                ):
+                    reservation = reserve_generation(
+                        provider, getattr(validator, "reservation_calls", 2) if validator else 1
+                    )
+                try:
+                    with reservation:
+                        result = provider.generate(instruction, payload, schema)
+                        if validator:
+                            validator(result, provider)
+                except (psycopg.Error, OSError):
+                    raise LanguageUnavailable("provider_budget_unavailable") from None
                 trace = {
                     "provider": provider.name,
                     "model": provider.model,
@@ -93,6 +151,7 @@ class ProviderChain:
                             protected,
                             trace,
                         )
+                        self.disk.put(disk_key, [protected, trace])
                         while len(self.cache) > 128:
                             self.cache.popitem(last=False)
                 last_provider.set(trace)
@@ -101,9 +160,14 @@ class ProviderChain:
                 return result
             except LanguageUnavailable as exc:
                 failures.append(provider.name + ":" + str(exc))
-                if str(exc).startswith("provider_http_") or str(exc) == "provider_or_schema_error":
+                if str(exc).startswith("provider_http_") or str(exc) in {
+                    "provider_or_schema_error",
+                    "provider_throttled",
+                }:
                     with self.lock:
                         delay = self.settings.llm_circuit_seconds
+                        if str(exc) == "provider_throttled":
+                            delay = exc.retry_after or 1
                         if str(exc) == "provider_http_429":
                             failures_count = min(6, self.rate_failures.get(provider.name, 0) + 1)
                             self.rate_failures[provider.name] = failures_count
