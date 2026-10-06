@@ -1,3 +1,0 @@
-{"id": "wifi", "query": "Wi-Fi is poor upstairs but the wired computer works. I already restarted the router.", "filters": {"intent": "wifi_connectivity"}, "review_note": "Look for local coverage evidence, not an access-line outage."}
-{"id": "billing", "query": "Two payments for the same invoice have both settled.", "filters": {"queue": "billing_support"}, "review_note": "Distinguish duplicate settlement from pending authorization."}
-{"id": "voice", "query": "Mobile internet works but every outgoing call fails.", "filters": {"product": "mobile_voice"}, "review_note": "Look for voice-specific diagnostics without claiming the cause is confirmed."}
