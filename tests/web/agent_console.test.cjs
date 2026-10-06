@@ -106,3 +106,21 @@ test('changed generated steps are labelled as an LLM plan', () => {
     language_plan:{title:'Initial checks',summary:'Customer reports drops.',steps:['Verify with authorized monitoring [S1]'],note:''}});
   assert.ok(h.nodes.some(n => n.textContent?.startsWith('LLM-assisted plan · protected repair steps · groq')));
 });
+
+test('neutral default replaces unknown sentiment without claiming quoted evidence', () => {
+  for (const sentiment of [
+    {value:'unknown',rule:'no_explicit_tone',evidence:[]},
+    {value:'unknown',rule:'quoted_language',evidence:[{text:'Broadband drops'}]},
+    {value:'neutral',rule:'neutral_default',evidence:[]}
+  ]) {
+    const h=harness();
+    h.context.issue.resolution.analysis.sentiment=sentiment;
+    vm.runInContext('panel = renderIssue(issue)',h.context);
+    function flatten(node) { return [node,...node.children.flatMap(flatten)]; }
+    const nodes=flatten(h.context.panel);
+    const chip=nodes.find(n=>n.textContent==='Sentiment: Neutral');
+    assert.ok(chip);
+    assert.equal(chip.title,'Neutral is the default; no explicit emotional tone was detected.');
+    assert.ok(!nodes.some(n=>n.textContent==='Sentiment: unknown'));
+  }
+});

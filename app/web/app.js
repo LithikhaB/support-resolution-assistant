@@ -147,7 +147,9 @@ function renderIssue(issue) {
   fields.append(fieldChip("Category", category.replaceAll("_", " "), analysis.category_evidence),
     fieldChip("Product", products, analysis.products),
     fieldChip("Severity", analysis.severity.value, analysis.severity.evidence, analysis.severity.rule),
-    fieldChip("Sentiment", analysis.sentiment.value, analysis.sentiment.evidence, analysis.sentiment.rule));
+    fieldChip("Sentiment", ["unknown", "neutral"].includes(analysis.sentiment.value) ? "Neutral" : analysis.sentiment.value,
+      analysis.sentiment.value === "unknown" ? [] : analysis.sentiment.evidence, analysis.sentiment.value === "unknown" || analysis.sentiment.rule === "neutral_default"
+        ? "Neutral is the default; no explicit emotional tone was detected." : analysis.sentiment.rule));
   for (const action of analysis.actions.filter(item => item.status === "attempted")) fields.append(fieldChip("Already tried", action.text, [action]));
   response.append(fields);
   response.append(el("h2", plan.title), el("p", resolution.language_summary || plan.summary));

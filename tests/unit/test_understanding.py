@@ -3,6 +3,7 @@
 from unittest.mock import Mock
 
 import numpy as np
+import pytest
 
 from app.config.settings import Settings
 from app.understanding.classifier import (
@@ -265,3 +266,64 @@ def test_final_severity_fallback_preserves_existing_rules_and_abstention(monkeyp
     )
     result = service.analyze(AnalyzeRequest(query="My router: " + text))
     assert result.severity.rule == "quoted_service_impact" and result.severity.value == "high"
+
+
+@pytest.mark.parametrize(
+    "query,expected",
+    [
+        ("Optical box shows a red LOS light.", "neutral"),
+        ("My broadband drops every evening.", "neutral"),
+        ("I am not angry. My broadband is slow.", "neutral"),
+        ("My broadband is slow and costing me orders.", "frustrated"),
+        ("I am furious about this invoice.", "angry"),
+        ("I am worried about my broadband.", "concerned"),
+    ],
+)
+def test_sentiment_defaults_to_neutral_without_inventing_evidence(query, expected):
+    classifier = Mock()
+    classifier.artifact = artifact()
+    classifier.predict.return_value = [
+        CategoryCandidate(category="wifi", score=0.38),
+        CategoryCandidate(category="mobile", score=0.37),
+    ]
+    service = UnderstandingService(classifier, settings=Settings(_env_file=None, llm_enabled=False))
+    result = service.analyze(AnalyzeRequest(query=query))
+    assert result.sentiment.value == expected
+    if expected == "neutral":
+        assert result.sentiment.rule == "neutral_default"
+        assert result.sentiment.evidence == []
+    else:
+        assert result.sentiment.evidence
+        assert all(
+            query[quote.start : quote.end] == quote.text for quote in result.sentiment.evidence
+        )
+
+
+def test_validated_language_sentiment_is_preserved_before_neutral_default(monkeypatch):
+    from app.understanding.models import RuleAssessment, TextEvidence
+
+    query = "My broadband drops. This is ruining my day."
+    quote = "ruining my day"
+    start = query.index(quote)
+    assessment = RuleAssessment(
+        value="frustrated",
+        rule="quoted_language",
+        evidence=[TextEvidence(text=quote, start=start, end=start + len(quote))],
+    )
+    monkeypatch.setattr(
+        "app.understanding.service.interpret_complaint",
+        lambda *args, **kwargs: ([], [], None, None, assessment),
+    )
+    classifier = Mock()
+    classifier.artifact = artifact()
+    classifier.predict.return_value = [
+        CategoryCandidate(category="wifi", score=0.38),
+        CategoryCandidate(category="mobile", score=0.37),
+    ]
+    service = UnderstandingService(
+        classifier,
+        language=Mock(),
+        settings=Settings(_env_file=None, llm_enabled=True, llm_extraction_enabled=True),
+    )
+    result = service.analyze(AnalyzeRequest(query=query))
+    assert result.sentiment == assessment

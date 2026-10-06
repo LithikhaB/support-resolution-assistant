@@ -195,6 +195,8 @@ class UnderstandingService:
         sentiment = assess_sentiment(request.query)
         if sentiment.value == "unknown" and language_sentiment is not None:
             sentiment = language_sentiment
+        if sentiment.value == "unknown":
+            sentiment = RuleAssessment(value="neutral", rule="neutral_default")
         if severity.value == "unknown":
             impacts = [fact for fact in facts if fact.name == "impact"]
             values = {fact.value for fact in impacts}
