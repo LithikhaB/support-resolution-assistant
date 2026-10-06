@@ -1,0 +1,118 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" version="24.7.17">
+  <diagram id="support-architecture" name="Architecture">
+    <mxGraphModel dx="1565" dy="1250" grid="1" gridSize="10" page="1" pageWidth="1565" pageHeight="1250">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ui" value="&lt;b&gt;Agent UI / API&lt;/b&gt;&lt;br&gt;Complaint + issue-linked follow-ups&lt;br&gt;Fields, cited plan, S = KB / T = tickets" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#effaf7;strokeColor=#147d70;fontFamily=Arial;fontSize=14;align=left;spacing=16;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="50" y="110" width="340" height="95" />
+        </mxCell>
+        <mxCell id="admit" value="&lt;b&gt;Validate / protect / admit&lt;/b&gt;&lt;br&gt;Pydantic bounds; credential scrubbing&lt;br&gt;FIFO queue; shared token budgets&lt;br&gt;429 / 503 on overload" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#effaf7;strokeColor=#147d70;fontFamily=Arial;fontSize=14;align=left;spacing=16;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="50" y="255" width="340" height="110" />
+        </mxCell>
+        <mxCell id="understand" value="&lt;b&gt;Understand&lt;/b&gt;&lt;br&gt;Local logistic classifier + quoted rules&lt;br&gt;Products / severity / sentiment / attempts&lt;br&gt;Optional quoted LLM extraction" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#effaf7;strokeColor=#147d70;fontFamily=Arial;fontSize=14;align=left;spacing=16;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="50" y="415" width="340" height="120" />
+        </mxCell>
+        <mxCell id="lookup" value="&lt;b&gt;Evidence reuse lookup&lt;/b&gt;&lt;br&gt;Revision-keyed JSON evidence cache&lt;br&gt;Reviewed owner-scoped outcomes → KB refs&lt;br&gt;Eligible constrained semantic reuse" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#effaf7;strokeColor=#147d70;fontFamily=Arial;fontSize=14;align=left;spacing=16;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="50" y="585" width="340" height="120" />
+        </mxCell>
+        <mxCell id="search" value="&lt;b&gt;Hybrid candidate search / rank&lt;/b&gt;&lt;br&gt;MiniLM cosine + PostgreSQL full-text&lt;br&gt;RRF → diversity → optional cross-encoder&lt;br&gt;In-memory BM25: exploration alternative" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#effaf7;strokeColor=#147d70;fontFamily=Arial;fontSize=14;align=left;spacing=16;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="440" y="585" width="360" height="120" />
+        </mxCell>
+        <mxCell id="select" value="&lt;b&gt;Applicability / selection&lt;/b&gt;&lt;br&gt;Symptom, service and timing conflicts&lt;br&gt;Local ranking; optional LLM supplied-ID choice&lt;br&gt;KB + up to 3 historical comparisons" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#effaf7;strokeColor=#147d70;fontFamily=Arial;fontSize=14;align=left;spacing=16;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="440" y="755" width="360" height="105" />
+        </mxCell>
+        <mxCell id="draft" value="&lt;b&gt;Deterministic draft&lt;/b&gt;&lt;br&gt;Ordered checks → gated fix → completion&lt;br&gt;Skip prior attempts; preserve restrictions&lt;br&gt;Exact quoted procedure / ticket evidence" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#effaf7;strokeColor=#147d70;fontFamily=Arial;fontSize=14;align=left;spacing=16;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="440" y="910" width="360" height="105" />
+        </mxCell>
+        <mxCell id="validate" value="&lt;b&gt;Validate / policy / response&lt;/b&gt;&lt;br&gt;Exact spans, citations, conditional rendering&lt;br&gt;clarify / agent_review / escalate&lt;br&gt;Agent review required; no handoff execution" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#effaf7;strokeColor=#147d70;fontFamily=Arial;fontSize=14;align=left;spacing=16;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="440" y="1065" width="360" height="110" />
+        </mxCell>
+        <mxCell id="provider" value="&lt;b&gt;Configurable hosted language roles&lt;/b&gt;&lt;br&gt;Example split=true: Groq wording / Gemini critique&lt;br&gt;Split=false: Groq → Gemini generation; same-provider critique&lt;br&gt;Extraction and selection: optional, disabled by example&lt;br&gt;No keys / quota / invalid wording → local fallback" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f4f0ff;strokeColor=#7a5bb5;fontFamily=Arial;fontSize=14;align=left;spacing=16;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="855" y="110" width="660" height="155" />
+        </mxCell>
+        <mxCell id="word" value="&lt;b&gt;Optional LLM wording&lt;/b&gt;&lt;br&gt;Editable wording only; protected steps kept&lt;br&gt;Structural checks + model critique&lt;br&gt;Reject → deterministic plan" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f4f0ff;strokeColor=#7a5bb5;fontFamily=Arial;fontSize=14;align=left;spacing=16;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="855" y="910" width="300" height="105" />
+        </mxCell>
+        <mxCell id="cache" value="&lt;b&gt;Caches (bounded)&lt;/b&gt;&lt;br&gt;Process: understanding / retrieval / reuse&lt;br&gt;Disk: evidence / masked wording / critiques&lt;br&gt;TTL: 120 s process; up to 1 day disk&lt;br&gt;Revision / payload keys; revalidate hits" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fb;strokeColor=#38658b;fontFamily=Arial;fontSize=14;align=left;spacing=16;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="440" y="110" width="360" height="155" />
+        </mxCell>
+        <mxCell id="db" value="&lt;b&gt;PostgreSQL + pgvector&lt;/b&gt;&lt;br&gt;Documents → chunks: vector(384), cosine HNSW, GIN full-text&lt;br&gt;Document fingerprints / published index revision&lt;br&gt;Redacted conversations, events, reviewed simulated outcomes&lt;br&gt;Shared request / provider budget tokens" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fb;strokeColor=#38658b;fontFamily=Arial;fontSize=14;align=left;spacing=16;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="855" y="415" width="660" height="145" />
+        </mxCell>
+        <mxCell id="evolve" value="&lt;b&gt;Ingestion and evolution&lt;/b&gt;&lt;br&gt;POST /api/v1/ingest + X-Admin-Key&lt;br&gt;Validate → stage → chunk/manifests&lt;br&gt;Incremental index; lock (8041,2)&lt;br&gt;Publish / rollback / revision changes&lt;br&gt;New KB searchable immediately&lt;br&gt;New class: examples + map&lt;br&gt;train / calibrate + restart" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fb;strokeColor=#38658b;fontFamily=Arial;fontSize=14;align=left;spacing=16;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1210" y="755" width="305" height="190" />
+        </mxCell>
+        <mxCell id="ops" value="&lt;b&gt;Monitoring and verification&lt;/b&gt;&lt;br&gt;/api/v1/health: process; /ready: DB schema/index state&lt;br&gt;/api/v1/metrics JSON; /metrics Prometheus text&lt;br&gt;CI: lint / unit + DB / UI tests / frozen local dev eval gate" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fb;strokeColor=#38658b;fontFamily=Arial;fontSize=14;align=left;spacing=16;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="855" y="1065" width="660" height="110" />
+        </mxCell>
+        <mxCell id="safety" value="&lt;b&gt;Evidence boundaries&lt;/b&gt;&lt;br&gt;AI-authored synthetic baseline&lt;br&gt;All supplied resolved outcomes simulated&lt;br&gt;History similarity ≠ current diagnosis&lt;br&gt;KB gates require authorized checks&lt;br&gt;Citation validity ≠ semantic quality&lt;br&gt;No repair / refund / handoff performed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff6e7;strokeColor=#b28538;fontFamily=Arial;fontSize=14;align=left;spacing=16;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="50" y="910" width="340" height="265" />
+        </mxCell>
+        <mxCell id="edge0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;" edge="1" parent="1" source="ui" target="admit">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;" edge="1" parent="1" source="admit" target="understand">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;" edge="1" parent="1" source="understand" target="lookup">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge3" value="miss" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;" edge="1" parent="1" source="lookup" target="search">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;" edge="1" parent="1" source="search" target="select">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;" edge="1" parent="1" source="select" target="draft">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;" edge="1" parent="1" source="draft" target="validate">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;dashed=1;" edge="1" parent="1" source="draft" target="word">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge8" value="accept or local fallback" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;dashed=1;" edge="1" parent="1" source="word" target="validate">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge9" value="revalidated reuse" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;dashed=1;" edge="1" parent="1" source="lookup" target="select">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;dashed=1;" edge="1" parent="1" source="cache" target="lookup">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;dashed=1;" edge="1" parent="1" source="provider" target="word">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;" edge="1" parent="1" source="db" target="search">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1535" y="210" />
+              <mxPoint x="1535" y="980" />
+              <mxPoint x="1175" y="980" />
+              <mxPoint x="1175" y="960" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;dashed=1;" edge="1" parent="1" source="db" target="lookup">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge14" value="publish revision" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;" edge="1" parent="1" source="evolve" target="db">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge15" value="response" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;" edge="1" parent="1" source="validate" target="ui">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="415" y="1150" />
+              <mxPoint x="415" y="1195" />
+              <mxPoint x="25" y="1195" />
+              <mxPoint x="25" y="155" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

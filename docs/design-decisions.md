@@ -21,8 +21,10 @@ not proof that the current customer has the same fault.
 Understanding keeps quoted evidence separate from estimated category/severity defaults.
 Completed customer actions and structured follow-ups constrain later steps. Explicit
 contradictions exclude procedures; missing diagnostic findings keep repairs conditional.
-Groq/Gemini can supply validated observations or wording, and Gemini can critique
-wording. Exact source quotes, citations, protected actions and restrictions remain
+The example deployment uses Groq for wording and Gemini for critique. With split
+review disabled, generation uses Groq-to-Gemini failover and same-provider critique.
+Optional extraction and selection are disabled in the example configuration. Exact source quotes, citations, protected actions and
+restrictions remain
 locally validated. Provider limits, invalid text or missing keys return the labelled
 extractive plan. No repair, refund or external handoff is performed by the assistant.
 
@@ -61,3 +63,7 @@ Scraped metrics need external storage because process counters reset on restart.
 The console is an agent advisory tool. Authentication beyond the ingest admin key,
 curated provider procedures, independent language/quality evaluations and production
 capacity testing depend on the deployment and remain explicit limitations.
+
+The [README](../README.md) is the implementation/command/measurement reference.
+[Ideas](ideas.md) records considered approaches and future work. Ordinary rollback
+is not a guarantee of atomic filesystem/database recovery after abrupt host failure.

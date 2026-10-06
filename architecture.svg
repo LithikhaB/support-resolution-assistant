@@ -1,36 +1,109 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="860" viewBox="0 0 1600 860" role="img" aria-labelledby="title desc">
-<title id="title">Telecom support resolution assistant architecture</title>
-<desc id="desc">Agent input is understood, retrieved with hybrid search, drafted, validated and returned with citations. Evidence and language caches reduce repeat work. PostgreSQL holds vector, lexical and conversation data. Validated staged updates feed incremental indexing and category mapping. Provider failures retain a local plan. Health, metrics and a frozen development CI gate provide operational checks.</desc>
-<defs>
- <marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#25635d"/></marker>
- <marker id="fallback" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#a96712"/></marker>
- <style>text{font-family:Segoe UI,Arial,sans-serif;fill:#173c38} .title{font-size:29px;font-weight:700} .label{font-size:20px;font-weight:600} .detail{font-size:16px} .note{font-size:15px;fill:#426460} .box{fill:white;stroke:#52968d;stroke-width:1.6;rx:12} .cache{fill:#ecf5ff;stroke:#5f88b1;stroke-width:1.6;rx:12} .flow{fill:none;stroke:#25635d;stroke-width:2;marker-end:url(#arrow)} .dash{stroke-dasharray:6 5} .safe{fill:#fff5e6;stroke:#c48a36;stroke-width:1.6;rx:12} .fallback{fill:none;stroke:#a96712;stroke-width:2;stroke-dasharray:6 5;marker-end:url(#fallback)}</style>
-</defs>
-<rect width="1600" height="860" fill="#f5f8f7"/>
-<text x="30" y="42" class="title">Telecom support: complaint → evidence → conditional agent plan</text>
-<text x="30" y="70" class="note">FastAPI microservice · agent review required · AI-authored synthetic evidence · no repairs or handoffs executed</text>
-<rect x="520" y="95" width="250" height="70" class="cache"/><text x="537" y="122" class="label">Solution evidence cache</text><text x="537" y="147" class="detail">24h JSON · revision + facts key</text>
-<rect x="805" y="95" width="210" height="70" class="cache"/><text x="822" y="122" class="label">LLM wording cache</text><text x="822" y="147" class="detail">Masked, checked · 24h TTL</text>
-<rect x="30" y="205" width="180" height="140" class="box"/><text x="47" y="236" class="label">UI / API</text><text x="47" y="263" class="detail">Complaint + replies</text><text x="47" y="290" class="detail">Structured answers</text><text x="47" y="317" class="detail">Admission limits</text>
-<rect x="245" y="205" width="240" height="140" class="box"/><text x="262" y="236" class="label">Understand</text><text x="262" y="263" class="detail">Local classifier + quoted rules</text><text x="262" y="290" class="detail">Optional LLM extraction:</text><text x="262" y="317" class="detail">Groq → Gemini → local *</text>
-<rect x="520" y="205" width="250" height="140" class="box"/><text x="537" y="236" class="label">Hybrid retrieve</text><text x="537" y="263" class="detail">Cache → reviewed recent cases</text><text x="537" y="290" class="detail">pgvector + lexical BM25/FTS</text><text x="537" y="317" class="detail">RRF + optional rerank</text>
-<rect x="805" y="205" width="210" height="140" class="box"/><text x="822" y="236" class="label">Draft</text><text x="822" y="263" class="detail">Ordered source steps</text><text x="822" y="290" class="detail">Skip completed checks</text><text x="822" y="317" class="detail">Optional Groq wording</text>
-<rect x="1050" y="205" width="240" height="140" class="box"/><text x="1067" y="236" class="label">Citation / grounding</text><text x="1067" y="263" class="detail">Exact quotes + source IDs</text><text x="1067" y="290" class="detail">Protected gates + repair steps</text><text x="1067" y="317" class="detail">Gemini critique in split mode *</text>
-<rect x="1325" y="205" width="245" height="140" class="box"/><text x="1342" y="236" class="label">Response</text><text x="1342" y="263" class="detail">Decision + priority + fields</text><text x="1342" y="290" class="detail">Numbered cited plan</text><text x="1342" y="317" class="detail">Provider / fallback disclosure</text>
-<path d="M210 275H245" class="flow"/><path d="M485 275H520" class="flow"/><path d="M770 275H805" class="flow"/><path d="M1015 275H1050" class="flow"/><path d="M1290 275H1325" class="flow"/>
-<path d="M645 165V205M910 165V205" class="flow dash"/>
-<rect x="30" y="435" width="455" height="115" class="box"/><text x="47" y="467" class="label">CI: frozen development evaluation gate</text><text x="47" y="495" class="detail">After pytest · LLM disabled · inputs fingerprinted</text><text x="47" y="523" class="detail">Category accuracy · expected-KB hit@5 · citation rate</text>
-<rect x="520" y="435" width="250" height="115" class="box"/><text x="537" y="467" class="label">PostgreSQL + pgvector</text><text x="537" y="495" class="detail">Docs + vectors + text index</text><text x="537" y="523" class="detail">Owned history + shared budgets</text>
-<path d="M645 435V345" class="flow"/><text x="657" y="397" class="note">Current source evidence</text>
-<rect x="805" y="435" width="210" height="115" class="safe"/><text x="822" y="467" class="label">Readable local plan</text><text x="822" y="495" class="detail">Quota / invalid output</text><text x="822" y="523" class="detail">Same conditional sources</text>
-<path d="M910 345V435" class="fallback"/><path d="M1015 492H1030V370H1170V345" class="fallback"/>
-<rect x="1050" y="435" width="520" height="115" class="box"/><text x="1067" y="467" class="label">Monitoring</text><text x="1067" y="495" class="detail">/api/v1/health · /api/v1/ready · /metrics</text><text x="1067" y="523" class="detail">Provider / fallback / citations / cache · stage latency histograms</text>
-<text x="30" y="618" class="label">Ingestion and evolution — reviewed, immutable versions</text>
-<rect x="30" y="642" width="250" height="100" class="box"/><text x="47" y="675" class="label">Validate</text><text x="47" y="703" class="detail">Schema + provenance + KB refs</text><text x="47" y="728" class="detail">Exclude dev/test from index</text>
-<rect x="340" y="642" width="240" height="100" class="box"/><text x="357" y="675" class="label">Stage</text><text x="357" y="703" class="detail">POST /api/v1/ingest</text><text x="357" y="728" class="detail">Preserve previous versions</text>
-<rect x="640" y="642" width="300" height="100" class="box"/><text x="657" y="675" class="label">Incremental index</text><text x="657" y="703" class="detail">Changed chunks + embeddings only</text><text x="657" y="728" class="detail">Lock + readiness + cache invalidation</text>
-<rect x="1000" y="642" width="570" height="100" class="box"/><text x="1017" y="675" class="label">Category map / model evolution</text><text x="1017" y="703" class="detail">New classes: train + calibrate + regression checks</text><text x="1017" y="728" class="detail">Activate matching corpus, model, routing and category mapping</text>
-<path d="M280 692H340" class="flow"/><path d="M580 692H640" class="flow"/><path d="M940 692H1000" class="flow"/><path d="M790 642V593H645V550" class="flow"/>
-<text x="30" y="794" class="note">* Modes are configurable. Current default: local understanding; Groq drafts and Gemini reviews. Missing keys retain the local plan.</text>
-<text x="30" y="822" class="note">PostgreSQL FTS is the production lexical backend; BM25 remains an exploration baseline. Dashed amber arrows show local fallback.</text>
-</svg>
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1565" height="1250" viewBox="0 0 1565 1250" role="img" aria-labelledby="title desc">
+<title id="title">Telecom support: evidence-controlled request and evolution flow</title>
+<desc id="desc">Local understanding, revision-aware reuse, hybrid search, applicability, deterministic draft, optional provider wording, validation, advisory policy and response. PostgreSQL, caches, live ingestion, monitoring and dev CI gate are shown separately.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#466374" /></marker></defs>
+<rect width="1565" height="1250" fill="#ffffff" />
+<text x="50" y="45" font-family="Arial,sans-serif" font-size="28" font-weight="700" fill="#173746">Telecom support: source-backed investigation, agent-reviewed decisions</text>
+<text x="50" y="77" font-family="Arial,sans-serif" font-size="16" fill="#526b78">Solid: main flow / data publication   •   Dashed: optional calls, cache reuse and fallback   •   Defaults: example environment + Compose</text>
+<rect x="50" y="110" width="340" height="95" rx="12" fill="#effaf7" stroke="#147d70" stroke-width="1.6" />
+<text x="66" y="137" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#193e4d">Agent UI / API</text>
+<text x="66" y="162" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Complaint + issue-linked follow-ups</text>
+<text x="66" y="184" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Fields, cited plan, S = KB / T = tickets</text>
+<rect x="50" y="255" width="340" height="110" rx="12" fill="#effaf7" stroke="#147d70" stroke-width="1.6" />
+<text x="66" y="282" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#193e4d">Validate / protect / admit</text>
+<text x="66" y="307" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Pydantic bounds; credential scrubbing</text>
+<text x="66" y="329" font-family="Arial,sans-serif" font-size="13" fill="#294f60">FIFO queue; shared token budgets</text>
+<text x="66" y="351" font-family="Arial,sans-serif" font-size="13" fill="#294f60">429 / 503 on overload</text>
+<rect x="50" y="415" width="340" height="120" rx="12" fill="#effaf7" stroke="#147d70" stroke-width="1.6" />
+<text x="66" y="442" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#193e4d">Understand</text>
+<text x="66" y="467" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Local logistic classifier + quoted rules</text>
+<text x="66" y="489" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Products / severity / sentiment / attempts</text>
+<text x="66" y="511" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Optional quoted LLM extraction</text>
+<rect x="50" y="585" width="340" height="120" rx="12" fill="#effaf7" stroke="#147d70" stroke-width="1.6" />
+<text x="66" y="612" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#193e4d">Evidence reuse lookup</text>
+<text x="66" y="637" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Revision-keyed JSON evidence cache</text>
+<text x="66" y="659" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Reviewed owner-scoped outcomes → KB refs</text>
+<text x="66" y="681" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Eligible constrained semantic reuse</text>
+<rect x="440" y="585" width="360" height="120" rx="12" fill="#effaf7" stroke="#147d70" stroke-width="1.6" />
+<text x="456" y="612" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#193e4d">Hybrid candidate search / rank</text>
+<text x="456" y="637" font-family="Arial,sans-serif" font-size="13" fill="#294f60">MiniLM cosine + PostgreSQL full-text</text>
+<text x="456" y="659" font-family="Arial,sans-serif" font-size="13" fill="#294f60">RRF → diversity → optional cross-encoder</text>
+<text x="456" y="681" font-family="Arial,sans-serif" font-size="13" fill="#294f60">In-memory BM25: exploration alternative</text>
+<rect x="440" y="755" width="360" height="105" rx="12" fill="#effaf7" stroke="#147d70" stroke-width="1.6" />
+<text x="456" y="782" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#193e4d">Applicability / selection</text>
+<text x="456" y="807" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Symptom, service and timing conflicts</text>
+<text x="456" y="829" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Local ranking; optional LLM supplied-ID choice</text>
+<text x="456" y="851" font-family="Arial,sans-serif" font-size="13" fill="#294f60">KB + up to 3 historical comparisons</text>
+<rect x="440" y="910" width="360" height="105" rx="12" fill="#effaf7" stroke="#147d70" stroke-width="1.6" />
+<text x="456" y="937" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#193e4d">Deterministic draft</text>
+<text x="456" y="962" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Ordered checks → gated fix → completion</text>
+<text x="456" y="984" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Skip prior attempts; preserve restrictions</text>
+<text x="456" y="1006" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Exact quoted procedure / ticket evidence</text>
+<rect x="440" y="1065" width="360" height="110" rx="12" fill="#effaf7" stroke="#147d70" stroke-width="1.6" />
+<text x="456" y="1092" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#193e4d">Validate / policy / response</text>
+<text x="456" y="1117" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Exact spans, citations, conditional rendering</text>
+<text x="456" y="1139" font-family="Arial,sans-serif" font-size="13" fill="#294f60">clarify / agent_review / escalate</text>
+<text x="456" y="1161" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Agent review required; no handoff execution</text>
+<rect x="855" y="110" width="660" height="155" rx="12" fill="#f4f0ff" stroke="#7a5bb5" stroke-width="1.6" />
+<text x="871" y="137" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#193e4d">Configurable hosted language roles</text>
+<text x="871" y="162" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Example split=true: Groq wording / Gemini critique</text>
+<text x="871" y="184" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Split=false: Groq → Gemini generation; same-provider critique</text>
+<text x="871" y="206" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Extraction and selection: optional, disabled by example</text>
+<text x="871" y="228" font-family="Arial,sans-serif" font-size="13" fill="#294f60">No keys / quota / invalid wording → local fallback</text>
+<rect x="855" y="910" width="300" height="105" rx="12" fill="#f4f0ff" stroke="#7a5bb5" stroke-width="1.6" />
+<text x="871" y="937" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#193e4d">Optional LLM wording</text>
+<text x="871" y="962" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Editable wording only; protected steps kept</text>
+<text x="871" y="984" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Structural checks + model critique</text>
+<text x="871" y="1006" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Reject → deterministic plan</text>
+<rect x="440" y="110" width="360" height="155" rx="12" fill="#edf4fb" stroke="#38658b" stroke-width="1.6" />
+<text x="456" y="137" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#193e4d">Caches (bounded)</text>
+<text x="456" y="162" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Process: understanding / retrieval / reuse</text>
+<text x="456" y="184" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Disk: evidence / masked wording / critiques</text>
+<text x="456" y="206" font-family="Arial,sans-serif" font-size="13" fill="#294f60">TTL: 120 s process; up to 1 day disk</text>
+<text x="456" y="228" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Revision / payload keys; revalidate hits</text>
+<rect x="855" y="415" width="660" height="145" rx="12" fill="#edf4fb" stroke="#38658b" stroke-width="1.6" />
+<text x="871" y="442" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#193e4d">PostgreSQL + pgvector</text>
+<text x="871" y="467" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Documents → chunks: vector(384), cosine HNSW, GIN full-text</text>
+<text x="871" y="489" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Document fingerprints / published index revision</text>
+<text x="871" y="511" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Redacted conversations, events, reviewed simulated outcomes</text>
+<text x="871" y="533" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Shared request / provider budget tokens</text>
+<rect x="1210" y="755" width="305" height="190" rx="12" fill="#edf4fb" stroke="#38658b" stroke-width="1.6" />
+<text x="1226" y="782" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#193e4d">Ingestion and evolution</text>
+<text x="1226" y="807" font-family="Arial,sans-serif" font-size="13" fill="#294f60">POST /api/v1/ingest + X-Admin-Key</text>
+<text x="1226" y="829" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Validate → stage → chunk/manifests</text>
+<text x="1226" y="851" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Incremental index; lock (8041,2)</text>
+<text x="1226" y="873" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Publish / rollback / revision changes</text>
+<text x="1226" y="895" font-family="Arial,sans-serif" font-size="13" fill="#294f60">New KB searchable immediately</text>
+<text x="1226" y="917" font-family="Arial,sans-serif" font-size="13" fill="#294f60">New class: examples + map</text>
+<text x="1226" y="939" font-family="Arial,sans-serif" font-size="13" fill="#294f60">train / calibrate + restart</text>
+<rect x="855" y="1065" width="660" height="110" rx="12" fill="#edf4fb" stroke="#38658b" stroke-width="1.6" />
+<text x="871" y="1092" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#193e4d">Monitoring and verification</text>
+<text x="871" y="1117" font-family="Arial,sans-serif" font-size="13" fill="#294f60">/api/v1/health: process; /ready: DB schema/index state</text>
+<text x="871" y="1139" font-family="Arial,sans-serif" font-size="13" fill="#294f60">/api/v1/metrics JSON; /metrics Prometheus text</text>
+<text x="871" y="1161" font-family="Arial,sans-serif" font-size="13" fill="#294f60">CI: lint / unit + DB / UI tests / frozen local dev eval gate</text>
+<rect x="50" y="910" width="340" height="265" rx="12" fill="#fff6e7" stroke="#b28538" stroke-width="1.6" />
+<text x="66" y="937" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#193e4d">Evidence boundaries</text>
+<text x="66" y="962" font-family="Arial,sans-serif" font-size="13" fill="#294f60">AI-authored synthetic baseline</text>
+<text x="66" y="984" font-family="Arial,sans-serif" font-size="13" fill="#294f60">All supplied resolved outcomes simulated</text>
+<text x="66" y="1006" font-family="Arial,sans-serif" font-size="13" fill="#294f60">History similarity ≠ current diagnosis</text>
+<text x="66" y="1028" font-family="Arial,sans-serif" font-size="13" fill="#294f60">KB gates require authorized checks</text>
+<text x="66" y="1050" font-family="Arial,sans-serif" font-size="13" fill="#294f60">Citation validity ≠ semantic quality</text>
+<text x="66" y="1072" font-family="Arial,sans-serif" font-size="13" fill="#294f60">No repair / refund / handoff performed</text>
+<path d="M220,205 L220,255" fill="none" stroke="#466374" stroke-width="1.8" marker-end="url(#arrow)" />
+<path d="M220,365 L220,415" fill="none" stroke="#466374" stroke-width="1.8" marker-end="url(#arrow)" />
+<path d="M220,535 L220,585" fill="none" stroke="#466374" stroke-width="1.8" marker-end="url(#arrow)" />
+<path d="M390,645 L440,645" fill="none" stroke="#466374" stroke-width="1.8" marker-end="url(#arrow)" />
+<path d="M620,705 L620,755" fill="none" stroke="#466374" stroke-width="1.8" marker-end="url(#arrow)" />
+<path d="M620,860 L620,910" fill="none" stroke="#466374" stroke-width="1.8" marker-end="url(#arrow)" />
+<path d="M620,1015 L620,1065" fill="none" stroke="#466374" stroke-width="1.8" marker-end="url(#arrow)" />
+<path d="M800,960 L855,960" fill="none" stroke="#466374" stroke-width="1.8" marker-end="url(#arrow)" stroke-dasharray="7 5" />
+<path d="M1005,1015 L1005,1040 L805,1040 L805,1120 L800,1120" fill="none" stroke="#466374" stroke-width="1.8" marker-end="url(#arrow)" stroke-dasharray="7 5" />
+<path d="M390,680 L415,680 L415,805 L440,805" fill="none" stroke="#466374" stroke-width="1.8" marker-end="url(#arrow)" stroke-dasharray="7 5" />
+<path d="M440,230 L415,230 L415,565 L300,565 L300,585" fill="none" stroke="#466374" stroke-width="1.8" marker-end="url(#arrow)" stroke-dasharray="7 5" />
+<path d="M1515,210 L1535,210 L1535,980 L1175,980 L1175,960 L1155,960" fill="none" stroke="#466374" stroke-width="1.8" marker-end="url(#arrow)" stroke-dasharray="7 5" />
+<path d="M855,505 L820,505 L820,620 L800,620" fill="none" stroke="#466374" stroke-width="1.8" marker-end="url(#arrow)" />
+<path d="M855,550 L820,550 L820,730 L405,730 L405,700 L390,700" fill="none" stroke="#466374" stroke-width="1.8" marker-end="url(#arrow)" stroke-dasharray="7 5" />
+<path d="M1360,755 L1360,560" fill="none" stroke="#466374" stroke-width="1.8" marker-end="url(#arrow)" />
+<path d="M440,1150 L415,1150 L415,1195 L25,1195 L25,155 L50,155" fill="none" stroke="#466374" stroke-width="1.8" marker-end="url(#arrow)" />
+<text x="855" y="1220" font-family="Arial,sans-serif" font-size="14" fill="#526b78">New retrieval knowledge does not retrain classifier classes. No real customer outcome is claimed.</text></svg>
