@@ -25,6 +25,7 @@ COMMANDS = {
     "ratings": "score_response_quality",
     "load": "load_test",
     "demo": "verify_demo",
+    "ingest-demo": "ingest_demo",
     "stage": "stage_corpus_update",
     "evolve": "demonstrate_evolution",
 }

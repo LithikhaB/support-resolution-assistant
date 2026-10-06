@@ -13,6 +13,7 @@ class Settings(BaseSettings):
 
     app_name: str = "support-resolution-assistant"
     log_level: str = "INFO"
+    ingest_admin_key: SecretStr = SecretStr("")
     llm_enabled: bool = False
     groq_api_key: SecretStr = SecretStr("")
     groq_model: str = "openai/gpt-oss-120b"

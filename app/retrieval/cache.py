@@ -43,18 +43,20 @@ def published_revision():
     from app.retrieval.vector_search import RetrievalUnavailable
 
     directory = get_settings().processed_dir
-    expected = (
-        json.loads((directory / "manifest.json").read_text(encoding="utf-8"))["output_sha256"],
-        json.loads((directory / "chunks.manifest.json").read_text(encoding="utf-8"))[
-            "output_sha256"
-        ],
-    )
     with get_connection() as conn:
         if not conn.execute("SELECT pg_try_advisory_xact_lock_shared(8041, 2)").fetchone()[0]:
             raise RetrievalUnavailable("index_update_in_progress")
+        # Read files only while holding the shared lock: publishers replace them under
+        # the exclusive lock before committing the corresponding index revision.
+        expected = (
+            json.loads((directory / "manifest.json").read_text(encoding="utf-8"))["output_sha256"],
+            json.loads((directory / "chunks.manifest.json").read_text(encoding="utf-8"))[
+                "output_sha256"
+            ],
+        )
         row = conn.execute(
-            "SELECT status,source_hash,chunks_hash,config_hash FROM retrieval_index_state WHERE singleton"
+            "SELECT status,source_hash,chunks_hash,config_hash,completed_at FROM retrieval_index_state WHERE singleton"
         ).fetchone()
         if not row or row[0] != "ready" or tuple(row[1:3]) != expected:
             raise RetrievalUnavailable("index_not_ready_or_stale")
-        return tuple(row[1:])
+        return tuple(row[1:4]) + (str(row[4]),)

@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
+from app.api.ingest import router as ingest_router
 from app.api.resolution import router as resolution_router
 from app.api.retrieval import router as retrieval_router
 from app.api.routes import router
@@ -32,6 +33,7 @@ app.include_router(router)
 app.include_router(retrieval_router)
 app.include_router(understanding_router)
 app.include_router(resolution_router)
+app.include_router(ingest_router)
 app.add_api_route("/metrics", prometheus_metrics, include_in_schema=False)
 
 WEB_DIR = Path(__file__).parent / "web"

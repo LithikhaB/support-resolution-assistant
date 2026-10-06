@@ -39,10 +39,16 @@ _provider_counts = Counter()
 _citation_counts = Counter()
 _cache_counts = Counter()
 _fallback_count = 0
+_ingest_counts = Counter()
 _stage_histograms = {
     stage: {"buckets": [0] * len(_buckets), "sum": 0.0, "count": 0}
     for stage in ("understand", "retrieve", "draft", "validate")
 }
+
+
+def ingest_documents_added(count):
+    with _lock:
+        _ingest_counts["documents_added"] += count
 
 
 def provider_outcome(provider, outcome):
@@ -190,6 +196,8 @@ async def measure_request(request, call_next):
         with _lock:
             if admitted:
                 _resolution_active -= 1
+            if request.method == "POST" and request.url.path == "/api/v1/ingest":
+                _ingest_counts["failure" if status >= 400 else "success"] += 1
             _counts["requests"] += 1
             _counts["in_flight"] -= 1
             _counts["server_errors"] += int(status >= 500)
@@ -229,6 +237,15 @@ def prometheus_metrics():
             f'support_request_duration_seconds_bucket{{le="+Inf"}} {_counts["requests"]}',
             f"support_request_duration_seconds_sum {_duration_sum}",
             f"support_request_duration_seconds_count {_counts['requests']}",
+        ]
+        lines += ["# TYPE ingest_total counter"]
+        lines += [
+            f'ingest_total{{outcome="{outcome}"}} {_ingest_counts[outcome]}'
+            for outcome in ("success", "failure")
+        ]
+        lines += [
+            "# TYPE ingest_documents_added_total counter",
+            f"ingest_documents_added_total {_ingest_counts['documents_added']}",
         ]
         lines += ["# TYPE resolve_provider_total counter"]
         lines += [
