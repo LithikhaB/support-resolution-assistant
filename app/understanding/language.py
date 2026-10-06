@@ -108,12 +108,6 @@ Every quote must be a verbatim, contiguous substring of text, including punctuat
 Return empty lists where there is no supported observation. Allowed fact values: """
 
 
-def interpret(text, client):
-    """Reject untraceable quotes and out-of-vocabulary values as a complete extraction."""
-    products, facts, _ = interpret_complaint(text, client)
-    return products, facts
-
-
 def interpret_complaint(
     text, client, *, category_options=(), category_products=None, include_assessments=False
 ):
