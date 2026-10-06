@@ -8,7 +8,7 @@ from pathlib import Path
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 
-from app.ingestion.artifacts import digest, file_sha256, write_json
+from app.ingestion.artifacts import code_fingerprint, file_sha256, write_json
 from app.understanding.augmentation import augment_training
 from app.understanding.classifier import CategoryClassifier, make_vectorizer
 from app.understanding.training import load_split, validate_separation
@@ -69,11 +69,10 @@ def validate_holdout(rows, train, dev, split):
 def fingerprint(settings, split):
     """Hash code, model, corpus and fixed settings before opening evaluation queries."""
     root = Path(__file__).resolve().parents[2]
-    files = sorted(list((root / "app").rglob("*.py")) + list((root / "scripts").glob("*.py")))
     manifest = json.loads((settings.corpus_dir / "quality_report.json").read_text(encoding="utf-8"))
     return {
         "split": split,
-        "code_sha256": digest({str(p.relative_to(root)): file_sha256(p) for p in files}),
+        "code_sha256": code_fingerprint(root),
         "routing_profile_sha256": file_sha256(settings.understanding_routing_path)
         if settings.understanding_routing_path.exists()
         else None,

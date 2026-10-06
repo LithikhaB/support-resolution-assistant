@@ -13,7 +13,7 @@ from pydantic import ValidationError
 from app.api.resolution import run_request
 from app.config.settings import get_settings
 from app.evaluation.review import validate_case_pack
-from app.ingestion.artifacts import digest, file_sha256, write_json
+from app.ingestion.artifacts import code_fingerprint, digest, file_sha256, write_json
 from app.resolution.conversation import ConversationRequest, resolve_conversation
 from app.resolution.service import get_resolution_service
 
@@ -21,7 +21,6 @@ from app.resolution.service import get_resolution_service
 def runtime_fingerprint(settings):
     """Record reproducible code/model identities and provider names without secrets."""
     root = Path(__file__).resolve().parents[1]
-    code = sorted([*(root / "app").rglob("*.py"), *(root / "scripts").glob("*.py")])
     paths = {
         "classifier": settings.understanding_model_path,
         "routing": settings.understanding_routing_path,
@@ -29,7 +28,7 @@ def runtime_fingerprint(settings):
         "chunks": settings.processed_dir / "chunks.jsonl",
     }
     return {
-        "code_sha256": digest({str(p.relative_to(root)): file_sha256(p) for p in code}),
+        "code_sha256": code_fingerprint(root),
         "artifacts": {
             name: file_sha256(path) if path.exists() else None for name, path in paths.items()
         },

@@ -42,3 +42,9 @@ def atomic_write(path: Path, lines) -> None:
 def write_json(path: Path, value: object) -> None:
     """Write an indented JSON artifact using atomic replacement."""
     atomic_write(path, [json.dumps(value, indent=2, ensure_ascii=False) + "\n"])
+
+
+def code_fingerprint(root: Path) -> str:
+    """Hash application and top-level command Python files in deterministic order."""
+    files = sorted([*(root / "app").rglob("*.py"), *(root / "scripts").glob("*.py")])
+    return digest({str(path.relative_to(root)): file_sha256(path) for path in files})
