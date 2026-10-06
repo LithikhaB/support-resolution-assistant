@@ -168,16 +168,6 @@ python -m scripts.eval_gate
 docker compose --profile app config --quiet
 ```
 
-## Limitations
-
-- All supplied KB and outcomes are synthetic; resolved outcomes remain `simulated_resolved`. No telecom expert review or real repair is claimed.
-- Understanding can miss language variation, sarcasm or ambiguous impact. `neutral_default` is an absence-of-tone fallback, not detected emotion; category-based severity remains an estimate.
-- LLM keys and quota are required for generated wording. Missing keys, throttling, rejected critique or invalid output return a labelled local plan. `language_status=generated_for_review` and the actual provider are needed to demonstrate genuine LLM use.
-- In the example split-provider configuration, Groq generates and Gemini critiques. With split review disabled, the generation chain tries Groq then Gemini, with same-provider critique. Optional extraction/selection are disabled by default.
-- Human plan-quality review and fresh sustained load testing remain outstanding. CPU inference, per-worker queues, filesystem caches and shared budgets need measured replica coordination; Docker alone does not establish scalability.
-- Anonymous browser ownership and the ingest key are not production authentication. Redaction is heuristic, and no network/billing actions are executed.
-
-
 
 ## Repository Map
 
