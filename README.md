@@ -6,7 +6,8 @@
 **Data:** all telecom evidence is **AI-authored synthetic** and **not expert-reviewed**.
 
 ## Demo
-<video src="./docs/demo/demoVideo.mp4" controls width="800"></video>
+![UI](docs/diagrams/UI%20ss.png)
+[Watch Demo here](./docs/demo/demoVideo.mp4)
 
 ## Architecture
 
