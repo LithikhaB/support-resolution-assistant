@@ -1,6 +1,8 @@
 .git
 .venv
 .env
+.env.*
+!.env.example
 **/__pycache__
 .pytest_cache
 .ruff_cache
@@ -8,7 +10,17 @@ data/workflow
 data/models
 data/evaluation/*
 !data/evaluation/customer_challenge_cases_v1.json
+!data/evaluation/gate_thresholds.json
 data/evolution/runs
 .work
 .codex
 .agents
+
+# Private runtime state and files not copied by Dockerfile
+data/cache
+**/.mypy_cache
+**/*.pyc
+htmlcov
+.coverage*
+docs
+tests

@@ -41,3 +41,15 @@ data/synthetic/telecom_v3_1/processed/indexing.manifest.json
 
 # Private expiring runtime caches
 data/cache/
+
+# Local tooling and generated verification artifacts
+.codex/
+.agents/
+data/evaluation/*
+!data/evaluation/gate_thresholds.json
+!data/evaluation/customer_challenge_cases_v1.json
+!data/evaluation/understanding_development.json
+!data/evaluation/v31_postgres_dev_release_20261005.json
+!data/evaluation/v31_postgres_test_release_20261005.json
+!data/evaluation/v31_challenge_confirmed_20261005.json
+!data/evaluation/load_test_report.json

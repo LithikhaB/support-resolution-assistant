@@ -8,7 +8,7 @@ COPY scripts scripts
 COPY db db
 COPY data/synthetic data/synthetic
 COPY data/synthetic /service/bundled/synthetic
-COPY data/evaluation/customer_challenge_cases_v1.json /service/bundled/evaluation/
+COPY data/evaluation/customer_challenge_cases_v1.json data/evaluation/gate_thresholds.json /service/bundled/evaluation/
 COPY data/evolution/dns_category_demo.json /service/bundled/evolution/
 RUN useradd --uid 10001 --create-home support && mkdir -p data/models cache && chown -R support:support /service
 USER support
