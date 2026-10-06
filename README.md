@@ -2,8 +2,12 @@
 
 > **Use Case 2.** An agent pastes a customer complaint and gets back the **category, product, severity, sentiment, steps already tried, relevant KB procedures, similar resolved tickets**, and a **cited, conditional troubleshooting plan**.
 
-**Scope:** the assistant *proposes* checks for **agent review**. It does **not** diagnose live networks, run repairs, issue refunds or create handoffs.
-**Data:** all telecom evidence is **AI-authored synthetic** and **not expert-reviewed**.
+**Scope:** the assistant *proposes* checks for **agent review**. It does **not** diagnose live networks, run repairs, issue refunds or create handoffs. <br>
+**Data:** all telecom evidence is **AI-authored synthetic** and **not expert-reviewed**. <br>
+**Microservice implementation:** A Dockerized FastAPI service exposes versioned
+REST APIs for complaint understanding, evidence retrieval, cited resolution
+and knowledge ingestion. The agent console consumes these APIs.
+PostgreSQL with pgvector stores the searchable evidence. 
 
 ## Demo
 https://github.com/user-attachments/assets/03da1402-8edb-4d44-b71d-11e55a7069e9
