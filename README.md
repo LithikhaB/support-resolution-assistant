@@ -5,11 +5,12 @@
 **Scope:** the assistant *proposes* checks for **agent review**. It does **not** diagnose live networks, run repairs, issue refunds or create handoffs.
 **Data:** all telecom evidence is **AI-authored synthetic** and **not expert-reviewed**.
 
----
+## Demo
+<video src="./docs/demo/demoVideo.mp4" controls width="800"></video>
 
 ## Architecture
 
-![Request, evidence and evolution](architecture.svg)
+![overall architecture](docs/diagrams/overall.png)
 
 | # | Phase | What happens |
 |---|-------|--------------|
@@ -20,6 +21,23 @@
 | 5 | **Reword (optional)** | **Groq** drafts, **Gemini** critiques; any failure falls back to the local plan |
 
 ---
+### Phase 1: Validate & Admit
+![Validate](docs/diagrams/1-Validate.png)
+
+### Phase 2: Understand
+![Understand](docs/diagrams/2-Understand.png)
+
+### Phase 3: Retrieve
+![Retrieve](docs/diagrams/3-Retrieve.png)
+
+### Phase 4: Draft Plan
+![Plan](docs/diagrams/4-Local_Plan.png)
+
+### Phase 5: Reword
+![Reword](docs/diagrams/5-LLM_Wording.png)
+
+### KB Evolution
+![KB_Evolution](docs/diagrams/6-Evolving-Data.png)
 
 ## Quick Start
 
@@ -32,7 +50,7 @@ docker compose --profile app up --build -d
 docker compose exec -T api python -m scripts check
 ```
 
-Then open the **console** at http://127.0.0.1:8000/ or **Swagger** at http://127.0.0.1:8000/docs.
+Then open the [agent console](http://127.0.0.1:8000/) or [Swagger UI](http://127.0.0.1:8000/docs). First startup downloads models and prepares missing artifacts; it can take several minutes. Do not delete persistent volumes to upgrade.
 
 ### Local Python
 
@@ -43,7 +61,7 @@ python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
 python -m pip install -r requirements.txt
 if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 docker compose up -d db
-python -m scripts setup
+python -m scripts.setup_database
 python -m scripts chunk
 python -m scripts index
 python -m scripts train
@@ -54,7 +72,7 @@ python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 
 > `data/models` is git-ignored, so **train and calibrate are required** after a fresh clone.
 
----
+
 
 ## Commands
 
@@ -66,7 +84,7 @@ Run as `python -m scripts <command>`.
 | `chunk` | Split documents into overlapping chunks |
 | `index` | Embed chunks and upsert into **pgvector** |
 | `check` | Verify **index readiness** and embedding norms |
-| `train` | Fit the **category classifier** on the dev split |
+| `train` | Fit the **category classifier** on train; select the model using dev |
 | `calibrate` | Choose **score/margin thresholds** on dev |
 | `reranker` | Warm the **cross-encoder** |
 | `analyze` | Run understanding on one complaint |
@@ -76,7 +94,9 @@ Run as `python -m scripts <command>`.
 | `demo` | Quick offline demo with verification |
 | `evolve` | Isolated **new-class demo** in a fresh DB |
 
----
+Live ingestion uses `POST /api/v1/ingest` (see below). The current CLI does not include an `ingest-demo` command.
+
+
 
 ## API Endpoints
 
@@ -88,63 +108,76 @@ Run as `python -m scripts <command>`.
 | `POST` | `/api/v1/retrieve` | Ranked KB and resolved-ticket **evidence** |
 | `POST` | `/api/v1/resolve` | **Cited plan** for one complaint |
 | `POST` | `/api/v1/conversation` | Same flow with bounded customer follow-ups |
+| `GET` | `/api/v1/conversations` | List recent conversations for the anonymous browser owner |
+| `GET` | `/api/v1/conversations/{id}` | Load an owner-scoped replay request and revision |
+| `DELETE` | `/api/v1/conversations/{id}` | Delete an owner-scoped conversation and related records |
+| `POST` | `/api/v1/conversations/{id}/review` | Record an explicitly reviewed **simulated** outcome |
+| `POST` | `/api/v1/ingest` | Add/replace up to 20 documents; requires **X-Admin-Key** |
+| `GET` | `/api/v1/categories` | Deployed classifier classes and indexed document counts per intent |
 | `GET` | `/api/v1/metrics` | JSON latency, error and provider telemetry |
 | `GET` | `/metrics` | **Prometheus** counters and histograms |
 
----
+
+
+Conversation history/review uses an anonymous owner cookie, not a production agent login. An empty `INGEST_ADMIN_KEY` disables ingestion (403). `/health` checks process liveness; `/ready` checks database schema and published index state, not a complete model-inference request.
 
 ## Results
 
-Retained **v3.1** dev/test reports. All runs use the local fallback only, PostgreSQL lexical search and the published MiniLM classifier.
+Each split contains 120 synthetic queries across 15 held-out families. Both reports use local fallback only, PostgreSQL lexical search and the published MiniLM classifier.
 
-| Metric | Dev | Test |
+| Metric | Dev — [retained report](data/evaluation/v31_postgres_dev_release_20261005.json) | Test — [retained report](data/evaluation/v31_postgres_test_release_20261005.json) |
 |--------|-----|------|
 | **Category top-1 accuracy** | 76.67% | **83.33%** |
 | **Macro-F1** | 0.7551 | 0.8077 |
-| **KB hit@5** (hybrid) | 90.00% | 95.83% |
-| **KB hit@5** (reranked) | 93.33% | **100.00%** |
+| **KB hit@5** (KB-focused hybrid) | 90.00% | 95.83% |
+| **KB hit@5** (KB-focused + reranker) | 93.33% | **100.00%** |
+| **Final draft contains expected KB** | 82.50% | 80.00% |
 | **Citation contract passed** | 100.00% | **100.00%** |
 | Severity correct / unknown | 40.00% / 43.33% | 13.33% / 83.33% |
 | Sentiment correct / unknown | 75.00% / 25.00% | 100.00% / 0.00% |
-| Latency p50 / p95 (ms) | 4666 / 6282 | 6996 / 16658 |
+| Sequential comparison latency p50 / p95 (ms) | 4666 / 6282 | 6996 / 16658 |
 
-*Citation validity is not diagnostic correctness, and synthetic sentiment does not prove language robustness.*
-
-### Load test (historical, offline extractive)
-
-| Concurrency | p50 / p95 / p99 (ms) | Accepted | Success RPS | Error rate |
-|-------------|----------------------|----------|-------------|------------|
-| 1 | 145 / 182 / 189 | 12/20 | 4.61 | 40% |
-| 5 | 133 / 292 / 381 | 3/20 | 4.43 | 85% |
-| 20 | 480 / 527 / 532 | 2/20 | 3.04 | 90% |
-
-*The first cold request takes about 20 s. Fast rejections inflate RPS, so this is **not** production capacity. No provider calls were recorded.*
-
----
 
 ## Evolving Data Demo
 
 ```powershell
 python -m scripts evolve --output .work/dns-evolution-new.json
 ```
-
+![Evolving Data](docs/diagrams/data%20evol.png)
 Runs in a **separate corpus and database**, then checks that:
+
 - the **new class** is registered and predicted
 - the **new article** is cited
 - the **citation contract** still passes and the index is ready
 - **old classes** are preserved and old dev accuracy stays within **5 points**
 
----
+
+
+## Verification
+
+Run against prepared artifacts and an appropriate writable test database for review purposes.
+
+```powershell
+python -m ruff check app scripts tests
+python -m ruff format --check app scripts tests
+python -m pytest tests/unit -q
+node --test tests/web/agent_console.test.cjs
+$env:RUN_DB_TESTS = '1'
+python -m pytest -q
+python -m scripts.eval_gate
+docker compose --profile app config --quiet
+```
 
 ## Limitations
 
-- **Synthetic data only:** a fictional provider, not expert-reviewed
-- **Weak severity:** rules and classifier often return *unknown*
-- **LLM needs keys:** without Groq/Gemini keys the assistant returns the **extractive local plan**
-- **No production auth:** the anonymous owner cookie and admin key are not real authentication
-- **Citations are not diagnoses:** exact-source checks pass, but semantic correctness is not measured
+- All supplied KB and outcomes are synthetic; resolved outcomes remain `simulated_resolved`. No telecom expert review or real repair is claimed.
+- Understanding can miss language variation, sarcasm or ambiguous impact. `neutral_default` is an absence-of-tone fallback, not detected emotion; category-based severity remains an estimate.
+- LLM keys and quota are required for generated wording. Missing keys, throttling, rejected critique or invalid output return a labelled local plan. `language_status=generated_for_review` and the actual provider are needed to demonstrate genuine LLM use.
+- In the example split-provider configuration, Groq generates and Gemini critiques. With split review disabled, the generation chain tries Groq then Gemini, with same-provider critique. Optional extraction/selection are disabled by default.
+- Human plan-quality review and fresh sustained load testing remain outstanding. CPU inference, per-worker queues, filesystem caches and shared budgets need measured replica coordination; Docker alone does not establish scalability.
+- Anonymous browser ownership and the ingest key are not production authentication. Redaction is heuristic, and no network/billing actions are executed.
 
----
+
 
 ## Repository Map
 
@@ -160,5 +193,5 @@ app/web           Agent console (index.html, app.js, style.css)
 scripts/          CLI commands
 data/synthetic/telecom_v3_1  Active corpus (62 KB, 240 resolved, 30 historical)
 data/evaluation   Frozen reports, gate thresholds, load report, challenge cases
-docs/design-decisions.md     Key architectural decisions
+docs/ideas.md                Considered approaches and current tradeoffs
 ```
