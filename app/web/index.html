@@ -5,25 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <title>Support Agent Triage Console</title>
-  <link rel="stylesheet" href="/assets/style.css?v=5">
-  <script src="/assets/app.js?v=12" defer></script>
+  <link rel="stylesheet" href="/assets/style.css?v=6">
+  <script src="/assets/app.js?v=14" defer></script>
 </head>
 <body>
-  <main>
-    <header><a class="brand" href="/">Support Resolution</a><button id="recent-conversations" class="secondary" type="button">Recent conversations</button><button id="new-ticket" class="secondary" type="button" hidden>New complaint</button></header>
+  <main id="workspace">
+    <header><a class="brand" href="/">Support Resolution</a><nav aria-label="Workspace actions"><button id="recent-conversations" class="secondary" type="button" aria-controls="history-drawer" aria-expanded="false">Recent conversations</button><button id="new-ticket" class="secondary" type="button">New complaint</button></nav></header>
     <h1>Support agent triage console</h1>
     <p class="intro">Paste a customer complaint. Review the evidence, record observations, and approve conditional next steps.</p>
     <div id="status" role="status" aria-live="polite" hidden></div>
-    <section id="recent-list" class="panel" hidden></section>
+    <section class="requirements" aria-label="Required support capabilities">
+      <div><strong>Understand the complaint</strong><span>Category · product · severity · sentiment</span></div>
+      <div><strong>Retrieve relevant evidence</strong><span>Knowledge-base articles and resolved tickets</span></div>
+      <div><strong>Draft a cited resolution</strong><span>Ordered checks, conditional fixes and agent review</span></div>
+      <div><strong>Support evolving knowledge</strong><span>New articles are searchable; new classes need training</span></div>
+    </section>
     <section id="intake" class="panel">
-      <form id="create-form">
+      <form id="create-form" autocomplete="off">
         <label for="complaint">Raw customer complaint</label>
-        <textarea id="complaint" required maxlength="10000" rows="5" placeholder="For example: My broadband drops every evening. I have already restarted the router twice."></textarea>
+        <textarea autocomplete="off" id="complaint" required maxlength="10000" rows="5" placeholder="For example: My broadband drops every evening. I have already restarted the router twice."></textarea>
         <button type="submit">Triage ticket</button>
       </form>
     </section>
     <div id="issues" aria-live="polite"></div>
-    <footer>Demo knowledge base. No payments, repairs or account changes are performed. Saved redacted conversations belong to this browser and expire after 7 days. Reviewed outcomes remain simulated.</footer>
+    <footer>Demo knowledge base. No payments, repairs or account changes are performed. Saved redacted conversations belong to this browser and expire after 7 days.</footer>
   </main>
+  <button id="history-backdrop" class="history-backdrop" type="button" aria-label="Close recent conversations" tabindex="-1" hidden></button>
+  <aside id="history-drawer" class="history-drawer" role="dialog" aria-modal="true" aria-labelledby="history-title" tabindex="-1" hidden>
+    <div class="drawer-header"><div><h2 id="history-title">Recent conversations</h2><p class="muted">Saved in this browser · redacted · expires after 7 days</p></div><button id="close-history" class="secondary" type="button">Close</button></div>
+    <div class="history-toolbar"><label class="select-all"><input id="history-select-all" type="checkbox"> Select all</label><button id="delete-selected" class="danger" type="button" disabled>Delete selected (0)</button></div>
+    <div id="history-confirmation" class="delete-confirmation" hidden><p id="history-confirmation-text"></p><button id="confirm-delete" class="danger" type="button">Confirm delete</button><button id="cancel-delete" class="secondary" type="button">Cancel</button></div>
+    <p id="history-status" role="status" aria-live="polite"></p>
+    <div id="recent-list" class="history-list"></div>
+  </aside>
 </body>
 </html>

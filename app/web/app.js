@@ -29,15 +29,14 @@ async function send(request, updatedIssue = null) {
     if (result.conversation_id) {
       conversation.conversation_id = result.conversation_id;
       conversation.revision = result.revision;
-      if (typeof localStorage !== "undefined") localStorage.setItem("support_conversation_id", result.conversation_id);
     }
     byId("intake").hidden = true;
     byId("new-ticket").hidden = false;
     byId("issues").replaceChildren(...result.issues.map(renderIssue));
     status.hidden = true;
     const target = byId(`response-${updatedIssue || result.issues[0].issue_id}`);
-    target.focus({preventScroll: true});
-    target.scrollIntoView({behavior: "smooth", block: "start"});
+    target?.focus({preventScroll: true});
+    target?.scrollIntoView({behavior: "smooth", block: "start"});
   } catch (error) {
     status.className = "error";
     status.textContent = error.message || "Unable to connect. Check that the server is running.";
@@ -49,7 +48,9 @@ async function send(request, updatedIssue = null) {
 function sourcesPanel(resolution, issueId) {
   const details = el("details", undefined, "sources");
   const history = (resolution.historical_cases || []).slice(0, 3);
-  details.append(el("summary", `Sources (${resolution.sources.length + history.length})`));
+  details.append(el("summary", `Source records (${resolution.sources.length + history.length})`));
+  details.open = true;
+  if (resolution.sources.length) details.append(el("h3", "Knowledge-base articles"));
   for (const source of resolution.sources) {
     const article = el("div", undefined, "source");
     article.id = `source-${issueId}-${source.citation_id}`;
@@ -61,6 +62,7 @@ function sourcesPanel(resolution, issueId) {
     article.append(quotes);
     details.append(article);
   }
+  if (history.length) details.append(el("h3", "Similar resolved tickets"));
   for (const item of history) {
     const article = el("div", undefined, "source");
     article.id = `source-${issueId}-${item.citation_id}`;
@@ -75,21 +77,28 @@ function sourcesPanel(resolution, issueId) {
   return details;
 }
 function citedText(node, text, issueId) {
-  let start = 0;
-  for (const match of text.matchAll(/\[([ST]\d+)\]/g)) {
-    node.append(el("span", text.slice(start, match.index)));
-    const link = el("a", match[0], "citation");
-    link.href = `#source-${issueId}-${match[1]}`;
-    link.title = `Inspect source ${match[1]}`;
-    link.onclick = () => {
-      const source = byId(`source-${issueId}-${match[1]}`);
-      const panel = source?.closest?.("details");
-      if (panel) panel.open = true;
+  const refs = [...new Set([...text.matchAll(/\[([ST]\d+)\]/g)].map(match => match[1]))];
+  node.append(el("span", text.replace(/\[([ST]\d+)\]/g, "").replace(/[ \t]+/g, " ").replace(/\s+([.,;:!?])/g, "$1").trim(), "instruction-text"));
+  if (!refs.length) return;
+  const citations = el("div", undefined, "step-citations");
+  citations.append(el("span", "Evidence", "citation-label"));
+  for (const ref of refs) {
+    const link = el("a", `[${ref}] · ${ref.startsWith("S") ? "KB" : "Ticket"}`, "citation");
+    link.href = `#source-${issueId}-${ref}`;
+    link.title = `Inspect ${ref.startsWith("S") ? "knowledge-base article" : "historical resolved ticket"} ${ref}`;
+    link.onclick = event => {
+      event?.preventDefault?.();
+      const source = byId(`source-${issueId}-${ref}`);
+      if (!source) return;
+      let parent = source.parentElement;
+      while (parent) { if (parent.tagName === "DETAILS") parent.open = true; parent = parent.parentElement; }
+      const quotes = source.querySelector?.("details");
+      if (quotes) quotes.open = true;
+      source.scrollIntoView?.({behavior: "smooth", block: "nearest"});
     };
-    node.append(link);
-    start = match.index + match[0].length;
+    citations.append(link);
   }
-  node.append(el("span", text.slice(start)));
+  node.append(citations);
 }
 function fieldChip(label, value, evidence, fallback = "No quoted evidence; provisional model prediction.") {
   const chip = el("details", undefined, "chip");
@@ -144,15 +153,18 @@ function renderIssue(issue) {
   const products = analysis.products.map(item => item.product.replaceAll("_", " ")).join(", ") || "not identified";
   const fields = el("div", undefined, "fields");
   const category = analysis.category || `Provisional: ${analysis.candidates.slice(0, 2).map(item => item.category.replaceAll("_", " ")).join(" / ") || "unclassified"}`;
-  fields.append(fieldChip("Category", category.replaceAll("_", " "), analysis.category_evidence),
-    fieldChip("Product", products, analysis.products),
-    fieldChip("Severity", analysis.severity.value, analysis.severity.evidence, analysis.severity.rule),
+  fields.append(fieldChip("Category", category.replaceAll("_", " "), analysis.category_evidence, "Category is an advisory model estimate; review the reported symptoms."),
+    fieldChip("Product", products, analysis.products, "No affected service or product has been identified yet."),
+    fieldChip("Severity", analysis.severity.value, analysis.severity.evidence, analysis.severity.rule === "category_default" ? "Estimated priority from the accepted category; no quoted impact evidence was available." : "Customer impact is unclear; record which services and people are affected."),
     fieldChip("Sentiment", ["unknown", "neutral"].includes(analysis.sentiment.value) ? "Neutral" : analysis.sentiment.value,
       analysis.sentiment.value === "unknown" ? [] : analysis.sentiment.evidence, analysis.sentiment.value === "unknown" || analysis.sentiment.rule === "neutral_default"
         ? "Neutral is the default; no explicit emotional tone was detected." : analysis.sentiment.rule));
-  for (const action of analysis.actions.filter(item => item.status === "attempted")) fields.append(fieldChip("Already tried", action.text, [action]));
-  response.append(fields);
-  response.append(el("h2", plan.title), el("p", resolution.language_summary || plan.summary));
+  const attempts = analysis.actions.filter(item => item.status === "attempted");
+  const displayedAttempts = attempts.filter((action, index) => !attempts.some((other, otherIndex) =>
+    otherIndex !== index && other.text.toLowerCase().includes(action.text.toLowerCase()) &&
+    (other.text.length > action.text.length || otherIndex < index)));
+  for (const action of displayedAttempts) fields.append(fieldChip("Already tried", action.text, [action]));
+  response.append(el("h2", "1. Complaint understanding"), fields, el("h2", "2. Recommended resolution"), el("strong", plan.title, "plan-stage"), el("p", resolution.language_summary || plan.summary));
   const trust = el("div", undefined, "trust");
   const validation = el("span", `Citation validation: ${resolution.validation.status}`, `badge ${resolution.validation.status}`);
   validation.title = resolution.validation.scope + " " + resolution.validation.issues.join("; ");
@@ -166,7 +178,7 @@ function renderIssue(issue) {
   if (resolution.evidence_reuse === "semantic_hit_revalidated") trust.append(el("span", "Similar source selection reused · revalidated", "badge"));
   response.append(trust);
   if (plan.steps.length) {
-    const steps = el("ol");
+    const steps = el("ol", undefined, "resolution-steps");
     for (const step of plan.steps) {
       const item = el("li");
       citedText(item, step, issue.issue_id);
@@ -174,9 +186,23 @@ function renderIssue(issue) {
     }
     response.append(steps);
   }
-  if (plan.note) response.append(el("small", plan.note));
-  panel.append(response);
-  if (resolution.sources.length) panel.append(sourcesPanel(resolution, issue.issue_id));
+  if (plan.note) {
+    const note = el("div", undefined, "plan-note");
+    note.append(el("strong", "Restrictions and escalation"));
+    citedText(note, plan.note, issue.issue_id);
+    response.append(note);
+  }
+  const evidence = el("aside", undefined, "evidence-column");
+  evidence.append(el("h2", "3. Evidence & citations"));
+  const legend = el("div", undefined, "citation-legend");
+  legend.append(el("strong", "What the citations mean"),
+    el("p", "S1, S2… = knowledge-base articles (KB)."),
+    el("p", "T1, T2… = historical resolved tickets. Demo outcomes are simulated."));
+  evidence.append(legend, sourcesPanel(resolution, issue.issue_id));
+  if (!resolution.sources.length) evidence.append(el("p", "No KB article was retained for this response; record the missing details.", "muted"));
+  const layout = el("div", undefined, "triage-grid");
+  layout.append(response, evidence);
+  panel.append(layout);
   const form = el("form", undefined, "followup");
   const questions = resolution.clarification_questions;
   for (const question of questions) form.append(el("p", question, "question"));
@@ -219,85 +245,157 @@ function renderIssue(issue) {
   };
   input.oninput = () => input.setCustomValidity("");
   panel.append(form);
-  if (conversation.conversation_id && resolution.validation.status === "passed" && resolution.sources.length) {
-    const review = el("details");
-    review.append(el("summary", "Record a reviewed simulated resolution"));
-    const reviewForm = el("form");
-    const note = el("textarea");
-    note.id = `outcome-${issue.issue_id}`;
-    note.required = true; note.minLength = 20; note.maxLength = 1000;
-    const noteLabel = el("label", "Record the observed result and the checks reviewed (at least 20 characters)");
-    noteLabel.htmlFor = note.id;
-    const confirmLabel = el("label", "I reviewed these conditional steps and am recording a simulated demo outcome.");
-    const confirm = el("input"); confirm.type = "checkbox"; confirm.required = true;
-    confirmLabel.append(confirm);
-    const save = el("button", "Save reviewed outcome"); save.type = "submit";
-    const feedback = el("p"); feedback.setAttribute?.("role", "status");
-    reviewForm.append(noteLabel, note, confirmLabel, save, feedback);
-    reviewForm.onsubmit = async event => {
-      event.preventDefault();
-      if (!confirm.checked) return;
-      save.disabled = true;
-      try {
-        const response = await fetch(`/api/v1/conversations/${conversation.conversation_id}/review`, {method:"POST", headers:{"Content-Type":"application/json"},body:JSON.stringify({issue_id:issue.issue_id,revision:conversation.revision,outcome_note:note.value.trim(),confirmation:"simulated_resolution_reviewed"})});
-        const result = await response.json();
-        if (!response.ok) throw new Error(typeof result.detail === "string" ? result.detail : "Review could not be saved.");
-        feedback.textContent = "Reviewed simulated history saved for this browser. It does not confirm another customer's cause.";
-      } catch (error) { feedback.textContent = error.message; }
-      finally { save.disabled = false; }
-    };
-    review.append(reviewForm); panel.append(review);
-  }
   return panel;
 }
 byId("create-form").onsubmit = event => {
   event.preventDefault();
   send({query: byId("complaint").value.trim(), turns: [], max_sources: 2});
 };
-byId("new-ticket").onclick = () => {
+let historyItems = [];
+let selectedHistory = new Set();
+let historyBusy = false;
+let historyReturnFocus = null;
+
+function setHistoryOpen(open) {
+  const drawer = byId("history-drawer");
+  if (!drawer) return;
+  drawer.hidden = !open;
+  byId("history-backdrop").hidden = !open;
+  byId("recent-conversations").setAttribute?.("aria-expanded", String(open));
+  const workspace = byId("workspace");
+  if (workspace) workspace.inert = open;
+  if (typeof document.body !== "undefined") document.body.style.overflow = open ? "hidden" : "";
+  if (open) { historyReturnFocus = document.activeElement; byId("close-history").focus(); }
+  else { byId("history-confirmation").hidden = true; historyReturnFocus?.focus?.(); }
+}
+function startNewComplaint() {
   conversation = null;
-  if (typeof localStorage !== "undefined") localStorage.removeItem("support_conversation_id");
+  try { if (typeof localStorage !== "undefined") localStorage.removeItem("support_conversation_id"); } catch { /* Storage can be disabled. */ }
   byId("issues").replaceChildren();
   byId("intake").hidden = false;
-  byId("new-ticket").hidden = true;
+  byId("new-ticket").hidden = false;
   byId("status").hidden = true;
   byId("complaint").value = "";
+  setHistoryOpen(false);
+  if (typeof window !== "undefined" && window.location.hash.startsWith("#source-")) window.history.replaceState(null, "", window.location.pathname + window.location.search);
   byId("complaint").focus();
-};
+}
+byId("new-ticket").onclick = startNewComplaint;
 
+function updateHistorySelection() {
+  const button = byId("delete-selected");
+  button.textContent = `Delete selected (${selectedHistory.size})`;
+  button.disabled = !selectedHistory.size || historyBusy;
+  const all = byId("history-select-all");
+  all.checked = historyItems.length > 0 && selectedHistory.size === historyItems.length;
+  all.indeterminate = selectedHistory.size > 0 && !all.checked;
+  all.disabled = !historyItems.length || historyBusy;
+}
+function renderHistoryList() {
+  const panel = byId("recent-list");
+  panel.replaceChildren();
+  if (!historyItems.length) panel.append(el("p", "No saved conversations yet. Your new complaint starts here.", "muted"));
+  for (const item of historyItems) {
+    const row = el("div", undefined, "history-row");
+    const label = el("label", undefined, "history-checkbox");
+    const checkbox = el("input");
+    checkbox.type = "checkbox"; checkbox.checked = selectedHistory.has(item.conversation_id);
+    checkbox.setAttribute?.("aria-label", `Select conversation: ${item.query}`);
+    checkbox.onchange = () => {
+      if (checkbox.checked) selectedHistory.add(item.conversation_id); else selectedHistory.delete(item.conversation_id);
+      byId("history-confirmation").hidden = true;
+      updateHistorySelection();
+    };
+    label.append(checkbox);
+    const content = el("div");
+    const open = el("button", item.query, "history-open"); open.type = "button";
+    open.onclick = () => restoreConversation(item.conversation_id);
+    const date = new Date(item.updated_at);
+    content.append(open, el("small", `${Number.isNaN(date.getTime()) ? "Saved conversation" : date.toLocaleString()} · revision ${item.revision}`));
+    row.append(label, content); panel.append(row);
+  }
+  updateHistorySelection();
+}
+async function loadRecentConversations() {
+  const status = byId("history-status"); status.textContent = "Loading saved conversations…";
+  byId("recent-list").replaceChildren();
+  try {
+    const response = await fetch("/api/v1/conversations"); const result = await response.json();
+    if (!response.ok) throw new Error(typeof result.detail === "string" ? result.detail : "History unavailable.");
+    historyItems = result.conversations;
+    selectedHistory = new Set();
+    byId("history-confirmation").hidden = true;
+    status.textContent = "Select conversations to delete, or open a complaint to re-check it against current evidence.";
+    renderHistoryList();
+    return true;
+  } catch (error) { status.textContent = error.message; historyItems = []; selectedHistory = new Set(); updateHistorySelection(); return false; }
+}
 async function restoreConversation(id) {
+  if (busy || historyBusy) return;
+  historyBusy = true;
+  byId("history-status").textContent = "Opening conversation…";
   try {
     const response = await fetch(`/api/v1/conversations/${id}`);
     const saved = await response.json();
-    if (!response.ok) throw new Error(saved.detail || "Saved conversation unavailable.");
-    byId("recent-list").hidden = true;
+    if (!response.ok) throw new Error(typeof saved.detail === "string" ? saved.detail : "Saved conversation unavailable.");
+    setHistoryOpen(false);
     await send({...saved.request, conversation_id:saved.conversation_id, revision:saved.revision});
-  } catch (error) { byId("status").hidden = false; byId("status").textContent = error.message; }
+  } catch (error) { byId("history-status").textContent = error.message; }
+  finally { historyBusy = false; updateHistorySelection(); }
 }
-if (byId("recent-conversations")) {
-  byId("recent-conversations").onclick = async () => {
-    const panel = byId("recent-list"); panel.hidden = false;
-    try {
-      const response = await fetch("/api/v1/conversations"); const result = await response.json();
-      if (!response.ok) throw new Error(result.detail || "History unavailable.");
-      panel.replaceChildren(el("h2", "Recent conversations · this browser"));
-      if (!result.conversations.length) panel.append(el("p", "No saved conversations yet."));
-      for (const item of result.conversations) {
-        const row = el("div");
-        const open = el("button", item.query, "secondary"); open.type = "button";
-        open.onclick = () => restoreConversation(item.conversation_id);
-        const remove = el("button", "Delete", "secondary"); remove.type = "button";
-        remove.onclick = async () => {
-          const response = await fetch(`/api/v1/conversations/${item.conversation_id}`, {method:"DELETE"});
-          if (response.ok) { if (typeof localStorage !== "undefined" && localStorage.getItem("support_conversation_id") === item.conversation_id) localStorage.removeItem("support_conversation_id"); byId("recent-conversations").onclick(); }
-          else { byId("status").hidden=false; byId("status").textContent="Could not delete the saved conversation."; }
-        };
-        row.append(open, remove); panel.append(row);
-      }
-    } catch (error) { panel.replaceChildren(el("p", error.message)); }
-  };
-  if (typeof localStorage !== "undefined") {
-    const active = localStorage.getItem("support_conversation_id");
-    if (active && /^[a-f0-9-]{36}$/i.test(active)) restoreConversation(active);
+async function deleteSelectedConversations() {
+  if (historyBusy || !selectedHistory.size) return;
+  historyBusy = true;
+  byId("confirm-delete").disabled = true;
+  byId("cancel-delete").disabled = true;
+  updateHistorySelection();
+  const targets = [...selectedHistory];
+  let deleted = 0;
+  try {
+    for (const id of targets) {
+      const response = await fetch(`/api/v1/conversations/${id}`, {method:"DELETE"});
+      if (!response.ok) throw new Error("Some conversations could not be deleted. Reload the list and try again.");
+      deleted++;
+      historyItems = historyItems.filter(item => item.conversation_id !== id);
+      selectedHistory.delete(id);
+      if (conversation?.conversation_id === id) { startNewComplaint(); setHistoryOpen(true); }
+    }
+    const refreshed = await loadRecentConversations();
+    byId("history-status").textContent = `Deleted ${deleted} conversation${deleted === 1 ? "" : "s"}.${refreshed ? "" : " History could not be refreshed; reopen the drawer to retry."}`;
+  } catch (error) { byId("history-status").textContent = `${deleted} deleted. ${error.message}`; }
+  finally {
+    historyBusy = false;
+    byId("history-confirmation").hidden = true;
+    byId("confirm-delete").disabled = false;
+    byId("cancel-delete").disabled = false;
+    renderHistoryList();
   }
 }
+if (byId("recent-conversations")) {
+  byId("recent-conversations").onclick = async () => { setHistoryOpen(true); await loadRecentConversations(); };
+  byId("close-history").onclick = () => setHistoryOpen(false);
+  byId("history-backdrop").onclick = () => setHistoryOpen(false);
+  byId("history-select-all").onchange = () => {
+    selectedHistory = byId("history-select-all").checked ? new Set(historyItems.map(item => item.conversation_id)) : new Set();
+    byId("history-confirmation").hidden = true;
+    renderHistoryList();
+  };
+  byId("delete-selected").onclick = () => {
+    byId("history-confirmation-text").textContent = `Delete ${selectedHistory.size} selected conversation${selectedHistory.size === 1 ? "" : "s"} and linked reviewed outcomes? This cannot be undone.`;
+    byId("history-confirmation").hidden = false;
+    byId("cancel-delete").focus();
+  };
+  byId("cancel-delete").onclick = () => { byId("history-confirmation").hidden = true; byId("delete-selected").focus(); };
+  byId("confirm-delete").onclick = deleteSelectedConversations;
+  document.addEventListener?.("keydown", event => {
+    if (byId("history-drawer").hidden) return;
+    if (event.key === "Escape") { setHistoryOpen(false); return; }
+    if (event.key !== "Tab") return;
+    const nodes = [...byId("history-drawer").querySelectorAll("button:not(:disabled),input:not(:disabled),[tabindex='0']")].filter(node => !node.closest("[hidden]"));
+    const first = nodes[0], last = nodes.at(-1);
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+  });
+}
+startNewComplaint();
+if (typeof window !== "undefined") window.addEventListener("pageshow", event => { if (event.persisted) startNewComplaint(); });

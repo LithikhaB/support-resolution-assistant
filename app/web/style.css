@@ -1,8 +1,8 @@
 :root { font-family: "Segoe UI", Arial, sans-serif; color: #18332f; background: #f4f7f6; font-synthesis: none; }
 * { box-sizing: border-box; }
 body { margin: 0; }
-main { width: min(100% - 40px, 800px); margin: 32px auto; }
-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 42px; }
+main { width: min(100% - 56px, 1360px); margin: 30px auto; }
+header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 28px; }
 .brand { color: #126954; font-weight: 750; font-size: 19px; text-decoration: none; }
 h1 { font-size: clamp(25px, 4vw, 34px); letter-spacing: -.7px; margin: 0 0 12px; }
 h2 { font-size: 19px; margin: 0 0 12px; }
@@ -44,3 +44,63 @@ footer { padding: 16px 0; }
 .citation { color: #087b66; font-weight: 650; text-decoration: underline; }
 .source { scroll-margin-top: 20px; }
 @media (max-width: 540px) { main { width: min(100% - 24px, 800px); margin-top: 20px; } .panel { padding: 18px; } header { margin-bottom: 28px; } }
+
+nav { display: flex; align-items: center; gap: 10px; }
+.requirements { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 24px 0; }
+.requirements > div { background: #eaf4ef; border: 1px solid #caddd3; border-radius: 12px; padding: 18px; }
+.requirements strong { display: block; color: #0c5749; font-size: 16px; margin-bottom: 8px; }
+.requirements span { display: block; color: #536c62; font-size: 14px; line-height: 1.5; }
+#create-form label { font-size: 19px; font-weight: 750; }
+.triage-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(290px, 360px); gap: 24px; align-items: start; margin-top: 24px; }
+.response { margin: 0; padding: 24px; }
+.response h2 { color: #164e40; font-size: 21px; font-weight: 750; }
+.fields { margin-bottom: 30px; gap: 10px; }
+.chip { font-size: 14px; padding: 9px 12px; }
+.chip summary { font-weight: 700; color: #164e40; }
+.decision h2 { font-size: 23px; font-weight: 750; }
+.trust { gap: 8px; padding-bottom: 12px; border-bottom: 1px solid #d3e4da; }
+.resolution-steps { padding-left: 30px; }
+.resolution-steps > li { padding: 0 0 18px 6px; margin: 18px 0; border-bottom: 1px solid #dce9e1; }
+.resolution-steps > li::marker { font-weight: 800; color: #087b66; }
+.instruction-text { display: block; line-height: 1.75; font-size: 16px; }
+.step-citations { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+.citation-label { font-size: 12px; color: #536c62; margin-right: 3px; }
+.citation { display: inline-block; text-decoration: none; border: 1px solid #8ebeb0; border-radius: 6px; background: #fff; padding: 3px 8px; font-size: 12px; font-weight: 750; }
+.citation:hover, .citation:focus-visible { background: #dff1e8; outline: 2px solid #65b8a3; outline-offset: 2px; }
+.evidence-column { background: #f9fbfa; border: 1px solid #dce6e0; border-radius: 12px; padding: 20px; max-height: 78vh; overflow-y: auto; position: sticky; top: 20px; }
+.evidence-column h2 { font-size: 20px; font-weight: 750; }
+.evidence-column h3 { font-size: 15px; font-weight: 750; margin: 20px 0 6px; }
+.evidence-column .sources > summary { font-weight: 700; }
+.citation-legend { padding: 14px; border-radius: 8px; background: #eaf4ef; font-size: 13px; }
+.citation-legend strong { display: block; color: #0c5749; }
+.citation-legend p { margin: 7px 0 0; }
+.source strong { color: #0f5b48; line-height: 1.6; }
+.source:target { background: #eaf4ef; }
+.source small { font-size: 12px; }
+.plan-note { padding: 16px; margin-top: 18px; border: 1px solid #e5d1a4; background: #fff8e9; border-radius: 8px; }
+.plan-note > strong { display: block; color: #715112; margin-bottom: 8px; }
+.plan-note .instruction-text { font-size: 14px; }
+.history-backdrop { position: fixed; inset: 0; margin: 0; border-radius: 0; z-index: 40; background: rgb(15 38 30 / 32%); }
+.history-drawer { position: fixed; top: 0; bottom: 0; right: 0; width: min(480px, 94vw); padding: 26px; background: white; border-left: 1px solid #cadcd3; box-shadow: -16px 0 48px rgb(10 37 27 / 14%); z-index: 41; overflow-y: auto; }
+.drawer-header { display: flex; align-items: start; gap: 18px; justify-content: space-between; }
+.drawer-header h2 { font-size: 23px; margin-bottom: 8px; }
+.drawer-header p { margin: 0; font-size: 13px; line-height: 1.6; }
+.drawer-header button { padding: 8px 12px; }
+.history-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 22px 0 14px; border-bottom: 1px solid #dce6e0; }
+.select-all { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 14px; }
+input[type="checkbox"] { width: 18px; height: 18px; accent-color: #087b66; }
+.danger { margin: 0; background: #a13228; padding: 10px 14px; font-size: 14px; }
+.danger:disabled { cursor: not-allowed; }
+.history-row { display: grid; grid-template-columns: 24px minmax(0, 1fr); align-items: start; gap: 12px; padding: 18px 0; border-bottom: 1px solid #e0e9e4; }
+.history-checkbox { padding-top: 5px; margin: 0; }
+.history-open { text-align: left; padding: 0; margin: 0 0 8px; border: 0; background: none; color: #164e40; font-size: 15px; font-weight: 650; line-height: 1.6; }
+.history-open:hover { text-decoration: underline; }
+.history-row small { display: block; }
+#history-status { font-size: 13px; color: #536c62; line-height: 1.6; }
+.delete-confirmation { margin-top: 16px; padding: 16px; border: 1px solid #e7b7ad; border-radius: 8px; background: #fff2ef; }
+.delete-confirmation p { font-size: 14px; color: #7c2a22; margin-top: 0; }
+.delete-confirmation button { margin: 4px 8px 0 0; }
+@media (max-width: 1050px) { .requirements { grid-template-columns: repeat(2, minmax(0, 1fr)); } .triage-grid { grid-template-columns: minmax(0, 1fr); } .evidence-column { position: static; max-height: none; } }
+@media (max-width: 620px) { main { width: calc(100% - 24px); } header { flex-wrap: wrap; } nav { width: 100%; justify-content: space-between; } .requirements { grid-template-columns: minmax(0, 1fr); } .requirements > div { padding: 14px; } .panel, .response { padding: 18px; } .history-drawer { padding: 20px; } }
+
+.plan-stage { display: inline-block; background: #e2eee7; color: #285840; padding: 5px 9px; border-radius: 6px; font-size: 13px; margin: 0 0 10px; }

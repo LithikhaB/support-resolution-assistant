@@ -12,6 +12,7 @@ COMMANDS = {
     "chunk": "chunk_documents",
     "index": "index_documents",
     "check": "check_index",
+    "clear-caches": "clear_caches",
     "train": "train_understanding",
     "calibrate": "calibrate_routing",
     "reranker": "prepare_reranker",
