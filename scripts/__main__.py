@@ -5,27 +5,18 @@ import runpy
 import sys
 
 COMMANDS = {
-    "setup": "setup_database",
     "prepare": "prepare_synthetic",
-    "publish-v3": "publish_telecom_v3",
-    "publish-baselines": "publish_baseline_update",
     "chunk": "chunk_documents",
     "index": "index_documents",
     "check": "check_index",
-    "clear-caches": "clear_caches",
     "train": "train_understanding",
     "calibrate": "calibrate_routing",
     "reranker": "prepare_reranker",
     "analyze": "analyze_complaint",
     "resolve": "resolve_complaint",
-    "converse": "converse",
     "evaluate": "evaluate_pipeline",
-    "audit": "evaluate_resolution_path",
-    "quality": "evaluate_response_quality",
     "load": "load_test",
     "demo": "verify_demo",
-    "ingest-demo": "ingest_demo",
-    "stage": "stage_corpus_update",
     "evolve": "demonstrate_evolution",
 }
 

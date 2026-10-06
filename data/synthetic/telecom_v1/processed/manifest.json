@@ -1,7 +1,0 @@
-{
-  "dataset_version": "telecom-synthetic-1.0.0",
-  "documents": 330,
-  "output_sha256": "a93a4a53ee5b02af72571b1e528fa63cba8d9fc9ff378a4de4eef19a2f0be348",
-  "source_sha256": "e4e95a51ebeb96316599681c16fd444f1044b7cd66ed942dd0f15ff04c5bd864",
-  "source": "Fictional Northstar Telecom / authored synthetic scenarios"
-}
